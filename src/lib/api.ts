@@ -38,9 +38,9 @@ export const authApi = {
   registerUniversity: (data: Record<string, unknown>) =>
     api.post('/auth/register/university', data),
   verifyEmail:        (email: string, code: string) =>
-    api.post('/auth/verify-email', { email, code }),
+    api.post('/auth/verify-otp', { email, code, type: 'email_verification' }),
   resendOtp:          (email: string) =>
-    api.post('/auth/resend-otp', { email }),
+    api.post('/auth/resend-otp', { email, type: 'email_verification' }),
   logout:             () => api.post('/auth/logout'),
 };
 
