@@ -32,21 +32,19 @@ export default function LoginPage() {
   async function onSubmit(data: FormData) {
     try {
       const res = await authApi.login(data.email, data.password);
-      const { accessToken, user } = (
-        res.data as { data: { accessToken: string; user: User } }
-      ).data;
+      const payload = (res.data as { data: { accessToken: string; user: User } }).data;
 
-      setAuth(accessToken, user);
-      toast.success(`Xush kelibsiz, ${user.fullName}!`);
+      setAuth(payload.accessToken, payload.user);
+      toast.success(`Xush kelibsiz, ${payload.user?.fullName ?? ''}!`);
       router.push('/problems');
     } catch (err: unknown) {
-      const error = err as { response?: { data?: { error?: { message?: string } } } };
-      const msg = error.response?.data?.error?.message;
-      if (msg?.includes('verify') || msg?.includes('tasdiql')) {
+      const msg = (err as any)?.response?.data?.error?.message as string | undefined;
+      if (msg && (msg.includes('tasdiql') || msg.includes('verify'))) {
         setPendingEmail(data.email);
+        toast(msg, { icon: '📧' });
         router.push('/verify-email');
       } else {
-        toast.error('Email yoki parol noto\'g\'ri');
+        toast.error(msg ?? 'Email yoki parol noto\'g\'ri');
       }
     }
   }
