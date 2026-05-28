@@ -16,6 +16,11 @@ export function middleware(request: NextRequest) {
     return NextResponse.redirect(new URL('/problems', request.url));
   }
 
+  // Kirgan foydalanuvchi landing sahifaga kirsa /problems ga yo'naltir
+  if (pathname === '/' && token) {
+    return NextResponse.redirect(new URL('/problems', request.url));
+  }
+
   // Himoyalangan sahifalar uchun token majburiy
   if (isProtected && !token) {
     return NextResponse.redirect(new URL('/login', request.url));
