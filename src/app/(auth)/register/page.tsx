@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import React, { useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useForm } from 'react-hook-form';
@@ -18,7 +18,7 @@ type UserType = 'general' | 'school' | 'university';
 const REGIONS = [
   'Toshkent shahri','Toshkent viloyati','Andijon',"Farg'ona",'Namangan',
   'Samarqand','Buxoro','Navoiy','Qashqadaryo','Surxondaryo',
-  'Jizzax','Sirdaryo','Xorazm','Qoraqalpog\'iston',
+  'Jizzax','Sirdaryo','Xorazm',"Qoraqalpog'iston",
 ];
 const GRADES  = ['1','2','3','4','5','6','7','8','9','10','11'];
 const COURSES = ['1','2','3','4','5','6'];
@@ -40,7 +40,7 @@ const schoolSchema = z.object({
   email:    z.string().email("Email noto'g'ri"),
   password: pwd,
   confirmPassword: z.string(),
-  age:      z.coerce.number({ invalid_type_error: 'Raqam kiriting' }).min(6, 'Min 6').max(20, 'Max 20'),
+  age:      z.coerce.number({ invalid_type_error: 'Raqam kiriting' }).min(6).max(20),
   region:   z.string().min(1, 'Tanlang'),
   district: z.string().min(2, 'Kiriting'),
   school:   z.string().min(2, 'Kiriting'),
@@ -52,15 +52,15 @@ const universitySchema = z.object({
   email:      z.string().email("Email noto'g'ri"),
   password:   pwd,
   confirmPassword: z.string(),
-  age:        z.coerce.number({ invalid_type_error: 'Raqam kiriting' }).min(16, 'Min 16').max(40, 'Max 40'),
+  age:        z.coerce.number({ invalid_type_error: 'Raqam kiriting' }).min(16).max(40),
   region:     z.string().min(1, 'Tanlang'),
   university: z.string().min(2, 'Kiriting'),
   course:     z.string().min(1, 'Tanlang'),
 }).refine(d => d.password === d.confirmPassword, { message: 'Parollar mos emas', path: ['confirmPassword'] });
 
-type GeneralForm = z.infer<typeof generalSchema>;
-type SchoolForm  = z.infer<typeof schoolSchema>;
-type UniForm     = z.infer<typeof universitySchema>;
+type GeneralData = z.infer<typeof generalSchema>;
+type SchoolData  = z.infer<typeof schoolSchema>;
+type UniData     = z.infer<typeof universitySchema>;
 
 const TYPES = [
   { id: 'general'    as UserType, icon: User,          label: "Oddiy foydalanuvchi", desc: 'Istalgan yoshdagi har qanday inson' },
@@ -68,83 +68,124 @@ const TYPES = [
   { id: 'university' as UserType, icon: GraduationCap, label: 'Talaba',              desc: "Oliy ta'lim muassasasi talabalari" },
 ];
 
-/* ── Reusable inputs ─────────────────────────────────────────── */
+/* ── Field (forwardRef — ref register() ga yetib boradi) ─────── */
 
-function Field({ label, error, hint, type = 'text', className, ...props }:
-  React.InputHTMLAttributes<HTMLInputElement> & { label: string; error?: string; hint?: string }
-) {
-  const [show, setShow] = useState(false);
-  const isPwd = type === 'password';
-  return (
-    <div className={cn('flex flex-col gap-1', className)}>
-      <label className="text-[10px] font-bold text-slate-500 uppercase tracking-[0.1em]">{label}</label>
-      <div className="relative">
-        <input
-          {...props}
-          type={isPwd ? (show ? 'text' : 'password') : type}
-          className={cn(
-            'w-full h-11 rounded-xl px-3.5 text-sm text-white placeholder:text-slate-600 outline-none transition-all',
-            'bg-slate-900 border',
-            error
-              ? 'border-red-500/60 focus:border-red-500'
-              : 'border-slate-800 focus:border-slate-600',
-            isPwd && 'pr-11',
+type FieldProps = React.InputHTMLAttributes<HTMLInputElement> & {
+  label: string;
+  error?: string;
+  hint?: string;
+};
+
+const Field = React.forwardRef<HTMLInputElement, FieldProps>(
+  ({ label, error, hint, type = 'text', className: _cls, ...props }, ref) => {
+    const [show, setShow] = useState(false);
+    const isPwd = type === 'password';
+    return (
+      <div className="flex flex-col gap-1">
+        <label className="text-[10px] font-bold text-slate-500 uppercase tracking-[0.1em]">{label}</label>
+        <div className="relative">
+          <input
+            ref={ref}
+            {...props}
+            type={isPwd ? (show ? 'text' : 'password') : type}
+            className={cn(
+              'w-full h-11 rounded-xl px-3.5 text-sm text-white placeholder:text-slate-600',
+              'outline-none transition-colors bg-slate-900 border',
+              error
+                ? 'border-red-500/60 focus:border-red-500/80'
+                : 'border-slate-800 focus:border-slate-600',
+              isPwd && 'pr-11',
+            )}
+          />
+          {isPwd && (
+            <button type="button" tabIndex={-1}
+              onClick={() => setShow(s => !s)}
+              className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-600 hover:text-slate-400 transition-colors">
+              {show ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+            </button>
           )}
-        />
-        {isPwd && (
-          <button type="button" tabIndex={-1}
-            onClick={() => setShow(s => !s)}
-            className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-600 hover:text-slate-400 transition-colors">
-            {show ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
-          </button>
-        )}
+        </div>
+        {error  && <p className="text-[11px] text-red-400">{error}</p>}
+        {hint && !error && <p className="text-[11px] text-slate-600">{hint}</p>}
       </div>
-      {error  && <p className="text-[11px] text-red-400 leading-tight">{error}</p>}
-      {hint && !error && <p className="text-[11px] text-slate-600">{hint}</p>}
-    </div>
-  );
-}
+    );
+  }
+);
+Field.displayName = 'Field';
 
-function Select({ label, error, children, className, ...props }:
-  React.SelectHTMLAttributes<HTMLSelectElement> & { label: string; error?: string }
-) {
-  return (
-    <div className={cn('flex flex-col gap-1', className)}>
+/* ── SelectField ─────────────────────────────────────────────── */
+
+type SelectProps = React.SelectHTMLAttributes<HTMLSelectElement> & {
+  label: string;
+  error?: string;
+};
+
+const SelectField = React.forwardRef<HTMLSelectElement, SelectProps>(
+  ({ label, error, children, className: _cls, ...props }, ref) => (
+    <div className="flex flex-col gap-1">
       <label className="text-[10px] font-bold text-slate-500 uppercase tracking-[0.1em]">{label}</label>
       <select
+        ref={ref}
         {...props}
         className={cn(
-          'w-full h-11 rounded-xl px-3.5 text-sm text-white outline-none transition-all appearance-none',
-          'bg-slate-900 border',
+          'w-full h-11 rounded-xl px-3.5 text-sm text-white appearance-none',
+          'outline-none transition-colors bg-slate-900 border',
           error ? 'border-red-500/60' : 'border-slate-800 focus:border-slate-600',
         )}
       >
         {children}
       </select>
-      {error && <p className="text-[11px] text-red-400 leading-tight">{error}</p>}
+      {error && <p className="text-[11px] text-red-400">{error}</p>}
+    </div>
+  )
+);
+SelectField.displayName = 'SelectField';
+
+/* ── Submit button ───────────────────────────────────────────── */
+
+function SubmitBtn({ isPending, onBack }: { isPending: boolean; onBack: () => void }) {
+  return (
+    <div className="space-y-3 pt-1">
+      <button type="submit" disabled={isPending}
+        className="w-full h-11 rounded-xl bg-white text-black text-sm font-semibold hover:bg-slate-100 active:scale-[0.99] disabled:opacity-50 transition-all flex items-center justify-center gap-2">
+        {isPending
+          ? <span className="h-4 w-4 rounded-full border-2 border-black/20 border-t-black animate-spin" />
+          : <><span>Ro&apos;yxatdan o&apos;tish</span><ArrowRight className="h-4 w-4" /></>
+        }
+      </button>
+      <p className="text-center text-sm text-slate-600">
+        Hisobingiz bormi?{' '}
+        <Link href="/login" className="text-slate-300 hover:text-white font-medium transition-colors">Kirish</Link>
+      </p>
     </div>
   );
 }
 
-/* ── Form screens (keyed → remount on type change) ───────────── */
+/* ── Form screens ────────────────────────────────────────────── */
 
 function GeneralForm({ onBack }: { onBack: () => void }) {
   const router = useRouter();
   const { setPendingEmail } = useAuthStore();
   const { register, handleSubmit, formState: { errors } } =
-    useForm<GeneralForm>({ resolver: zodResolver(generalSchema) });
+    useForm<GeneralData>({ resolver: zodResolver(generalSchema) });
 
   const { mutate, isPending } = useMutation({
-    mutationFn: (d: GeneralForm) =>
+    mutationFn: (d: GeneralData) =>
       authApi.register({ fullName: d.fullName, email: d.email, password: d.password }),
-    onSuccess: (_, v) => { setPendingEmail(v.email); toast.success("Emailga kod yuborildi"); router.push('/verify-email'); },
+    onSuccess: (_, v) => {
+      setPendingEmail(v.email);
+      toast.success('Emailga tasdiqlash kodi yuborildi');
+      router.push('/verify-email');
+    },
     onError: (e: any) => toast.error(e.response?.data?.error?.message ?? 'Xatolik'),
   });
 
   return (
     <form onSubmit={handleSubmit(d => mutate(d))} className="space-y-3.5">
-      <Field label="To'liq ism" placeholder="Ism Familiya" error={errors.fullName?.message} {...register('fullName')} />
-      <Field label="Email" type="email" placeholder="email@example.com" error={errors.email?.message} {...register('email')} />
+      <Field label="To'liq ism" placeholder="Ism Familiya"
+        error={errors.fullName?.message} {...register('fullName')} />
+      <Field label="Email" type="email" placeholder="email@example.com"
+        error={errors.email?.message} {...register('email')} />
       <div className="grid grid-cols-2 gap-3">
         <Field label="Parol" type="password" placeholder="••••••••"
           hint="8+ belgi, katta harf, raqam" error={errors.password?.message} {...register('password')} />
@@ -160,38 +201,47 @@ function SchoolForm({ onBack }: { onBack: () => void }) {
   const router = useRouter();
   const { setPendingEmail } = useAuthStore();
   const { register, handleSubmit, formState: { errors } } =
-    useForm<SchoolForm>({ resolver: zodResolver(schoolSchema) });
+    useForm<SchoolData>({ resolver: zodResolver(schoolSchema) });
 
   const { mutate, isPending } = useMutation({
-    mutationFn: (d: SchoolForm) =>
+    mutationFn: (d: SchoolData) =>
       authApi.registerSchool({
         fullName: d.fullName, email: d.email, password: d.password,
         age: d.age, region: d.region, district: d.district,
         school: d.school, grade: Number(d.grade),
       }),
-    onSuccess: (_, v) => { setPendingEmail(v.email); toast.success("Emailga kod yuborildi"); router.push('/verify-email'); },
+    onSuccess: (_, v) => {
+      setPendingEmail(v.email);
+      toast.success('Emailga tasdiqlash kodi yuborildi');
+      router.push('/verify-email');
+    },
     onError: (e: any) => toast.error(e.response?.data?.error?.message ?? 'Xatolik'),
   });
 
   return (
     <form onSubmit={handleSubmit(d => mutate(d))} className="space-y-3.5">
       <div className="grid grid-cols-[1fr_90px] gap-3">
-        <Field label="To'liq ism" placeholder="Ism Familiya" error={errors.fullName?.message} {...register('fullName')} />
-        <Field label="Yosh" type="number" placeholder="14" error={errors.age?.message} {...register('age')} />
+        <Field label="To'liq ism" placeholder="Ism Familiya"
+          error={errors.fullName?.message} {...register('fullName')} />
+        <Field label="Yosh" type="number" placeholder="14"
+          error={errors.age?.message} {...register('age')} />
       </div>
-      <Select label="Viloyat" error={errors.region?.message} {...register('region')}>
+      <SelectField label="Viloyat" error={errors.region?.message} {...register('region')}>
         <option value="">Tanlang...</option>
         {REGIONS.map(r => <option key={r} value={r}>{r}</option>)}
-      </Select>
-      <Field label="Tuman" placeholder="Tuman nomi" error={errors.district?.message} {...register('district')} />
+      </SelectField>
+      <Field label="Tuman" placeholder="Tuman nomi"
+        error={errors.district?.message} {...register('district')} />
       <div className="grid grid-cols-[1fr_110px] gap-3">
-        <Field label="Maktab" placeholder="Maktab nomi yoki raqami" error={errors.school?.message} {...register('school')} />
-        <Select label="Sinf" error={errors.grade?.message} {...register('grade')}>
+        <Field label="Maktab" placeholder="Maktab nomi yoki raqami"
+          error={errors.school?.message} {...register('school')} />
+        <SelectField label="Sinf" error={errors.grade?.message} {...register('grade')}>
           <option value="">Sinf</option>
           {GRADES.map(g => <option key={g} value={g}>{g}-sinf</option>)}
-        </Select>
+        </SelectField>
       </div>
-      <Field label="Email" type="email" placeholder="email@example.com" error={errors.email?.message} {...register('email')} />
+      <Field label="Email" type="email" placeholder="email@example.com"
+        error={errors.email?.message} {...register('email')} />
       <div className="grid grid-cols-2 gap-3">
         <Field label="Parol" type="password" placeholder="••••••••"
           hint="8+ belgi, katta harf, raqam" error={errors.password?.message} {...register('password')} />
@@ -203,41 +253,49 @@ function SchoolForm({ onBack }: { onBack: () => void }) {
   );
 }
 
-function UniForm({ onBack }: { onBack: () => void }) {
+function UniversityForm({ onBack }: { onBack: () => void }) {
   const router = useRouter();
   const { setPendingEmail } = useAuthStore();
   const { register, handleSubmit, formState: { errors } } =
-    useForm<UniForm>({ resolver: zodResolver(universitySchema) });
+    useForm<UniData>({ resolver: zodResolver(universitySchema) });
 
   const { mutate, isPending } = useMutation({
-    mutationFn: (d: UniForm) =>
+    mutationFn: (d: UniData) =>
       authApi.registerUniversity({
         fullName: d.fullName, email: d.email, password: d.password,
         age: d.age, region: d.region, university: d.university,
         course: Number(d.course),
       }),
-    onSuccess: (_, v) => { setPendingEmail(v.email); toast.success("Emailga kod yuborildi"); router.push('/verify-email'); },
+    onSuccess: (_, v) => {
+      setPendingEmail(v.email);
+      toast.success('Emailga tasdiqlash kodi yuborildi');
+      router.push('/verify-email');
+    },
     onError: (e: any) => toast.error(e.response?.data?.error?.message ?? 'Xatolik'),
   });
 
   return (
     <form onSubmit={handleSubmit(d => mutate(d))} className="space-y-3.5">
       <div className="grid grid-cols-[1fr_90px] gap-3">
-        <Field label="To'liq ism" placeholder="Ism Familiya" error={errors.fullName?.message} {...register('fullName')} />
-        <Field label="Yosh" type="number" placeholder="20" error={errors.age?.message} {...register('age')} />
+        <Field label="To'liq ism" placeholder="Ism Familiya"
+          error={errors.fullName?.message} {...register('fullName')} />
+        <Field label="Yosh" type="number" placeholder="20"
+          error={errors.age?.message} {...register('age')} />
       </div>
-      <Select label="Viloyat" error={errors.region?.message} {...register('region')}>
+      <SelectField label="Viloyat" error={errors.region?.message} {...register('region')}>
         <option value="">Tanlang...</option>
         {REGIONS.map(r => <option key={r} value={r}>{r}</option>)}
-      </Select>
+      </SelectField>
       <div className="grid grid-cols-[1fr_110px] gap-3">
-        <Field label="Universitet" placeholder="Universitet nomi" error={errors.university?.message} {...register('university')} />
-        <Select label="Kurs" error={errors.course?.message} {...register('course')}>
+        <Field label="Universitet" placeholder="Universitet nomi"
+          error={errors.university?.message} {...register('university')} />
+        <SelectField label="Kurs" error={errors.course?.message} {...register('course')}>
           <option value="">Kurs</option>
           {COURSES.map(c => <option key={c} value={c}>{c}-kurs</option>)}
-        </Select>
+        </SelectField>
       </div>
-      <Field label="Email" type="email" placeholder="email@example.com" error={errors.email?.message} {...register('email')} />
+      <Field label="Email" type="email" placeholder="email@example.com"
+        error={errors.email?.message} {...register('email')} />
       <div className="grid grid-cols-2 gap-3">
         <Field label="Parol" type="password" placeholder="••••••••"
           hint="8+ belgi, katta harf, raqam" error={errors.password?.message} {...register('password')} />
@@ -246,24 +304,6 @@ function UniForm({ onBack }: { onBack: () => void }) {
       </div>
       <SubmitBtn isPending={isPending} onBack={onBack} />
     </form>
-  );
-}
-
-function SubmitBtn({ isPending, onBack }: { isPending: boolean; onBack: () => void }) {
-  return (
-    <div className="space-y-3 pt-1">
-      <button type="submit" disabled={isPending}
-        className="w-full h-11 rounded-xl bg-white text-black text-sm font-semibold hover:bg-slate-100 active:scale-[0.99] disabled:opacity-50 transition-all flex items-center justify-center gap-2">
-        {isPending
-          ? <span className="h-4 w-4 rounded-full border-2 border-black/20 border-t-black animate-spin" />
-          : <><span>Ro&apos;yxatdan o&apos;tish</span><ArrowRight className="h-4 w-4" /></>
-        }
-      </button>
-      <p className="text-center text-sm text-slate-600">
-        Hisobingiz bormi?{' '}
-        <Link href="/login" className="text-slate-300 hover:text-white transition-colors font-medium">Kirish</Link>
-      </p>
-    </div>
   );
 }
 
@@ -277,7 +317,6 @@ export default function RegisterPage() {
     <div className="min-h-screen flex items-center justify-center px-4 py-10">
       <div className="w-full max-w-md space-y-6">
 
-        {/* Header */}
         <div className="flex items-center gap-3">
           {userType && (
             <button onClick={() => setUserType(null)}
@@ -295,7 +334,6 @@ export default function RegisterPage() {
           </div>
         </div>
 
-        {/* Type selector */}
         {!userType && (
           <div className="space-y-2">
             {TYPES.map(({ id, icon: Icon, label, desc }) => (
@@ -313,15 +351,14 @@ export default function RegisterPage() {
             ))}
             <p className="text-sm text-slate-600 pt-1">
               Hisobingiz bormi?{' '}
-              <Link href="/login" className="text-slate-300 hover:text-white transition-colors font-medium">Kirish</Link>
+              <Link href="/login" className="text-slate-300 hover:text-white font-medium transition-colors">Kirish</Link>
             </p>
           </div>
         )}
 
-        {/* Forms — keyed so they fully remount on type change */}
-        {userType === 'general'    && <GeneralForm key="general"    onBack={() => setUserType(null)} />}
-        {userType === 'school'     && <SchoolForm  key="school"     onBack={() => setUserType(null)} />}
-        {userType === 'university' && <UniForm     key="university" onBack={() => setUserType(null)} />}
+        {userType === 'general'    && <GeneralForm    key="general"    onBack={() => setUserType(null)} />}
+        {userType === 'school'     && <SchoolForm     key="school"     onBack={() => setUserType(null)} />}
+        {userType === 'university' && <UniversityForm key="university" onBack={() => setUserType(null)} />}
       </div>
     </div>
   );
