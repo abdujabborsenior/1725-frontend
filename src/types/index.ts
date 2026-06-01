@@ -4,7 +4,38 @@ export type UserRole =
 export type ProblemStatus =
   | 'pending' | 'open' | 'under_review' | 'resolved' | 'rejected';
 
-export type SolutionStatus = 'pending' | 'approved' | 'rejected';
+export type SolutionStatus = 'pending' | 'accepted' | 'rejected';
+
+/* ── API envelopes ────────────────────────────────────────────── */
+export interface ApiEnvelope<T> {
+  success: true;
+  data: T;
+  timestamp: string;
+}
+
+export interface ApiErrorBody {
+  success: false;
+  error: { code: string; message: string };
+  path: string;
+  timestamp: string;
+}
+
+export interface PaginationMeta {
+  total: number;
+  page: number;
+  limit: number;
+  totalPages: number;
+  hasNext: boolean;
+  hasPrev: boolean;
+}
+
+export interface PaginatedResponse<T> {
+  data: T[];
+  meta: PaginationMeta;
+}
+
+/* ── Entities ─────────────────────────────────────────────────── */
+export type PublicAuthor = Pick<User, 'id' | 'fullName' | 'role'>;
 
 export interface User {
   id: string;
@@ -27,8 +58,8 @@ export interface Comment {
   id: string;
   content: string;
   links: string[];
-  authorId: string;
-  author: Pick<User, 'id' | 'fullName' | 'role'> | null;
+  authorId: string | null;
+  author: PublicAuthor | null;
   problemId: string;
   createdAt: string;
 }
@@ -36,13 +67,17 @@ export interface Comment {
 export interface Solution {
   id: string;
   fullName: string;
-  email: string;
   content: string;
-  links: string[];
+  presentationUrl: string | null;
+  videoUrl: string | null;
   status: SolutionStatus;
+  analyzerNote: string | null;
   problemId: string;
-  reviewNote: string | null;
+  submittedById: string | null;
+  submittedBy: PublicAuthor | null;
+  problem?: Pick<Problem, 'id' | 'title' | 'status'>;
   createdAt: string;
+  updatedAt: string;
 }
 
 export interface Problem {
@@ -57,30 +92,37 @@ export interface Problem {
   analyzerId: string | null;
   analyzerNote: string | null;
   viewCount: number;
-  submittedBy: Pick<User, 'id' | 'fullName' | 'role'> | null;
+  submittedBy: PublicAuthor | null;
+  analyzer?: PublicAuthor | null;
   comments?: Comment[];
   solutions?: Solution[];
   createdAt: string;
   updatedAt: string;
 }
 
-export interface PaginationMeta {
-  total: number;
-  page: number;
-  limit: number;
-  totalPages: number;
+/* ── Auth ─────────────────────────────────────────────────────── */
+export interface LoginResponse {
+  accessToken: string;
+  refreshToken: string;
+  user: User;
+  message: string;
 }
 
-export interface PaginatedResponse<T> {
-  data: T[];
-  meta: PaginationMeta;
+export interface TokenRefreshResponse {
+  accessToken: string;
+  refreshToken: string;
+  message: string;
 }
 
 export interface AuthState {
   token: string | null;
+  refreshToken: string | null;
   user: User | null;
   pendingEmail: string | null;
-  setAuth: (token: string, user: User) => void;
+  hasHydrated: boolean;
+  hydrate: () => void;
+  setAuth: (token: string, refreshToken: string, user: User) => void;
+  setTokens: (token: string, refreshToken: string) => void;
   setPendingEmail: (email: string) => void;
   clearAuth: () => void;
 }

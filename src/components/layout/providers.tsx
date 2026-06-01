@@ -1,12 +1,22 @@
 'use client';
 
+import { useEffect } from 'react';
 import { QueryClientProvider } from '@tanstack/react-query';
 import { Toaster } from 'react-hot-toast';
 import { queryClient } from '@/lib/query-client';
+import { useAuthStore } from '@/store/auth.store';
+
+function AuthHydrator() {
+  useEffect(() => {
+    useAuthStore.getState().hydrate();
+  }, []);
+  return null;
+}
 
 export function Providers({ children }: { children: React.ReactNode }) {
   return (
     <QueryClientProvider client={queryClient}>
+      <AuthHydrator />
       {children}
       <Toaster
         position="top-center"

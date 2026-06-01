@@ -7,15 +7,14 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { Mail, Lock, Eye, EyeOff, Zap, ArrowRight } from 'lucide-react';
-import { authApi } from '@/lib/api';
+import { authApi, getErrorMessage } from '@/lib/api';
 import { useAuthStore } from '@/store/auth.store';
-import type { User } from '@/types';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import toast from 'react-hot-toast';
 
 const schema = z.object({
-  email:    z.string().email('Email noto\'g\'ri formatda'),
+  email:    z.string().email("Email noto'g'ri formatda"),
   password: z.string().min(1, 'Parol kiritilmagan'),
 });
 
@@ -31,20 +30,18 @@ export default function LoginPage() {
 
   async function onSubmit(data: FormData) {
     try {
-      const res = await authApi.login(data.email, data.password);
-      const payload = (res.data as { data: { accessToken: string; user: User } }).data;
-
-      setAuth(payload.accessToken, payload.user);
+      const payload = await authApi.login(data.email, data.password);
+      setAuth(payload.accessToken, payload.refreshToken, payload.user);
       toast.success(`Xush kelibsiz, ${payload.user?.fullName ?? ''}!`);
       router.push('/problems');
     } catch (err: unknown) {
-      const msg = (err as any)?.response?.data?.error?.message as string | undefined;
-      if (msg && (msg.includes('tasdiql') || msg.includes('verify'))) {
+      const msg = getErrorMessage(err, "Email yoki parol noto'g'ri");
+      if (msg.includes('tasdiql') || msg.toLowerCase().includes('verif')) {
         setPendingEmail(data.email);
         toast(msg, { icon: '📧' });
         router.push('/verify-email');
       } else {
-        toast.error(msg ?? 'Email yoki parol noto\'g\'ri');
+        toast.error(msg);
       }
     }
   }
@@ -54,20 +51,19 @@ export default function LoginPage() {
       <div className="w-full max-w-md animate-slide-up">
         {/* Logo */}
         <div className="flex justify-center mb-8">
-          <div className="flex items-center gap-3">
-            <div className="h-12 w-12 rounded-2xl bg-gradient-brand flex items-center justify-center shadow-glow-brand">
-              <Zap className="h-6 w-6 text-white" fill="white" />
+          <Link href="/" className="flex items-center gap-3">
+            <div className="h-12 w-12 rounded-2xl bg-brand-900 flex items-center justify-center">
+              <Zap className="h-6 w-6 text-accent-400" fill="currentColor" />
             </div>
-            <span className="text-2xl font-black text-white">StartupHub</span>
-          </div>
+            <span className="text-2xl font-black text-brand-900">StartupHub</span>
+          </Link>
         </div>
 
         {/* Card */}
-        <div className="glass-strong rounded-3xl p-8 shadow-card">
-          {/* Header */}
-          <div className="text-center mb-8">
-            <h1 className="text-2xl font-bold text-white mb-2">Xush kelibsiz!</h1>
-            <p className="text-slate-400 text-sm">
+        <div className="bg-white border border-slate-200 rounded-2xl p-8 shadow-card">
+          <div className="text-center mb-7">
+            <h1 className="text-2xl font-bold text-brand-900 mb-2">Xush kelibsiz!</h1>
+            <p className="text-slate-500 text-sm">
               Hisobingizga kiring va muammolarni hal qiling
             </p>
           </div>
@@ -84,29 +80,38 @@ export default function LoginPage() {
             />
 
             <div className="flex flex-col gap-1.5">
-              <label className="text-xs font-semibold text-slate-300 uppercase tracking-wider">
+              <label className="text-xs font-semibold text-slate-700 uppercase tracking-wider">
                 Parol
               </label>
               <div className="relative">
-                <Lock className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-500 pointer-events-none" />
+                <Lock className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400 pointer-events-none" />
                 <input
                   type={showPwd ? 'text' : 'password'}
                   placeholder="••••••••"
                   autoComplete="current-password"
                   {...register('password')}
-                  className="w-full h-12 pl-11 pr-12 rounded-2xl glass border border-white/10 text-sm text-slate-100 placeholder:text-slate-500 focus:outline-none input-glow transition-all duration-200"
+                  className="w-full h-12 pl-11 pr-12 rounded-xl bg-white border border-slate-200 hover:border-slate-300 text-sm text-brand-900 placeholder:text-slate-400 focus:outline-none input-focus transition-all duration-150"
                 />
                 <button
                   type="button"
                   onClick={() => setShowPwd((p) => !p)}
-                  className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-500 hover:text-slate-300 transition-colors"
+                  className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-700 transition-colors"
+                  aria-label={showPwd ? 'Parolni yashirish' : "Parolni ko'rsatish"}
                 >
                   {showPwd ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
                 </button>
               </div>
               {errors.password && (
-                <p className="text-xs text-red-400">{errors.password.message}</p>
+                <p className="text-xs text-rose-600">{errors.password.message}</p>
               )}
+              <div className="flex justify-end">
+                <Link
+                  href="/forgot-password"
+                  className="text-xs text-slate-500 hover:text-accent-700 font-medium transition-colors"
+                >
+                  Parolni unutdingizmi?
+                </Link>
+              </div>
             </div>
 
             <Button
@@ -124,26 +129,28 @@ export default function LoginPage() {
 
           {/* Divider */}
           <div className="flex items-center gap-4 my-6">
-            <div className="flex-1 h-px bg-white/10" />
-            <span className="text-xs text-slate-500">yoki</span>
-            <div className="flex-1 h-px bg-white/10" />
+            <div className="flex-1 h-px bg-slate-200" />
+            <span className="text-xs text-slate-400">yoki</span>
+            <div className="flex-1 h-px bg-slate-200" />
           </div>
 
           {/* Register links */}
           <div className="space-y-3">
-            <p className="text-center text-xs text-slate-500 mb-3">Hisobingiz yo&apos;qmi? Ro&apos;yxatdan o&apos;ting:</p>
+            <p className="text-center text-xs text-slate-500 mb-3">
+              Hisobingiz yo&apos;qmi? Ro&apos;yxatdan o&apos;ting:
+            </p>
             <div className="grid grid-cols-3 gap-2">
               {[
-                { href: '/register', label: 'Oddiy', sub: 'foydalanuvchi' },
-                { href: '/register/school', label: 'Maktab', sub: "o'quvchisi" },
+                { href: '/register',            label: 'Oddiy',  sub: 'foydalanuvchi' },
+                { href: '/register/school',     label: 'Maktab', sub: "o'quvchisi" },
                 { href: '/register/university', label: 'Talaba', sub: 'universiteti' },
               ].map(({ href, label, sub }) => (
                 <Link
                   key={href}
                   href={href}
-                  className="flex flex-col items-center gap-0.5 p-3 rounded-2xl glass border border-white/10 hover:border-brand-400/40 hover:bg-white/8 transition-all duration-200 group"
+                  className="flex flex-col items-center gap-0.5 p-3 rounded-xl border border-slate-200 hover:border-accent-500 hover:bg-accent-50 transition-all duration-150 group"
                 >
-                  <span className="text-xs font-semibold text-slate-200 group-hover:text-white transition-colors">
+                  <span className="text-xs font-semibold text-brand-900 group-hover:text-accent-700 transition-colors">
                     {label}
                   </span>
                   <span className="text-[10px] text-slate-500">{sub}</span>

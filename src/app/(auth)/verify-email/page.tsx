@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { Mail, Zap, RefreshCw, CheckCircle2 } from 'lucide-react';
 import { authApi } from '@/lib/api';
@@ -11,7 +12,7 @@ import toast from 'react-hot-toast';
 
 export default function VerifyEmailPage() {
   const router = useRouter();
-  const { pendingEmail, clearAuth } = useAuthStore();
+  const { pendingEmail, hasHydrated, clearAuth } = useAuthStore();
   const [otp, setOtp] = useState('');
   const [loading, setLoading] = useState(false);
   const [resendLoading, setResendLoading] = useState(false);
@@ -21,8 +22,8 @@ export default function VerifyEmailPage() {
   const [canResend, setCanResend] = useState(false);
 
   useEffect(() => {
-    if (!pendingEmail) { router.replace('/login'); return; }
-  }, [pendingEmail, router]);
+    if (hasHydrated && !pendingEmail) router.replace('/login');
+  }, [hasHydrated, pendingEmail, router]);
 
   useEffect(() => {
     if (countdown <= 0) { setCanResend(true); return; }
@@ -35,13 +36,13 @@ export default function VerifyEmailPage() {
     setLoading(true);
     setOtpError(false);
     try {
-      await authApi.verifyEmail(pendingEmail, otp);
+      await authApi.verifyOtp(pendingEmail, otp);
       setSuccess(true);
       toast.success('Email tasdiqlandi!');
       setTimeout(() => router.push('/login'), 1500);
     } catch {
       setOtpError(true);
-      toast.error('Kod noto\'g\'ri yoki muddati o\'tgan');
+      toast.error("Kod noto'g'ri yoki muddati o'tgan");
     } finally {
       setLoading(false);
     }
@@ -68,11 +69,11 @@ export default function VerifyEmailPage() {
     return (
       <div className="min-h-screen flex items-center justify-center px-4">
         <div className="text-center animate-slide-up">
-          <div className="h-24 w-24 rounded-full bg-neon-green/15 border border-neon-green/30 flex items-center justify-center mx-auto mb-6">
-            <CheckCircle2 className="h-12 w-12 text-neon-green" />
+          <div className="h-24 w-24 rounded-full bg-accent-50 border border-accent-200 flex items-center justify-center mx-auto mb-6">
+            <CheckCircle2 className="h-12 w-12 text-accent-600" />
           </div>
-          <h1 className="text-2xl font-bold text-white mb-2">Tasdiqlandi!</h1>
-          <p className="text-slate-400">Kirish sahifasiga yo&apos;naltirilmoqda...</p>
+          <h1 className="text-2xl font-bold text-brand-900 mb-2">Tasdiqlandi!</h1>
+          <p className="text-slate-500">Kirish sahifasiga yo&apos;naltirilmoqda...</p>
         </div>
       </div>
     );
@@ -81,36 +82,33 @@ export default function VerifyEmailPage() {
   return (
     <div className="min-h-screen flex items-center justify-center px-4 py-12">
       <div className="w-full max-w-md animate-slide-up">
-        {/* Logo */}
         <div className="flex justify-center mb-8">
-          <div className="flex items-center gap-3">
-            <div className="h-12 w-12 rounded-2xl bg-gradient-brand flex items-center justify-center shadow-glow-brand">
-              <Zap className="h-6 w-6 text-white" fill="white" />
+          <Link href="/" className="flex items-center gap-3">
+            <div className="h-12 w-12 rounded-2xl bg-brand-900 flex items-center justify-center">
+              <Zap className="h-6 w-6 text-accent-400" fill="currentColor" />
             </div>
-            <span className="text-2xl font-black text-white">StartupHub</span>
-          </div>
+            <span className="text-2xl font-black text-brand-900">StartupHub</span>
+          </Link>
         </div>
 
-        <div className="glass-strong rounded-3xl p-8 shadow-card text-center">
-          {/* Icon */}
-          <div className="h-20 w-20 rounded-2xl bg-gradient-brand/10 neon-border-brand flex items-center justify-center mx-auto mb-6">
-            <Mail className="h-10 w-10 text-brand-400" />
+        <div className="bg-white border border-slate-200 rounded-2xl p-8 shadow-card text-center">
+          <div className="h-20 w-20 rounded-2xl bg-accent-50 border border-accent-200 flex items-center justify-center mx-auto mb-6">
+            <Mail className="h-10 w-10 text-accent-600" />
           </div>
 
-          <h1 className="text-2xl font-bold text-white mb-2">Emailni tasdiqlang</h1>
-          <p className="text-slate-400 text-sm mb-1">
+          <h1 className="text-2xl font-bold text-brand-900 mb-2">Emailni tasdiqlang</h1>
+          <p className="text-slate-500 text-sm mb-1">
             6 xonali kod quyidagi emailga yuborildi:
           </p>
-          <p className="text-brand-400 font-semibold text-sm mb-8 truncate">
+          <p className="text-accent-700 font-semibold text-sm mb-8 truncate">
             {pendingEmail}
           </p>
 
-          {/* OTP */}
           <div className="flex justify-center mb-3">
             <OtpInput value={otp} onChange={setOtp} length={6} error={otpError} />
           </div>
           {otpError && (
-            <p className="text-sm text-red-400 mb-4">Kod noto&apos;g&apos;ri yoki muddati o&apos;tgan</p>
+            <p className="text-sm text-rose-600 mb-4">Kod noto&apos;g&apos;ri yoki muddati o&apos;tgan</p>
           )}
 
           <div className="space-y-3 mt-6">
@@ -127,7 +125,7 @@ export default function VerifyEmailPage() {
             <button
               onClick={handleResend}
               disabled={!canResend || resendLoading}
-              className="flex items-center justify-center gap-2 w-full text-sm text-slate-400 hover:text-white disabled:opacity-40 disabled:cursor-not-allowed transition-colors py-2"
+              className="flex items-center justify-center gap-2 w-full text-sm text-slate-500 hover:text-brand-900 disabled:opacity-40 disabled:cursor-not-allowed transition-colors py-2"
             >
               <RefreshCw className={`h-4 w-4 ${resendLoading ? 'animate-spin' : ''}`} />
               {canResend
@@ -138,7 +136,7 @@ export default function VerifyEmailPage() {
 
           <button
             onClick={() => { clearAuth(); router.push('/login'); }}
-            className="mt-4 text-xs text-slate-600 hover:text-slate-400 transition-colors"
+            className="mt-4 text-xs text-slate-400 hover:text-slate-600 transition-colors"
           >
             Boshqa email bilan kirish
           </button>

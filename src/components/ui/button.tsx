@@ -5,19 +5,25 @@ import { Loader2 } from 'lucide-react';
 import type { ButtonHTMLAttributes } from 'react';
 
 interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
-  variant?: 'primary' | 'secondary' | 'ghost' | 'neon' | 'danger' | 'outline';
+  variant?: 'primary' | 'secondary' | 'ghost' | 'accent' | 'danger' | 'outline';
   size?: 'sm' | 'md' | 'lg' | 'xl';
   loading?: boolean;
   fullWidth?: boolean;
 }
 
 const variants = {
-  primary:   'bg-gradient-brand text-white shadow-glow-brand hover:opacity-90',
-  neon:      'bg-gradient-neon text-gray-900 font-bold shadow-glow-neon hover:opacity-90',
-  secondary: 'glass text-slate-200 hover:bg-white/10',
-  ghost:     'text-slate-400 hover:text-white hover:bg-white/5',
-  outline:   'border border-white/20 text-slate-200 hover:border-white/40 hover:bg-white/5',
-  danger:    'bg-red-500/15 text-red-400 border border-red-500/30 hover:bg-red-500/25',
+  // Brand navy — asosiy harakat (login, registratsiya, jiddiy bloklar)
+  primary:   'bg-brand-900 text-white hover:bg-brand-800 shadow-glow-brand',
+  // Emerald CTA — eng muhim harakatlar (Muammo yuborish, Yechim taklif qilish)
+  accent:    'bg-accent-500 text-white hover:bg-accent-600 shadow-glow-accent',
+  // Secondary — kulrang fon
+  secondary: 'bg-slate-100 text-brand-900 hover:bg-slate-200',
+  // Outline — chegaralangan
+  outline:   'border border-slate-300 text-brand-900 bg-white hover:bg-slate-50 hover:border-slate-400',
+  // Ghost — fonsiz
+  ghost:     'text-slate-600 hover:text-brand-900 hover:bg-slate-100',
+  // Danger
+  danger:    'bg-rose-50 text-rose-700 border border-rose-200 hover:bg-rose-100',
 };
 
 const sizes = {
@@ -35,9 +41,9 @@ export function Button({
     <button
       disabled={disabled ?? loading}
       className={cn(
-        'inline-flex items-center justify-center font-semibold rounded-2xl',
-        'transition-all duration-200 btn-lift',
-        'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-400/50',
+        'inline-flex items-center justify-center font-semibold rounded-xl',
+        'transition-all duration-150 btn-lift',
+        'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-500/40 focus-visible:ring-offset-2 focus-visible:ring-offset-white',
         'disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none',
         variants[variant],
         sizes[size],

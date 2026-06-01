@@ -1,7 +1,13 @@
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 
-const PUBLIC_PATHS = ['/login', '/register', '/verify-email'];
+const PUBLIC_PATHS = [
+  '/login',
+  '/register',
+  '/verify-email',
+  '/forgot-password',
+  '/reset-password',
+];
 const PROTECTED_PATHS = ['/problems/create', '/profile'];
 
 export function middleware(request: NextRequest) {

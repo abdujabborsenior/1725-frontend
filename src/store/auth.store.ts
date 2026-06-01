@@ -2,6 +2,7 @@
 
 import { create } from 'zustand';
 import type { AuthState, User } from '@/types';
+import { STORAGE } from '@/lib/constants';
 
 const COOKIE_MAX_AGE = 60 * 60 * 24 * 30; // 30 kun
 
@@ -13,37 +14,55 @@ function deleteCookie(name: string) {
   document.cookie = `${name}=; path=/; max-age=0`;
 }
 
-export const useAuthStore = create<AuthState>((set) => ({
-  token: typeof window !== 'undefined' ? localStorage.getItem('sh_token') : null,
-  user: typeof window !== 'undefined'
-    ? (() => {
-        try {
-          const u = localStorage.getItem('sh_user');
-          return u ? (JSON.parse(u) as User) : null;
-        } catch { return null; }
-      })()
-    : null,
-  pendingEmail: typeof window !== 'undefined'
-    ? sessionStorage.getItem('sh_pending_email')
-    : null,
+/**
+ * Initial state is always null on both server and client to avoid SSR
+ * hydration mismatch. The real auth state is loaded from storage in
+ * `hydrate()`, called once from <Providers> via useEffect.
+ */
+export const useAuthStore = create<AuthState>((set, get) => ({
+  token: null,
+  refreshToken: null,
+  user: null,
+  pendingEmail: null,
+  hasHydrated: false,
 
-  setAuth: (token, user) => {
-    localStorage.setItem('sh_token', token);
-    localStorage.setItem('sh_user', JSON.stringify(user));
-    setCookie('sh_token', token);
-    set({ token, user });
+  hydrate: () => {
+    if (typeof window === 'undefined' || get().hasHydrated) return;
+    const token = localStorage.getItem(STORAGE.token);
+    const refreshToken = localStorage.getItem(STORAGE.refresh);
+    const userRaw = localStorage.getItem(STORAGE.user);
+    const pendingEmail = sessionStorage.getItem(STORAGE.pendingEmail);
+    let user: User | null = null;
+    try { user = userRaw ? (JSON.parse(userRaw) as User) : null; } catch { /* ignore */ }
+    set({ token, refreshToken, user, pendingEmail, hasHydrated: true });
+  },
+
+  setAuth: (token, refreshToken, user) => {
+    localStorage.setItem(STORAGE.token, token);
+    localStorage.setItem(STORAGE.refresh, refreshToken);
+    localStorage.setItem(STORAGE.user, JSON.stringify(user));
+    setCookie(STORAGE.token, token);
+    set({ token, refreshToken, user, hasHydrated: true });
+  },
+
+  setTokens: (token, refreshToken) => {
+    localStorage.setItem(STORAGE.token, token);
+    localStorage.setItem(STORAGE.refresh, refreshToken);
+    setCookie(STORAGE.token, token);
+    set({ token, refreshToken });
   },
 
   setPendingEmail: (email) => {
-    sessionStorage.setItem('sh_pending_email', email);
+    sessionStorage.setItem(STORAGE.pendingEmail, email);
     set({ pendingEmail: email });
   },
 
   clearAuth: () => {
-    localStorage.removeItem('sh_token');
-    localStorage.removeItem('sh_user');
-    sessionStorage.removeItem('sh_pending_email');
-    deleteCookie('sh_token');
-    set({ token: null, user: null, pendingEmail: null });
+    localStorage.removeItem(STORAGE.token);
+    localStorage.removeItem(STORAGE.refresh);
+    localStorage.removeItem(STORAGE.user);
+    sessionStorage.removeItem(STORAGE.pendingEmail);
+    deleteCookie(STORAGE.token);
+    set({ token: null, refreshToken: null, user: null, pendingEmail: null });
   },
 }));
