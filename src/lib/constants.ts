@@ -1,4 +1,11 @@
-import type { ProblemStatus, SolutionStatus, UserRole } from '@/types';
+import type {
+  PlatformType,
+  ProblemStatus,
+  SolutionStatus,
+  StartupSort,
+  StartupStatus,
+  UserRole,
+} from '@/types';
 
 export const API_URL =
   process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:3333/api';
@@ -87,5 +94,108 @@ export const PROBLEM_CATEGORIES = [
   "Sog'liqni saqlash",
   "Qishloq xo'jaligi",
   'Ekologiya',
+  'Boshqa',
+];
+
+/* ── Startups ─────────────────────────────────────────────────── */
+export const STARTUP_STATUS_LABEL: Record<StartupStatus, string> = {
+  draft: 'Qoralama',
+  published: "E'lon qilingan",
+  archived: 'Arxivlangan',
+};
+
+export const STARTUP_STATUS_BADGE: Record<StartupStatus, string> = {
+  draft:     'bg-amber-50 text-amber-700 border-amber-200',
+  published: 'bg-accent-50 text-accent-700 border-accent-200',
+  archived:  'bg-slate-100 text-slate-600 border-slate-200',
+};
+
+/**
+ * Platforma turlari uchun meta — App Store / Play Store / sayt / Telegram
+ * uslubidagi tugmalar va ranglar. Real do'kon ko'rinishini taqlid qiladi.
+ */
+export interface PlatformMeta {
+  /** Qisqa nom (filtrlarda) */
+  label: string;
+  /** Do'kon/CTA tugmasi matni */
+  cta: string;
+  /** "Quyidagidan oling" yuqori matni (App Store / Play Store badge uslubi) */
+  storeKicker: string;
+  storeName: string;
+  /** Tugma uchun rang sinflari (tailwind) */
+  badgeClass: string;
+  /** Filtr chip rangi */
+  chipClass: string;
+}
+
+export const PLATFORM_META: Record<PlatformType, PlatformMeta> = {
+  android: {
+    label: 'Android',
+    cta: 'Google Play',
+    storeKicker: 'GET IT ON',
+    storeName: 'Google Play',
+    badgeClass: 'bg-brand-900 text-white hover:bg-brand-800',
+    chipClass: 'bg-accent-50 text-accent-700 border-accent-200',
+  },
+  ios: {
+    label: 'iOS',
+    cta: 'App Store',
+    storeKicker: 'Download on the',
+    storeName: 'App Store',
+    badgeClass: 'bg-brand-900 text-white hover:bg-brand-800',
+    chipClass: 'bg-slate-100 text-slate-700 border-slate-200',
+  },
+  website: {
+    label: 'Veb-sayt',
+    cta: 'Saytga o\'tish',
+    storeKicker: 'OPEN',
+    storeName: 'Website',
+    badgeClass: 'bg-sky-600 text-white hover:bg-sky-700',
+    chipClass: 'bg-sky-50 text-sky-700 border-sky-200',
+  },
+  telegram_bot: {
+    label: 'Telegram',
+    cta: 'Telegramda ochish',
+    storeKicker: 'OPEN IN',
+    storeName: 'Telegram',
+    badgeClass: 'bg-[#229ED9] text-white hover:bg-[#1c8ec2]',
+    chipClass: 'bg-cyan-50 text-cyan-700 border-cyan-200',
+  },
+  other: {
+    label: 'Havola',
+    cta: 'Havolani ochish',
+    storeKicker: 'OPEN',
+    storeName: 'Link',
+    badgeClass: 'bg-violet-600 text-white hover:bg-violet-700',
+    chipClass: 'bg-violet-50 text-violet-700 border-violet-200',
+  },
+};
+
+export const PLATFORM_ORDER: PlatformType[] = [
+  'android',
+  'ios',
+  'website',
+  'telegram_bot',
+  'other',
+];
+
+export const STARTUP_SORT_OPTIONS: { value: StartupSort; label: string }[] = [
+  { value: 'featured', label: 'Tavsiya etilgan' },
+  { value: 'top_rated', label: 'Eng yuqori baholangan' },
+  { value: 'newest', label: 'Eng yangi' },
+  { value: 'popular', label: 'Mashhur' },
+  { value: 'alphabetical', label: 'Alifbo bo\'yicha' },
+];
+
+export const STARTUP_CATEGORIES = [
+  'Texnologiya',
+  'Fintex',
+  "Ta'lim",
+  'Sog\'liq',
+  'E-commerce',
+  'Logistika',
+  'AI / ML',
+  'O\'yinlar',
+  'Ijtimoiy',
   'Boshqa',
 ];

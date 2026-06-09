@@ -6,6 +6,14 @@ export type ProblemStatus =
 
 export type SolutionStatus = 'pending' | 'accepted' | 'rejected';
 
+export type StartupStatus = 'draft' | 'published' | 'archived';
+
+export type PlatformType =
+  | 'android' | 'ios' | 'website' | 'telegram_bot' | 'other';
+
+export type StartupSort =
+  | 'newest' | 'popular' | 'featured' | 'alphabetical' | 'top_rated';
+
 /* ── API envelopes ────────────────────────────────────────────── */
 export interface ApiEnvelope<T> {
   success: true;
@@ -98,6 +106,100 @@ export interface Problem {
   solutions?: Solution[];
   createdAt: string;
   updatedAt: string;
+}
+
+/* ── Startups ─────────────────────────────────────────────────── */
+export interface StartupPlatform {
+  type: PlatformType;
+  url: string;
+  label?: string | null;
+  iconUrl?: string | null;
+}
+
+export interface Startup {
+  id: string;
+  title: string;
+  slug: string;
+  tagline: string | null;
+  description: string;
+  coverUrl: string | null;
+  logoUrl: string | null;
+  screenshots: string[];
+  category: string | null;
+  tags: string[];
+  platforms: StartupPlatform[];
+  status: StartupStatus;
+  isFeatured: boolean;
+  sortOrder: number;
+  viewCount: number;
+  clickCount: number;
+  likeCount: number;
+  bookmarkCount: number;
+  ratingAvg: number;
+  ratingCount: number;
+  /** Joriy foydalanuvchi yoqtirganmi (auth bo'lsa) */
+  likedByMe?: boolean;
+  /** Joriy foydalanuvchi saqlaganmi (auth bo'lsa) */
+  bookmarkedByMe?: boolean;
+  foundedYear: number | null;
+  teamName: string | null;
+  createdById: string | null;
+  createdBy?: PublicAuthor | null;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface StartupReview {
+  id: string;
+  rating: number;
+  comment: string | null;
+  userId: string;
+  startupId: string;
+  user?: PublicAuthor | null;
+  startup?: Pick<Startup, 'id' | 'title' | 'slug' | 'logoUrl'> | null;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface LinkPreview {
+  url: string;
+  detectedType: PlatformType;
+  title: string | null;
+  description: string | null;
+  image: string | null;
+  favicon: string | null;
+  siteName: string | null;
+}
+
+export interface UploadResult {
+  url: string;
+  path: string;
+  filename: string;
+  mimeType: string;
+  size: number;
+}
+
+export interface CategoryCount {
+  category: string;
+  count: number;
+}
+
+/* ── Notifications ────────────────────────────────────────────── */
+export type NotificationType =
+  | 'problem_approved'
+  | 'problem_rejected'
+  | 'solution_accepted'
+  | 'solution_rejected'
+  | 'system';
+
+export interface AppNotification {
+  id: string;
+  type: NotificationType;
+  title: string;
+  body: string | null;
+  link: string | null;
+  isRead: boolean;
+  createdAt: string;
 }
 
 /* ── Auth ─────────────────────────────────────────────────────── */

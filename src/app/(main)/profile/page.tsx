@@ -7,14 +7,15 @@ import Link from 'next/link';
 import {
   User, Mail, MapPin, School, BookOpen, Lightbulb,
   FileQuestion, Eye, Clock, LogOut, Trash2,
-  ShieldCheck, Calendar,
+  ShieldCheck, Calendar, Bookmark, Settings,
 } from 'lucide-react';
-import { profileApi, authApi, getErrorMessage } from '@/lib/api';
+import { profileApi, authApi, startupsApi, getErrorMessage } from '@/lib/api';
 import { useAuthStore } from '@/store/auth.store';
 import type { Solution } from '@/types';
 import { Button } from '@/components/ui/button';
 import { Modal } from '@/components/ui/modal';
 import { ProblemStatusBadge, SolutionStatusBadge } from '@/components/ui/badge';
+import { StartupCard } from '@/components/startups/startup-card';
 import { ROLE_LABEL, ROLE_BADGE } from '@/lib/constants';
 import { formatDistanceToNow, format } from 'date-fns';
 import toast from 'react-hot-toast';
@@ -38,6 +39,12 @@ export default function ProfilePage() {
   const { data: mySolutionsRaw } = useQuery({
     queryKey: ['my-solutions'],
     queryFn: () => profileApi.mySolutions({ limit: 50 }),
+    enabled: !!token,
+  });
+
+  const { data: bookmarks } = useQuery({
+    queryKey: ['my-bookmarks'],
+    queryFn: () => startupsApi.myBookmarks({ limit: 12 }),
     enabled: !!token,
   });
 
@@ -124,6 +131,22 @@ export default function ProfilePage() {
         )}
       </div>
 
+      {/* Saved startups */}
+      {(bookmarks?.data?.length ?? 0) > 0 && (
+        <div>
+          <h2 className="text-base font-bold text-brand-900 mb-4 flex items-center gap-2">
+            <Bookmark className="h-4 w-4 text-accent-600" />
+            Saqlangan startaplar
+            <span className="text-xs text-slate-400 font-normal">({bookmarks?.meta.total ?? 0})</span>
+          </h2>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+            {bookmarks?.data.map((s) => (
+              <StartupCard key={s.id} startup={s} />
+            ))}
+          </div>
+        </div>
+      )}
+
       {/* My problems */}
       <div>
         <h2 className="text-base font-bold text-brand-900 mb-4 flex items-center gap-2">
@@ -200,6 +223,11 @@ export default function ProfilePage() {
 
       {/* Actions */}
       <div className="flex flex-col sm:flex-row gap-3 pt-2">
+        <Link href="/settings" className="flex-1">
+          <Button variant="outline" size="md" fullWidth>
+            <Settings className="h-4 w-4" /> Sozlamalar
+          </Button>
+        </Link>
         <Button variant="outline" size="md" onClick={handleLogout} className="flex-1">
           <LogOut className="h-4 w-4" /> Chiqish
         </Button>

@@ -7,14 +7,25 @@ import { API_URL, STORAGE } from './constants';
 import type {
   ApiEnvelope,
   ApiErrorBody,
+  AppNotification,
+  CategoryCount,
   Comment,
+  LinkPreview,
   LoginResponse,
   PaginatedResponse,
+  PlatformType,
   Problem,
+  ProblemStatus,
   Solution,
   SolutionStatus,
+  Startup,
+  StartupReview,
+  StartupSort,
+  StartupStatus,
   TokenRefreshResponse,
+  UploadResult,
   User,
+  UserRole,
 } from '@/types';
 
 /* ── Axios instance ───────────────────────────────────────────── */
@@ -173,6 +184,20 @@ export const problemsApi = {
     imageUrls?: string[];
     videoUrls?: string[];
   }) => unwrap<{ data: Problem; message: string }>(api.post('/problems', data)),
+
+  // Admin moderation
+  approve: (id: string) =>
+    unwrap<{ message: string }>(api.patch(`/problems/${id}/approve`)),
+  reject: (id: string, note?: string) =>
+    unwrap<{ message: string }>(api.patch(`/problems/${id}/reject`, { note })),
+  updateStatus: (id: string, status: ProblemStatus, analyzerNote?: string) =>
+    unwrap<{ message: string }>(
+      api.patch(`/problems/${id}/status`, { status, analyzerNote }),
+    ),
+  assignAnalyzer: (id: string, analyzerId: string) =>
+    unwrap<{ message: string }>(api.patch(`/problems/${id}/assign`, { analyzerId })),
+  remove: (id: string) =>
+    unwrap<{ message: string }>(api.delete(`/problems/${id}`)),
 };
 
 /* ── Comments ─────────────────────────────────────────────────── */
@@ -198,6 +223,8 @@ export const solutionsApi = {
     problemId?: string;
   }) => unwrap<PaginatedResponse<Solution>>(api.get('/solutions', { params })),
   findOne: (id: string) => unwrap<Solution>(api.get(`/solutions/${id}`)),
+  my: (params?: { page?: number; limit?: number; status?: SolutionStatus }) =>
+    unwrap<PaginatedResponse<Solution>>(api.get('/solutions/my', { params })),
   submit: (data: {
     problemId: string;
     fullName: string;
@@ -205,14 +232,206 @@ export const solutionsApi = {
     presentationUrl?: string;
     videoUrl?: string;
   }) => unwrap<{ data: Solution; message: string }>(api.post('/solutions', data)),
+  updateStatus: (id: string, status: SolutionStatus, analyzerNote?: string) =>
+    unwrap<{ message: string }>(
+      api.patch(`/solutions/${id}/status`, { status, analyzerNote }),
+    ),
 };
 
-/* ── Profile (no dedicated /me endpoint — user comes from login) ── */
+/* ── Startups ─────────────────────────────────────────────────── */
+export interface StartupListParams {
+  page?: number;
+  limit?: number;
+  search?: string;
+  category?: string;
+  platform?: PlatformType;
+  featured?: boolean;
+  status?: StartupStatus;
+  sort?: StartupSort;
+}
+
+export interface StartupPayload {
+  title: string;
+  tagline?: string;
+  description: string;
+  coverUrl?: string | null;
+  logoUrl?: string | null;
+  screenshots?: string[];
+  category?: string | null;
+  tags?: string[];
+  platforms?: { type: PlatformType; url: string; label?: string; iconUrl?: string }[];
+  status?: StartupStatus;
+  isFeatured?: boolean;
+  sortOrder?: number;
+  foundedYear?: number | null;
+  teamName?: string | null;
+}
+
+export const startupsApi = {
+  list: (params?: StartupListParams) =>
+    unwrap<PaginatedResponse<Startup>>(api.get('/startups', { params })),
+  findOne: (idOrSlug: string) =>
+    unwrap<Startup>(api.get(`/startups/${idOrSlug}`)),
+  related: (idOrSlug: string) =>
+    unwrap<Startup[]>(api.get(`/startups/${idOrSlug}/related`)),
+  categories: () => unwrap<CategoryCount[]>(api.get('/startups/categories')),
+  registerClick: (id: string) => api.post(`/startups/${id}/click`),
+
+  // Engagement (auth)
+  toggleLike: (id: string) =>
+    unwrap<{ liked: boolean; likeCount: number }>(api.post(`/startups/${id}/like`)),
+  toggleBookmark: (id: string) =>
+    unwrap<{ bookmarked: boolean }>(api.post(`/startups/${id}/bookmark`)),
+  myBookmarks: (params?: { page?: number; limit?: number }) =>
+    unwrap<PaginatedResponse<Startup>>(api.get('/startups/me/bookmarks', { params })),
+
+  // Admin
+  create: (data: StartupPayload) =>
+    unwrap<{ data: Startup; message: string }>(api.post('/startups', data)),
+  update: (id: string, data: Partial<StartupPayload>) =>
+    unwrap<{ data: Startup; message: string }>(
+      api.patch(`/startups/${id}`, data),
+    ),
+  setStatus: (id: string, status: StartupStatus) =>
+    unwrap<{ message: string }>(api.patch(`/startups/${id}/status`, { status })),
+  remove: (id: string) =>
+    unwrap<{ message: string }>(api.delete(`/startups/${id}`)),
+  linkPreview: (url: string) =>
+    unwrap<LinkPreview>(api.get('/startups/link-preview', { params: { url } })),
+
+  // Reviews
+  reviews: (idOrSlug: string, params?: { page?: number; limit?: number }) =>
+    unwrap<PaginatedResponse<StartupReview>>(
+      api.get(`/startups/${idOrSlug}/reviews`, { params }),
+    ),
+  myReview: (idOrSlug: string) =>
+    unwrap<{ data: StartupReview | null }>(
+      api.get(`/startups/${idOrSlug}/reviews/me`),
+    ),
+  submitReview: (id: string, data: { rating: number; comment?: string }) =>
+    unwrap<{ data: StartupReview; message: string }>(
+      api.post(`/startups/${id}/reviews`, data),
+    ),
+  deleteMyReview: (id: string) =>
+    unwrap<{ message: string }>(api.delete(`/startups/${id}/reviews/me`)),
+
+  // Admin reviews moderation
+  adminReviews: (params?: { page?: number; limit?: number }) =>
+    unwrap<PaginatedResponse<StartupReview>>(api.get('/admin/reviews', { params })),
+  adminDeleteReview: (id: string) =>
+    unwrap<{ message: string }>(api.delete(`/admin/reviews/${id}`)),
+};
+
+/* ── Uploads ──────────────────────────────────────────────────── */
+export const uploadsApi = {
+  image: (file: File) => {
+    const form = new FormData();
+    form.append('file', file);
+    return unwrap<UploadResult>(
+      api.post('/uploads/image', form, {
+        headers: { 'Content-Type': 'multipart/form-data' },
+      }),
+    );
+  },
+  images: (files: File[]) => {
+    const form = new FormData();
+    files.forEach((f) => form.append('files', f));
+    return unwrap<{ files: UploadResult[] }>(
+      api.post('/uploads/images', form, {
+        headers: { 'Content-Type': 'multipart/form-data' },
+      }),
+    );
+  },
+};
+
+/* ── Notifications ────────────────────────────────────────────── */
+export const notificationsApi = {
+  list: (params?: { page?: number; limit?: number; unreadOnly?: boolean }) =>
+    unwrap<PaginatedResponse<AppNotification>>(
+      api.get('/notifications', { params }),
+    ),
+  unreadCount: () =>
+    unwrap<{ count: number }>(api.get('/notifications/unread-count')),
+  markRead: (id: string) =>
+    unwrap<{ success: boolean }>(api.patch(`/notifications/${id}/read`)),
+  markAllRead: () =>
+    unwrap<{ success: boolean }>(api.patch('/notifications/read-all')),
+};
+
+/* ── Statistics (Superadmin) ──────────────────────────────────── */
+export interface StatsDashboard {
+  userStats: {
+    total: number;
+    active: number;
+    verified: number;
+    byRole: Record<string, number>;
+    newThisWeek: number;
+    newThisMonth: number;
+  };
+  problemStats: {
+    total: number;
+    byStatus: Record<string, number>;
+    newThisWeek: number;
+    newThisMonth: number;
+    totalViews: number;
+    byCategory: { category: string; count: string }[];
+  };
+  solutionStats: {
+    total: number;
+    byStatus: Record<string, number>;
+    newThisWeek: number;
+    newThisMonth: number;
+  };
+  recentActivity: {
+    recentUsers: { id: string; fullName: string; email: string; role: string; createdAt: string }[];
+    recentProblems: { id: string; title: string; status: string; createdAt: string }[];
+    recentSolutions: { id: string; fullName: string; status: string; createdAt: string }[];
+  };
+  topProblems: { id: string; title: string; status: string; viewCount: number; createdAt: string }[];
+}
+
+export interface GrowthPoint {
+  date: string;
+  count: string;
+}
+export interface GrowthChart {
+  userGrowth: GrowthPoint[];
+  problemGrowth: GrowthPoint[];
+  solutionGrowth: GrowthPoint[];
+}
+
+export const statisticsApi = {
+  dashboard: () => unwrap<StatsDashboard>(api.get('/statistics/dashboard')),
+  growth: (days = 30) =>
+    unwrap<GrowthChart>(api.get('/statistics/growth', { params: { days } })),
+};
+
+/* ── Users (admin + self profile) ─────────────────────────────── */
+export const usersApi = {
+  // Self
+  me: () => unwrap<User>(api.get('/users/me')),
+  updateProfile: (data: Partial<Pick<User,
+    'fullName' | 'age' | 'region' | 'district' | 'school' | 'grade' | 'university' | 'course'
+  >>) => unwrap<User>(api.patch('/users/me', data)),
+  changePassword: (data: { currentPassword: string; newPassword: string }) =>
+    unwrap<{ message: string }>(api.patch('/users/me/change-password', data)),
+
+  // Admin
+  list: (params?: { page?: number; limit?: number; role?: UserRole; search?: string }) =>
+    unwrap<PaginatedResponse<User>>(api.get('/users', { params })),
+  updateRole: (id: string, role: UserRole) =>
+    unwrap<User>(api.patch(`/users/${id}/role`, { role })),
+  toggleActive: (id: string) =>
+    unwrap<{ isActive: boolean }>(api.patch(`/users/${id}/toggle-active`)),
+  analyzers: () => unwrap<User[]>(api.get('/users/analyzers')),
+};
+
+/* ── Profile ──────────────────────────────────────────────────── */
 export const profileApi = {
   myProblems: (params?: Record<string, unknown>) =>
     unwrap<PaginatedResponse<Problem>>(api.get('/problems/my', { params })),
   mySolutions: (params?: Record<string, unknown>) =>
-    unwrap<PaginatedResponse<Solution>>(api.get('/solutions', { params })),
+    unwrap<PaginatedResponse<Solution>>(api.get('/solutions/my', { params })),
 };
 
 export type { User };

@@ -3,22 +3,16 @@
 import Link from 'next/link';
 import { useQuery } from '@tanstack/react-query';
 import {
-  Zap, ArrowRight, Users, FileQuestion,
-  Lightbulb, TrendingUp, ChevronRight, Eye, Clock,
+  Zap, ArrowRight, FileQuestion,
+  Lightbulb, TrendingUp, ChevronRight, Eye, Clock, Rocket,
 } from 'lucide-react';
-import { problemsApi } from '@/lib/api';
+import { problemsApi, solutionsApi, startupsApi } from '@/lib/api';
 import { useAuthStore } from '@/store/auth.store';
 import { Button } from '@/components/ui/button';
 import { ProblemStatusBadge } from '@/components/ui/badge';
+import { StartupCard, StartupCardSkeleton } from '@/components/startups/startup-card';
 import { cn } from '@/lib/utils';
 import { formatDistanceToNow } from 'date-fns';
-
-const STATS = [
-  { icon: Users,        label: 'Foydalanuvchilar', value: '1,200+', color: 'text-brand-700' },
-  { icon: FileQuestion, label: 'Muammolar',         value: '340+',   color: 'text-amber-600' },
-  { icon: Lightbulb,    label: 'Yechimlar',         value: '890+',   color: 'text-accent-600' },
-  { icon: TrendingUp,   label: 'Hal qilingan',      value: '73%',    color: 'text-violet-600' },
-];
 
 const HOW_IT_WORKS = [
   {
@@ -47,6 +41,32 @@ export default function LandingPage() {
     staleTime: 60_000,
   });
 
+  const { data: featuredStartups, isLoading: startupsLoading } = useQuery({
+    queryKey: ['startups-landing'],
+    queryFn: () => startupsApi.list({ limit: 8, sort: 'featured' }),
+    staleTime: 60_000,
+  });
+
+  // Real, jonli statistika — soxta raqamlar o'rniga (har biri yengil count so'rovi)
+  const { data: solutionsCount } = useQuery({
+    queryKey: ['stat-solutions'],
+    queryFn: () => solutionsApi.list({ limit: 1 }),
+    staleTime: 60_000,
+  });
+  const { data: resolvedCount } = useQuery({
+    queryKey: ['stat-resolved'],
+    queryFn: () => problemsApi.list({ limit: 1, status: 'resolved' }),
+    staleTime: 60_000,
+  });
+
+  const fmt = (n?: number) => (n === undefined ? '—' : n.toLocaleString('uz'));
+  const stats = [
+    { icon: Rocket,       label: 'Startaplar', value: fmt(featuredStartups?.meta.total), color: 'text-accent-600' },
+    { icon: FileQuestion, label: 'Muammolar',  value: fmt(recentProblems?.meta.total),   color: 'text-amber-600' },
+    { icon: Lightbulb,    label: 'Yechimlar',  value: fmt(solutionsCount?.meta.total),    color: 'text-brand-700' },
+    { icon: TrendingUp,   label: 'Hal qilingan', value: fmt(resolvedCount?.meta.total),   color: 'text-violet-600' },
+  ];
+
   return (
     <div className="space-y-20 animate-fade-in">
       {/* ── Hero ─────────────────────────────────────────── */}
@@ -68,7 +88,7 @@ export default function LandingPage() {
 
           <p className="text-lg text-slate-600 max-w-xl mx-auto leading-relaxed">
             StartupHub — maktab o&apos;quvchilari, talabalar va barcha insonlar uchun
-            muammo va yechimlarni ulash platformasi.
+            muammolarni yechimga, yechimlarni esa real startaplarga aylantirish platformasi.
           </p>
 
           <div className="flex flex-col sm:flex-row items-center justify-center gap-3 pt-2">
@@ -105,13 +125,56 @@ export default function LandingPage() {
 
       {/* ── Stats ────────────────────────────────────────── */}
       <section className="grid grid-cols-2 md:grid-cols-4 gap-4">
-        {STATS.map(({ icon: Icon, label, value, color }) => (
+        {stats.map(({ icon: Icon, label, value, color }) => (
           <div key={label} className="bg-white border border-slate-200 rounded-2xl p-5 text-center hover:shadow-card-hover transition-all">
             <Icon className={cn('h-6 w-6 mx-auto mb-3', color)} />
             <p className="text-2xl font-black text-brand-900">{value}</p>
             <p className="text-xs text-slate-500 mt-1">{label}</p>
           </div>
         ))}
+      </section>
+
+      {/* ── Featured startups ────────────────────────────── */}
+      <section className="space-y-6">
+        <div className="flex items-end justify-between gap-3">
+          <div>
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-accent-50 border border-accent-200 mb-2">
+              <Rocket className="h-3.5 w-3.5 text-accent-600" />
+              <span className="text-xs font-semibold text-accent-700">Vitrina</span>
+            </div>
+            <h2 className="text-2xl md:text-3xl font-bold text-brand-900">Yaratilgan startaplar</h2>
+            <p className="text-sm text-slate-500 mt-0.5">
+              Hamjamiyat ishlab chiqqan ilovalar, saytlar va botlar
+            </p>
+          </div>
+          <Link href="/startups">
+            <Button variant="outline" size="sm">
+              Barchasi <ChevronRight className="h-4 w-4" />
+            </Button>
+          </Link>
+        </div>
+
+        {startupsLoading ? (
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+            {Array.from({ length: 4 }).map((_, i) => <StartupCardSkeleton key={i} />)}
+          </div>
+        ) : featuredStartups && featuredStartups.data.length > 0 ? (
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+            {featuredStartups.data.map((s) => (
+              <StartupCard key={s.id} startup={s} />
+            ))}
+          </div>
+        ) : (
+          <div className="rounded-2xl border border-dashed border-slate-200 bg-surface-soft py-14 text-center">
+            <div className="h-14 w-14 rounded-2xl bg-white border border-slate-200 flex items-center justify-center mx-auto mb-3">
+              <Rocket className="h-7 w-7 text-slate-400" />
+            </div>
+            <p className="text-brand-900 font-semibold">Tez orada birinchi startaplar</p>
+            <p className="text-sm text-slate-500 mt-1">
+              Hamjamiyat mahsulotlari shu yerda namoyish etiladi
+            </p>
+          </div>
+        )}
       </section>
 
       {/* ── How it works ─────────────────────────────────── */}

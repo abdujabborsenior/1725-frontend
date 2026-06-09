@@ -8,7 +8,13 @@ const PUBLIC_PATHS = [
   '/forgot-password',
   '/reset-password',
 ];
-const PROTECTED_PATHS = ['/problems/create', '/profile'];
+const PROTECTED_PATHS = [
+  '/problems/create',
+  '/profile',
+  '/admin',
+  '/notifications',
+  '/settings',
+];
 
 export function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
@@ -19,12 +25,7 @@ export function middleware(request: NextRequest) {
 
   // Kirgan foydalanuvchi auth sahifalariga kirmasin
   if (isPublic && token) {
-    return NextResponse.redirect(new URL('/problems', request.url));
-  }
-
-  // Kirgan foydalanuvchi landing sahifaga kirsa /problems ga yo'naltir
-  if (pathname === '/' && token) {
-    return NextResponse.redirect(new URL('/problems', request.url));
+    return NextResponse.redirect(new URL('/', request.url));
   }
 
   // Himoyalangan sahifalar uchun token majburiy

@@ -1,0 +1,162 @@
+'use client';
+
+import { useState } from 'react';
+import { useRouter } from 'next/navigation';
+import { Heart, Bookmark } from 'lucide-react';
+import { startupsApi, getErrorMessage } from '@/lib/api';
+import { useAuthStore } from '@/store/auth.store';
+import { cn } from '@/lib/utils';
+import type { Startup } from '@/types';
+import toast from 'react-hot-toast';
+
+type Variant = 'card' | 'detail';
+
+function useAuthGuard() {
+  const { token } = useAuthStore();
+  const router = useRouter();
+  return () => {
+    if (!token) {
+      toast.error('Buning uchun tizimga kiring');
+      router.push('/login');
+      return false;
+    }
+    return true;
+  };
+}
+
+export function LikeButton({
+  startup,
+  variant = 'detail',
+  onChange,
+}: {
+  startup: Startup;
+  variant?: Variant;
+  onChange?: (liked: boolean, count: number) => void;
+}) {
+  const guard = useAuthGuard();
+  const [liked, setLiked] = useState(!!startup.likedByMe);
+  const [count, setCount] = useState(startup.likeCount ?? 0);
+  const [busy, setBusy] = useState(false);
+
+  async function toggle(e: React.MouseEvent) {
+    e.preventDefault();
+    e.stopPropagation();
+    if (busy || !guard()) return;
+
+    // optimistik
+    const next = !liked;
+    setLiked(next);
+    setCount((c) => Math.max(0, c + (next ? 1 : -1)));
+    setBusy(true);
+    try {
+      const res = await startupsApi.toggleLike(startup.id);
+      setLiked(res.liked);
+      setCount(res.likeCount);
+      onChange?.(res.liked, res.likeCount);
+    } catch (err) {
+      setLiked(!next);
+      setCount((c) => Math.max(0, c + (next ? -1 : 1)));
+      toast.error(getErrorMessage(err));
+    } finally {
+      setBusy(false);
+    }
+  }
+
+  if (variant === 'card') {
+    return (
+      <button
+        onClick={toggle}
+        aria-label="Yoqtirish"
+        className={cn(
+          'inline-flex items-center gap-1 text-[11px] font-medium transition-colors',
+          liked ? 'text-rose-600' : 'text-slate-400 hover:text-rose-500',
+        )}
+      >
+        <Heart className={cn('h-3.5 w-3.5', liked && 'fill-rose-500 text-rose-500')} />
+        {count}
+      </button>
+    );
+  }
+
+  return (
+    <button
+      onClick={toggle}
+      disabled={busy}
+      className={cn(
+        'inline-flex items-center gap-2 h-11 px-4 rounded-xl border font-semibold transition-all btn-lift',
+        liked
+          ? 'bg-rose-50 border-rose-200 text-rose-600'
+          : 'bg-white border-slate-200 text-slate-600 hover:border-rose-200 hover:text-rose-600',
+      )}
+    >
+      <Heart className={cn('h-4 w-4', liked && 'fill-rose-500 text-rose-500')} />
+      {count}
+    </button>
+  );
+}
+
+export function BookmarkButton({
+  startup,
+  variant = 'detail',
+  onChange,
+}: {
+  startup: Startup;
+  variant?: Variant;
+  onChange?: (bookmarked: boolean) => void;
+}) {
+  const guard = useAuthGuard();
+  const [saved, setSaved] = useState(!!startup.bookmarkedByMe);
+  const [busy, setBusy] = useState(false);
+
+  async function toggle(e: React.MouseEvent) {
+    e.preventDefault();
+    e.stopPropagation();
+    if (busy || !guard()) return;
+
+    const next = !saved;
+    setSaved(next);
+    setBusy(true);
+    try {
+      const res = await startupsApi.toggleBookmark(startup.id);
+      setSaved(res.bookmarked);
+      onChange?.(res.bookmarked);
+      toast.success(res.bookmarked ? 'Saqlandi' : 'Saqlanganlardan olib tashlandi');
+    } catch (err) {
+      setSaved(!next);
+      toast.error(getErrorMessage(err));
+    } finally {
+      setBusy(false);
+    }
+  }
+
+  if (variant === 'card') {
+    return (
+      <button
+        onClick={toggle}
+        aria-label="Saqlash"
+        className={cn(
+          'h-8 w-8 flex items-center justify-center rounded-lg bg-white/90 backdrop-blur border border-slate-200 transition-colors',
+          saved ? 'text-accent-600' : 'text-slate-400 hover:text-accent-600',
+        )}
+      >
+        <Bookmark className={cn('h-4 w-4', saved && 'fill-accent-500 text-accent-500')} />
+      </button>
+    );
+  }
+
+  return (
+    <button
+      onClick={toggle}
+      disabled={busy}
+      aria-label="Saqlash"
+      className={cn(
+        'inline-flex items-center justify-center h-11 w-11 rounded-xl border transition-all btn-lift',
+        saved
+          ? 'bg-accent-50 border-accent-200 text-accent-600'
+          : 'bg-white border-slate-200 text-slate-600 hover:border-accent-200 hover:text-accent-600',
+      )}
+    >
+      <Bookmark className={cn('h-4 w-4', saved && 'fill-accent-500 text-accent-500')} />
+    </button>
+  );
+}
