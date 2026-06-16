@@ -13,7 +13,7 @@ import { cn } from '@/lib/utils';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Button } from '@/components/ui/button';
-import { ImageUpload, GalleryUpload } from '@/components/ui/image-upload';
+import { ImageUpload, GalleryUpload, VideoUpload } from '@/components/ui/image-upload';
 import { PlatformIcon } from '@/components/startups/platform';
 import toast from 'react-hot-toast';
 
@@ -34,6 +34,7 @@ interface FormState {
   foundedYear: string;
   coverUrl: string | null;
   logoUrl: string | null;
+  videoUrl: string | null;
   screenshots: string[];
   tags: string[];
   platforms: PlatformRow[];
@@ -51,6 +52,7 @@ function initState(initial?: Startup): FormState {
     foundedYear: initial?.foundedYear ? String(initial.foundedYear) : '',
     coverUrl: initial?.coverUrl ?? null,
     logoUrl: initial?.logoUrl ?? null,
+    videoUrl: initial?.videoUrl ?? null,
     screenshots: initial?.screenshots ?? [],
     tags: initial?.tags ?? [],
     platforms:
@@ -173,6 +175,7 @@ export function StartupForm({
       foundedYear: form.foundedYear ? Number(form.foundedYear) : null,
       coverUrl: form.coverUrl,
       logoUrl: form.logoUrl,
+      videoUrl: form.videoUrl,
       screenshots: form.screenshots,
       tags: form.tags,
       platforms: form.platforms.map((p) => ({
@@ -423,6 +426,10 @@ export function StartupForm({
               hint="Kartochka va detal sahifa banneri"
               value={form.coverUrl}
               onChange={(url) => set('coverUrl', url)}
+            />
+            <VideoUpload
+              value={form.videoUrl}
+              onChange={(url) => set('videoUrl', url)}
             />
           </div>
 

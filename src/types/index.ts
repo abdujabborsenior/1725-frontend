@@ -4,9 +4,13 @@ export type UserRole =
 export type ProblemStatus =
   | 'pending' | 'open' | 'under_review' | 'resolved' | 'rejected';
 
+export type ProblemSort = 'newest' | 'popular' | 'most_viewed';
+
 export type SolutionStatus = 'pending' | 'accepted' | 'rejected';
 
 export type StartupStatus = 'draft' | 'published' | 'archived';
+
+export type StartupVisibility = 'public' | 'private';
 
 export type PlatformType =
   | 'android' | 'ios' | 'website' | 'telegram_bot' | 'other';
@@ -43,15 +47,26 @@ export interface PaginatedResponse<T> {
 }
 
 /* ── Entities ─────────────────────────────────────────────────── */
-export type PublicAuthor = Pick<User, 'id' | 'fullName' | 'role'>;
+export type PublicAuthor = Pick<User, 'id' | 'fullName' | 'role'> & {
+  username?: string | null;
+  avatarUrl?: string | null;
+};
 
 export interface User {
   id: string;
+  username: string | null;
   fullName: string;
   email: string;
   role: UserRole;
   isEmailVerified: boolean;
   isActive: boolean;
+  headline: string | null;
+  bio: string | null;
+  avatarUrl: string | null;
+  coverUrl: string | null;
+  links: string[];
+  followerCount: number;
+  followingCount: number;
   age: number | null;
   region: string | null;
   district: string | null;
@@ -60,6 +75,111 @@ export interface User {
   university: string | null;
   course: number | null;
   createdAt: string;
+}
+
+/* ── Social: profil, qidiruv, follow ──────────────────────────── */
+export interface PublicUserCard {
+  id: string;
+  username: string | null;
+  fullName: string;
+  headline: string | null;
+  avatarUrl: string | null;
+  role: UserRole;
+  followerCount: number;
+  isFollowedByMe: boolean;
+}
+
+export interface PublicProfile {
+  id: string;
+  username: string | null;
+  fullName: string;
+  role: UserRole;
+  headline: string | null;
+  bio: string | null;
+  avatarUrl: string | null;
+  coverUrl: string | null;
+  links: string[];
+  region: string | null;
+  followerCount: number;
+  followingCount: number;
+  lastSeenAt: string | null;
+  createdAt: string;
+  isMe: boolean;
+  isFollowing: boolean;
+  isFollowedBy: boolean;
+}
+
+/* ── Chat ─────────────────────────────────────────────────────── */
+export type ConversationType = 'direct' | 'group';
+export type MessageType =
+  | 'text' | 'image' | 'video' | 'voice' | 'round_video' | 'file' | 'system';
+
+export interface ChatUserMini {
+  id: string;
+  username: string | null;
+  fullName: string;
+  avatarUrl: string | null;
+  lastSeenAt?: string | null;
+}
+
+export interface MessageAttachment {
+  url: string;
+  type: MessageType;
+  mimeType: string;
+  size: number;
+  name?: string | null;
+  durationSec?: number | null;
+  width?: number | null;
+  height?: number | null;
+  waveform?: number[] | null;
+}
+
+export interface ChatMessage {
+  id: string;
+  conversationId: string;
+  type: MessageType;
+  content: string | null;
+  attachments: MessageAttachment[];
+  createdAt: string;
+  editedAt: string | null;
+  isDeleted: boolean;
+  sender: ChatUserMini | null;
+  replyTo: {
+    id: string;
+    type: MessageType;
+    content: string | null;
+    senderName: string | null;
+  } | null;
+  clientId?: string;
+  /** Optimistik UI uchun mahalliy holat */
+  pending?: boolean;
+}
+
+export interface Conversation {
+  id: string;
+  type: ConversationType;
+  title: string | null;
+  avatarUrl: string | null;
+  slug: string | null;
+  isPublic: boolean;
+  description: string | null;
+  participantCount: number;
+  lastMessagePreview: string | null;
+  lastMessageAt: string | null;
+  unreadCount: number;
+  myRole: string | null;
+  otherUser: ChatUserMini | null;
+}
+
+export interface PublicGroup {
+  id: string;
+  title: string | null;
+  slug: string | null;
+  avatarUrl: string | null;
+  description: string | null;
+  participantCount: number;
+  lastMessagePreview: string | null;
+  lastMessageAt: string | null;
 }
 
 export interface Comment {
@@ -100,12 +220,54 @@ export interface Problem {
   analyzerId: string | null;
   analyzerNote: string | null;
   viewCount: number;
+  likeCount: number;
+  likedByMe?: boolean;
   submittedBy: PublicAuthor | null;
   analyzer?: PublicAuthor | null;
   comments?: Comment[];
   solutions?: Solution[];
   createdAt: string;
   updatedAt: string;
+}
+
+/* ── Polls (startaplar ovoz berish) ───────────────────────────── */
+export type PollStatus = 'active' | 'closed';
+
+export interface PollStartup {
+  id: string;
+  slug: string;
+  title: string;
+  tagline: string | null;
+  description: string;
+  logoUrl: string | null;
+  coverUrl: string | null;
+  videoUrl: string | null;
+  category: string | null;
+  tags: string[];
+  platforms: StartupPlatform[];
+  ratingAvg: number;
+  ratingCount: number;
+  viewCount: number;
+}
+
+export interface PollOption {
+  id: string;
+  voteCount: number;
+  percent: number;
+  startup: PollStartup | null;
+}
+
+export interface Poll {
+  id: string;
+  question: string;
+  description: string | null;
+  status: PollStatus;
+  isClosed: boolean;
+  endsAt: string | null;
+  totalVotes: number;
+  createdAt: string;
+  myVotedOptionId: string | null;
+  options: PollOption[];
 }
 
 /* ── Startups ─────────────────────────────────────────────────── */
@@ -124,11 +286,13 @@ export interface Startup {
   description: string;
   coverUrl: string | null;
   logoUrl: string | null;
+  videoUrl: string | null;
   screenshots: string[];
   category: string | null;
   tags: string[];
   platforms: StartupPlatform[];
   status: StartupStatus;
+  visibility: StartupVisibility;
   isFeatured: boolean;
   sortOrder: number;
   viewCount: number;
@@ -225,6 +389,7 @@ export interface AuthState {
   hydrate: () => void;
   setAuth: (token: string, refreshToken: string, user: User) => void;
   setTokens: (token: string, refreshToken: string) => void;
+  setUser: (user: User) => void;
   setPendingEmail: (email: string) => void;
   clearAuth: () => void;
 }

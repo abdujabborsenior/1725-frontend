@@ -11,6 +11,8 @@ import { useAuthStore } from '@/store/auth.store';
 import { Button } from '@/components/ui/button';
 import { StartupStatusBadge } from '@/components/ui/badge';
 import { GrowthChart } from '@/components/admin/growth-chart';
+import { Avatar } from '@/components/ui/avatar';
+import { ROLE_LABEL } from '@/lib/constants';
 import { cn } from '@/lib/utils';
 
 function StatCard({
@@ -133,6 +135,52 @@ export default function AdminDashboard() {
               { label: 'Yechimlar', color: '#10b981', points: growth.solutionGrowth },
             ]}
           />
+        </div>
+      )}
+
+      {/* Recent users + recent problems (superadmin) */}
+      {isSuperadmin && stats && (
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+          <div className="bg-white border border-slate-200 rounded-2xl overflow-hidden">
+            <div className="flex items-center justify-between px-5 py-4 border-b border-slate-100">
+              <h2 className="font-bold text-brand-900">So&apos;nggi foydalanuvchilar</h2>
+              <Link href="/admin/users" className="text-xs font-semibold text-accent-700 hover:underline flex items-center gap-1">
+                Barchasi <ArrowRight className="h-3 w-3" />
+              </Link>
+            </div>
+            <div className="divide-y divide-slate-100">
+              {stats.recentActivity.recentUsers.slice(0, 5).map((u) => (
+                <div key={u.id} className="flex items-center gap-3 px-5 py-3">
+                  <Avatar name={u.fullName} size={36} />
+                  <div className="flex-1 min-w-0">
+                    <p className="text-sm font-semibold text-brand-900 truncate">{u.fullName}</p>
+                    <p className="text-xs text-slate-400 truncate">{u.email}</p>
+                  </div>
+                  <span className="text-[11px] text-slate-400">{ROLE_LABEL[u.role as keyof typeof ROLE_LABEL] ?? u.role}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          <div className="bg-white border border-slate-200 rounded-2xl overflow-hidden">
+            <div className="flex items-center justify-between px-5 py-4 border-b border-slate-100">
+              <h2 className="font-bold text-brand-900">So&apos;nggi muammolar</h2>
+              <Link href="/admin/problems" className="text-xs font-semibold text-accent-700 hover:underline flex items-center gap-1">
+                Barchasi <ArrowRight className="h-3 w-3" />
+              </Link>
+            </div>
+            <div className="divide-y divide-slate-100">
+              {stats.recentActivity.recentProblems.slice(0, 5).map((p) => (
+                <div key={p.id} className="flex items-center gap-3 px-5 py-3">
+                  <span className="h-9 w-9 rounded-lg bg-amber-50 border border-amber-100 flex items-center justify-center shrink-0">
+                    <FileQuestion className="h-4 w-4 text-amber-500" />
+                  </span>
+                  <p className="flex-1 min-w-0 text-sm font-medium text-brand-900 truncate">{p.title}</p>
+                  <span className="text-[11px] text-slate-400 shrink-0">{p.status}</span>
+                </div>
+              ))}
+            </div>
+          </div>
         </div>
       )}
 

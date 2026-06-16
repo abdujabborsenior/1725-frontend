@@ -5,7 +5,7 @@ import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import {
   LayoutDashboard, Rocket, ArrowLeft, Menu, Shield, LogOut,
-  Users, FileQuestion, Lightbulb, Star,
+  Users, FileQuestion, Lightbulb, Star, MessageCircle,
 } from 'lucide-react';
 import { useAuthStore } from '@/store/auth.store';
 import { authApi } from '@/lib/api';
@@ -22,6 +22,7 @@ const NAV = [
   { href: '/admin/problems', label: 'Muammolar', icon: FileQuestion, exact: false, superadminOnly: false },
   { href: '/admin/solutions', label: 'Yechimlar', icon: Lightbulb, exact: false, superadminOnly: false },
   { href: '/admin/users', label: 'Foydalanuvchilar', icon: Users, exact: false, superadminOnly: true },
+  { href: '/admin/groups', label: 'Guruhlar', icon: MessageCircle, exact: false, superadminOnly: true },
 ];
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {

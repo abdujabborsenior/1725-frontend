@@ -11,6 +11,7 @@ import { cn } from '@/lib/utils';
 import { StarRating, RatingInput } from './rating';
 import { Button } from '@/components/ui/button';
 import { Pagination } from '@/components/ui/pagination';
+import { AuthorLink } from '@/components/social/author-link';
 import { formatDistanceToNow } from 'date-fns';
 import toast from 'react-hot-toast';
 import type { Startup } from '@/types';
@@ -147,20 +148,11 @@ export function Reviews({ startup }: { startup: Startup }) {
           {items.map((r) => (
             <div key={r.id} className="bg-white border border-slate-200 rounded-2xl p-4">
               <div className="flex items-center justify-between gap-3">
-                <div className="flex items-center gap-2.5">
-                  <div className="h-9 w-9 rounded-full bg-brand-900 flex items-center justify-center text-xs font-bold text-accent-400">
-                    {r.user?.fullName?.charAt(0).toUpperCase() ?? 'U'}
-                  </div>
-                  <div>
-                    <p className="text-sm font-semibold text-brand-900">
-                      {r.user?.fullName ?? 'Foydalanuvchi'}
-                    </p>
-                    <p className="text-[11px] text-slate-400">
-                      {r.user ? ROLE_LABEL[r.user.role] : ''} ·{' '}
-                      {formatDistanceToNow(new Date(r.createdAt), { addSuffix: true })}
-                    </p>
-                  </div>
-                </div>
+                <AuthorLink
+                  author={r.user}
+                  size={36}
+                  subtitle={`${r.user ? ROLE_LABEL[r.user.role] : ''} · ${formatDistanceToNow(new Date(r.createdAt), { addSuffix: true })}`}
+                />
                 <StarRating value={r.rating} size={14} />
               </div>
               {r.comment && (

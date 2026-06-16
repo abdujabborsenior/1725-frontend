@@ -1,6 +1,7 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import Link from 'next/link';
 import { useParams, useRouter } from 'next/navigation';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import {
@@ -14,6 +15,10 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { ProblemStatusBadge } from '@/components/ui/badge';
+import { Avatar } from '@/components/ui/avatar';
+import { ProblemLikeButton } from '@/components/problems/like-button';
+import { ProblemShareModal } from '@/components/problems/share-modal';
+import { Share2 } from 'lucide-react';
 import { formatDistanceToNow } from 'date-fns';
 import toast from 'react-hot-toast';
 
@@ -39,14 +44,20 @@ function CommentItem({
 
   return (
     <div className="flex gap-3 group">
-      <div className="h-8 w-8 rounded-lg bg-brand-50 border border-brand-200 flex items-center justify-center text-xs font-bold text-brand-900 flex-shrink-0 mt-0.5">
-        {comment.author?.fullName?.charAt(0).toUpperCase() ?? 'U'}
+      <div className="mt-0.5 flex-shrink-0">
+        <Avatar src={comment.author?.avatarUrl} name={comment.author?.fullName ?? 'U'} size={32} />
       </div>
       <div className="flex-1 min-w-0">
         <div className="flex items-center gap-2 mb-1">
-          <span className="text-sm font-semibold text-brand-900">
-            {comment.author?.fullName ?? 'Foydalanuvchi'}
-          </span>
+          {comment.author?.username ? (
+            <Link href={`/u/${comment.author.username}`} className="text-sm font-semibold text-brand-900 hover:underline">
+              {comment.author.fullName}
+            </Link>
+          ) : (
+            <span className="text-sm font-semibold text-brand-900">
+              {comment.author?.fullName ?? 'Foydalanuvchi'}
+            </span>
+          )}
           <span className="text-[10px] text-slate-400">
             {formatDistanceToNow(new Date(comment.createdAt), { addSuffix: true })}
           </span>
@@ -242,13 +253,23 @@ function SolutionForm({
 export default function ProblemDetailPage() {
   const { id } = useParams<{ id: string }>();
   const router = useRouter();
-  const { token, user } = useAuthStore();
+  const { token, user, hasHydrated } = useAuthStore();
   const [showSolutionForm, setShowSolutionForm] = useState(false);
   const [activeTab, setActiveTab] = useState<'comments' | 'solutions'>('comments');
+  const [shareOpen, setShareOpen] = useState(false);
+
+  // Ulashilgan havola: kirmagan foydalanuvchini login → ro'yxatdan o'tgach
+  // aynan shu muammoga qaytaramiz (?next=).
+  useEffect(() => {
+    if (hasHydrated && !token) {
+      router.replace(`/login?next=${encodeURIComponent(`/problems/${id}`)}`);
+    }
+  }, [hasHydrated, token, id, router]);
 
   const { data: problem, isLoading } = useQuery({
     queryKey: ['problem', id],
     queryFn: () => problemsApi.findOne(id),
+    enabled: !!token,
   });
 
   const commentsEnabled =
@@ -332,26 +353,43 @@ export default function ProblemDetailPage() {
         )}
 
         {problem.videoUrls.length > 0 && (
-          <div className="mt-4 space-y-2">
+          <div className="mt-4 space-y-3">
             {problem.videoUrls.map((url, i) => (
-              <a key={i} href={url} target="_blank" rel="noopener noreferrer"
-                className="flex items-center gap-2 text-sm text-accent-700 hover:text-accent-800 transition-colors">
-                <Video className="h-4 w-4" /> Video {i + 1}
-              </a>
+              <video key={i} src={url} controls playsInline
+                className="w-full max-h-96 rounded-xl border border-slate-200 bg-black" />
             ))}
           </div>
         )}
 
-        {problem.submittedBy && (
-          <div className="flex items-center gap-2 mt-6 pt-5 border-t border-slate-200">
-            <div className="h-7 w-7 rounded-md bg-brand-50 border border-brand-200 flex items-center justify-center text-xs font-bold text-brand-900">
-              {problem.submittedBy.fullName.charAt(0).toUpperCase()}
+        {/* Like + Share + author */}
+        <div className="mt-6 flex flex-wrap items-center gap-3 border-t border-slate-200 pt-5">
+          <ProblemLikeButton
+            problemId={problem.id}
+            initialLiked={problem.likedByMe ?? false}
+            initialCount={problem.likeCount}
+          />
+          <button
+            onClick={() => setShareOpen(true)}
+            className="btn-lift inline-flex h-10 items-center gap-2 rounded-full border border-slate-200 bg-white px-4 text-sm font-semibold text-slate-600 transition-all hover:border-accent-300 hover:text-accent-700"
+          >
+            <Share2 className="h-4 w-4" /> Ulashish
+          </button>
+
+          {problem.submittedBy && (
+            <div className="ml-auto flex items-center gap-2.5">
+              <Avatar src={problem.submittedBy.avatarUrl} name={problem.submittedBy.fullName} size={32} />
+              <span className="text-sm text-slate-500">
+                {problem.submittedBy.username ? (
+                  <Link href={`/u/${problem.submittedBy.username}`} className="font-semibold text-brand-900 hover:underline">
+                    {problem.submittedBy.fullName}
+                  </Link>
+                ) : (
+                  <span className="font-semibold text-brand-900">{problem.submittedBy.fullName}</span>
+                )}{' '}tomonidan
+              </span>
             </div>
-            <span className="text-sm text-slate-500">
-              <span className="text-brand-900 font-semibold">{problem.submittedBy.fullName}</span> tomonidan
-            </span>
-          </div>
-        )}
+          )}
+        </div>
 
         {problem.analyzerNote && (
           <div className="mt-4 p-4 rounded-lg bg-accent-50 border border-accent-200">
@@ -442,12 +480,16 @@ export default function ProblemDetailPage() {
             ) : solutions.map((s: Solution) => (
               <div key={s.id} className="bg-white border border-accent-200 rounded-2xl p-5 shadow-card">
                 <div className="flex items-center justify-between mb-3">
-                  <div className="flex items-center gap-2">
-                    <div className="h-7 w-7 rounded-md bg-accent-50 border border-accent-200 flex items-center justify-center text-xs font-bold text-accent-700">
-                      {s.fullName.charAt(0).toUpperCase()}
-                    </div>
+                  <div className="flex items-center gap-2.5">
+                    <Avatar src={s.submittedBy?.avatarUrl} name={s.submittedBy?.fullName ?? s.fullName} size={32} />
                     <div>
-                      <p className="text-sm font-semibold text-brand-900">{s.fullName}</p>
+                      {s.submittedBy?.username ? (
+                        <Link href={`/u/${s.submittedBy.username}`} className="text-sm font-semibold text-brand-900 hover:underline">
+                          {s.submittedBy?.fullName ?? s.fullName}
+                        </Link>
+                      ) : (
+                        <p className="text-sm font-semibold text-brand-900">{s.submittedBy?.fullName ?? s.fullName}</p>
+                      )}
                       <p className="text-[10px] text-slate-400">
                         {formatDistanceToNow(new Date(s.createdAt), { addSuffix: true })}
                       </p>
@@ -484,6 +526,13 @@ export default function ProblemDetailPage() {
           </div>
         )}
       </div>
+
+      <ProblemShareModal
+        open={shareOpen}
+        onClose={() => setShareOpen(false)}
+        problemId={problem.id}
+        problemTitle={problem.title}
+      />
     </div>
   );
 }

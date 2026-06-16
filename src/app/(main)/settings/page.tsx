@@ -3,18 +3,23 @@
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useQuery } from '@tanstack/react-query';
-import { ArrowLeft, Save, KeyRound, Loader2, User as UserIcon } from 'lucide-react';
-import { usersApi, getErrorMessage } from '@/lib/api';
+import {
+  ArrowLeft, Save, KeyRound, Loader2, User as UserIcon, AtSign, Check, X, IdCard,
+} from 'lucide-react';
+import { usersApi, chatApi, getErrorMessage } from '@/lib/api';
 import { useAuthStore } from '@/store/auth.store';
+import { useDebounce } from '@/lib/use-debounce';
 import { UZ_REGIONS, SCHOOL_GRADES, UNIVERSITY_COURSES } from '@/lib/constants';
 import { Input } from '@/components/ui/input';
 import { Select } from '@/components/ui/select';
 import { Button } from '@/components/ui/button';
+import { Textarea } from '@/components/ui/textarea';
+import { ImageUpload } from '@/components/ui/image-upload';
 import toast from 'react-hot-toast';
 
 export default function SettingsPage() {
   const router = useRouter();
-  const { user, token, refreshToken, hasHydrated, setAuth } = useAuthStore();
+  const { user, token, refreshToken, hasHydrated, setAuth, setUser } = useAuthStore();
 
   useEffect(() => {
     if (hasHydrated && !token) router.replace('/login');
@@ -48,6 +53,33 @@ export default function SettingsPage() {
     }
   }, [me]);
 
+  // Public profile form
+  const [pub, setPub] = useState({
+    username: '', headline: '', bio: '', avatarUrl: '' as string | null, coverUrl: '' as string | null,
+  });
+  const [savingPub, setSavingPub] = useState(false);
+
+  useEffect(() => {
+    if (me) {
+      setPub({
+        username: me.username ?? '',
+        headline: me.headline ?? '',
+        bio: me.bio ?? '',
+        avatarUrl: me.avatarUrl ?? null,
+        coverUrl: me.coverUrl ?? null,
+      });
+    }
+  }, [me]);
+
+  const debouncedUsername = useDebounce(pub.username, 400);
+  const usernameChanged = !!me && debouncedUsername.toLowerCase() !== (me.username ?? '');
+  const usernameValid = /^[a-zA-Z][a-zA-Z0-9_]{4,31}$/.test(debouncedUsername);
+  const { data: availability, isFetching: checkingUsername } = useQuery({
+    queryKey: ['username-available', debouncedUsername],
+    queryFn: () => usersApi.usernameAvailable(debouncedUsername),
+    enabled: usernameChanged && usernameValid,
+  });
+
   // Password form
   const [pw, setPw] = useState({ currentPassword: '', newPassword: '', confirm: '' });
   const [savingPw, setSavingPw] = useState(false);
@@ -78,6 +110,32 @@ export default function SettingsPage() {
       toast.error(getErrorMessage(err));
     } finally {
       setSavingProfile(false);
+    }
+  }
+
+  async function savePublicProfile() {
+    if (!me) return;
+    if (usernameChanged) {
+      if (!usernameValid) return toast.error('username 5–32 belgi, harf bilan boshlanishi kerak');
+      if (availability && !availability.available) return toast.error('Bu username band');
+    }
+    setSavingPub(true);
+    try {
+      if (usernameChanged && usernameValid) {
+        await usersApi.setUsername(pub.username.trim());
+      }
+      const updated = await usersApi.updateProfile({
+        headline: pub.headline.trim(),
+        bio: pub.bio.trim(),
+        avatarUrl: pub.avatarUrl ?? undefined,
+        coverUrl: pub.coverUrl ?? undefined,
+      });
+      setUser(updated);
+      toast.success('Ommaviy profil yangilandi');
+    } catch (err) {
+      toast.error(getErrorMessage(err));
+    } finally {
+      setSavingPub(false);
     }
   }
 
@@ -118,10 +176,89 @@ export default function SettingsPage() {
 
       <h1 className="text-2xl font-bold text-brand-900">Sozlamalar</h1>
 
+      {/* Public profile */}
+      <div className="bg-white border border-slate-200 rounded-2xl p-6 space-y-5">
+        <div className="flex items-center justify-between">
+          <h2 className="text-sm font-bold text-slate-500 uppercase tracking-wider flex items-center gap-2">
+            <IdCard className="h-4 w-4" /> Ommaviy profil
+          </h2>
+          {me.username && (
+            <button
+              onClick={() => router.push(`/u/${me.username}`)}
+              className="text-xs font-semibold text-iris-700 hover:underline"
+            >
+              Profilni ko&apos;rish →
+            </button>
+          )}
+        </div>
+
+        <ImageUpload
+          label="Muqova rasmi"
+          aspect="wide"
+          value={pub.coverUrl}
+          uploader={chatApi.upload}
+          onChange={(url) => setPub((p) => ({ ...p, coverUrl: url }))}
+        />
+
+        <div className="flex items-end gap-4">
+          <ImageUpload
+            label="Avatar"
+            aspect="logo"
+            rounded
+            value={pub.avatarUrl}
+            uploader={chatApi.upload}
+            onChange={(url) => setPub((p) => ({ ...p, avatarUrl: url }))}
+            className="w-[120px]"
+          />
+          <div className="flex-1">
+            <Input
+              label="Username"
+              icon={<AtSign className="h-4 w-4" />}
+              placeholder="username"
+              value={pub.username}
+              onChange={(e) => setPub((p) => ({ ...p, username: e.target.value.toLowerCase() }))}
+              rightIcon={
+                usernameChanged && usernameValid ? (
+                  checkingUsername ? (
+                    <Loader2 className="h-4 w-4 animate-spin text-slate-300" />
+                  ) : availability?.available ? (
+                    <Check className="h-4 w-4 text-accent-600" />
+                  ) : (
+                    <X className="h-4 w-4 text-rose-500" />
+                  )
+                ) : undefined
+              }
+              hint="5–32 belgi · harf bilan boshlanadi · a-z, 0-9, _"
+            />
+          </div>
+        </div>
+
+        <Input
+          label="Sarlavha (headline)"
+          placeholder="Masalan: Full-stack dasturchi · Founder"
+          maxLength={120}
+          value={pub.headline}
+          onChange={(e) => setPub((p) => ({ ...p, headline: e.target.value }))}
+        />
+
+        <Textarea
+          label="Men haqimda (bio)"
+          rows={3}
+          maxLength={300}
+          count={{ current: pub.bio.length, max: 300 }}
+          value={pub.bio}
+          onChange={(e) => setPub((p) => ({ ...p, bio: e.target.value }))}
+        />
+
+        <Button variant="accent" loading={savingPub} onClick={savePublicProfile}>
+          <Save className="h-4 w-4" /> Ommaviy profilni saqlash
+        </Button>
+      </div>
+
       {/* Profile */}
       <div className="bg-white border border-slate-200 rounded-2xl p-6 space-y-5">
         <h2 className="text-sm font-bold text-slate-500 uppercase tracking-wider flex items-center gap-2">
-          <UserIcon className="h-4 w-4" /> Profil ma&apos;lumotlari
+          <UserIcon className="h-4 w-4" /> Shaxsiy ma&apos;lumotlar
         </h2>
 
         <Input

@@ -107,25 +107,23 @@ export default function StartupDetailPage() {
           <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent" />
         </div>
 
-        <div className="px-5 md:px-8 pb-6">
-          <div className="flex flex-col sm:flex-row sm:items-end gap-4 -mt-12">
-            <div className="h-24 w-24 rounded-3xl bg-white border border-slate-200 shadow-card flex items-center justify-center overflow-hidden shrink-0">
-              {startup.logoUrl ? (
-                // eslint-disable-next-line @next/next/no-img-element
-                <img src={startup.logoUrl} alt={startup.title} className="h-full w-full object-cover" />
-              ) : (
-                <span className="text-3xl font-black text-brand-900">
-                  {startup.title.charAt(0).toUpperCase()}
-                </span>
-              )}
-            </div>
-            <div className="flex-1 min-w-0 sm:pb-2">
-              <h1 className="text-2xl md:text-3xl font-black text-brand-900">{startup.title}</h1>
-              {startup.tagline && (
-                <p className="mt-1 text-sm text-slate-600">{startup.tagline}</p>
-              )}
-            </div>
+        <div className="relative z-10 px-5 md:px-8 pb-6">
+          {/* Logo — faqat shu element cover ustiga chiqadi */}
+          <div className="relative z-10 -mt-12 mb-3 inline-flex h-24 w-24 shrink-0 items-center justify-center overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-card">
+            {startup.logoUrl ? (
+              // eslint-disable-next-line @next/next/no-img-element
+              <img src={startup.logoUrl} alt={startup.title} className="h-full w-full object-cover" />
+            ) : (
+              <span className="text-3xl font-black text-brand-900">
+                {startup.title.charAt(0).toUpperCase()}
+              </span>
+            )}
           </div>
+          {/* Sarlavha + shior — oq maydonda, to'liq ko'rinadi */}
+          <h1 className="text-2xl md:text-3xl font-black text-brand-900">{startup.title}</h1>
+          {startup.tagline && (
+            <p className="mt-1 text-sm text-slate-600">{startup.tagline}</p>
+          )}
 
           {/* Meta row */}
           <div className="mt-5 flex flex-wrap items-center gap-4 text-xs text-slate-500">
@@ -187,6 +185,19 @@ export default function StartupDetailPage() {
           )}
         </div>
       </div>
+
+      {/* Promo video */}
+      {startup.videoUrl && (
+        <section className="space-y-3">
+          <h2 className="text-lg font-bold text-brand-900">Tanishtiruv video</h2>
+          <video
+            src={startup.videoUrl}
+            controls
+            playsInline
+            className="w-full max-h-[28rem] rounded-2xl border border-slate-200 bg-black"
+          />
+        </section>
+      )}
 
       {/* Screenshots */}
       {startup.screenshots.length > 0 && (

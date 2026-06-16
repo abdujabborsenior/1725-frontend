@@ -4,9 +4,10 @@ import { useEffect, useRef, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useQuery } from '@tanstack/react-query';
 import {
-  Search, Rocket, FileQuestion, Loader2, CornerDownLeft, ArrowRight,
+  Search, Rocket, FileQuestion, Loader2, CornerDownLeft, ArrowRight, Users,
 } from 'lucide-react';
-import { startupsApi, problemsApi } from '@/lib/api';
+import { startupsApi, problemsApi, usersApi } from '@/lib/api';
+import { Avatar } from '@/components/ui/avatar';
 import { useDebounce } from '@/lib/use-debounce';
 
 const QUICK_LINKS = [
@@ -69,16 +70,23 @@ export function SearchPalette() {
     queryFn: () => problemsApi.list({ search: debounced, limit: 5 }),
     enabled,
   });
+  const { data: users, isFetching: uFetching } = useQuery({
+    queryKey: ['search-users', debounced],
+    queryFn: () => usersApi.search(debounced, { limit: 5 }),
+    enabled,
+  });
 
   function go(href: string) {
     setOpen(false);
     router.push(href);
   }
 
+  const userResults = users?.data ?? [];
   const startupResults = startups?.data ?? [];
   const problemResults = problems?.data ?? [];
-  const fetching = sFetching || pFetching;
-  const hasResults = startupResults.length > 0 || problemResults.length > 0;
+  const fetching = sFetching || pFetching || uFetching;
+  const hasResults =
+    userResults.length > 0 || startupResults.length > 0 || problemResults.length > 0;
 
   if (!open) return null;
 
@@ -93,7 +101,7 @@ export function SearchPalette() {
                 ref={inputRef}
                 value={q}
                 onChange={(e) => setQ(e.target.value)}
-                placeholder="Startap yoki muammo qidiring..."
+                placeholder="Odam, startap yoki muammo qidiring..."
                 className="flex-1 h-14 bg-transparent text-sm text-brand-900 placeholder:text-slate-400 focus:outline-none"
               />
               {fetching && <Loader2 className="h-4 w-4 text-slate-300 animate-spin" />}
@@ -117,6 +125,24 @@ export function SearchPalette() {
                 <p className="py-10 text-center text-sm text-slate-400">Natija topilmadi</p>
               ) : (
                 <>
+                  {userResults.length > 0 && (
+                    <div className="mb-2">
+                      <p className="px-3 py-1 text-[11px] font-semibold uppercase tracking-wider text-slate-400">Odamlar</p>
+                      {userResults.map((u) => (
+                        <button key={u.id} onClick={() => go(u.username ? `/u/${u.username}` : `/u/${u.id}`)}
+                          className="flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-left transition-colors hover:bg-slate-50">
+                          <Avatar src={u.avatarUrl} name={u.fullName} size={32} />
+                          <span className="min-w-0 flex-1">
+                            <span className="block truncate text-sm font-medium text-brand-900">{u.fullName}</span>
+                            <span className="block truncate text-xs text-slate-400">
+                              {u.username ? `@${u.username}` : ''}{u.username && u.headline ? ' · ' : ''}{u.headline ?? ''}
+                            </span>
+                          </span>
+                          <Users className="h-3.5 w-3.5 shrink-0 text-slate-300" />
+                        </button>
+                      ))}
+                    </div>
+                  )}
                   {startupResults.length > 0 && (
                     <div className="mb-2">
                       <p className="text-[11px] font-semibold text-slate-400 uppercase tracking-wider px-3 py-1">Startaplar</p>

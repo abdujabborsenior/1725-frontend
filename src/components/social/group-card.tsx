@@ -1,0 +1,83 @@
+'use client';
+
+import { useState } from 'react';
+import { useRouter } from 'next/navigation';
+import { Users, ArrowRight, Loader2, Hash } from 'lucide-react';
+import { chatApi, getErrorMessage } from '@/lib/api';
+import { useAuthStore } from '@/store/auth.store';
+import { Avatar } from '@/components/ui/avatar';
+import { cn } from '@/lib/utils';
+import type { PublicGroup } from '@/types';
+import toast from 'react-hot-toast';
+
+export function GroupCard({ group, className }: { group: PublicGroup; className?: string }) {
+  const router = useRouter();
+  const { token } = useAuthStore();
+  const [loading, setLoading] = useState(false);
+
+  async function open() {
+    if (!token) {
+      router.push('/login');
+      return;
+    }
+    setLoading(true);
+    try {
+      const conv = await chatApi.joinGroup(group.slug ?? group.id);
+      router.push(`/messages/${conv.id}`);
+    } catch (err) {
+      toast.error(getErrorMessage(err));
+      setLoading(false);
+    }
+  }
+
+  return (
+    <div
+      className={cn(
+        'group flex h-full flex-col rounded-3xl border border-slate-200/80 bg-white p-5 shadow-soft transition-all hover:-translate-y-0.5 hover:border-iris-200 hover:shadow-card-hover',
+        className,
+      )}
+    >
+      <div className="flex items-center gap-3">
+        {group.avatarUrl ? (
+          <Avatar src={group.avatarUrl} name={group.title ?? 'G'} size={48} />
+        ) : (
+          <span className="flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-iris text-white">
+            <Hash className="h-5 w-5" />
+          </span>
+        )}
+        <div className="min-w-0 flex-1">
+          <h3 className="truncate text-sm font-bold text-brand-900">{group.title}</h3>
+          <p className="flex items-center gap-1 text-xs text-slate-500">
+            <Users className="h-3 w-3" /> {group.participantCount} a&apos;zo
+          </p>
+        </div>
+      </div>
+
+      {group.description && (
+        <p className="mt-3 line-clamp-2 text-xs leading-relaxed text-slate-600">
+          {group.description}
+        </p>
+      )}
+
+      {group.lastMessagePreview && (
+        <p className="mt-3 truncate rounded-xl bg-surface-soft px-3 py-2 text-xs text-slate-500">
+          {group.lastMessagePreview}
+        </p>
+      )}
+
+      <button
+        onClick={open}
+        disabled={loading}
+        className="btn-lift mt-4 inline-flex h-10 items-center justify-center gap-1.5 rounded-xl bg-brand-900 text-sm font-semibold text-white transition-colors hover:bg-brand-800"
+      >
+        {loading ? (
+          <Loader2 className="h-4 w-4 animate-spin" />
+        ) : (
+          <>
+            Qo&apos;shilish <ArrowRight className="h-4 w-4" />
+          </>
+        )}
+      </button>
+    </div>
+  );
+}

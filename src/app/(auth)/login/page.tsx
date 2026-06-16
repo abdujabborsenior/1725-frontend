@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useForm } from 'react-hook-form';
@@ -28,12 +28,24 @@ export default function LoginPage() {
   const { register, handleSubmit, formState: { errors, isSubmitting } } =
     useForm<FormData>({ resolver: zodResolver(schema) });
 
+  // Ulashilgan havoladan kelgan bo'lsa — qaytib boriladigan manzilni saqlaymiz
+  useEffect(() => {
+    const next = new URLSearchParams(window.location.search).get('next');
+    if (next && next.startsWith('/')) sessionStorage.setItem('sh_next', next);
+  }, []);
+
+  function redirectAfterAuth() {
+    const next = sessionStorage.getItem('sh_next');
+    sessionStorage.removeItem('sh_next');
+    router.push(next && next.startsWith('/') ? next : '/problems');
+  }
+
   async function onSubmit(data: FormData) {
     try {
       const payload = await authApi.login(data.email, data.password);
       setAuth(payload.accessToken, payload.refreshToken, payload.user);
       toast.success(`Xush kelibsiz, ${payload.user?.fullName ?? ''}!`);
-      router.push('/problems');
+      redirectAfterAuth();
     } catch (err: unknown) {
       const msg = getErrorMessage(err, "Email yoki parol noto'g'ri");
       if (msg.includes('tasdiql') || msg.toLowerCase().includes('verif')) {

@@ -5,10 +5,19 @@ import { QueryClientProvider } from '@tanstack/react-query';
 import { Toaster } from 'react-hot-toast';
 import { queryClient } from '@/lib/query-client';
 import { useAuthStore } from '@/store/auth.store';
+import { usersApi } from '@/lib/api';
 
 function AuthHydrator() {
   useEffect(() => {
-    useAuthStore.getState().hydrate();
+    const store = useAuthStore.getState();
+    store.hydrate();
+    // To'liq, yangilangan profil (avatar/username/sanoqlar) ni olib kelamiz
+    if (useAuthStore.getState().token) {
+      usersApi
+        .me()
+        .then((u) => useAuthStore.getState().setUser(u))
+        .catch(() => undefined);
+    }
   }, []);
   return null;
 }

@@ -7,17 +7,18 @@ import Link from 'next/link';
 import {
   User, Mail, MapPin, School, BookOpen, Lightbulb,
   FileQuestion, Eye, Clock, LogOut, Trash2,
-  ShieldCheck, Calendar, Bookmark, Settings,
+  ShieldCheck, Bookmark, Settings,
 } from 'lucide-react';
 import { profileApi, authApi, startupsApi, getErrorMessage } from '@/lib/api';
 import { useAuthStore } from '@/store/auth.store';
 import type { Solution } from '@/types';
 import { Button } from '@/components/ui/button';
 import { Modal } from '@/components/ui/modal';
+import { Avatar } from '@/components/ui/avatar';
 import { ProblemStatusBadge, SolutionStatusBadge } from '@/components/ui/badge';
 import { StartupCard } from '@/components/startups/startup-card';
 import { ROLE_LABEL, ROLE_BADGE } from '@/lib/constants';
-import { formatDistanceToNow, format } from 'date-fns';
+import { formatDistanceToNow } from 'date-fns';
 import toast from 'react-hot-toast';
 
 export default function ProfilePage() {
@@ -92,9 +93,7 @@ export default function ProfilePage() {
       {/* Profile card */}
       <div className="bg-white border border-slate-200 rounded-2xl p-6 md:p-8 shadow-card">
         <div className="flex items-start gap-5">
-          <div className="h-20 w-20 rounded-2xl bg-brand-900 flex items-center justify-center text-3xl font-black text-accent-400 flex-shrink-0">
-            {user.fullName.charAt(0).toUpperCase()}
-          </div>
+          <Avatar src={user.avatarUrl} name={user.fullName} size={80} />
           <div className="flex-1 min-w-0">
             <div className="flex items-center gap-3 flex-wrap">
               <h2 className="text-xl font-bold text-brand-900">{user.fullName}</h2>
@@ -107,13 +106,26 @@ export default function ProfilePage() {
                 </span>
               )}
             </div>
+            {user.username && <p className="text-sm text-slate-500">@{user.username}</p>}
+            {user.headline && <p className="text-sm font-medium text-brand-800 mt-1">{user.headline}</p>}
             <p className="text-sm text-slate-600 mt-1 flex items-center gap-1.5">
               <Mail className="h-3.5 w-3.5" /> {user.email}
             </p>
-            <p className="text-xs text-slate-400 mt-1 flex items-center gap-1.5">
-              <Calendar className="h-3 w-3" />
-              {format(new Date(user.createdAt), 'dd.MM.yyyy')} da ro&apos;yxatdan o&apos;tgan
-            </p>
+            {/* Follower / following */}
+            <div className="mt-2 flex items-center gap-5">
+              <span><span className="font-black text-brand-900">{(user.followerCount ?? 0).toLocaleString('uz')}</span> <span className="text-sm text-slate-500">obunachi</span></span>
+              <span><span className="font-black text-brand-900">{(user.followingCount ?? 0).toLocaleString('uz')}</span> <span className="text-sm text-slate-500">obuna</span></span>
+            </div>
+            {user.username && (
+              <Link href={`/u/${user.username}`} className="mt-2 inline-block text-xs font-semibold text-iris-700 hover:underline">
+                Ommaviy profilni ko&apos;rish →
+              </Link>
+            )}
+            {!user.username && (
+              <Link href="/settings" className="mt-2 inline-block text-xs font-semibold text-accent-700 hover:underline">
+                Username o&apos;rnating →
+              </Link>
+            )}
           </div>
         </div>
 
@@ -173,7 +185,7 @@ export default function ProfilePage() {
                       <p className="text-sm font-semibold text-brand-900 group-hover:text-accent-700 transition-colors truncate">
                         {p.title}
                       </p>
-                      <p className="text-xs text-slate-500 mt-0.5 line-clamp-1">{p.description}</p>
+                      <p className="text-xs text-slate-500 mt-0.5 truncate">{p.description}</p>
                     </div>
                     <div className="flex flex-col items-end gap-1.5 flex-shrink-0">
                       <ProblemStatusBadge status={p.status} className="px-2 py-0.5 text-[10px]" />

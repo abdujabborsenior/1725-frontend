@@ -14,6 +14,7 @@ const PROTECTED_PATHS = [
   '/admin',
   '/notifications',
   '/settings',
+  '/messages',
 ];
 
 export function middleware(request: NextRequest) {
@@ -28,9 +29,11 @@ export function middleware(request: NextRequest) {
     return NextResponse.redirect(new URL('/', request.url));
   }
 
-  // Himoyalangan sahifalar uchun token majburiy
+  // Himoyalangan sahifalar uchun token majburiy — qaytib kelish uchun ?next=
   if (isProtected && !token) {
-    return NextResponse.redirect(new URL('/login', request.url));
+    const loginUrl = new URL('/login', request.url);
+    loginUrl.searchParams.set('next', pathname + request.nextUrl.search);
+    return NextResponse.redirect(loginUrl);
   }
 
   return NextResponse.next();

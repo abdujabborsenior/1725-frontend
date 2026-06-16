@@ -10,6 +10,7 @@ import type { Problem, ProblemStatus } from '@/types';
 import { Button } from '@/components/ui/button';
 import { Pagination } from '@/components/ui/pagination';
 import { ProblemStatusBadge } from '@/components/ui/badge';
+import { ProblemLikeButton } from '@/components/problems/like-button';
 import { cn } from '@/lib/utils';
 import { useDebounce } from '@/lib/use-debounce';
 import { formatDistanceToNow } from 'date-fns';
@@ -52,20 +53,22 @@ function ProblemCard({ problem }: { problem: Problem }) {
           </div>
         )}
 
-        <div className="flex items-center justify-between text-xs text-slate-500 mt-auto">
-          <span className="flex items-center gap-1">
-            <Eye className="h-3.5 w-3.5" /> {problem.viewCount}
-          </span>
-          <div className="flex items-center gap-1.5">
-            {problem.submittedBy && (
-              <span className="text-slate-400 truncate max-w-[90px]">{problem.submittedBy.fullName}</span>
-            )}
-            <span className="text-slate-300">·</span>
+        <div className="flex items-center justify-between gap-2 text-xs text-slate-500 mt-auto">
+          <div className="flex items-center gap-2">
+            <ProblemLikeButton
+              problemId={problem.id}
+              initialLiked={problem.likedByMe ?? false}
+              initialCount={problem.likeCount}
+              size="sm"
+            />
             <span className="flex items-center gap-1">
-              <Clock className="h-3 w-3" />
-              {formatDistanceToNow(new Date(problem.createdAt), { addSuffix: true })}
+              <Eye className="h-3.5 w-3.5" /> {problem.viewCount}
             </span>
           </div>
+          <span className="flex items-center gap-1 shrink-0">
+            <Clock className="h-3 w-3" />
+            {formatDistanceToNow(new Date(problem.createdAt), { addSuffix: true })}
+          </span>
         </div>
       </article>
     </Link>

@@ -116,7 +116,7 @@ export default function AdminProblemsPage() {
                       {p.category && <span className="text-[11px] text-slate-400">{p.category}</span>}
                     </div>
                     <p className="text-sm font-semibold text-brand-900 truncate">{p.title}</p>
-                    <p className="text-xs text-slate-500 line-clamp-1 mt-0.5">{p.description}</p>
+                    <p className="text-xs text-slate-500 truncate mt-0.5">{p.description}</p>
                   </div>
                   <Link href={`/problems/${p.id}`} target="_blank"
                     className="h-8 w-8 flex items-center justify-center rounded-lg text-slate-400 hover:text-sky-600 hover:bg-sky-50 shrink-0">

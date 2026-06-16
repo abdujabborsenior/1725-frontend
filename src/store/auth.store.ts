@@ -11,7 +11,7 @@ function setCookie(name: string, value: string) {
 }
 
 function deleteCookie(name: string) {
-  document.cookie = `${name}=; path=/; max-age=0`;
+  document.cookie = `${name}=; path=/; max-age=0; expires=Thu, 01 Jan 1970 00:00:00 GMT; SameSite=Lax`;
 }
 
 /**
@@ -50,6 +50,11 @@ export const useAuthStore = create<AuthState>((set, get) => ({
     localStorage.setItem(STORAGE.refresh, refreshToken);
     setCookie(STORAGE.token, token);
     set({ token, refreshToken });
+  },
+
+  setUser: (user) => {
+    localStorage.setItem(STORAGE.user, JSON.stringify(user));
+    set({ user });
   },
 
   setPendingEmail: (email) => {

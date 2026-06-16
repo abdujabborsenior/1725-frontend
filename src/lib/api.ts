@@ -9,19 +9,26 @@ import type {
   ApiErrorBody,
   AppNotification,
   CategoryCount,
+  ChatMessage,
   Comment,
+  Conversation,
   LinkPreview,
   LoginResponse,
   PaginatedResponse,
   PlatformType,
+  Poll,
   Problem,
   ProblemStatus,
+  PublicGroup,
+  PublicProfile,
+  PublicUserCard,
   Solution,
   SolutionStatus,
   Startup,
   StartupReview,
   StartupSort,
   StartupStatus,
+  StartupVisibility,
   TokenRefreshResponse,
   UploadResult,
   User,
@@ -54,14 +61,31 @@ function persistTokens(accessToken: string, refreshToken: string) {
   document.cookie = `${STORAGE.token}=${accessToken}; path=/; max-age=${60 * 60 * 24 * 30}; SameSite=Lax`;
 }
 
+function clearAuthCookie() {
+  // Ishonchli o'chirish — max-age=0 + expires (o'tmish). path=/ bilan mos.
+  const past = 'Thu, 01 Jan 1970 00:00:00 GMT';
+  document.cookie = `${STORAGE.token}=; path=/; max-age=0; expires=${past}; SameSite=Lax`;
+}
+
+/** Sessiya o'lganda chiqarish — loop-guard bilan (5s ichida ko'pi bilan 1 navigatsiya). */
 function forceLogout() {
+  if (typeof window === 'undefined') return;
   localStorage.removeItem(STORAGE.token);
   localStorage.removeItem(STORAGE.refresh);
   localStorage.removeItem(STORAGE.user);
-  document.cookie = `${STORAGE.token}=; path=/; max-age=0`;
-  if (typeof window !== 'undefined' && !window.location.pathname.startsWith('/login')) {
-    window.location.href = '/login';
+  clearAuthCookie();
+
+  if (window.location.pathname.startsWith('/login')) return;
+
+  // Loop-breaker: oxirgi 5 soniyada chiqarilgan bo'lsa, qayta navigatsiya qilmaymiz.
+  try {
+    const last = Number(sessionStorage.getItem('sh_logout_at') ?? '0');
+    if (Date.now() - last < 5000) return;
+    sessionStorage.setItem('sh_logout_at', String(Date.now()));
+  } catch {
+    /* sessionStorage mavjud bo'lmasligi mumkin */
   }
+  window.location.replace('/login');
 }
 
 let refreshPromise: Promise<string> | null = null;
@@ -95,6 +119,9 @@ api.interceptors.response.use(
       url.includes('/auth/login') ||
       url.includes('/auth/refresh') ||
       url.includes('/auth/register');
+    // Ilova yuklanishidagi profil yangilash (best-effort) — muvaffaqiyatsiz
+    // bo'lsa ham majburiy chiqarish/reload qilinmaydi (loop oldini olish).
+    const isSilent = url.includes('/users/me');
 
     if (
       status === 401 &&
@@ -113,12 +140,12 @@ api.interceptors.response.use(
         original.headers.Authorization = `Bearer ${newToken}`;
         return api(original);
       } catch {
-        forceLogout();
+        if (!isSilent) forceLogout();
         return Promise.reject(error);
       }
     }
 
-    if (status === 401 && typeof window !== 'undefined' && !isAuthRoute) {
+    if (status === 401 && typeof window !== 'undefined' && !isAuthRoute && !isSilent) {
       forceLogout();
     }
 
@@ -185,6 +212,9 @@ export const problemsApi = {
     videoUrls?: string[];
   }) => unwrap<{ data: Problem; message: string }>(api.post('/problems', data)),
 
+  toggleLike: (id: string) =>
+    unwrap<{ liked: boolean; likeCount: number }>(api.post(`/problems/${id}/like`)),
+
   // Admin moderation
   approve: (id: string) =>
     unwrap<{ message: string }>(api.patch(`/problems/${id}/approve`)),
@@ -248,6 +278,7 @@ export interface StartupListParams {
   featured?: boolean;
   status?: StartupStatus;
   sort?: StartupSort;
+  userId?: string;
 }
 
 export interface StartupPayload {
@@ -256,11 +287,14 @@ export interface StartupPayload {
   description: string;
   coverUrl?: string | null;
   logoUrl?: string | null;
+  videoUrl?: string | null;
   screenshots?: string[];
   category?: string | null;
   tags?: string[];
   platforms?: { type: PlatformType; url: string; label?: string; iconUrl?: string }[];
   status?: StartupStatus;
+  visibility?: StartupVisibility;
+  allowedViewerIds?: string[];
   isFeatured?: boolean;
   sortOrder?: number;
   foundedYear?: number | null;
@@ -320,6 +354,39 @@ export const startupsApi = {
     unwrap<PaginatedResponse<StartupReview>>(api.get('/admin/reviews', { params })),
   adminDeleteReview: (id: string) =>
     unwrap<{ message: string }>(api.delete(`/admin/reviews/${id}`)),
+
+  // Private startup — ruxsat berilgan ko'ruvchilar (egasi/admin)
+  viewers: (id: string) =>
+    unwrap<(PublicUserCard & { addedAt: string })[]>(
+      api.get(`/startups/${id}/viewers`),
+    ),
+  addViewer: (id: string, userId: string) =>
+    unwrap<{ message: string }>(api.post(`/startups/${id}/viewers`, { userId })),
+  removeViewer: (id: string, userId: string) =>
+    unwrap<{ message: string }>(api.delete(`/startups/${id}/viewers/${userId}`)),
+};
+
+/* ── Polls (startaplar ovoz berish) ───────────────────────────── */
+export const pollsApi = {
+  list: () => unwrap<Poll[]>(api.get('/polls')),
+  get: (id: string) => unwrap<Poll>(api.get(`/polls/${id}`)),
+  vote: (id: string, optionId: string) =>
+    unwrap<Poll>(api.post(`/polls/${id}/vote`, { optionId })),
+
+  // Superadmin
+  create: (data: {
+    question: string;
+    description?: string;
+    startupIds: string[];
+    endsAt?: string;
+  }) => unwrap<Poll>(api.post('/polls', data)),
+  addOption: (id: string, startupId: string) =>
+    unwrap<Poll>(api.post(`/polls/${id}/options`, { startupId })),
+  removeOption: (id: string, optionId: string) =>
+    unwrap<Poll>(api.delete(`/polls/${id}/options/${optionId}`)),
+  update: (id: string, data: { question?: string; description?: string; status?: string; endsAt?: string }) =>
+    unwrap<Poll>(api.patch(`/polls/${id}`, data)),
+  remove: (id: string) => unwrap<{ message: string }>(api.delete(`/polls/${id}`)),
 };
 
 /* ── Uploads ──────────────────────────────────────────────────── */
@@ -411,10 +478,43 @@ export const usersApi = {
   // Self
   me: () => unwrap<User>(api.get('/users/me')),
   updateProfile: (data: Partial<Pick<User,
-    'fullName' | 'age' | 'region' | 'district' | 'school' | 'grade' | 'university' | 'course'
+    'fullName' | 'headline' | 'bio' | 'avatarUrl' | 'coverUrl' | 'links'
+    | 'age' | 'region' | 'district' | 'school' | 'grade' | 'university' | 'course'
   >>) => unwrap<User>(api.patch('/users/me', data)),
   changePassword: (data: { currentPassword: string; newPassword: string }) =>
     unwrap<{ message: string }>(api.patch('/users/me/change-password', data)),
+
+  // ── Social: qidiruv, profil, follow ──
+  search: (q: string, params?: { page?: number; limit?: number }) =>
+    unwrap<PaginatedResponse<PublicUserCard>>(
+      api.get('/users/search', { params: { q, ...params } }),
+    ),
+  suggestions: (limit = 8) =>
+    unwrap<PublicUserCard[]>(api.get('/users/suggestions', { params: { limit } })),
+  profile: (handle: string) =>
+    unwrap<PublicProfile>(api.get(`/users/profile/${handle}`)),
+  setUsername: (username: string) =>
+    unwrap<User>(api.patch('/users/me/username', { username })),
+  usernameAvailable: (username: string) =>
+    unwrap<{ available: boolean; username: string }>(
+      api.get('/users/username-available', { params: { username } }),
+    ),
+  follow: (id: string) =>
+    unwrap<{ following: true; followerCount: number }>(
+      api.post(`/users/${id}/follow`),
+    ),
+  unfollow: (id: string) =>
+    unwrap<{ following: false; followerCount: number }>(
+      api.delete(`/users/${id}/follow`),
+    ),
+  followers: (id: string, params?: { page?: number; limit?: number }) =>
+    unwrap<PaginatedResponse<PublicUserCard>>(
+      api.get(`/users/${id}/followers`, { params }),
+    ),
+  following: (id: string, params?: { page?: number; limit?: number }) =>
+    unwrap<PaginatedResponse<PublicUserCard>>(
+      api.get(`/users/${id}/following`, { params }),
+    ),
 
   // Admin
   list: (params?: { page?: number; limit?: number; role?: UserRole; search?: string }) =>
@@ -424,6 +524,62 @@ export const usersApi = {
   toggleActive: (id: string) =>
     unwrap<{ isActive: boolean }>(api.patch(`/users/${id}/toggle-active`)),
   analyzers: () => unwrap<User[]>(api.get('/users/analyzers')),
+};
+
+/* ── Chat ─────────────────────────────────────────────────────── */
+export interface SendMessagePayload {
+  type: ChatMessage['type'];
+  content?: string;
+  attachments?: ChatMessage['attachments'];
+  replyToId?: string;
+  clientId?: string;
+}
+
+export const chatApi = {
+  conversations: () => unwrap<Conversation[]>(api.get('/chat/conversations')),
+  conversation: (id: string) =>
+    unwrap<Conversation>(api.get(`/chat/conversations/${id}`)),
+  direct: (userId: string) =>
+    unwrap<Conversation>(api.post('/chat/conversations/direct', { userId })),
+  messages: (id: string, params?: { limit?: number; before?: string }) =>
+    unwrap<{ data: ChatMessage[]; nextCursor: string | null }>(
+      api.get(`/chat/conversations/${id}/messages`, { params }),
+    ),
+  send: (id: string, payload: SendMessagePayload) =>
+    unwrap<ChatMessage>(api.post(`/chat/conversations/${id}/messages`, payload)),
+  read: (id: string) =>
+    unwrap<{ ok: true; readAt: string }>(api.post(`/chat/conversations/${id}/read`)),
+  unreadCount: () => unwrap<{ count: number }>(api.get('/chat/unread-count')),
+
+  // Groups
+  publicGroups: (limit = 10) =>
+    unwrap<PublicGroup[]>(api.get('/chat/groups/public', { params: { limit } })),
+  allGroups: () =>
+    unwrap<(PublicGroup & { isPublic: boolean; createdAt: string })[]>(
+      api.get('/chat/groups/admin'),
+    ),
+  createGroup: (data: {
+    title: string;
+    description?: string;
+    avatarUrl?: string;
+    isPublic?: boolean;
+    memberIds?: string[];
+  }) => unwrap<Conversation>(api.post('/chat/groups', data)),
+  joinGroup: (idOrSlug: string) =>
+    unwrap<Conversation>(api.post(`/chat/groups/${idOrSlug}/join`)),
+  deleteGroup: (id: string) =>
+    unwrap<{ message: string }>(api.delete(`/chat/groups/${id}`)),
+
+  // Media upload (any authed user)
+  upload: (file: File) => {
+    const form = new FormData();
+    form.append('file', file);
+    return unwrap<UploadResult>(
+      api.post('/chat/upload', form, {
+        headers: { 'Content-Type': 'multipart/form-data' },
+      }),
+    );
+  },
 };
 
 /* ── Profile ──────────────────────────────────────────────────── */

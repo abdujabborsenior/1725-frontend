@@ -2,10 +2,65 @@
 
 import { useRef, useState } from 'react';
 import Image from 'next/image';
-import { Loader2, UploadCloud, X, ImagePlus } from 'lucide-react';
-import { uploadsApi, getErrorMessage } from '@/lib/api';
+import { Loader2, UploadCloud, X, ImagePlus, Film } from 'lucide-react';
+import { uploadsApi, chatApi, getErrorMessage } from '@/lib/api';
 import { cn } from '@/lib/utils';
 import toast from 'react-hot-toast';
+
+/** Promo video yuklash — /chat/upload video qabul qiladi (50MB). */
+export function VideoUpload({
+  value, onChange, label = 'Promo video',
+}: {
+  value?: string | null;
+  onChange: (url: string | null) => void;
+  label?: string;
+}) {
+  const ref = useRef<HTMLInputElement>(null);
+  const [loading, setLoading] = useState(false);
+
+  async function handleFile(file: File) {
+    if (file.size > 50 * 1024 * 1024) {
+      toast.error('Maks. 50MB');
+      return;
+    }
+    setLoading(true);
+    try {
+      const res = await chatApi.upload(file);
+      onChange(res.url);
+    } catch (err) {
+      toast.error(getErrorMessage(err, 'Yuklashda xatolik'));
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  return (
+    <div className="flex flex-col gap-1.5">
+      <label className="text-xs font-semibold uppercase tracking-wider text-slate-700">{label}</label>
+      {value ? (
+        <div className="group relative overflow-hidden rounded-xl border border-slate-200 bg-black">
+          <video src={value} controls className="max-h-48 w-full" />
+          <button type="button" onClick={() => onChange(null)}
+            className="absolute right-2 top-2 flex h-8 w-8 items-center justify-center rounded-lg bg-white/90 text-slate-600 opacity-0 shadow-card transition-opacity hover:text-rose-600 group-hover:opacity-100">
+            <X className="h-4 w-4" />
+          </button>
+        </div>
+      ) : (
+        <button type="button" onClick={() => ref.current?.click()}
+          className="flex aspect-video w-full flex-col items-center justify-center gap-2 rounded-xl border-2 border-dashed border-slate-200 bg-surface-soft transition-all hover:border-accent-300 hover:bg-slate-50">
+          {loading ? <Loader2 className="h-6 w-6 animate-spin text-accent-500" /> : (
+            <>
+              <Film className="h-6 w-6 text-slate-400" />
+              <span className="text-xs font-medium text-slate-500">Video yuklash (max 50MB)</span>
+            </>
+          )}
+        </button>
+      )}
+      <input ref={ref} type="file" accept="video/*" className="hidden"
+        onChange={(e) => { const f = e.target.files?.[0]; if (f) void handleFile(f); e.target.value = ''; }} />
+    </div>
+  );
+}
 
 type Aspect = 'square' | 'video' | 'wide' | 'logo';
 
@@ -23,6 +78,10 @@ interface ImageUploadProps {
   hint?: string;
   aspect?: Aspect;
   className?: string;
+  /** Yuklash funksiyasi (default: admin uploadsApi.image). Oddiy userlar uchun chatApi.upload bering. */
+  uploader?: (file: File) => Promise<{ url: string }>;
+  /** Avatar/dumaloq oldindan ko'rish */
+  rounded?: boolean;
 }
 
 /** Bitta rasm yuklash — kover yoki logo uchun. */
@@ -33,6 +92,8 @@ export function ImageUpload({
   hint,
   aspect = 'video',
   className,
+  uploader,
+  rounded,
 }: ImageUploadProps) {
   const inputRef = useRef<HTMLInputElement>(null);
   const [loading, setLoading] = useState(false);
@@ -41,7 +102,7 @@ export function ImageUpload({
   async function handleFile(file: File) {
     setLoading(true);
     try {
-      const res = await uploadsApi.image(file);
+      const res = await (uploader ? uploader(file) : uploadsApi.image(file));
       onChange(res.url);
     } catch (err) {
       toast.error(getErrorMessage(err, 'Yuklashda xatolik'));
@@ -63,6 +124,7 @@ export function ImageUpload({
           className={cn(
             'relative w-full overflow-hidden rounded-xl border border-slate-200 bg-surface-soft group',
             ASPECT[aspect],
+            rounded && 'rounded-full',
           )}
         >
           {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -94,6 +156,7 @@ export function ImageUpload({
           className={cn(
             'w-full flex flex-col items-center justify-center gap-2 rounded-xl border-2 border-dashed transition-all',
             ASPECT[aspect],
+            rounded && 'rounded-full',
             dragOver
               ? 'border-accent-400 bg-accent-50'
               : 'border-slate-200 bg-surface-soft hover:border-slate-300 hover:bg-slate-50',

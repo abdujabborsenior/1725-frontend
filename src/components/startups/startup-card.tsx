@@ -42,8 +42,8 @@ export function StartupCard({ startup }: { startup: Startup }) {
 
         {/* Body */}
         <div className="flex-1 p-4 pt-0">
-          {/* Logo overlaps cover */}
-          <div className="flex items-end gap-3 -mt-7 mb-3">
+          {/* Logo overlaps cover — `relative z-10` shart, aks holda positioned cover ustidan chiziladi */}
+          <div className="relative z-10 flex items-end gap-3 -mt-7 mb-3">
             <div className="h-14 w-14 rounded-2xl bg-white border border-slate-200 shadow-card flex items-center justify-center overflow-hidden shrink-0">
               {startup.logoUrl ? (
                 // eslint-disable-next-line @next/next/no-img-element
@@ -61,7 +61,7 @@ export function StartupCard({ startup }: { startup: Startup }) {
             )}
           </div>
 
-          <h3 className="text-sm font-bold text-brand-900 group-hover:text-accent-700 transition-colors line-clamp-1">
+          <h3 className="text-sm font-bold text-brand-900 group-hover:text-accent-700 transition-colors truncate">
             {startup.title}
           </h3>
           <p className="mt-1 text-xs text-slate-600 leading-relaxed line-clamp-2 min-h-[2rem]">

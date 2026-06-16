@@ -1,14 +1,16 @@
 'use client';
 
 import { useState } from 'react';
+import Link from 'next/link';
 import { useMutation, useQuery, useQueryClient, keepPreviousData } from '@tanstack/react-query';
-import { Search, ShieldCheck, ShieldOff, Loader2, Users as UsersIcon } from 'lucide-react';
+import { Search, ShieldCheck, ShieldOff, Loader2, Users as UsersIcon, ExternalLink } from 'lucide-react';
 import { usersApi, getErrorMessage } from '@/lib/api';
 import { ROLE_LABEL, ROLE_BADGE } from '@/lib/constants';
 import type { User, UserRole } from '@/types';
 import { useDebounce } from '@/lib/use-debounce';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
+import { Avatar } from '@/components/ui/avatar';
 import { format } from 'date-fns';
 import toast from 'react-hot-toast';
 
@@ -94,12 +96,11 @@ export default function AdminUsersPage() {
           <div className="divide-y divide-slate-100">
             {items.map((u: User) => (
               <div key={u.id} className="flex flex-wrap items-center gap-3 px-4 sm:px-5 py-3.5 hover:bg-slate-50/60 transition-colors">
-                <div className="h-10 w-10 rounded-full bg-brand-900 flex items-center justify-center text-sm font-bold text-accent-400 shrink-0">
-                  {u.fullName.charAt(0).toUpperCase()}
-                </div>
+                <Avatar src={u.avatarUrl} name={u.fullName} size={40} />
                 <div className="flex-1 min-w-[160px]">
                   <div className="flex items-center gap-2">
                     <p className="text-sm font-semibold text-brand-900 truncate">{u.fullName}</p>
+                    {u.username && <span className="text-xs text-slate-400">@{u.username}</span>}
                     {!u.isActive && <span className="text-[10px] font-semibold text-rose-600 bg-rose-50 px-1.5 py-0.5 rounded">Bloklangan</span>}
                   </div>
                   <p className="text-xs text-slate-400 truncate">{u.email}</p>
@@ -108,6 +109,13 @@ export default function AdminUsersPage() {
                 <span className="text-[11px] text-slate-400 hidden md:block">
                   {format(new Date(u.createdAt), 'dd.MM.yyyy')}
                 </span>
+
+                {u.username && (
+                  <Link href={`/u/${u.username}`} target="_blank" title="Profilni ko'rish"
+                    className="h-8 w-8 hidden sm:flex items-center justify-center rounded-lg text-slate-400 hover:text-sky-600 hover:bg-sky-50">
+                    <ExternalLink className="h-4 w-4" />
+                  </Link>
+                )}
 
                 <select
                   value={u.role}
