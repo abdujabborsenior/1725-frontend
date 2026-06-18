@@ -14,6 +14,7 @@ import type {
   Conversation,
   LinkPreview,
   LoginResponse,
+  MessageType,
   PaginatedResponse,
   PlatformType,
   Poll,
@@ -558,17 +559,39 @@ export const chatApi = {
     unwrap<(PublicGroup & { isPublic: boolean; createdAt: string })[]>(
       api.get('/chat/groups/admin'),
     ),
+  groupSearch: (q: string) =>
+    unwrap<PublicGroup[]>(api.get('/chat/groups/search', { params: { q } })),
+  groupByUsername: (username: string) =>
+    unwrap<PublicGroup>(api.get(`/chat/groups/by-username/${username}`)),
   createGroup: (data: {
     title: string;
     description?: string;
     avatarUrl?: string;
     isPublic?: boolean;
     memberIds?: string[];
+    username?: string;
+    blockedMessageTypes?: MessageType[];
   }) => unwrap<Conversation>(api.post('/chat/groups', data)),
   joinGroup: (idOrSlug: string) =>
     unwrap<Conversation>(api.post(`/chat/groups/${idOrSlug}/join`)),
+  leaveGroup: (idOrSlug: string) =>
+    unwrap<{ ok: true }>(api.post(`/chat/groups/${idOrSlug}/leave`)),
   deleteGroup: (id: string) =>
     unwrap<{ message: string }>(api.delete(`/chat/groups/${id}`)),
+  updateGroup: (
+    id: string,
+    data: {
+      title?: string;
+      description?: string;
+      avatarUrl?: string;
+      isPublic?: boolean;
+      username?: string;
+    },
+  ) => unwrap<Conversation>(api.patch(`/chat/groups/${id}`, data)),
+  setGroupRestrictions: (id: string, blockedMessageTypes: MessageType[]) =>
+    unwrap<Conversation>(
+      api.patch(`/chat/groups/${id}/restrictions`, { blockedMessageTypes }),
+    ),
 
   // Media upload (any authed user)
   upload: (file: File) => {

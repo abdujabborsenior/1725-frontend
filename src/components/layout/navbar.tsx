@@ -3,7 +3,7 @@
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import {
-  Plus, LogOut, Menu, X, LayoutDashboard, Search, MessageCircle, Rocket,
+  Plus, LogOut, Menu, X, Search, MessageCircle, Rocket,
 } from 'lucide-react';
 import { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
@@ -21,11 +21,9 @@ const NAV_LINKS = [
   { href: '/startups',  label: 'Startaplar' },
   { href: '/polls',     label: 'Ovoz berish' },
   { href: '/problems',  label: 'Muammolar' },
-  { href: '/solutions', label: 'Yechimlar' },
+  { href: '/solutions', label: 'Yechimlarim' },
   { href: '/discover',  label: 'Hamjamiyat' },
 ];
-
-const ADMIN_ROLES = ['superadmin', 'analyzer'];
 
 function ChatLink({ mobile }: { mobile?: boolean }) {
   const { token } = useAuthStore();
@@ -80,7 +78,6 @@ export function Navbar() {
   const router = useRouter();
   const { user, token, refreshToken, clearAuth } = useAuthStore();
   const [menuOpen, setMenuOpen] = useState(false);
-  const isAdmin = !!user && ADMIN_ROLES.includes(user.role);
 
   async function handleLogout() {
     try { await authApi.logout(refreshToken); } catch { /* ignore */ }
@@ -92,6 +89,8 @@ export function Navbar() {
 
   return (
     <header className="sticky top-0 z-40 w-full glass border-b border-slate-200/70">
+      {/* Signature gradient hairline */}
+      <div className="pointer-events-none absolute inset-x-0 bottom-0 h-px bg-gradient-to-r from-transparent via-accent-400/50 to-transparent" />
       <div className="max-w-6xl mx-auto px-4 h-16 flex items-center justify-between">
         {/* Logo */}
         <Link href="/" className="flex items-center gap-2.5 group">
@@ -105,20 +104,26 @@ export function Navbar() {
 
         {/* Desktop nav */}
         <nav className="hidden md:flex items-center gap-1">
-          {NAV_LINKS.map(({ href, label }) => (
-            <Link
-              key={href}
-              href={href}
-              className={cn(
-                'px-3.5 py-2 rounded-lg text-sm font-semibold transition-all duration-150',
-                pathname.startsWith(href)
-                  ? 'text-brand-900 bg-slate-100'
-                  : 'text-slate-600 hover:text-brand-900 hover:bg-slate-50',
-              )}
-            >
-              {label}
-            </Link>
-          ))}
+          {NAV_LINKS.map(({ href, label }) => {
+            const active = pathname.startsWith(href);
+            return (
+              <Link
+                key={href}
+                href={href}
+                className={cn(
+                  'relative px-3.5 py-2 rounded-lg text-sm font-semibold transition-all duration-150',
+                  active
+                    ? 'text-brand-900'
+                    : 'text-slate-600 hover:text-brand-900 hover:bg-slate-50',
+                )}
+              >
+                {label}
+                {active && (
+                  <span className="absolute inset-x-3.5 -bottom-px h-0.5 rounded-full bg-gradient-emerald-iris" />
+                )}
+              </Link>
+            );
+          })}
         </nav>
 
         {/* Right actions */}
@@ -133,13 +138,6 @@ export function Navbar() {
           </button>
           {token ? (
             <>
-              {isAdmin && (
-                <Link href="/admin">
-                  <Button size="sm" variant="primary">
-                    <LayoutDashboard className="h-3.5 w-3.5" /> Admin
-                  </Button>
-                </Link>
-              )}
               <Link href="/problems/create">
                 <Button size="sm" variant="accent">
                   <Plus className="h-3.5 w-3.5" /> Muammo
@@ -209,12 +207,6 @@ export function Navbar() {
           {token ? (
             <>
               <ChatLink mobile />
-              {isAdmin && (
-                <Link href="/admin" onClick={() => setMenuOpen(false)}
-                  className="flex items-center gap-2 px-4 py-2.5 rounded-lg text-sm font-semibold text-brand-900 bg-slate-100 hover:bg-slate-200 transition-all">
-                  <LayoutDashboard className="h-4 w-4" /> Admin panel
-                </Link>
-              )}
               <Link href="/problems/create" onClick={() => setMenuOpen(false)}
                 className="block px-4 py-2.5 rounded-lg text-sm font-semibold text-accent-700 bg-accent-50 hover:bg-accent-100 transition-all">
                 + Muammo yuborish

@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from 'react';
 import {
-  Paperclip, Mic, Send, X, Check, Video, Loader2, Trash2,
+  Paperclip, Mic, Send, X, Check, Video, Loader2, Trash2, ShieldAlert,
 } from 'lucide-react';
 import { chatApi, getErrorMessage, type SendMessagePayload } from '@/lib/api';
 import { useMediaRecorder } from '@/lib/use-media-recorder';
@@ -22,15 +22,33 @@ interface Props {
   onTyping: () => void;
   replyTo: ChatMessage | null;
   onCancelReply: () => void;
+  /** Guruhda oddiy a'zolar uchun taqiqlangan turlar */
+  blockedMessageTypes?: MessageType[];
+  /** Egasi/admin/superadmin — cheklovlarni chetlab o'tadi */
+  canBypassRestrictions?: boolean;
 }
 
-export function Composer({ onSend, onTyping, replyTo, onCancelReply }: Props) {
+const RESTRICTION_LABEL: Record<string, string> = {
+  text: 'Matn', image: 'Rasm', video: 'Video', voice: 'Ovozli xabar', round_video: 'Video xabar',
+};
+
+export function Composer({
+  onSend, onTyping, replyTo, onCancelReply,
+  blockedMessageTypes = [], canBypassRestrictions = false,
+}: Props) {
   const [text, setText] = useState('');
   const [uploading, setUploading] = useState(false);
   const fileRef = useRef<HTMLInputElement>(null);
   const videoPreviewRef = useRef<HTMLVideoElement>(null);
   const rec = useMediaRecorder();
   const lastTyping = useRef(0);
+
+  // Cheklovlar — faqat oddiy a'zolarga ta'sir qiladi
+  const blocked = canBypassRestrictions ? new Set<MessageType>() : new Set(blockedMessageTypes);
+  const textBlocked = blocked.has('text');
+  const voiceBlocked = blocked.has('voice');
+  const roundBlocked = blocked.has('round_video');
+  const restrictionList = blockedMessageTypes.filter((t) => !canBypassRestrictions);
 
   // Round video live preview
   useEffect(() => {
@@ -43,6 +61,7 @@ export function Composer({ onSend, onTyping, replyTo, onCancelReply }: Props) {
   function sendText() {
     const t = text.trim();
     if (!t) return;
+    if (textBlocked) { toast.error('Bu guruhda matn yuborish taqiqlangan'); return; }
     onSend({ type: 'text', content: t, replyToId: replyTo?.id });
     setText('');
     onCancelReply();
@@ -83,7 +102,11 @@ export function Composer({ onSend, onTyping, replyTo, onCancelReply }: Props) {
     e.target.value = '';
     if (!file) return;
     if (file.size > 50 * 1024 * 1024) return toast.error('Maks. 50MB');
-    await uploadAndSend(file, typeFromMime(file.type));
+    const mediaType = typeFromMime(file.type);
+    if (blocked.has(mediaType)) {
+      return toast.error(`Bu guruhda ${RESTRICTION_LABEL[mediaType] ?? mediaType} yuborish taqiqlangan`);
+    }
+    await uploadAndSend(file, mediaType);
   }
 
   async function finishRecording() {
@@ -118,7 +141,14 @@ export function Composer({ onSend, onTyping, replyTo, onCancelReply }: Props) {
   const mmss = `${Math.floor(rec.seconds / 60)}:${String(rec.seconds % 60).padStart(2, '0')}`;
 
   return (
-    <div className="border-t border-slate-200 bg-white px-3 py-2.5">
+    <div className="border-t border-slate-200 bg-white px-3 py-2.5" style={{ paddingBottom: 'max(0.625rem, env(safe-area-inset-bottom))' }}>
+      {/* Cheklov banneri */}
+      {restrictionList.length > 0 && (
+        <div className="mb-2 flex items-center gap-2 rounded-xl bg-rose-50 px-3 py-1.5 text-[11px] font-medium text-rose-600">
+          <ShieldAlert className="h-3.5 w-3.5 shrink-0" />
+          <span className="truncate">Bu guruhda taqiqlangan: {restrictionList.map((t) => RESTRICTION_LABEL[t] ?? t).join(', ')}</span>
+        </div>
+      )}
       {/* Reply preview */}
       {replyTo && (
         <div className="mb-2 flex items-center gap-2 rounded-xl border-l-2 border-accent-400 bg-surface-soft px-3 py-1.5">
@@ -183,13 +213,14 @@ export function Composer({ onSend, onTyping, replyTo, onCancelReply }: Props) {
 
           <textarea
             value={text}
+            disabled={textBlocked}
             onChange={(e) => { setText(e.target.value); emitTyping(); }}
             onKeyDown={(e) => {
               if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendText(); }
             }}
             rows={1}
-            placeholder="Xabar yozing…"
-            className="chat-scroll max-h-32 flex-1 resize-none rounded-2xl border border-slate-200 bg-surface-soft px-4 py-2.5 text-sm text-brand-900 placeholder:text-slate-400 focus:border-accent-300 focus:outline-none"
+            placeholder={textBlocked ? 'Bu guruhda matn taqiqlangan' : 'Xabar yozing…'}
+            className="chat-scroll max-h-32 flex-1 resize-none rounded-2xl border border-slate-200 bg-surface-soft px-4 py-2.5 text-sm text-brand-900 placeholder:text-slate-400 focus:border-accent-300 focus:outline-none disabled:cursor-not-allowed disabled:opacity-60"
           />
 
           {text.trim() ? (
@@ -198,23 +229,27 @@ export function Composer({ onSend, onTyping, replyTo, onCancelReply }: Props) {
             </button>
           ) : (
             <>
-              <button
-                onClick={() => void startRec('video')}
-                aria-label="Dumaloq video"
-                title="Dumaloq video"
-                className="group relative flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-iris-500 to-iris-700 text-white shadow-glow-iris transition-transform hover:scale-105 active:scale-95"
-              >
-                <span className="absolute inset-0 rounded-full ring-2 ring-iris-300/50 ring-offset-2 ring-offset-white opacity-0 transition-opacity group-hover:opacity-100" />
-                <Video className="h-[18px] w-[18px]" />
-              </button>
-              <button
-                onClick={() => void startRec('audio')}
-                aria-label="Ovozli xabar"
-                title="Ovozli xabar"
-                className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-accent-500 text-white shadow-glow-accent transition-transform hover:scale-105 active:scale-95 hover:bg-accent-600"
-              >
-                <Mic className="h-5 w-5" />
-              </button>
+              {!roundBlocked && (
+                <button
+                  onClick={() => void startRec('video')}
+                  aria-label="Dumaloq video"
+                  title="Dumaloq video"
+                  className="group relative flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-iris-500 to-iris-700 text-white shadow-glow-iris transition-transform hover:scale-105 active:scale-95"
+                >
+                  <span className="absolute inset-0 rounded-full ring-2 ring-iris-300/50 ring-offset-2 ring-offset-white opacity-0 transition-opacity group-hover:opacity-100" />
+                  <Video className="h-[18px] w-[18px]" />
+                </button>
+              )}
+              {!voiceBlocked && (
+                <button
+                  onClick={() => void startRec('audio')}
+                  aria-label="Ovozli xabar"
+                  title="Ovozli xabar"
+                  className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-accent-500 text-white shadow-glow-accent transition-transform hover:scale-105 active:scale-95 hover:bg-accent-600"
+                >
+                  <Mic className="h-5 w-5" />
+                </button>
+              )}
             </>
           )}
         </div>

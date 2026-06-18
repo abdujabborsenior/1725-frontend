@@ -161,6 +161,7 @@ export interface Conversation {
   title: string | null;
   avatarUrl: string | null;
   slug: string | null;
+  username?: string | null;
   isPublic: boolean;
   description: string | null;
   participantCount: number;
@@ -168,6 +169,8 @@ export interface Conversation {
   lastMessageAt: string | null;
   unreadCount: number;
   myRole: string | null;
+  /** Oddiy a'zolar uchun taqiqlangan xabar turlari (default []) */
+  blockedMessageTypes: MessageType[];
   otherUser: ChatUserMini | null;
 }
 
@@ -175,11 +178,14 @@ export interface PublicGroup {
   id: string;
   title: string | null;
   slug: string | null;
+  username?: string | null;
   avatarUrl: string | null;
   description: string | null;
   participantCount: number;
   lastMessagePreview: string | null;
   lastMessageAt: string | null;
+  /** Joriy foydalanuvchi a'zomi (autentifikatsiya bo'lsa) */
+  isMember?: boolean;
 }
 
 export interface Comment {

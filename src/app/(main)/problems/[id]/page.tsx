@@ -14,8 +14,10 @@ import type { Comment, Solution } from '@/types';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
-import { ProblemStatusBadge } from '@/components/ui/badge';
+import { ProblemStatusPill } from '@/components/ui/badge';
+import { PROBLEM_STATUS_META } from '@/lib/constants';
 import { Avatar } from '@/components/ui/avatar';
+import { cn } from '@/lib/utils';
 import { ProblemLikeButton } from '@/components/problems/like-button';
 import { ProblemShareModal } from '@/components/problems/share-modal';
 import { Share2 } from 'lucide-react';
@@ -281,11 +283,16 @@ export default function ProblemDetailPage() {
     enabled: commentsEnabled,
   });
 
+  // Yechimlar ommaviy saytda ko'rsatilmaydi — faqat analizator/superadmin
+  // ko'ra oladi (ular asosan admin panelda ishlaydi).
+  const canSeeSolutions =
+    user?.role === 'analyzer' || user?.role === 'superadmin';
+
   const { data: solutions = [] } = useQuery({
     queryKey: ['solutions', id],
     queryFn: async () =>
       (await solutionsApi.list({ problemId: id, status: 'accepted', limit: 100 })).data,
-    enabled: !!problem,
+    enabled: !!problem && canSeeSolutions,
   });
 
   if (isLoading) {
@@ -320,24 +327,29 @@ export default function ProblemDetailPage() {
       </button>
 
       {/* Problem card */}
-      <article className="bg-white border border-slate-200 rounded-2xl p-6 md:p-8 shadow-card">
-        <div className="flex flex-wrap items-center gap-3 mb-5">
-          <ProblemStatusBadge status={problem.status} className="px-3 py-1 rounded-lg text-xs" />
+      <article className="relative overflow-hidden rounded-[26px] border border-slate-200/70 bg-white p-6 shadow-soft md:p-8">
+        {/* status rangidagi yuqori urg'u chizig'i */}
+        <span className={cn('absolute inset-x-0 top-0 h-1', PROBLEM_STATUS_META[problem.status].bar)} />
+        <div className="pointer-events-none absolute -right-20 -top-24 h-56 w-56 rounded-full bg-accent-500/[0.06] blur-3xl" />
+
+        <div className="relative mb-5 flex flex-wrap items-center gap-3">
+          <ProblemStatusPill status={problem.status} className="px-3 py-1.5 text-xs" />
           {problem.category && (
-            <span className="px-3 py-1 rounded-lg text-xs font-medium bg-slate-50 border border-slate-200 text-slate-600">
+            <span className="rounded-full bg-slate-50 px-3 py-1.5 text-xs font-semibold text-slate-600 ring-1 ring-inset ring-slate-200/70">
               {problem.category}
             </span>
           )}
-          <div className="flex items-center gap-3 ml-auto text-xs text-slate-500">
-            <span className="flex items-center gap-1"><Eye className="h-3.5 w-3.5" /> {problem.viewCount}</span>
-            <span className="flex items-center gap-1"><Clock className="h-3.5 w-3.5" />
+          <div className="ml-auto flex items-center gap-3.5 text-xs font-medium text-slate-400">
+            <span className="flex items-center gap-1.5"><Eye className="h-3.5 w-3.5" /> {problem.viewCount.toLocaleString('uz')}</span>
+            <span className="h-1 w-1 rounded-full bg-slate-300" />
+            <span className="flex items-center gap-1.5"><Clock className="h-3.5 w-3.5" />
               {formatDistanceToNow(new Date(problem.createdAt), { addSuffix: true })}
             </span>
           </div>
         </div>
 
-        <h1 className="text-2xl font-bold text-brand-900 mb-4">{problem.title}</h1>
-        <p className="text-slate-700 leading-relaxed whitespace-pre-wrap break-words">{problem.description}</p>
+        <h1 className="relative mb-4 text-2xl font-black leading-tight tracking-tight text-brand-900 md:text-[1.75rem]">{problem.title}</h1>
+        <p className="relative leading-relaxed text-slate-600 whitespace-pre-wrap break-words">{problem.description}</p>
 
         {problem.imageUrls.length > 0 && (
           <div className="mt-5 grid grid-cols-2 md:grid-cols-3 gap-3">
@@ -420,9 +432,11 @@ export default function ProblemDetailPage() {
       <div>
         <div className="flex gap-1 p-1 bg-white border border-slate-200 rounded-xl w-fit mb-5">
           {([
-            { key: 'comments', label: 'Izohlar', count: comments.length },
-            { key: 'solutions', label: 'Yechimlar', count: solutions.length },
-          ] as const).map(({ key, label, count }) => (
+            { key: 'comments' as const, label: 'Izohlar', count: comments.length },
+            ...(canSeeSolutions
+              ? [{ key: 'solutions' as const, label: 'Yechimlar', count: solutions.length }]
+              : []),
+          ]).map(({ key, label, count }) => (
             <button
               key={key}
               onClick={() => setActiveTab(key)}

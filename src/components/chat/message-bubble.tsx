@@ -1,13 +1,16 @@
 'use client';
 
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
-import { Play, Pause, FileText, Reply, Check, CheckCheck, Download } from 'lucide-react';
+import { createPortal } from 'react-dom';
+import { motion, AnimatePresence, useMotionValue, useTransform, animate } from 'framer-motion';
+import { Play, Pause, FileText, Reply, Check, CheckCheck, Download, Copy } from 'lucide-react';
 import { Avatar } from '@/components/ui/avatar';
 import { profileHref } from '@/components/social/user-list-item';
 import { cn } from '@/lib/utils';
 import { format } from 'date-fns';
 import type { ChatMessage, MessageAttachment } from '@/types';
+import toast from 'react-hot-toast';
 
 function fmtTime(iso: string) {
   return format(new Date(iso), 'HH:mm');
@@ -127,6 +130,61 @@ function Attachment({ att, mine }: { att: MessageAttachment; mine: boolean }) {
   );
 }
 
+/* ── Kontekst menyu (o'ng tugma / uzun bosish) ──────────────── */
+function ContextMenu({
+  x, y, hasText, onReply, onCopy, onClose,
+}: {
+  x: number; y: number; hasText: boolean;
+  onReply: () => void; onCopy: () => void; onClose: () => void;
+}) {
+  useEffect(() => {
+    const close = () => onClose();
+    window.addEventListener('scroll', close, true);
+    window.addEventListener('resize', close);
+    window.addEventListener('pointerdown', close);
+    return () => {
+      window.removeEventListener('scroll', close, true);
+      window.removeEventListener('resize', close);
+      window.removeEventListener('pointerdown', close);
+    };
+  }, [onClose]);
+
+  // Ekrandan chiqib ketmasligi uchun joylashuvni cheklash
+  const left = Math.min(x, (typeof window !== 'undefined' ? window.innerWidth : 9999) - 180);
+  const top = Math.min(y, (typeof window !== 'undefined' ? window.innerHeight : 9999) - 120);
+
+  if (typeof document === 'undefined') return null;
+
+  return createPortal(
+    <div
+      className="fixed inset-0 z-[70]"
+      onContextMenu={(e) => { e.preventDefault(); onClose(); }}
+    >
+      <div
+        className="animate-pop-in absolute min-w-[168px] overflow-hidden rounded-2xl border border-slate-200 bg-white p-1 shadow-modal"
+        style={{ left, top, transformOrigin: 'top left' }}
+        onPointerDown={(e) => e.stopPropagation()}
+      >
+        <button
+          onClick={() => { onReply(); onClose(); }}
+          className="flex w-full items-center gap-2.5 rounded-xl px-3 py-2 text-sm font-medium text-brand-900 transition-colors hover:bg-surface-soft"
+        >
+          <Reply className="h-4 w-4 text-accent-600" /> Javob berish
+        </button>
+        {hasText && (
+          <button
+            onClick={() => { onCopy(); onClose(); }}
+            className="flex w-full items-center gap-2.5 rounded-xl px-3 py-2 text-sm font-medium text-brand-900 transition-colors hover:bg-surface-soft"
+          >
+            <Copy className="h-4 w-4 text-iris-600" /> Nusxa olish
+          </button>
+        )}
+      </div>
+    </div>,
+    document.body,
+  );
+}
+
 interface Props {
   message: ChatMessage;
   mine: boolean;
@@ -136,7 +194,19 @@ interface Props {
   onReply: (m: ChatMessage) => void;
 }
 
+const SWIPE_THRESHOLD = 64;
+
 export function MessageBubble({ message, mine, showAvatar, isGroup, read, onReply }: Props) {
+  const [menu, setMenu] = useState<{ x: number; y: number } | null>(null);
+  const x = useMotionValue(0);
+  // Surilganda ko'rinadigan reply ikonkasi — surish chuqurligiga bog'liq
+  const iconScale = useTransform(x, [0, SWIPE_THRESHOLD], [0.2, 1]);
+  const iconOpacity = useTransform(x, [8, SWIPE_THRESHOLD], [0, 1]);
+
+  const lastTap = useRef(0);
+  const longPress = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const draggedRef = useRef(false);
+
   if (message.type === 'system') {
     return (
       <div className="my-2 flex justify-center">
@@ -153,8 +223,45 @@ export function MessageBubble({ message, mine, showAvatar, isGroup, read, onRepl
     message.attachments.length > 0 &&
     message.attachments.every((a) => ['image', 'video', 'round_video'].includes(a.type));
 
+  function triggerReply() {
+    onReply(message);
+  }
+
+  function copyText() {
+    if (message.content) {
+      navigator.clipboard?.writeText(message.content).then(
+        () => toast.success('Nusxa olindi'),
+        () => toast.error('Nusxa olib bo‘lmadi'),
+      );
+    }
+  }
+
+  // Ikki marta bosish/tegish → javob
+  function handleClick() {
+    const now = Date.now();
+    if (now - lastTap.current < 300) {
+      triggerReply();
+      lastTap.current = 0;
+    } else {
+      lastTap.current = now;
+    }
+  }
+
+  // Uzun bosish (mobil) → kontekst menyu
+  function startLongPress(e: React.PointerEvent) {
+    if (e.pointerType !== 'touch') return;
+    const px = e.clientX;
+    const py = e.clientY;
+    longPress.current = setTimeout(() => {
+      if (!draggedRef.current) setMenu({ x: px, y: py });
+    }, 450);
+  }
+  function cancelLongPress() {
+    if (longPress.current) { clearTimeout(longPress.current); longPress.current = null; }
+  }
+
   return (
-    <div className={cn('group flex items-end gap-2 animate-msg-in', mine ? 'flex-row-reverse' : 'flex-row')}>
+    <div className={cn('group relative flex items-end gap-2 animate-msg-in', mine ? 'flex-row-reverse' : 'flex-row')}>
       {/* Avatar (group, others) — profilga bog'langan */}
       {!mine && isGroup ? (
         showAvatar ? (
@@ -170,28 +277,60 @@ export function MessageBubble({ message, mine, showAvatar, isGroup, read, onRepl
         )
       ) : null}
 
-      <div className={cn('flex max-w-[78%] flex-col', mine ? 'items-end' : 'items-start')}>
-        {/* Reply / actions */}
+      {/* Surish (swipe) reply ikonkasi — bubble ortida */}
+      <motion.span
+        style={{ scale: iconScale, opacity: iconOpacity }}
+        className="pointer-events-none absolute left-8 top-1/2 z-0 flex h-9 w-9 -translate-y-1/2 items-center justify-center rounded-full bg-accent-500 text-white shadow-glow-accent"
+      >
+        <Reply className="h-4 w-4" />
+      </motion.span>
+
+      <div className={cn('relative z-10 flex max-w-[82%] flex-col sm:max-w-[78%]', mine ? 'items-end' : 'items-start')}>
+        {/* Hover "Javob" affordans (desktop) */}
         <button
-          onClick={() => onReply(message)}
+          onClick={triggerReply}
           className={cn(
-            'mb-1 hidden items-center gap-1 text-[11px] text-slate-400 group-hover:flex',
+            'mb-1 hidden items-center gap-1 text-[11px] text-slate-400 transition-colors hover:text-accent-600 group-hover:flex',
             mine ? 'flex-row-reverse' : '',
           )}
         >
           <Reply className="h-3 w-3" /> Javob
         </button>
 
-        <div
+        <motion.div
+          drag="x"
+          dragConstraints={{ left: 0, right: SWIPE_THRESHOLD + 24 }}
+          dragElastic={0.18}
+          dragSnapToOrigin
+          style={{ x }}
+          onDragStart={() => { draggedRef.current = true; cancelLongPress(); }}
+          onDragEnd={(_, info) => {
+            if (info.offset.x >= SWIPE_THRESHOLD) {
+              triggerReply();
+            }
+            void animate(x, 0, { type: 'spring', stiffness: 600, damping: 40 });
+            setTimeout(() => { draggedRef.current = false; }, 60);
+          }}
+          onClick={handleClick}
+          onContextMenu={(e) => { e.preventDefault(); setMenu({ x: e.clientX, y: e.clientY }); }}
+          onPointerDown={startLongPress}
+          onPointerUp={cancelLongPress}
+          onPointerCancel={cancelLongPress}
+          onPointerMove={(e) => { if (e.pointerType === 'touch') cancelLongPress(); }}
           className={cn(
-            'relative rounded-2xl px-3 py-2 shadow-soft',
+            'relative cursor-pointer touch-pan-y select-none rounded-2xl px-3 py-2 shadow-soft',
             isRound ? 'bg-transparent p-0 shadow-none' : mine ? 'bubble-out rounded-br-md' : 'bubble-in rounded-bl-md',
             onlyMedia && !isRound && 'overflow-hidden p-1',
           )}
         >
           {/* Sender name (group) — profilga bog'langan */}
           {!mine && isGroup && showAvatar && message.sender && (
-            <Link href={profileHref(message.sender)} className="mb-0.5 block text-xs font-bold text-iris-600 hover:underline">
+            <Link
+              href={profileHref(message.sender)}
+              onClick={(e) => e.stopPropagation()}
+              draggable={false}
+              className="mb-0.5 block text-xs font-bold text-iris-600 hover:underline"
+            >
               {message.sender.fullName}
             </Link>
           )}
@@ -225,8 +364,21 @@ export function MessageBubble({ message, mine, showAvatar, isGroup, read, onRepl
               {mine && !message.pending && (read ? <CheckCheck className="h-3 w-3" /> : <Check className="h-3 w-3" />)}
             </span>
           )}
-        </div>
+        </motion.div>
       </div>
+
+      <AnimatePresence>
+        {menu && (
+          <ContextMenu
+            x={menu.x}
+            y={menu.y}
+            hasText={!!message.content}
+            onReply={triggerReply}
+            onCopy={copyText}
+            onClose={() => setMenu(null)}
+          />
+        )}
+      </AnimatePresence>
     </div>
   );
 }

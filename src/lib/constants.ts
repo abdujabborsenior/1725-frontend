@@ -35,6 +35,37 @@ export const PROBLEM_STATUS_BADGE: Record<ProblemStatus, string> = {
   rejected:     'bg-rose-50 text-rose-700 border-rose-200',
 };
 
+/**
+ * Boyitilgan status vizuali — kartochkalar va detal sahifa uchun.
+ * dot: nuqta rangi · text: matn rangi · chip: yumshoq fonli pill (ring bilan)
+ * bar: hover/urg'u chizig'i · glow: hover soyasi.
+ */
+export const PROBLEM_STATUS_META: Record<
+  ProblemStatus,
+  { label: string; dot: string; text: string; chip: string; bar: string; border: string }
+> = {
+  pending: {
+    label: 'Kutilmoqda', dot: 'bg-amber-500', text: 'text-amber-700',
+    chip: 'bg-amber-50 text-amber-700 ring-amber-500/20', bar: 'bg-amber-400', border: 'hover:border-amber-300',
+  },
+  open: {
+    label: 'Ochiq', dot: 'bg-accent-500', text: 'text-accent-700',
+    chip: 'bg-accent-50 text-accent-700 ring-accent-500/20', bar: 'bg-accent-500', border: 'hover:border-accent-300',
+  },
+  under_review: {
+    label: "Ko'rib chiqilmoqda", dot: 'bg-sky-500', text: 'text-sky-700',
+    chip: 'bg-sky-50 text-sky-700 ring-sky-500/20', bar: 'bg-sky-500', border: 'hover:border-sky-300',
+  },
+  resolved: {
+    label: 'Hal qilindi', dot: 'bg-violet-500', text: 'text-violet-700',
+    chip: 'bg-violet-50 text-violet-700 ring-violet-500/20', bar: 'bg-violet-500', border: 'hover:border-violet-300',
+  },
+  rejected: {
+    label: 'Rad etildi', dot: 'bg-rose-500', text: 'text-rose-700',
+    chip: 'bg-rose-50 text-rose-700 ring-rose-500/20', bar: 'bg-rose-500', border: 'hover:border-rose-300',
+  },
+};
+
 /* ── Solution status ──────────────────────────────────────────── */
 export const SOLUTION_STATUS_LABEL: Record<SolutionStatus, string> = {
   pending: 'Kutilmoqda',

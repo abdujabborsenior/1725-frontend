@@ -93,10 +93,38 @@ const config: Config = {
         'pop-in':     'popIn 0.22s cubic-bezier(0.34,1.56,0.64,1)',
         'shimmer':    'shimmer 1.6s linear infinite',
         'float':      'float 6s ease-in-out infinite',
+        'float-slow': 'float 9s ease-in-out infinite',
         'msg-in':     'msgIn 0.22s cubic-bezier(0.22,1,0.36,1)',
+        'aurora':     'aurora 16s ease-in-out infinite',
+        'blob':       'blob 14s ease-in-out infinite',
+        'marquee':    'marquee 38s linear infinite',
+        'gradient-pan': 'gradientPan 8s ease infinite',
+        'shine':      'shine 4.5s ease-in-out infinite',
+        'spin-slow':  'spin 20s linear infinite',
       },
       keyframes: {
         fadeIn:    { from: { opacity: '0' }, to: { opacity: '1' } },
+        aurora: {
+          '0%, 100%': { transform: 'translate3d(0,0,0) scale(1)' },
+          '33%':      { transform: 'translate3d(4%,-6%,0) scale(1.12)' },
+          '66%':      { transform: 'translate3d(-5%,4%,0) scale(0.94)' },
+        },
+        blob: {
+          '0%, 100%': { borderRadius: '42% 58% 63% 37% / 41% 44% 56% 59%' },
+          '50%':      { borderRadius: '63% 37% 41% 59% / 56% 63% 37% 44%' },
+        },
+        marquee: {
+          from: { transform: 'translateX(0)' },
+          to:   { transform: 'translateX(-50%)' },
+        },
+        gradientPan: {
+          '0%, 100%': { backgroundPosition: '0% 50%' },
+          '50%':      { backgroundPosition: '100% 50%' },
+        },
+        shine: {
+          '0%':        { transform: 'translateX(-130%) skewX(-12deg)' },
+          '55%, 100%': { transform: 'translateX(230%) skewX(-12deg)' },
+        },
         slideUp:   { from: { opacity: '0', transform: 'translateY(16px)' }, to: { opacity: '1', transform: 'translateY(0)' } },
         slideDown: { from: { opacity: '0', transform: 'translateY(-8px)' }, to: { opacity: '1', transform: 'translateY(0)' } },
         scaleIn:   { from: { opacity: '0', transform: 'scale(0.96)' }, to: { opacity: '1', transform: 'scale(1)' } },

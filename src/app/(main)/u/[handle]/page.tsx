@@ -10,6 +10,7 @@ import { usersApi, startupsApi, chatApi, getErrorMessage } from '@/lib/api';
 import { useAuthStore } from '@/store/auth.store';
 import { Avatar } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
+import { BackButton } from '@/components/ui/back-button';
 import { FollowButton } from '@/components/social/follow-button';
 import { FollowListModal } from '@/components/social/follow-list-modal';
 import { StartupCard } from '@/components/startups/startup-card';
@@ -76,6 +77,7 @@ export default function ProfilePage() {
 
   return (
     <div className="mx-auto max-w-4xl animate-fade-in">
+      <BackButton label="Ortga" className="mb-4" fallbackHref="/discover" />
       {/* Cover + header */}
       <div className="overflow-hidden rounded-[2rem] border border-slate-200 bg-white shadow-soft">
         <div className="relative h-40 bg-gradient-emerald-iris md:h-52">

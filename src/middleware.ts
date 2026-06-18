@@ -11,7 +11,6 @@ const PUBLIC_PATHS = [
 const PROTECTED_PATHS = [
   '/problems/create',
   '/profile',
-  '/admin',
   '/notifications',
   '/settings',
   '/messages',

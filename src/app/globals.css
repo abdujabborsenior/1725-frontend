@@ -86,6 +86,56 @@ select:-webkit-autofill {
   background-clip: text;
 }
 
+/* Animatsiyalangan gradient text — hero sarlavhasi uchun */
+.gradient-text-animated {
+  background: linear-gradient(120deg, #059669 0%, #10b981 25%, #6366f1 55%, #10b981 80%, #059669 100%);
+  background-size: 220% 100%;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: gradientPan 8s ease infinite;
+}
+@keyframes gradientPan {
+  0%, 100% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+}
+
+/* Nozik to'r naqshi — premium bloklar foni */
+.grid-pattern {
+  background-image:
+    linear-gradient(to right, rgba(15,23,42,0.045) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(15,23,42,0.045) 1px, transparent 1px);
+  background-size: 40px 40px;
+  -webkit-mask-image: radial-gradient(ellipse 70% 60% at 50% 40%, #000 35%, transparent 100%);
+          mask-image: radial-gradient(ellipse 70% 60% at 50% 40%, #000 35%, transparent 100%);
+}
+
+/* Dim to'r — to'q fonli bloklar (CTA, footer) */
+.grid-pattern-dark {
+  background-image:
+    linear-gradient(to right, rgba(255,255,255,0.06) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255,255,255,0.06) 1px, transparent 1px);
+  background-size: 44px 44px;
+  -webkit-mask-image: radial-gradient(ellipse 80% 70% at 50% 0%, #000 30%, transparent 100%);
+          mask-image: radial-gradient(ellipse 80% 70% at 50% 0%, #000 30%, transparent 100%);
+}
+
+/* Marquee qatori — chetlarni yumshatish */
+.marquee-mask {
+  -webkit-mask-image: linear-gradient(to right, transparent, #000 8%, #000 92%, transparent);
+          mask-image: linear-gradient(to right, transparent, #000 8%, #000 92%, transparent);
+}
+
+/* Reduced motion — bezovta animatsiyalarni to'xtatish */
+@media (prefers-reduced-motion: reduce) {
+  .gradient-text-animated,
+  .animate-aurora, .animate-blob, .animate-marquee,
+  .animate-float, .animate-float-slow, .animate-spin-slow,
+  .animate-shine, .animate-gradient-pan {
+    animation: none !important;
+  }
+}
+
 /* Glassmorphism — navbar, floating panels */
 .glass {
   background: rgba(255, 255, 255, 0.72);
@@ -185,3 +235,32 @@ select:-webkit-autofill {
 @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 @keyframes slideUp { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: translateY(0); } }
 @keyframes slideDown { from { opacity: 0; transform: translateY(-8px); } to { opacity: 1; transform: translateY(0); } }
+
+/* ── Safe-area (mobil — iOS notch/home indicator) ───────────── */
+.safe-bottom { padding-bottom: env(safe-area-inset-bottom); }
+.safe-top { padding-top: env(safe-area-inset-top); }
+.safe-x {
+  padding-left: env(safe-area-inset-left);
+  padding-right: env(safe-area-inset-right);
+}
+
+/* Winner crown — tantanali mikro-animatsiya */
+@keyframes crownPop {
+  0% { transform: translateY(4px) scale(0.4) rotate(-12deg); opacity: 0; }
+  55% { transform: translateY(-2px) scale(1.18) rotate(6deg); opacity: 1; }
+  100% { transform: translateY(0) scale(1) rotate(0deg); opacity: 1; }
+}
+.animate-crown { animation: crownPop 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) both; }
+
+/* Konfetti / uchqun nuqtalari */
+@keyframes sparkFloat {
+  0% { transform: translateY(0) scale(0.6); opacity: 0; }
+  30% { opacity: 1; }
+  100% { transform: translateY(-22px) scale(1); opacity: 0; }
+}
+.animate-spark { animation: sparkFloat 0.9s ease-out both; }
+
+/* Pill bosish geptikasi */
+@media (hover: none) {
+  .btn-lift:hover { transform: none; }
+}

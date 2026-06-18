@@ -110,8 +110,14 @@ export default function CreateProblemPage() {
       </button>
 
       <div>
-        <h1 className="text-2xl font-bold text-brand-900">Muammo yuborish</h1>
-        <p className="text-sm text-slate-500 mt-1">
+        <span className="inline-flex items-center gap-2 text-[11px] font-bold uppercase tracking-[0.2em] text-slate-400">
+          <span className="grid h-7 w-7 place-items-center rounded-lg bg-gradient-emerald-iris text-white shadow-glow-iris">
+            <Send className="h-3.5 w-3.5" strokeWidth={2.5} />
+          </span>
+          Yangi muammo
+        </span>
+        <h1 className="mt-3 text-[1.75rem] font-black tracking-tight text-brand-900">Muammo yuborish</h1>
+        <p className="mt-1 text-sm text-slate-500">
           Muammoni batafsil tasvirlab bering — mutaxassislar ko&apos;rib chiqadi
         </p>
       </div>

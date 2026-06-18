@@ -4,16 +4,22 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useQueryClient } from '@tanstack/react-query';
-import { ArrowLeft, Loader2, Users, Hash } from 'lucide-react';
-import { chatApi, type SendMessagePayload } from '@/lib/api';
+import { AnimatePresence, motion } from 'framer-motion';
+import {
+  ArrowLeft, Loader2, Users, Hash, MoreVertical, Info, LogOut, Settings,
+} from 'lucide-react';
+import { chatApi, getErrorMessage, type SendMessagePayload } from '@/lib/api';
 import { getSocket } from '@/lib/socket';
 import { useAuthStore } from '@/store/auth.store';
 import { Avatar } from '@/components/ui/avatar';
+import { Modal } from '@/components/ui/modal';
 import { MessageBubble } from './message-bubble';
 import { Composer } from './composer';
+import { GroupSettingsModal } from './group-settings-modal';
 import { profileHref } from '@/components/social/user-list-item';
 import { cn } from '@/lib/utils';
 import { formatDistanceToNow } from 'date-fns';
+import toast from 'react-hot-toast';
 import type { ChatMessage, Conversation } from '@/types';
 
 let cidCounter = 0;
@@ -33,6 +39,12 @@ export function ChatWindow({ conversationId }: { conversationId: string }) {
   const [typingUser, setTypingUser] = useState<string | null>(null);
   const [online, setOnline] = useState(false);
   const [peerRead, setPeerRead] = useState(false);
+
+  const [menuOpen, setMenuOpen] = useState(false);
+  const [infoOpen, setInfoOpen] = useState(false);
+  const [settingsOpen, setSettingsOpen] = useState(false);
+  const [leaveOpen, setLeaveOpen] = useState(false);
+  const [leaving, setLeaving] = useState(false);
 
   const scrollRef = useRef<HTMLDivElement>(null);
   const typingTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -182,6 +194,21 @@ export function ChatWindow({ conversationId }: { conversationId: string }) {
     getSocket().emit('typing', { conversationId, typing: true });
   }
 
+  async function handleLeave() {
+    setLeaving(true);
+    try {
+      await chatApi.leaveGroup(conversationId);
+      void qc.invalidateQueries({ queryKey: ['chat-conversations'] });
+      void qc.invalidateQueries({ queryKey: ['chat-unread'] });
+      toast.success('Guruhdan chiqdingiz');
+      router.push('/messages');
+    } catch (err) {
+      toast.error(getErrorMessage(err));
+      setLeaving(false);
+      setLeaveOpen(false);
+    }
+  }
+
   if (loading) {
     return <div className="flex h-full items-center justify-center"><Loader2 className="h-6 w-6 animate-spin text-slate-300" /></div>;
   }
@@ -191,11 +218,14 @@ export function ChatWindow({ conversationId }: { conversationId: string }) {
 
   const isGroup = conv.type === 'group';
   const headerHref = conv.otherUser ? profileHref(conv.otherUser) : '#';
+  const isOwner = conv.myRole === 'owner';
+  const isSuperadmin = me?.role === 'superadmin';
+  const canBypassRestrictions = isOwner || conv.myRole === 'admin' || isSuperadmin;
 
   return (
     <div className="flex h-full w-full flex-col overflow-hidden">
       {/* Header */}
-      <div className="flex items-center gap-3 border-b border-slate-200 bg-white/90 px-3 py-2.5 backdrop-blur">
+      <div className="relative flex items-center gap-3 border-b border-slate-200 bg-white/90 px-3 py-2.5 backdrop-blur">
         <button
           onClick={() => router.push('/messages')}
           aria-label="Ortga"
@@ -205,21 +235,65 @@ export function ChatWindow({ conversationId }: { conversationId: string }) {
           <ArrowLeft className="h-5 w-5" />
         </button>
         {isGroup ? (
-          <span className="flex h-10 w-10 items-center justify-center rounded-full bg-gradient-iris text-white">
+          <button onClick={() => setInfoOpen(true)} className="flex h-10 w-10 items-center justify-center rounded-full bg-gradient-iris text-white">
             {conv.avatarUrl ? <Avatar src={conv.avatarUrl} name={conv.title} size={40} /> : <Hash className="h-5 w-5" />}
-          </span>
+          </button>
         ) : (
           <Link href={headerHref}><Avatar src={conv.avatarUrl} name={conv.title} size={40} online={online} /></Link>
         )}
-        <div className="min-w-0 flex-1">
+        <button
+          onClick={() => isGroup && setInfoOpen(true)}
+          className={cn('min-w-0 flex-1 text-left', isGroup && 'cursor-pointer')}
+        >
           <p className="truncate text-sm font-bold text-brand-900">{conv.title}</p>
           <p className="truncate text-xs text-slate-500">
             {typingUser ? <span className="text-accent-600">yozmoqda…</span>
-              : isGroup ? <span className="flex items-center gap-1"><Users className="h-3 w-3" /> {conv.participantCount} a&apos;zo</span>
+              : isGroup ? <span className="flex items-center gap-1"><Users className="h-3 w-3" /> {conv.participantCount} a&apos;zo{conv.username ? <span className="text-iris-500"> · @{conv.username}</span> : null}</span>
               : online ? <span className="text-accent-600">onlayn</span>
               : conv.otherUser?.lastSeenAt ? `oxirgi faollik ${formatDistanceToNow(new Date(conv.otherUser.lastSeenAt), { addSuffix: true })}` : ''}
           </p>
-        </div>
+        </button>
+
+        {/* Group menu */}
+        {isGroup && (
+          <div className="relative shrink-0">
+            <button
+              onClick={() => setMenuOpen((v) => !v)}
+              aria-label="Menyu"
+              className="flex h-9 w-9 items-center justify-center rounded-lg text-slate-500 transition-colors hover:bg-slate-100 hover:text-brand-900"
+            >
+              <MoreVertical className="h-5 w-5" />
+            </button>
+            <AnimatePresence>
+              {menuOpen && (
+                <>
+                  <div className="fixed inset-0 z-10" onClick={() => setMenuOpen(false)} />
+                  <motion.div
+                    initial={{ opacity: 0, scale: 0.94, y: -4 }}
+                    animate={{ opacity: 1, scale: 1, y: 0 }}
+                    exit={{ opacity: 0, scale: 0.94, y: -4 }}
+                    transition={{ duration: 0.14 }}
+                    className="absolute right-0 top-11 z-20 w-52 overflow-hidden rounded-2xl border border-slate-200 bg-white p-1.5 shadow-modal"
+                  >
+                    <button onClick={() => { setInfoOpen(true); setMenuOpen(false); }} className="flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium text-brand-900 hover:bg-surface-soft">
+                      <Info className="h-4 w-4 text-slate-400" /> Guruh ma&apos;lumoti
+                    </button>
+                    {isSuperadmin && (
+                      <button onClick={() => { setSettingsOpen(true); setMenuOpen(false); }} className="flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium text-brand-900 hover:bg-surface-soft">
+                        <Settings className="h-4 w-4 text-slate-400" /> Guruh sozlamalari
+                      </button>
+                    )}
+                    {!isOwner && (
+                      <button onClick={() => { setLeaveOpen(true); setMenuOpen(false); }} className="flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium text-rose-600 hover:bg-rose-50">
+                        <LogOut className="h-4 w-4" /> Guruhdan chiqish
+                      </button>
+                    )}
+                  </motion.div>
+                </>
+              )}
+            </AnimatePresence>
+          </div>
+        )}
       </div>
 
       {/* Messages */}
@@ -253,7 +327,65 @@ export function ChatWindow({ conversationId }: { conversationId: string }) {
         )}
       </div>
 
-      <Composer onSend={handleSend} onTyping={emitTyping} replyTo={replyTo} onCancelReply={() => setReplyTo(null)} />
+      <Composer
+        onSend={handleSend}
+        onTyping={emitTyping}
+        replyTo={replyTo}
+        onCancelReply={() => setReplyTo(null)}
+        blockedMessageTypes={isGroup ? (conv.blockedMessageTypes ?? []) : []}
+        canBypassRestrictions={canBypassRestrictions}
+      />
+
+      {/* Group info */}
+      <Modal open={infoOpen} onClose={() => setInfoOpen(false)} title="Guruh ma'lumoti">
+        <div className="space-y-4">
+          <div className="flex items-center gap-3">
+            <span className="flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-iris text-white">
+              {conv.avatarUrl ? <Avatar src={conv.avatarUrl} name={conv.title} size={56} /> : <Hash className="h-6 w-6" />}
+            </span>
+            <div className="min-w-0">
+              <p className="truncate text-lg font-black text-brand-900">{conv.title}</p>
+              {conv.username && <p className="text-sm text-iris-600">@{conv.username}</p>}
+              <p className="flex items-center gap-1 text-xs text-slate-500"><Users className="h-3 w-3" /> {conv.participantCount} a&apos;zo</p>
+            </div>
+          </div>
+          {conv.description && <p className="text-sm leading-relaxed text-slate-600">{conv.description}</p>}
+          {(conv.blockedMessageTypes ?? []).length > 0 && (
+            <div className="rounded-2xl bg-rose-50 p-3 text-xs text-rose-700">
+              Cheklovlar yoqilgan: {(conv.blockedMessageTypes ?? []).map((t) => RESTRICTION_LABEL[t] ?? t).join(', ')}
+            </div>
+          )}
+        </div>
+      </Modal>
+
+      {/* Superadmin settings */}
+      {isSuperadmin && (
+        <GroupSettingsModal
+          open={settingsOpen}
+          onClose={() => setSettingsOpen(false)}
+          conversation={conv}
+          onUpdated={(c) => setConv(c)}
+        />
+      )}
+
+      {/* Leave confirm */}
+      <Modal open={leaveOpen} onClose={() => !leaving && setLeaveOpen(false)} title="Guruhdan chiqish">
+        <div className="space-y-4">
+          <p className="text-sm text-slate-600">
+            <span className="font-semibold text-brand-900">{conv.title}</span> guruhidan chiqmoqchimisiz? Keyin uni qidiruvdan qayta topib qo&apos;shilishingiz mumkin.
+          </p>
+          <div className="flex justify-end gap-3">
+            <button onClick={() => setLeaveOpen(false)} disabled={leaving} className="rounded-xl px-4 py-2 text-sm font-semibold text-slate-600 hover:bg-surface-soft">Bekor</button>
+            <button onClick={handleLeave} disabled={leaving} className="btn-lift flex items-center gap-2 rounded-xl bg-rose-500 px-4 py-2 text-sm font-semibold text-white hover:bg-rose-600 disabled:opacity-60">
+              {leaving ? <Loader2 className="h-4 w-4 animate-spin" /> : <LogOut className="h-4 w-4" />} Chiqish
+            </button>
+          </div>
+        </div>
+      </Modal>
     </div>
   );
 }
+
+const RESTRICTION_LABEL: Record<string, string> = {
+  text: 'Matn', image: 'Rasm', video: 'Video', voice: 'Ovozli xabar', round_video: 'Video xabar',
+};

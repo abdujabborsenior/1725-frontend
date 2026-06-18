@@ -107,29 +107,48 @@ export default function SolutionsPage() {
   const [status, setStatus] = useState<SolutionStatus | ''>('');
 
   const { data, isLoading } = useQuery({
-    queryKey: ['solutions', { page, status }],
-    queryFn: () => solutionsApi.list({ page, limit: 9, status: status || undefined }),
+    queryKey: ['my-solutions', { page, status }],
+    queryFn: () => solutionsApi.my({ page, limit: 9, status: status || undefined }),
+    enabled: !!token,
   });
 
-  const visibleTabs = token
-    ? STATUS_TABS
-    : STATUS_TABS.filter((t) => t.value === '' || t.value === 'accepted');
+  const visibleTabs = STATUS_TABS;
 
   const items = data?.data ?? [];
+
+  if (!token) {
+    return (
+      <div className="py-24 text-center animate-fade-in">
+        <div className="h-16 w-16 rounded-2xl bg-slate-100 flex items-center justify-center mx-auto mb-4">
+          <Lightbulb className="h-8 w-8 text-slate-400" />
+        </div>
+        <p className="text-brand-900 font-semibold">Yechimlaringizni kuzating</p>
+        <p className="text-sm text-slate-500 mt-1 mb-5">
+          Yuborgan yechimlaringiz holatini ko&apos;rish uchun tizimga kiring
+        </p>
+        <Link
+          href="/login"
+          className="inline-flex items-center gap-2 rounded-xl bg-brand-900 px-5 py-2.5 text-sm font-semibold text-white hover:bg-brand-800 transition-colors"
+        >
+          Tizimga kirish
+        </Link>
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-6 animate-fade-in">
       <div className="flex items-center justify-between gap-3 flex-wrap">
         <div>
-          <h1 className="text-2xl font-bold text-brand-900">Yechimlar</h1>
+          <h1 className="text-2xl font-bold text-brand-900">Yechimlarim</h1>
           <p className="text-sm text-slate-500 mt-0.5">
-            Jami {data?.meta.total ?? '—'} ta yechim
+            Siz yuborgan {data?.meta.total ?? '—'} ta yechim
           </p>
         </div>
         <div className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-white border border-slate-200">
           <Lightbulb className="h-4 w-4 text-amber-600" />
           <span className="text-xs text-slate-600 font-medium">
-            {token ? 'Hamjamiyat yechimlari' : 'Qabul qilingan yechimlar'}
+            Shaxsiy yechimlar
           </span>
         </div>
       </div>
@@ -158,9 +177,9 @@ export default function SolutionsPage() {
                 <div className="h-16 w-16 rounded-2xl bg-slate-100 flex items-center justify-center mx-auto mb-4">
                   <Lightbulb className="h-8 w-8 text-slate-400" />
                 </div>
-                <p className="text-brand-900 font-semibold">Yechimlar topilmadi</p>
+                <p className="text-brand-900 font-semibold">Yechim topilmadi</p>
                 <p className="text-sm text-slate-500 mt-1">
-                  {token ? 'Hozircha yechim mavjud emas' : "Hozircha qabul qilingan yechimlar yo'q"}
+                  Siz hali yechim yubormagansiz
                 </p>
               </div>
             )

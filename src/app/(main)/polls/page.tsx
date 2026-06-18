@@ -1,9 +1,10 @@
 'use client';
 
 import { useQuery } from '@tanstack/react-query';
-import { BarChart3, Loader2, Vote } from 'lucide-react';
+import { Loader2, Vote } from 'lucide-react';
 import { pollsApi } from '@/lib/api';
 import { PollCard } from '@/components/polls/poll-card';
+import { BackButton } from '@/components/ui/back-button';
 
 export default function PollsPage() {
   const { data: polls, isLoading } = useQuery({
@@ -12,37 +13,50 @@ export default function PollsPage() {
     staleTime: 30_000,
   });
 
+  const activeCount = polls?.filter((p) => !p.isClosed).length ?? 0;
+  const totalVotes = polls?.reduce((s, p) => s + p.totalVotes, 0) ?? 0;
+  const hasPolls = !!polls && polls.length > 0;
+
   return (
     <div className="mx-auto max-w-2xl animate-fade-in space-y-6">
-      {/* Header */}
-      <div className="relative overflow-hidden rounded-3xl border border-slate-200 bg-white p-6 shadow-soft">
-        <div className="pointer-events-none absolute inset-0 bg-mesh opacity-70" />
-        <div className="relative flex items-center gap-4">
-          <span className="flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-emerald-iris text-white shadow-glow-accent">
-            <BarChart3 className="h-7 w-7" />
-          </span>
-          <div>
-            <h1 className="text-2xl font-black tracking-tight text-brand-900">Ovoz berish</h1>
-            <p className="mt-0.5 text-sm text-slate-500">
-              Hamjamiyat tanlovi — yoqqan startaplaringizga ovoz bering 🗳️
-            </p>
-          </div>
+      <BackButton label="Ortga" fallbackHref="/" />
+
+      {/* Hero */}
+      <div className="overflow-hidden rounded-3xl border border-slate-200/80 bg-white shadow-soft">
+        <div className="h-1 w-full bg-gradient-emerald-iris" />
+        <div className="px-6 py-6 md:px-8 md:py-7">
+          <p className="text-[11px] font-bold uppercase tracking-[0.2em] text-accent-600">Hamjamiyat tanlovi</p>
+          <h1 className="mt-1.5 text-3xl font-black tracking-tight text-brand-900">Ovoz berish</h1>
+          <p className="mt-1.5 max-w-md text-sm leading-relaxed text-slate-500">
+            Eng kuchli startaplarni hamjamiyat tanlaydi. Yoqqan loyihangizga ovoz bering — natijalar jonli yangilanadi.
+          </p>
+          {hasPolls && (
+            <div className="mt-5 flex items-center gap-6 border-t border-slate-100 pt-4">
+              <div>
+                <p className="text-xl font-black tabular-nums text-brand-900">{activeCount}</p>
+                <p className="text-[11px] font-medium uppercase tracking-wide text-slate-400">Faol tanlov</p>
+              </div>
+              <div className="h-8 w-px bg-slate-200" />
+              <div>
+                <p className="text-xl font-black tabular-nums text-brand-900">{totalVotes.toLocaleString('uz')}</p>
+                <p className="text-[11px] font-medium uppercase tracking-wide text-slate-400">Umumiy ovoz</p>
+              </div>
+            </div>
+          )}
         </div>
       </div>
 
       {/* Polls */}
       {isLoading ? (
-        <div className="flex justify-center py-20">
-          <Loader2 className="h-6 w-6 animate-spin text-slate-300" />
-        </div>
-      ) : polls && polls.length > 0 ? (
+        <div className="flex justify-center py-20"><Loader2 className="h-6 w-6 animate-spin text-slate-300" /></div>
+      ) : hasPolls ? (
         <div className="space-y-5">
           {polls.map((p) => <PollCard key={p.id} poll={p} />)}
         </div>
       ) : (
         <div className="rounded-3xl border border-dashed border-slate-200 bg-surface-soft py-16 text-center">
           <Vote className="mx-auto mb-3 h-10 w-10 text-slate-300" />
-          <p className="font-semibold text-brand-900">Hozircha ovoz berishlar yo‘q</p>
+          <p className="font-semibold text-brand-900">Hozircha tanlovlar yo‘q</p>
           <p className="mt-1 text-sm text-slate-500">Superadmin tez orada startaplar tanlovini boshlaydi.</p>
         </div>
       )}
