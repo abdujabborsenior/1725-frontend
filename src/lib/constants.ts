@@ -2,6 +2,8 @@ import type {
   LeaderboardPeriod,
   PlatformType,
   ProblemStatus,
+  ReportReason,
+  ReportTargetType,
   SolutionStatus,
   StartupSort,
   StartupStatus,
@@ -228,6 +230,39 @@ export const LEADERBOARD_PERIOD_OPTIONS: {
   { value: 'month', label: 'Bu oy' },
   { value: 'week', label: 'Bu hafta' },
 ];
+
+/* ── Shikoyat (report) sabablari ──────────────────────────────── */
+export const REPORT_REASON_LABELS: Record<ReportReason, string> = {
+  spam: 'Spam yoki reklama',
+  inappropriate: 'Nomaqbul kontent',
+  harassment: 'Tahqirlash / bezovta qilish',
+  hate_speech: 'Nafrat nutqi',
+  sexual_content: 'Jinsiy mazmunli kontent',
+  violence: "Zo'ravonlik",
+  misinformation: "Yolg'on ma'lumot",
+  scam: 'Firibgarlik / aldov',
+  copyright: 'Mualliflik huquqi buzilishi',
+  duplicate: 'Takroriy',
+  not_working: 'Ishlamaydi / buzilgan',
+  low_quality: 'Past sifatli / ahamiyatsiz',
+  offensive: 'Haqoratli',
+  other: 'Boshqa sabab',
+};
+
+/** Har bir obyekt turi uchun ko'rsatiladigan sabablar (backend bilan mos) */
+export const REPORT_REASONS_BY_TYPE: Record<ReportTargetType, ReportReason[]> = {
+  startup: ['spam', 'scam', 'copyright', 'not_working', 'inappropriate', 'misinformation', 'offensive', 'other'],
+  message: ['spam', 'harassment', 'hate_speech', 'sexual_content', 'violence', 'misinformation', 'offensive', 'other'],
+  problem: ['spam', 'inappropriate', 'duplicate', 'misinformation', 'offensive', 'other'],
+  solution: ['spam', 'inappropriate', 'copyright', 'low_quality', 'misinformation', 'offensive', 'other'],
+};
+
+export const REPORT_TARGET_LABELS: Record<ReportTargetType, string> = {
+  startup: 'startap',
+  message: 'xabar',
+  problem: 'muammo',
+  solution: 'yechim',
+};
 
 export const STARTUP_CATEGORIES = [
   'Texnologiya',

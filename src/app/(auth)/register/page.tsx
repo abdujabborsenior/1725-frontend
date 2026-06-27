@@ -9,13 +9,14 @@ import { z } from 'zod';
 import { useMutation } from '@tanstack/react-query';
 import {
   GraduationCap, School, User, ArrowRight, Eye, EyeOff,
-  ChevronLeft, Zap, Mail, Lock, MapPin, CalendarDays,
+  ChevronLeft, Mail, Lock, MapPin, CalendarDays,
 } from 'lucide-react';
 import { authApi, getErrorMessage } from '@/lib/api';
 import { useAuthStore } from '@/store/auth.store';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Select } from '@/components/ui/select';
+import { AuthMobileLogo } from '@/components/auth/auth-shell';
 import { UZ_REGIONS, SCHOOL_GRADES, UNIVERSITY_COURSES } from '@/lib/constants';
 import { cn } from '@/lib/utils';
 import toast from 'react-hot-toast';
@@ -260,19 +261,9 @@ export default function RegisterPage() {
   const selected = TYPES.find((t) => t.id === userType);
 
   return (
-    <div className="min-h-screen flex items-center justify-center px-4 py-10">
-      <div className="w-full max-w-md animate-slide-up">
-        {/* Logo */}
-        <div className="flex justify-center mb-8">
-          <Link href="/" className="flex items-center gap-3">
-            <div className="h-12 w-12 rounded-2xl bg-brand-900 flex items-center justify-center">
-              <Zap className="h-6 w-6 text-accent-400" fill="currentColor" />
-            </div>
-            <span className="text-2xl font-black text-brand-900">StartupHub</span>
-          </Link>
-        </div>
-
-        <div className="bg-white border border-slate-200 rounded-2xl p-8 shadow-card">
+    <div className="w-full max-w-md">
+      <AuthMobileLogo />
+      <div className="rounded-3xl border border-slate-200/80 bg-white/90 p-7 shadow-card backdrop-blur-sm sm:p-8">
           <div className="flex items-center gap-3 mb-7">
             {userType && (
               <button
@@ -318,7 +309,6 @@ export default function RegisterPage() {
           {userType === 'general' && <GeneralForm key="general" />}
           {userType === 'school' && <SchoolForm key="school" />}
           {userType === 'university' && <UniversityForm key="university" />}
-        </div>
       </div>
     </div>
   );

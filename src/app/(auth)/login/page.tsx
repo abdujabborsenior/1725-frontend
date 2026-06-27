@@ -6,11 +6,12 @@ import { useRouter } from 'next/navigation';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
-import { Mail, Lock, Eye, EyeOff, Zap, ArrowRight } from 'lucide-react';
+import { Mail, Lock, Eye, EyeOff, ArrowRight } from 'lucide-react';
 import { authApi, getErrorMessage } from '@/lib/api';
 import { useAuthStore } from '@/store/auth.store';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import { AuthCard } from '@/components/auth/auth-shell';
 import toast from 'react-hot-toast';
 
 const schema = z.object({
@@ -59,28 +60,12 @@ export default function LoginPage() {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center px-4 py-12">
-      <div className="w-full max-w-md animate-slide-up">
-        {/* Logo */}
-        <div className="flex justify-center mb-8">
-          <Link href="/" className="flex items-center gap-3">
-            <div className="h-12 w-12 rounded-2xl bg-brand-900 flex items-center justify-center">
-              <Zap className="h-6 w-6 text-accent-400" fill="currentColor" />
-            </div>
-            <span className="text-2xl font-black text-brand-900">StartupHub</span>
-          </Link>
-        </div>
-
-        {/* Card */}
-        <div className="bg-white border border-slate-200 rounded-2xl p-8 shadow-card">
-          <div className="text-center mb-7">
-            <h1 className="text-2xl font-bold text-brand-900 mb-2">Xush kelibsiz!</h1>
-            <p className="text-slate-500 text-sm">
-              Hisobingizga kiring va muammolarni hal qiling
-            </p>
-          </div>
-
-          <form onSubmit={handleSubmit(onSubmit)} className="space-y-5" noValidate>
+    <AuthCard
+      eyebrow="Kirish"
+      title="Xush kelibsiz!"
+      subtitle="Hisobingizga kiring va g'oyalaringizni hayotga tatbiq eting"
+    >
+      <form onSubmit={handleSubmit(onSubmit)} className="space-y-5" noValidate>
             <Input
               label="Email"
               type="email"
@@ -170,8 +155,6 @@ export default function LoginPage() {
               ))}
             </div>
           </div>
-        </div>
-      </div>
-    </div>
+    </AuthCard>
   );
 }

@@ -20,6 +20,7 @@ import { Avatar } from '@/components/ui/avatar';
 import { cn } from '@/lib/utils';
 import { ProblemLikeButton } from '@/components/problems/like-button';
 import { ProblemShareModal } from '@/components/problems/share-modal';
+import { ReportButton } from '@/components/reports/report-dialog';
 import { Share2 } from 'lucide-react';
 import { formatDistanceToNow } from 'date-fns';
 import toast from 'react-hot-toast';
@@ -386,6 +387,11 @@ export default function ProblemDetailPage() {
           >
             <Share2 className="h-4 w-4" /> Ulashish
           </button>
+          <ReportButton
+            targetType="problem"
+            targetId={problem.id}
+            className="h-10 rounded-full border border-slate-200 bg-white px-4 hover:border-rose-200"
+          />
 
           {problem.submittedBy && (
             <div className="ml-auto flex items-center gap-2.5">
@@ -535,6 +541,9 @@ export default function ProblemDetailPage() {
                     &ldquo;{s.analyzerNote}&rdquo;
                   </div>
                 )}
+                <div className="mt-3 flex justify-end border-t border-slate-100 pt-2.5">
+                  <ReportButton targetType="solution" targetId={s.id} />
+                </div>
               </div>
             ))}
           </div>

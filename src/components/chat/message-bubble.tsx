@@ -4,8 +4,9 @@ import { useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
 import { createPortal } from 'react-dom';
 import { motion, AnimatePresence, useMotionValue, useTransform, animate } from 'framer-motion';
-import { Play, Pause, FileText, Reply, Check, CheckCheck, Download, Copy } from 'lucide-react';
+import { Play, Pause, FileText, Reply, Check, CheckCheck, Download, Copy, Flag } from 'lucide-react';
 import { Avatar } from '@/components/ui/avatar';
+import { ReportDialog } from '@/components/reports/report-dialog';
 import { profileHref } from '@/components/social/user-list-item';
 import { cn } from '@/lib/utils';
 import { format } from 'date-fns';
@@ -132,10 +133,10 @@ function Attachment({ att, mine }: { att: MessageAttachment; mine: boolean }) {
 
 /* ── Kontekst menyu (o'ng tugma / uzun bosish) ──────────────── */
 function ContextMenu({
-  x, y, hasText, onReply, onCopy, onClose,
+  x, y, hasText, canReport, onReply, onCopy, onReport, onClose,
 }: {
-  x: number; y: number; hasText: boolean;
-  onReply: () => void; onCopy: () => void; onClose: () => void;
+  x: number; y: number; hasText: boolean; canReport: boolean;
+  onReply: () => void; onCopy: () => void; onReport: () => void; onClose: () => void;
 }) {
   useEffect(() => {
     const close = () => onClose();
@@ -179,6 +180,14 @@ function ContextMenu({
             <Copy className="h-4 w-4 text-iris-600" /> Nusxa olish
           </button>
         )}
+        {canReport && (
+          <button
+            onClick={() => { onReport(); onClose(); }}
+            className="flex w-full items-center gap-2.5 rounded-xl px-3 py-2 text-sm font-medium text-rose-600 transition-colors hover:bg-rose-50"
+          >
+            <Flag className="h-4 w-4" /> Shikoyat qilish
+          </button>
+        )}
       </div>
     </div>,
     document.body,
@@ -198,6 +207,7 @@ const SWIPE_THRESHOLD = 64;
 
 export function MessageBubble({ message, mine, showAvatar, isGroup, read, onReply }: Props) {
   const [menu, setMenu] = useState<{ x: number; y: number } | null>(null);
+  const [reportOpen, setReportOpen] = useState(false);
   const x = useMotionValue(0);
   // Surilganda ko'rinadigan reply ikonkasi — surish chuqurligiga bog'liq
   const iconScale = useTransform(x, [0, SWIPE_THRESHOLD], [0.2, 1]);
@@ -373,12 +383,21 @@ export function MessageBubble({ message, mine, showAvatar, isGroup, read, onRepl
             x={menu.x}
             y={menu.y}
             hasText={!!message.content}
+            canReport={!mine}
             onReply={triggerReply}
             onCopy={copyText}
+            onReport={() => setReportOpen(true)}
             onClose={() => setMenu(null)}
           />
         )}
       </AnimatePresence>
+
+      <ReportDialog
+        open={reportOpen}
+        onClose={() => setReportOpen(false)}
+        targetType="message"
+        targetId={message.id}
+      />
     </div>
   );
 }

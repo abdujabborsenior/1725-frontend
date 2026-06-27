@@ -25,6 +25,8 @@ import type {
   PublicGroup,
   PublicProfile,
   PublicUserCard,
+  ReportReason,
+  ReportTargetType,
   Solution,
   SolutionStatus,
   Startup,
@@ -380,6 +382,20 @@ export const startupsApi = {
     unwrap<{ message: string }>(api.post(`/startups/${id}/viewers`, { userId })),
   removeViewer: (id: string, userId: string) =>
     unwrap<{ message: string }>(api.delete(`/startups/${id}/viewers/${userId}`)),
+};
+
+/* ── Reports (shikoyatlar) ────────────────────────────────────── */
+export const reportsApi = {
+  create: (data: {
+    targetType: ReportTargetType;
+    targetId: string;
+    reason: ReportReason;
+    details?: string;
+  }) => unwrap<{ data: { id: string }; message: string }>(api.post('/reports', data)),
+  check: (targetType: ReportTargetType, targetId: string) =>
+    unwrap<{ reported: boolean }>(
+      api.get('/reports/check', { params: { targetType, targetId } }),
+    ),
 };
 
 /* ── Polls (startaplar ovoz berish) ───────────────────────────── */

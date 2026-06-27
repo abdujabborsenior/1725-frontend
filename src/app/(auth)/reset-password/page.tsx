@@ -3,11 +3,12 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { Lock, Eye, EyeOff, Zap, ShieldCheck, RefreshCw, ArrowLeft } from 'lucide-react';
+import { Lock, Eye, EyeOff, ShieldCheck, RefreshCw, ArrowLeft } from 'lucide-react';
 import { authApi, getErrorMessage } from '@/lib/api';
 import { useAuthStore } from '@/store/auth.store';
 import { Button } from '@/components/ui/button';
 import { OtpInput } from '@/components/ui/otp-input';
+import { AuthCard } from '@/components/auth/auth-shell';
 import toast from 'react-hot-toast';
 
 const pwdRules = [
@@ -78,28 +79,14 @@ export default function ResetPasswordPage() {
   if (!pendingEmail) return null;
 
   return (
-    <div className="min-h-screen flex items-center justify-center px-4 py-12">
-      <div className="w-full max-w-md animate-slide-up">
-        <div className="flex justify-center mb-8">
-          <Link href="/" className="flex items-center gap-3">
-            <div className="h-12 w-12 rounded-2xl bg-brand-900 flex items-center justify-center">
-              <Zap className="h-6 w-6 text-accent-400" fill="currentColor" />
-            </div>
-            <span className="text-2xl font-black text-brand-900">StartupHub</span>
-          </Link>
-        </div>
-
-        <div className="bg-white border border-slate-200 rounded-2xl p-8 shadow-card">
-          <div className="text-center mb-7">
-            <h1 className="text-2xl font-bold text-brand-900 mb-2">Yangi parol o&apos;rnatish</h1>
-            <p className="text-slate-500 text-sm">
-              Emailga yuborilgan kodni va yangi parolingizni kiriting
-            </p>
-            <p className="text-accent-700 font-semibold text-sm mt-1 truncate">
-              {pendingEmail}
-            </p>
-          </div>
-
+    <AuthCard
+      eyebrow="Xavfsizlik"
+      title="Yangi parol o'rnatish"
+      subtitle="Emailga yuborilgan kodni va yangi parolingizni kiriting"
+    >
+          <p className="-mt-4 mb-5 truncate text-sm font-semibold text-accent-700">
+            {pendingEmail}
+          </p>
           <div className="space-y-5">
             <div className="flex flex-col items-center gap-3">
               <label className="text-xs font-semibold text-slate-700 uppercase tracking-wider self-start">
@@ -193,8 +180,6 @@ export default function ResetPasswordPage() {
           >
             <ArrowLeft className="h-4 w-4" /> Kirishga qaytish
           </Link>
-        </div>
-      </div>
-    </div>
+    </AuthCard>
   );
 }

@@ -3,11 +3,12 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { Mail, Zap, RefreshCw, CheckCircle2 } from 'lucide-react';
+import { Mail, RefreshCw, CheckCircle2 } from 'lucide-react';
 import { authApi } from '@/lib/api';
 import { useAuthStore } from '@/store/auth.store';
 import { Button } from '@/components/ui/button';
 import { OtpInput } from '@/components/ui/otp-input';
+import { AuthMobileLogo } from '@/components/auth/auth-shell';
 import toast from 'react-hot-toast';
 
 export default function VerifyEmailPage() {
@@ -67,31 +68,20 @@ export default function VerifyEmailPage() {
 
   if (success) {
     return (
-      <div className="min-h-screen flex items-center justify-center px-4">
-        <div className="text-center animate-slide-up">
-          <div className="h-24 w-24 rounded-full bg-accent-50 border border-accent-200 flex items-center justify-center mx-auto mb-6">
-            <CheckCircle2 className="h-12 w-12 text-accent-600" />
-          </div>
-          <h1 className="text-2xl font-bold text-brand-900 mb-2">Tasdiqlandi!</h1>
-          <p className="text-slate-500">Kirish sahifasiga yo&apos;naltirilmoqda...</p>
+      <div className="text-center animate-slide-up">
+        <div className="h-24 w-24 rounded-full bg-accent-50 border border-accent-200 flex items-center justify-center mx-auto mb-6">
+          <CheckCircle2 className="h-12 w-12 text-accent-600" />
         </div>
+        <h1 className="text-2xl font-bold text-brand-900 mb-2">Tasdiqlandi!</h1>
+        <p className="text-slate-500">Kirish sahifasiga yo&apos;naltirilmoqda...</p>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center px-4 py-12">
-      <div className="w-full max-w-md animate-slide-up">
-        <div className="flex justify-center mb-8">
-          <Link href="/" className="flex items-center gap-3">
-            <div className="h-12 w-12 rounded-2xl bg-brand-900 flex items-center justify-center">
-              <Zap className="h-6 w-6 text-accent-400" fill="currentColor" />
-            </div>
-            <span className="text-2xl font-black text-brand-900">StartupHub</span>
-          </Link>
-        </div>
-
-        <div className="bg-white border border-slate-200 rounded-2xl p-8 shadow-card text-center">
+    <div className="w-full max-w-md">
+      <AuthMobileLogo />
+      <div className="rounded-3xl border border-slate-200/80 bg-white/90 p-7 text-center shadow-card backdrop-blur-sm sm:p-8">
           <div className="h-20 w-20 rounded-2xl bg-accent-50 border border-accent-200 flex items-center justify-center mx-auto mb-6">
             <Mail className="h-10 w-10 text-accent-600" />
           </div>
@@ -140,7 +130,6 @@ export default function VerifyEmailPage() {
           >
             Boshqa email bilan kirish
           </button>
-        </div>
       </div>
     </div>
   );

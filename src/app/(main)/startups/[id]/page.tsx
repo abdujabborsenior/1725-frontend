@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import { useQuery } from '@tanstack/react-query';
 import {
-  ArrowLeft, Eye, Calendar, Users, Rocket, Tag, ExternalLink, Share2, Check,
+  ArrowLeft, Eye, Calendar, Users, Rocket, Tag, ExternalLink, Share2, Check, Flag,
 } from 'lucide-react';
 import { startupsApi } from '@/lib/api';
 import { PLATFORM_ORDER } from '@/lib/constants';
@@ -13,6 +13,7 @@ import { StartupCard } from '@/components/startups/startup-card';
 import { LikeButton, BookmarkButton } from '@/components/startups/engagement';
 import { Reviews } from '@/components/startups/reviews';
 import { StarRating } from '@/components/startups/rating';
+import { ReportDialog } from '@/components/reports/report-dialog';
 import toast from 'react-hot-toast';
 
 export default function StartupDetailPage() {
@@ -21,6 +22,7 @@ export default function StartupDetailPage() {
   const slug = params.id;
 
   const [copied, setCopied] = useState(false);
+  const [reportOpen, setReportOpen] = useState(false);
 
   const { data: startup, isLoading, isError } = useQuery({
     queryKey: ['startup', slug],
@@ -165,7 +167,19 @@ export default function StartupDetailPage() {
               {copied ? <Check className="h-4 w-4 text-accent-600" /> : <Share2 className="h-4 w-4" />}
               {copied ? 'Nusxalandi' : 'Ulashish'}
             </button>
+            <button
+              onClick={() => setReportOpen(true)}
+              className="inline-flex items-center gap-2 h-11 px-4 rounded-xl border border-slate-200 bg-white text-slate-500 font-semibold hover:text-rose-600 hover:border-rose-200 transition-all btn-lift"
+            >
+              <Flag className="h-4 w-4" /> Shikoyat
+            </button>
           </div>
+          <ReportDialog
+            open={reportOpen}
+            onClose={() => setReportOpen(false)}
+            targetType="startup"
+            targetId={startup.id}
+          />
 
           {/* Store buttons */}
           {orderedPlatforms.length > 0 ? (

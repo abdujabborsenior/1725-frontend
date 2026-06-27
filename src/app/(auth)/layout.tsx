@@ -1,21 +1,20 @@
+import { AuthBrandPanel } from '@/components/auth/auth-shell';
+
 export default function AuthLayout({ children }: { children: React.ReactNode }) {
   return (
-    <div className="min-h-screen bg-surface-soft relative overflow-hidden">
-      {/* Soft brand accents */}
-      <div className="absolute -top-32 -left-32 w-[480px] h-[480px] rounded-full bg-accent-100/60 blur-3xl pointer-events-none" />
-      <div className="absolute -bottom-32 -right-32 w-[480px] h-[480px] rounded-full bg-brand-100/60 blur-3xl pointer-events-none" />
+    <div className="flex min-h-screen bg-surface-soft">
+      {/* Chap: brend showcase (lg+) */}
+      <AuthBrandPanel />
 
-      {/* Subtle grid overlay */}
-      <div
-        className="absolute inset-0 opacity-[0.03] pointer-events-none"
-        style={{
-          backgroundImage:
-            'linear-gradient(rgba(10,25,47,1) 1px, transparent 1px), linear-gradient(90deg, rgba(10,25,47,1) 1px, transparent 1px)',
-          backgroundSize: '64px 64px',
-        }}
-      />
-
-      <div className="relative z-10">{children}</div>
+      {/* O'ng: forma maydoni */}
+      <div className="relative flex flex-1 items-center justify-center overflow-hidden px-4 py-10 sm:px-6">
+        {/* Yumshoq brend aksanlari (mobil/planshet) */}
+        <div className="pointer-events-none absolute -top-32 -right-24 h-[28rem] w-[28rem] rounded-full bg-accent-100/50 blur-3xl lg:hidden" />
+        <div className="pointer-events-none absolute -bottom-32 -left-24 h-[28rem] w-[28rem] rounded-full bg-iris-100/50 blur-3xl lg:hidden" />
+        <div className="relative z-10 flex w-full animate-slide-up justify-center">
+          {children}
+        </div>
+      </div>
     </div>
   );
 }

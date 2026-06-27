@@ -20,6 +20,12 @@ export type StartupSort =
 
 export type LeaderboardPeriod = 'all' | 'year' | 'month' | 'week';
 
+export type ReportTargetType = 'startup' | 'message' | 'problem' | 'solution';
+export type ReportReason =
+  | 'spam' | 'inappropriate' | 'harassment' | 'hate_speech' | 'sexual_content'
+  | 'violence' | 'misinformation' | 'scam' | 'copyright' | 'duplicate'
+  | 'not_working' | 'low_quality' | 'offensive' | 'other';
+
 /* ── API envelopes ────────────────────────────────────────────── */
 export interface ApiEnvelope<T> {
   success: true;
