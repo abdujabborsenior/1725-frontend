@@ -1,0 +1,67 @@
+'use client';
+
+import { useState } from 'react';
+import { Info, ChevronDown } from 'lucide-react';
+import type { LeaderboardFormula } from '@/types';
+import { cn } from '@/lib/utils';
+
+/**
+ * Shaffoflik banneri — IMDB Top-250 kabi vaznli (Bayes) reyting formulasini
+ * va joriy konstantalarni ko'rsatadi. Yig'iladi/yoziladi.
+ */
+export function FormulaExplainer({ formula }: { formula: LeaderboardFormula }) {
+  const [open, setOpen] = useState(false);
+  return (
+    <div className="rounded-2xl border border-slate-200 bg-surface-soft">
+      <button
+        onClick={() => setOpen((v) => !v)}
+        className="flex w-full items-center gap-2.5 px-4 py-3 text-left"
+      >
+        <Info className="h-4 w-4 shrink-0 text-iris-500" />
+        <span className="flex-1 text-sm font-semibold text-brand-900">
+          O&apos;rinlar qanday hisoblanadi?
+        </span>
+        <span className="hidden text-xs text-slate-400 sm:inline">
+          O&apos;rtacha = {formula.c.toFixed(2)} · ishonch ostonasi (m) ={' '}
+          {formula.m}
+        </span>
+        <ChevronDown
+          className={cn(
+            'h-4 w-4 text-slate-400 transition-transform',
+            open && 'rotate-180',
+          )}
+        />
+      </button>
+      {open && (
+        <div className="space-y-3 border-t border-slate-200 px-4 py-4 text-sm text-slate-600">
+          <p>
+            Oddiy o&apos;rtacha adolatsiz: bitta 5&nbsp;yulduzli startap, 1000 ta
+            sharhli 4.8&nbsp;li startapdan yuqori chiqib ketardi. Shuning uchun
+            biz IMDB Top-250 kabi <b>Bayes (vaznli) reyting</b> ishlatamiz —
+            sharhlar kam bo&apos;lsa, ball umumiy o&apos;rtachaga &laquo;tortiladi&raquo;.
+          </p>
+          <div className="overflow-x-auto rounded-xl bg-brand-900 px-4 py-3 font-mono text-[13px] text-slate-100">
+            WR = (v / (v + m)) · R + (m / (v + m)) · C
+          </div>
+          <ul className="grid gap-1.5 sm:grid-cols-2">
+            <li>
+              <b className="text-brand-900">R</b> — startapning o&apos;rtacha
+              reytingi
+            </li>
+            <li>
+              <b className="text-brand-900">v</b> — sharhlar (ovozlar) soni
+            </li>
+            <li>
+              <b className="text-brand-900">m</b> = {formula.m} — ishonchli
+              bo&apos;lish uchun zarur ovoz
+            </li>
+            <li>
+              <b className="text-brand-900">C</b> = {formula.c.toFixed(2)} —
+              barcha startaplar o&apos;rtachasi
+            </li>
+          </ul>
+        </div>
+      )}
+    </div>
+  );
+}

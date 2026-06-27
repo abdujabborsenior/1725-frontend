@@ -18,11 +18,12 @@ import { disconnectSocket } from '@/lib/socket';
 import toast from 'react-hot-toast';
 
 const NAV_LINKS = [
-  { href: '/startups',  label: 'Startaplar' },
-  { href: '/polls',     label: 'Ovoz berish' },
-  { href: '/problems',  label: 'Muammolar' },
-  { href: '/solutions', label: 'Yechimlarim' },
-  { href: '/discover',  label: 'Hamjamiyat' },
+  { href: '/startups',    label: 'Startaplar' },
+  { href: '/leaderboard', label: 'Reyting' },
+  { href: '/polls',       label: 'Ovoz berish' },
+  { href: '/problems',    label: 'Muammolar' },
+  { href: '/solutions',   label: 'Yechimlarim' },
+  { href: '/discover',    label: 'Hamjamiyat' },
 ];
 
 function ChatLink({ mobile }: { mobile?: boolean }) {

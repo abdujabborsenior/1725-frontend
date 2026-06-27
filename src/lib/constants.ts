@@ -1,4 +1,5 @@
 import type {
+  LeaderboardPeriod,
   PlatformType,
   ProblemStatus,
   SolutionStatus,
@@ -216,6 +217,16 @@ export const STARTUP_SORT_OPTIONS: { value: StartupSort; label: string }[] = [
   { value: 'newest', label: 'Eng yangi' },
   { value: 'popular', label: 'Mashhur' },
   { value: 'alphabetical', label: 'Alifbo bo\'yicha' },
+];
+
+export const LEADERBOARD_PERIOD_OPTIONS: {
+  value: LeaderboardPeriod;
+  label: string;
+}[] = [
+  { value: 'all', label: 'Barcha vaqt' },
+  { value: 'year', label: 'Bu yil' },
+  { value: 'month', label: 'Bu oy' },
+  { value: 'week', label: 'Bu hafta' },
 ];
 
 export const STARTUP_CATEGORIES = [

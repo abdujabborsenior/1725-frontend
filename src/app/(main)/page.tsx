@@ -5,13 +5,14 @@ import { motion } from 'framer-motion';
 import { useQuery } from '@tanstack/react-query';
 import {
   ArrowRight, FileQuestion, ChevronRight, Rocket, Sparkles, Users,
-  MessageCircle, Star, UserPlus, Lightbulb, Compass, Zap, Heart,
+  MessageCircle, Star, UserPlus, Lightbulb, Compass, Zap, Heart, Trophy,
 } from 'lucide-react';
 import { problemsApi, startupsApi, chatApi, usersApi, pollsApi } from '@/lib/api';
 import { useAuthStore } from '@/store/auth.store';
 import { Button } from '@/components/ui/button';
 import { ProblemCard } from '@/components/problems/problem-card';
 import { StartupCard, StartupCardSkeleton } from '@/components/startups/startup-card';
+import { LeaderboardMini } from '@/components/startups/leaderboard-mini';
 import { GroupCard } from '@/components/social/group-card';
 import { PollCard } from '@/components/polls/poll-card';
 import { UserListItem } from '@/components/social/user-list-item';
@@ -93,8 +94,8 @@ export default function LandingPage() {
     staleTime: 60_000,
   });
   const { data: topRated } = useQuery({
-    queryKey: ['startups-top-rated'],
-    queryFn: () => startupsApi.list({ limit: 4, sort: 'top_rated' }),
+    queryKey: ['startups-leaderboard-home'],
+    queryFn: () => startupsApi.leaderboard({ limit: 6, period: 'all' }),
     staleTime: 60_000,
   });
   const { data: recentProblems } = useQuery({
@@ -375,13 +376,19 @@ export default function LandingPage() {
       <section className="grid grid-cols-1 gap-8 lg:grid-cols-3">
         <div className="space-y-6 lg:col-span-2">
           <Reveal>
-            <SectionHeader kicker="Siz uchun" icon={Star} title="Eng yuqori baholangan" href="/startups?sort=top_rated" />
+            <SectionHeader kicker="Reyting taxtasi" icon={Trophy} title="Top startaplar" subtitle="IMDB uslubidagi vaznli reyting bo‘yicha yetakchilar" href="/leaderboard" hrefLabel="To‘liq reyting" />
           </Reveal>
-          <RevealGroup className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-            {topRated?.data?.length
-              ? topRated.data.map((s) => <RevealItem key={s.id}><StartupCard startup={s} /></RevealItem>)
-              : Array.from({ length: 2 }).map((_, i) => <StartupCardSkeleton key={i} />)}
-          </RevealGroup>
+          <Reveal delay={0.06}>
+            {topRated?.data?.length ? (
+              <LeaderboardMini entries={topRated.data} />
+            ) : (
+              <div className="space-y-2">
+                {Array.from({ length: 3 }).map((_, i) => (
+                  <StartupCardSkeleton key={i} />
+                ))}
+              </div>
+            )}
+          </Reveal>
         </div>
 
         <div className="space-y-4">

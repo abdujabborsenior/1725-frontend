@@ -18,6 +18,8 @@ export type PlatformType =
 export type StartupSort =
   | 'newest' | 'popular' | 'featured' | 'alphabetical' | 'top_rated';
 
+export type LeaderboardPeriod = 'all' | 'year' | 'month' | 'week';
+
 /* ── API envelopes ────────────────────────────────────────────── */
 export interface ApiEnvelope<T> {
   success: true;
@@ -329,6 +331,38 @@ export interface StartupReview {
   startup?: Pick<Startup, 'id' | 'title' | 'slug' | 'logoUrl'> | null;
   createdAt: string;
   updatedAt: string;
+}
+
+/* ── Reyting taxtasi (IMDB uslubidagi Bayes vaznli reyting) ───── */
+export interface LeaderboardEntry extends Startup {
+  /** 1-dan boshlanadigan reyting o'rni */
+  rank: number;
+  /** Bayes (vaznli) reyting bali — 0–5 */
+  score: number;
+  /** Ushbu taxtada hisobga olingan o'rtacha reyting (davrga bog'liq) */
+  leaderboardRating: number;
+  /** Ushbu taxtada hisobga olingan ovozlar (sharhlar) soni */
+  leaderboardVotes: number;
+  /** O'rin o'zgarishi (oldingi − joriy). + ko'tarildi, − tushdi, null yangi */
+  rankDelta: number | null;
+}
+
+export interface LeaderboardFormula {
+  /** Global o'rtacha reyting (C) */
+  c: number;
+  /** Bayes silliqlash konstantasi (m) */
+  m: number;
+  period: LeaderboardPeriod;
+  minVotes: number;
+}
+
+export interface LeaderboardMeta extends PaginationMeta {
+  formula: LeaderboardFormula;
+}
+
+export interface LeaderboardResponse {
+  data: LeaderboardEntry[];
+  meta: LeaderboardMeta;
 }
 
 export interface LinkPreview {

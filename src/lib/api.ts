@@ -12,6 +12,8 @@ import type {
   ChatMessage,
   Comment,
   Conversation,
+  LeaderboardPeriod,
+  LeaderboardResponse,
   LinkPreview,
   LoginResponse,
   MessageType,
@@ -282,6 +284,15 @@ export interface StartupListParams {
   userId?: string;
 }
 
+export interface LeaderboardParams {
+  page?: number;
+  limit?: number;
+  period?: LeaderboardPeriod;
+  category?: string;
+  region?: string;
+  minVotes?: number;
+}
+
 export interface StartupPayload {
   title: string;
   tagline?: string;
@@ -311,6 +322,10 @@ export const startupsApi = {
     unwrap<Startup[]>(api.get(`/startups/${idOrSlug}/related`)),
   categories: () => unwrap<CategoryCount[]>(api.get('/startups/categories')),
   registerClick: (id: string) => api.post(`/startups/${id}/click`),
+
+  // Reyting taxtasi (IMDB uslubidagi Bayes vaznli reyting)
+  leaderboard: (params?: LeaderboardParams) =>
+    unwrap<LeaderboardResponse>(api.get('/startups/leaderboard', { params })),
 
   // Engagement (auth)
   toggleLike: (id: string) =>

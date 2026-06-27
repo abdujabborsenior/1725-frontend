@@ -6,6 +6,7 @@ const COLS: { title: string; links: { label: string; href: string }[] }[] = [
     title: 'Platforma',
     links: [
       { label: 'Startaplar vitrinasi', href: '/startups' },
+      { label: 'Top startaplar', href: '/leaderboard' },
       { label: 'Muammolar', href: '/problems' },
       { label: 'Ovoz berish', href: '/polls' },
       { label: 'Yechimlarim', href: '/solutions' },
