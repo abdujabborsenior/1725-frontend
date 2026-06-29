@@ -315,7 +315,9 @@ export default function SettingsPage() {
         <div className="flex items-center justify-between">
           <span className="text-sm text-brand-900">{me.email}</span>
           {me.isEmailVerified && (
-            <span className="text-xs font-semibold text-accent-700">Tasdiqlangan ✓</span>
+            <span className="inline-flex items-center gap-1 text-xs font-semibold text-accent-700">
+              <Check className="h-3.5 w-3.5" strokeWidth={3} /> Tasdiqlangan
+            </span>
           )}
         </div>
         <p className="text-xs text-slate-400 mt-1">Emailni o&apos;zgartirib bo&apos;lmaydi</p>

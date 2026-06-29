@@ -1,10 +1,10 @@
 'use client';
 
-import { ChevronUp, ChevronDown, Minus, Star } from 'lucide-react';
+import { ChevronUp, ChevronDown, Minus, Star, Trophy, Medal } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 /**
- * O'rin harakati — IMDB/chart uslubidagi ▲ / ▼ / — / NEW.
+ * O'rin harakati — chart uslubidagi ▲ / ▼ / — / Yangi.
  * delta = (oldingi o'rin − joriy). + ko'tarildi, − tushdi, 0 o'zgarmadi.
  */
 export function RankMovement({
@@ -43,20 +43,16 @@ export function RankMovement({
       )}
       title={up ? `${delta} pog'ona ko'tarildi` : `${-delta} pog'ona tushdi`}
     >
-      {up ? (
-        <ChevronUp className="h-3.5 w-3.5" />
-      ) : (
-        <ChevronDown className="h-3.5 w-3.5" />
-      )}
+      {up ? <ChevronUp className="h-3.5 w-3.5" /> : <ChevronDown className="h-3.5 w-3.5" />}
       {Math.abs(delta)}
     </span>
   );
 }
 
-/** Reyting baliga qarab rang darajasi (oltin → yashil → kulrang) */
+/** Reyting baliga qarab vazmin rang darajasi */
 function scoreTone(score: number): string {
   if (score >= 4.5) return 'bg-amber-50 text-amber-700 ring-amber-200';
-  if (score >= 4) return 'bg-emerald-50 text-emerald-700 ring-emerald-200';
+  if (score >= 4) return 'bg-accent-50 text-accent-700 ring-accent-200';
   if (score >= 3) return 'bg-sky-50 text-sky-700 ring-sky-200';
   return 'bg-slate-100 text-slate-600 ring-slate-200';
 }
@@ -93,43 +89,45 @@ export function ScoreBadge({
   );
 }
 
-/** Top-3 medal ranglari */
+/** Top-3 — vazmin, jiddiy oltin/kumush/bronza palitra (porloq emas) */
 export const MEDAL = {
   1: {
     ring: 'ring-amber-300',
-    grad: 'from-amber-300 via-yellow-400 to-amber-500',
-    text: 'text-amber-900',
-    glow: 'shadow-[0_8px_30px_-6px_rgba(245,158,11,0.55)]',
+    bg: 'bg-gradient-to-br from-amber-300 to-amber-500',
+    text: 'text-amber-950',
+    soft: 'bg-amber-50 text-amber-700 ring-amber-200',
+    icon: Trophy,
     label: 'Oltin',
   },
   2: {
     ring: 'ring-slate-300',
-    grad: 'from-slate-200 via-slate-300 to-slate-400',
-    text: 'text-slate-700',
-    glow: 'shadow-[0_8px_30px_-8px_rgba(100,116,139,0.45)]',
+    bg: 'bg-gradient-to-br from-slate-300 to-slate-400',
+    text: 'text-slate-800',
+    soft: 'bg-slate-100 text-slate-600 ring-slate-300',
+    icon: Medal,
     label: 'Kumush',
   },
   3: {
     ring: 'ring-orange-300',
-    grad: 'from-orange-300 via-amber-600 to-orange-700',
+    bg: 'bg-gradient-to-br from-orange-300 to-orange-500',
     text: 'text-orange-950',
-    glow: 'shadow-[0_8px_30px_-8px_rgba(194,120,3,0.5)]',
+    soft: 'bg-orange-50 text-orange-700 ring-orange-200',
+    icon: Medal,
     label: 'Bronza',
   },
 } as const;
 
-/** Doira ichidagi o'rin raqami — top-3 medalli, qolgani sodda */
+/** Yumaloq-kvadrat ichidagi o'rin raqami — top-3 medalli, qolgani sodda */
 export function RankNumber({ rank }: { rank: number }) {
   const medal = MEDAL[rank as 1 | 2 | 3];
   if (medal) {
     return (
       <span
         className={cn(
-          'flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-to-br text-sm font-black ring-2',
-          medal.grad,
+          'flex h-9 w-9 items-center justify-center rounded-xl text-sm font-black ring-1 ring-inset shadow-sm',
+          medal.bg,
           medal.ring,
           medal.text,
-          medal.glow,
         )}
       >
         {rank}

@@ -3,23 +3,14 @@
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useQuery, useQueryClient, keepPreviousData } from '@tanstack/react-query';
-import {
-  Bell, CheckCheck, CheckCircle2, XCircle, Sparkles, Info,
-} from 'lucide-react';
+import { Bell, CheckCheck } from 'lucide-react';
 import { notificationsApi } from '@/lib/api';
 import { useAuthStore } from '@/store/auth.store';
 import { cn } from '@/lib/utils';
-import type { AppNotification, NotificationType } from '@/types';
+import { notificationMeta, notificationTarget } from '@/lib/notification-meta';
+import type { AppNotification } from '@/types';
 import { Pagination } from '@/components/ui/pagination';
 import { formatDistanceToNow } from 'date-fns';
-
-const TYPE_META: Record<NotificationType, { icon: typeof Bell; color: string }> = {
-  problem_approved:  { icon: CheckCircle2, color: 'text-accent-600 bg-accent-50' },
-  problem_rejected:  { icon: XCircle,      color: 'text-rose-600 bg-rose-50' },
-  solution_accepted: { icon: Sparkles,     color: 'text-violet-600 bg-violet-50' },
-  solution_rejected: { icon: XCircle,      color: 'text-rose-600 bg-rose-50' },
-  system:            { icon: Info,         color: 'text-sky-600 bg-sky-50' },
-};
 
 export default function NotificationsPage() {
   const { token, hasHydrated } = useAuthStore();
@@ -50,11 +41,18 @@ export default function NotificationsPage() {
   }
 
   async function open(n: AppNotification) {
-    if (!n.isRead) {
-      await notificationsApi.markRead(n.id).catch(() => undefined);
-      invalidate();
+    // getById — serverdan aynan shu bildirishnomani (yangi link bilan) olamiz va
+    // o'qilgan deb belgilaymiz; shunda doim to'g'ri manzilga o'tamiz.
+    let link = n.link;
+    try {
+      link = (await notificationsApi.getById(n.id)).link;
+    } catch {
+      if (!n.isRead) await notificationsApi.markRead(n.id).catch(() => undefined);
     }
-    if (n.link) router.push(n.link);
+    invalidate();
+    // Noma'lum/yaroqsiz havolada 404 chiqmasligi uchun xavfsiz manzilga aylantiramiz
+    const target = notificationTarget(link);
+    if (target) router.push(target);
   }
 
   const items = data?.data ?? [];
@@ -98,7 +96,7 @@ export default function NotificationsPage() {
         ) : (
           <div className="divide-y divide-slate-100">
             {items.map((n) => {
-              const meta = TYPE_META[n.type] ?? TYPE_META.system;
+              const meta = notificationMeta(n.type);
               const Icon = meta.icon;
               return (
                 <button

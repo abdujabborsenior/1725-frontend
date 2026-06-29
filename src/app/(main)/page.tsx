@@ -4,8 +4,8 @@ import Link from 'next/link';
 import { motion } from 'framer-motion';
 import { useQuery } from '@tanstack/react-query';
 import {
-  ArrowRight, FileQuestion, ChevronRight, Rocket, Sparkles, Users,
-  MessageCircle, Star, UserPlus, Lightbulb, Compass, Zap, Heart, Trophy,
+  ArrowRight, FileQuestion, ChevronRight, Rocket, Vote, Users,
+  MessageCircle, Star, UserPlus, Lightbulb, Compass, Zap, Heart, Trophy, HelpCircle, Hand,
 } from 'lucide-react';
 import { problemsApi, startupsApi, chatApi, usersApi, pollsApi } from '@/lib/api';
 import { useAuthStore } from '@/store/auth.store';
@@ -123,7 +123,7 @@ export default function LandingPage() {
   const stats = [
     { icon: Rocket, label: 'Startaplar', value: featuredStartups?.meta.total, color: 'text-accent-600' },
     { icon: FileQuestion, label: 'Muammolar', value: recentProblems?.meta.total, color: 'text-amber-600' },
-    { icon: Sparkles, label: 'Ovoz berishlar', value: polls?.length, color: 'text-iris-600' },
+    { icon: Vote, label: 'Ovoz berishlar', value: polls?.length, color: 'text-iris-600' },
     { icon: Users, label: 'Guruhlar', value: groups?.length, color: 'text-sky-600' },
   ];
 
@@ -271,7 +271,7 @@ export default function LandingPage() {
       <section id="startap-nima" className="scroll-mt-24 space-y-10">
         <Reveal className="mx-auto max-w-2xl text-center">
           <div className="mb-3 inline-flex items-center gap-2 rounded-full border border-iris-200 bg-iris-50 px-3 py-1">
-            <Sparkles className="h-3.5 w-3.5 text-iris-600" />
+            <HelpCircle className="h-3.5 w-3.5 text-iris-600" />
             <span className="text-xs font-semibold text-iris-700">Bu savollar sizni o‘ylantiryaptimi?</span>
           </div>
           <h2 className="text-3xl font-black tracking-tight text-brand-900 md:text-4xl">
@@ -500,8 +500,9 @@ export default function LandingPage() {
       )}
 
       {user && (
-        <p className="text-center text-xs text-slate-400">
-          Xush kelibsiz, {user.fullName} 👋
+        <p className="flex items-center justify-center gap-1.5 text-xs text-slate-400">
+          <Hand className="h-3.5 w-3.5 text-amber-500" />
+          Xush kelibsiz, {user.fullName}
         </p>
       )}
     </div>

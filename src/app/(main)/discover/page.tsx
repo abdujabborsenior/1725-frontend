@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { AnimatePresence, motion } from 'framer-motion';
-import { Search, Loader2, Users, Sparkles, MessageCircle, Clock, X } from 'lucide-react';
+import { Search, Loader2, Users, UserPlus, MessageCircle, Clock, X } from 'lucide-react';
 import { usersApi, chatApi } from '@/lib/api';
 import { useDebounce } from '@/lib/use-debounce';
 import { UserListItem } from '@/components/social/user-list-item';
@@ -201,7 +201,7 @@ export default function DiscoverPage() {
           {/* Suggestions */}
           <section>
             <h2 className="mb-3 flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-slate-400">
-              <Sparkles className="h-4 w-4 text-iris-500" /> Kuzatish uchun
+              <UserPlus className="h-4 w-4 text-iris-500" /> Kuzatish uchun
             </h2>
             <div className="grid grid-cols-1 gap-2 rounded-3xl border border-slate-200 bg-white p-2 shadow-soft sm:grid-cols-2">
               {suggestions && suggestions.length > 0

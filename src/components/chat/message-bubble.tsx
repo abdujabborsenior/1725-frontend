@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
 import { createPortal } from 'react-dom';
 import { motion, AnimatePresence, useMotionValue, useTransform, animate } from 'framer-motion';
-import { Play, Pause, FileText, Reply, Check, CheckCheck, Download, Copy, Flag } from 'lucide-react';
+import { Play, Pause, FileText, Reply, Check, CheckCheck, Download, Copy, Flag, Clock, Paperclip, Pencil } from 'lucide-react';
 import { Avatar } from '@/components/ui/avatar';
 import { ReportDialog } from '@/components/reports/report-dialog';
 import { profileHref } from '@/components/social/user-list-item';
@@ -133,10 +133,10 @@ function Attachment({ att, mine }: { att: MessageAttachment; mine: boolean }) {
 
 /* ── Kontekst menyu (o'ng tugma / uzun bosish) ──────────────── */
 function ContextMenu({
-  x, y, hasText, canReport, onReply, onCopy, onReport, onClose,
+  x, y, hasText, canReport, canEdit, onReply, onCopy, onReport, onEdit, onClose,
 }: {
-  x: number; y: number; hasText: boolean; canReport: boolean;
-  onReply: () => void; onCopy: () => void; onReport: () => void; onClose: () => void;
+  x: number; y: number; hasText: boolean; canReport: boolean; canEdit: boolean;
+  onReply: () => void; onCopy: () => void; onReport: () => void; onEdit: () => void; onClose: () => void;
 }) {
   useEffect(() => {
     const close = () => onClose();
@@ -172,6 +172,14 @@ function ContextMenu({
         >
           <Reply className="h-4 w-4 text-accent-600" /> Javob berish
         </button>
+        {canEdit && (
+          <button
+            onClick={() => { onEdit(); onClose(); }}
+            className="flex w-full items-center gap-2.5 rounded-xl px-3 py-2 text-sm font-medium text-brand-900 transition-colors hover:bg-surface-soft"
+          >
+            <Pencil className="h-4 w-4 text-iris-600" /> Tahrirlash
+          </button>
+        )}
         {hasText && (
           <button
             onClick={() => { onCopy(); onClose(); }}
@@ -201,11 +209,12 @@ interface Props {
   isGroup: boolean;
   read?: boolean;
   onReply: (m: ChatMessage) => void;
+  onEdit?: (m: ChatMessage) => void;
 }
 
 const SWIPE_THRESHOLD = 64;
 
-export function MessageBubble({ message, mine, showAvatar, isGroup, read, onReply }: Props) {
+export function MessageBubble({ message, mine, showAvatar, isGroup, read, onReply, onEdit }: Props) {
   const [menu, setMenu] = useState<{ x: number; y: number } | null>(null);
   const [reportOpen, setReportOpen] = useState(false);
   const x = useMotionValue(0);
@@ -349,7 +358,9 @@ export function MessageBubble({ message, mine, showAvatar, isGroup, read, onRepl
           {message.replyTo && (
             <div className={cn('mb-1.5 rounded-lg border-l-2 px-2 py-1 text-xs', mine ? 'border-white/60 bg-white/15' : 'border-accent-400 bg-surface-soft')}>
               <p className={cn('font-semibold', mine ? 'text-white/90' : 'text-accent-700')}>{message.replyTo.senderName ?? 'Xabar'}</p>
-              <p className={cn('truncate', mine ? 'text-white/75' : 'text-slate-500')}>{message.replyTo.content ?? '📎 media'}</p>
+              <p className={cn('flex items-center gap-1 truncate', mine ? 'text-white/75' : 'text-slate-500')}>
+                {message.replyTo.content ?? (<><Paperclip className="h-3 w-3 shrink-0" /> Biriktirma</>)}
+              </p>
             </div>
           )}
 
@@ -370,7 +381,8 @@ export function MessageBubble({ message, mine, showAvatar, isGroup, read, onRepl
           {/* Meta */}
           {!isRound && (
             <span className={cn('mt-0.5 flex items-center justify-end gap-1 text-[10px]', mine ? 'text-white/70' : 'text-slate-400')}>
-              {message.pending ? '⏳' : fmtTime(message.createdAt)}
+              {message.editedAt && !message.pending && <span className="italic">tahrirlangan</span>}
+              {message.pending ? <Clock className="h-3 w-3 animate-pulse" /> : fmtTime(message.createdAt)}
               {mine && !message.pending && (read ? <CheckCheck className="h-3 w-3" /> : <Check className="h-3 w-3" />)}
             </span>
           )}
@@ -384,9 +396,11 @@ export function MessageBubble({ message, mine, showAvatar, isGroup, read, onRepl
             y={menu.y}
             hasText={!!message.content}
             canReport={!mine}
+            canEdit={mine && !message.pending && !!onEdit && ['text', 'image', 'video', 'file'].includes(message.type)}
             onReply={triggerReply}
             onCopy={copyText}
             onReport={() => setReportOpen(true)}
+            onEdit={() => onEdit?.(message)}
             onClose={() => setMenu(null)}
           />
         )}

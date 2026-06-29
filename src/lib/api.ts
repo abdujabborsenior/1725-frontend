@@ -451,6 +451,8 @@ export const notificationsApi = {
     ),
   unreadCount: () =>
     unwrap<{ count: number }>(api.get('/notifications/unread-count')),
+  getById: (id: string) =>
+    unwrap<AppNotification>(api.get(`/notifications/${id}`)),
   markRead: (id: string) =>
     unwrap<{ success: boolean }>(api.patch(`/notifications/${id}/read`)),
   markAllRead: () =>
@@ -579,6 +581,8 @@ export const chatApi = {
     ),
   send: (id: string, payload: SendMessagePayload) =>
     unwrap<ChatMessage>(api.post(`/chat/conversations/${id}/messages`, payload)),
+  editMessage: (messageId: string, content: string) =>
+    unwrap<ChatMessage>(api.patch(`/chat/messages/${messageId}`, { content })),
   read: (id: string) =>
     unwrap<{ ok: true; readAt: string }>(api.post(`/chat/conversations/${id}/read`)),
   unreadCount: () => unwrap<{ count: number }>(api.get('/chat/unread-count')),

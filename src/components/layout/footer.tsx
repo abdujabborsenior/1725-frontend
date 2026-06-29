@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { Rocket, ArrowUpRight } from 'lucide-react';
+import { Rocket, ArrowUpRight, Heart } from 'lucide-react';
 
 const COLS: { title: string; links: { label: string; href: string }[] }[] = [
   {
@@ -79,7 +79,7 @@ export function Footer() {
           <p>© {new Date().getFullYear()} StartupHub · Barcha huquqlar himoyalangan</p>
           <p className="inline-flex items-center gap-1.5">
             O‘zbekistonda yoshlar uchun yaratildi
-            <span className="text-rose-500">♥</span>
+            <Heart className="h-3.5 w-3.5 fill-rose-500 text-rose-500" />
           </p>
         </div>
       </div>

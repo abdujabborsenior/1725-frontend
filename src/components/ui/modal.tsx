@@ -1,6 +1,7 @@
 'use client';
 
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
+import { createPortal } from 'react-dom';
 import { X } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
@@ -13,6 +14,10 @@ interface ModalProps {
 }
 
 export function Modal({ open, onClose, title, children, className }: ModalProps) {
+  // Portal faqat brauzerda — SSR paytida document mavjud emas.
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => setMounted(true), []);
+
   useEffect(() => {
     if (!open) return;
     const onKey = (e: KeyboardEvent) => e.key === 'Escape' && onClose();
@@ -24,9 +29,11 @@ export function Modal({ open, onClose, title, children, className }: ModalProps)
     };
   }, [open, onClose]);
 
-  if (!open) return null;
+  if (!open || !mounted) return null;
 
-  return (
+  // body'ga portal — transform/overflow'li ota-elementlar (masalan, chat)
+  // ichida ham modal to'g'ri markazlashadi va kesilmaydi.
+  return createPortal(
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
       <div
         className="absolute inset-0 bg-brand-900/40 backdrop-blur-sm animate-fade-in"
@@ -53,6 +60,7 @@ export function Modal({ open, onClose, title, children, className }: ModalProps)
         )}
         {children}
       </div>
-    </div>
+    </div>,
+    document.body,
   );
 }

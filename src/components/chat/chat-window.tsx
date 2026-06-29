@@ -36,6 +36,7 @@ export function ChatWindow({ conversationId }: { conversationId: string }) {
   const [cursor, setCursor] = useState<string | null>(null);
   const [loadingMore, setLoadingMore] = useState(false);
   const [replyTo, setReplyTo] = useState<ChatMessage | null>(null);
+  const [editing, setEditing] = useState<ChatMessage | null>(null);
   const [typingUser, setTypingUser] = useState<string | null>(null);
   const [online, setOnline] = useState(false);
   const [peerRead, setPeerRead] = useState(false);
@@ -120,16 +121,22 @@ export function ChatWindow({ conversationId }: { conversationId: string }) {
     const onRead = (r: { conversationId: string; userId: string }) => {
       if (r.conversationId === conversationId && r.userId !== me?.id) setPeerRead(true);
     };
+    const onEdited = (msg: ChatMessage) => {
+      if (msg.conversationId !== conversationId) return;
+      setMessages((prev) => prev.map((m) => (m.id === msg.id ? { ...m, ...msg } : m)));
+    };
 
     socket.on('message:new', onNew);
     socket.on('typing', onTyping);
     socket.on('presence', onPresence);
     socket.on('message:read', onRead);
+    socket.on('message:edit', onEdited);
     return () => {
       socket.off('message:new', onNew);
       socket.off('typing', onTyping);
       socket.off('presence', onPresence);
       socket.off('message:read', onRead);
+      socket.off('message:edit', onEdited);
     };
   }, [conversationId, me?.id, conv?.otherUser, markRead, scrollToBottom]);
 
@@ -190,6 +197,11 @@ export function ChatWindow({ conversationId }: { conversationId: string }) {
     );
   }
 
+  async function handleEditSave(id: string, content: string) {
+    const updated = await chatApi.editMessage(id, content);
+    setMessages((prev) => prev.map((m) => (m.id === id ? { ...m, ...updated } : m)));
+  }
+
   function emitTyping() {
     getSocket().emit('typing', { conversationId, typing: true });
   }
@@ -224,8 +236,8 @@ export function ChatWindow({ conversationId }: { conversationId: string }) {
 
   return (
     <div className="flex h-full w-full flex-col overflow-hidden">
-      {/* Header */}
-      <div className="relative flex items-center gap-3 border-b border-slate-200 bg-white/90 px-3 py-2.5 backdrop-blur">
+      {/* Header — z-30 so the group menu paints above message bubbles (z-10) */}
+      <div className="relative z-30 flex items-center gap-3 border-b border-slate-200 bg-white/90 px-3 py-2.5 backdrop-blur">
         <button
           onClick={() => router.push('/messages')}
           aria-label="Ortga"
@@ -267,13 +279,13 @@ export function ChatWindow({ conversationId }: { conversationId: string }) {
             <AnimatePresence>
               {menuOpen && (
                 <>
-                  <div className="fixed inset-0 z-10" onClick={() => setMenuOpen(false)} />
+                  <div className="fixed inset-0 z-40" onClick={() => setMenuOpen(false)} />
                   <motion.div
                     initial={{ opacity: 0, scale: 0.94, y: -4 }}
                     animate={{ opacity: 1, scale: 1, y: 0 }}
                     exit={{ opacity: 0, scale: 0.94, y: -4 }}
                     transition={{ duration: 0.14 }}
-                    className="absolute right-0 top-11 z-20 w-52 overflow-hidden rounded-2xl border border-slate-200 bg-white p-1.5 shadow-modal"
+                    className="absolute right-0 top-11 z-50 w-56 max-w-[calc(100vw-1.5rem)] overflow-hidden rounded-2xl border border-slate-200 bg-white p-1.5 shadow-modal"
                   >
                     <button onClick={() => { setInfoOpen(true); setMenuOpen(false); }} className="flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium text-brand-900 hover:bg-surface-soft">
                       <Info className="h-4 w-4 text-slate-400" /> Guruh ma&apos;lumoti
@@ -317,6 +329,7 @@ export function ChatWindow({ conversationId }: { conversationId: string }) {
               showAvatar={showAvatar}
               read={isLastMine ? peerRead : undefined}
               onReply={setReplyTo}
+              onEdit={setEditing}
             />
           );
         })}
@@ -332,6 +345,9 @@ export function ChatWindow({ conversationId }: { conversationId: string }) {
         onTyping={emitTyping}
         replyTo={replyTo}
         onCancelReply={() => setReplyTo(null)}
+        editing={editing}
+        onEditSave={handleEditSave}
+        onCancelEdit={() => setEditing(null)}
         blockedMessageTypes={isGroup ? (conv.blockedMessageTypes ?? []) : []}
         canBypassRestrictions={canBypassRestrictions}
       />

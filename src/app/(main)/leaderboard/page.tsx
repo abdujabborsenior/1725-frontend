@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { useQuery, keepPreviousData } from '@tanstack/react-query';
-import { Trophy, Sparkles } from 'lucide-react';
+import { Trophy, Flame } from 'lucide-react';
 import { startupsApi } from '@/lib/api';
 import { LEADERBOARD_PERIOD_OPTIONS } from '@/lib/constants';
 import type { LeaderboardPeriod } from '@/types';
@@ -61,29 +61,38 @@ export default function LeaderboardPage() {
   return (
     <div className="animate-fade-in space-y-6">
       {/* Hero */}
-      <div className="relative overflow-hidden rounded-2xl bg-gradient-brand p-6 md:p-8">
-        <div className="absolute -right-12 -top-12 h-44 w-44 rounded-full bg-amber-400/25 blur-3xl" />
-        <div className="absolute -bottom-16 -left-10 h-44 w-44 rounded-full bg-iris-500/20 blur-3xl" />
-        <div className="relative z-10">
-          <div className="mb-3 inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/10 px-3 py-1">
-            <Trophy className="h-3.5 w-3.5 text-amber-300" />
-            <span className="text-xs font-semibold text-white/90">
-              Startaplar reytingi
+      <div className="relative overflow-hidden rounded-3xl border border-white/5 bg-gradient-brand p-6 md:p-8">
+        {/* nozik mesh + bitta vazmin yorug'lik */}
+        <div className="pointer-events-none absolute inset-0 opacity-[0.07] [background-image:linear-gradient(white_1px,transparent_1px),linear-gradient(90deg,white_1px,transparent_1px)] [background-size:28px_28px]" />
+        <div className="pointer-events-none absolute -right-16 -top-20 h-56 w-56 rounded-full bg-accent-500/20 blur-3xl" />
+        <div className="relative z-10 flex items-start justify-between gap-4">
+          <div>
+            <div className="mb-3 inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/10 px-3 py-1 backdrop-blur">
+              <Trophy className="h-3.5 w-3.5 text-amber-300" />
+              <span className="text-xs font-semibold tracking-wide text-white/90">
+                Startaplar reytingi
+              </span>
+            </div>
+            <h1 className="text-2xl font-black tracking-tight text-white md:text-[2rem]">
+              Top Startaplar
+            </h1>
+            <p className="mt-1.5 max-w-xl text-sm leading-relaxed text-slate-300">
+              Foydalanuvchilar baholari asosida, IMDB uslubidagi vaznli (Bayes)
+              reyting bilan tartiblangan eng yaxshi startaplar.
+            </p>
+            {total > 0 && (
+              <p className="mt-3 inline-flex items-center gap-1.5 text-xs font-medium text-amber-200/90">
+                <Flame className="h-3.5 w-3.5" />
+                {total} ta baholangan startap raqobatda
+              </p>
+            )}
+          </div>
+          {/* katta vazmin kubok belgisi (faqat desktop) */}
+          <div className="hidden shrink-0 sm:block">
+            <span className="grid h-16 w-16 place-items-center rounded-2xl border border-white/10 bg-white/5 backdrop-blur">
+              <Trophy className="h-8 w-8 text-amber-300/90" />
             </span>
           </div>
-          <h1 className="text-2xl font-black text-white md:text-3xl">
-            Top Startaplar
-          </h1>
-          <p className="mt-1.5 max-w-xl text-sm text-slate-300">
-            Foydalanuvchilar baholari asosida, IMDB uslubidagi vaznli (Bayes)
-            reyting bilan tartiblangan eng yaxshi startaplar.
-          </p>
-          {total > 0 && (
-            <p className="mt-3 inline-flex items-center gap-1.5 text-xs font-medium text-amber-200">
-              <Sparkles className="h-3.5 w-3.5" />
-              {total} ta baholangan startap raqobatda
-            </p>
-          )}
         </div>
       </div>
 

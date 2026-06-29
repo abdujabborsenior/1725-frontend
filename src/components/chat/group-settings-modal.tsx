@@ -5,6 +5,7 @@ import { motion } from 'framer-motion';
 import { Type, Image as ImageIcon, Video, Mic, Disc, ShieldAlert } from 'lucide-react';
 import { chatApi, getErrorMessage } from '@/lib/api';
 import { Modal } from '@/components/ui/modal';
+import { GroupAvatarPicker } from './group-avatar-picker';
 import { cn } from '@/lib/utils';
 import type { Conversation, MessageType } from '@/types';
 import toast from 'react-hot-toast';
@@ -47,11 +48,15 @@ export function GroupSettingsModal({
   onUpdated: (conv: Conversation) => void;
 }) {
   const [blocked, setBlocked] = useState<MessageType[]>(conversation.blockedMessageTypes ?? []);
+  const [avatarUrl, setAvatarUrl] = useState<string | null>(conversation.avatarUrl ?? null);
   const [saving, setSaving] = useState(false);
 
   useEffect(() => {
-    if (open) setBlocked(conversation.blockedMessageTypes ?? []);
-  }, [open, conversation.blockedMessageTypes]);
+    if (open) {
+      setBlocked(conversation.blockedMessageTypes ?? []);
+      setAvatarUrl(conversation.avatarUrl ?? null);
+    }
+  }, [open, conversation.blockedMessageTypes, conversation.avatarUrl]);
 
   function toggle(type: MessageType) {
     setBlocked((prev) =>
@@ -62,7 +67,12 @@ export function GroupSettingsModal({
   async function save() {
     setSaving(true);
     try {
-      const updated = await chatApi.setGroupRestrictions(conversation.id, blocked);
+      // Avatar o'zgargan bo'lsa — guruhni yangilaymiz; so'ng cheklovlarni saqlaymiz.
+      let updated = conversation;
+      if ((avatarUrl ?? null) !== (conversation.avatarUrl ?? null)) {
+        updated = await chatApi.updateGroup(conversation.id, { avatarUrl: avatarUrl ?? '' });
+      }
+      updated = await chatApi.setGroupRestrictions(conversation.id, blocked);
       onUpdated(updated);
       toast.success('Guruh sozlamalari saqlandi');
       onClose();
@@ -76,6 +86,11 @@ export function GroupSettingsModal({
   return (
     <Modal open={open} onClose={onClose} title="Guruh sozlamalari">
       <div className="space-y-4">
+        {/* Guruh avatari */}
+        <div className="flex flex-col items-center gap-1 border-b border-slate-100 pb-4">
+          <GroupAvatarPicker value={avatarUrl} name={conversation.title} onChange={setAvatarUrl} />
+        </div>
+
         <div className="flex items-start gap-3 rounded-2xl bg-amber-50 p-3 text-amber-800">
           <ShieldAlert className="mt-0.5 h-5 w-5 shrink-0" />
           <p className="text-xs leading-relaxed">

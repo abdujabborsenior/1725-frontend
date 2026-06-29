@@ -20,7 +20,7 @@ export type StartupSort =
 
 export type LeaderboardPeriod = 'all' | 'year' | 'month' | 'week';
 
-export type ReportTargetType = 'startup' | 'message' | 'problem' | 'solution';
+export type ReportTargetType = 'startup' | 'message' | 'problem' | 'solution' | 'user';
 export type ReportReason =
   | 'spam' | 'inappropriate' | 'harassment' | 'hate_speech' | 'sexual_content'
   | 'violence' | 'misinformation' | 'scam' | 'copyright' | 'duplicate'
@@ -400,6 +400,8 @@ export type NotificationType =
   | 'problem_rejected'
   | 'solution_accepted'
   | 'solution_rejected'
+  | 'new_follower'
+  | 'new_message'
   | 'system';
 
 export interface AppNotification {

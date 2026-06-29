@@ -255,6 +255,7 @@ export const REPORT_REASONS_BY_TYPE: Record<ReportTargetType, ReportReason[]> = 
   message: ['spam', 'harassment', 'hate_speech', 'sexual_content', 'violence', 'misinformation', 'offensive', 'other'],
   problem: ['spam', 'inappropriate', 'duplicate', 'misinformation', 'offensive', 'other'],
   solution: ['spam', 'inappropriate', 'copyright', 'low_quality', 'misinformation', 'offensive', 'other'],
+  user: ['spam', 'harassment', 'hate_speech', 'sexual_content', 'violence', 'scam', 'offensive', 'other'],
 };
 
 export const REPORT_TARGET_LABELS: Record<ReportTargetType, string> = {
@@ -262,6 +263,7 @@ export const REPORT_TARGET_LABELS: Record<ReportTargetType, string> = {
   message: 'xabar',
   problem: 'muammo',
   solution: 'yechim',
+  user: 'foydalanuvchi',
 };
 
 export const STARTUP_CATEGORIES = [

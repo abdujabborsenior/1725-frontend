@@ -1,7 +1,7 @@
 'use client';
 
 import {
-  Smartphone, Globe, Bot, Brain, ShoppingBag, GraduationCap,
+  Smartphone, Globe, Bot, Layers, ShoppingBag, GraduationCap,
   Gamepad2, HeartPulse, Sprout, Camera, Music, Wallet,
 } from 'lucide-react';
 
@@ -10,7 +10,7 @@ const ITEMS: { icon: React.ElementType; label: string }[] = [
   { icon: Smartphone, label: 'Mobil ilovalar' },
   { icon: Bot, label: 'Telegram botlar' },
   { icon: Globe, label: 'Veb-saytlar' },
-  { icon: Brain, label: 'AI yechimlar' },
+  { icon: Layers, label: 'SaaS xizmatlar' },
   { icon: ShoppingBag, label: 'Onlayn do‘konlar' },
   { icon: GraduationCap, label: 'EdTech loyihalar' },
   { icon: Gamepad2, label: 'O‘yinlar' },

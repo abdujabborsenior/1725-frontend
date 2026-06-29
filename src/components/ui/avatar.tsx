@@ -1,5 +1,6 @@
 'use client';
 
+import { useEffect, useState } from 'react';
 import { cn } from '@/lib/utils';
 
 const GRADIENTS = [
@@ -45,9 +46,12 @@ export function Avatar({
   ring,
   className,
 }: AvatarProps) {
+  const [failed, setFailed] = useState(false);
+  useEffect(() => setFailed(false), [src]);
   const seed = name || 'user';
   const gradient = GRADIENTS[hashString(seed) % GRADIENTS.length];
   const fontSize = Math.max(10, Math.round(size * 0.4));
+  const showImg = !!src && !failed;
 
   return (
     <span
@@ -63,16 +67,17 @@ export function Avatar({
         className={cn(
           'relative flex h-full w-full items-center justify-center overflow-hidden rounded-full',
           ring && 'ring-2 ring-white',
-          !src && `bg-gradient-to-br ${gradient}`,
+          !showImg && `bg-gradient-to-br ${gradient}`,
         )}
       >
-        {src ? (
+        {showImg ? (
           // eslint-disable-next-line @next/next/no-img-element
           <img
-            src={src}
+            src={src as string}
             alt={name ?? ''}
             className="h-full w-full object-cover"
             loading="lazy"
+            onError={() => setFailed(true)}
           />
         ) : (
           <span className="font-bold text-white" style={{ fontSize }}>

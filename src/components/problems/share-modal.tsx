@@ -60,7 +60,7 @@ export function ProblemShareModal({ open, onClose, problemId, problemTitle }: Pr
     try {
       await chatApi.send(id, {
         type: 'text',
-        content: `📌 Muammo: ${problemTitle}\n${shareUrl}`,
+        content: `Muammo: ${problemTitle}\n${shareUrl}`,
       });
       setSentTo((s) => new Set(s).add(id));
       toast.success('Suhbatga yuborildi');

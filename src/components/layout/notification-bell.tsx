@@ -4,22 +4,13 @@ import { useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
-import {
-  Bell, CheckCheck, CheckCircle2, XCircle, Sparkles, Info, Loader2,
-} from 'lucide-react';
+import { Bell, CheckCheck, Loader2 } from 'lucide-react';
 import { notificationsApi } from '@/lib/api';
 import { useAuthStore } from '@/store/auth.store';
 import { cn } from '@/lib/utils';
-import type { AppNotification, NotificationType } from '@/types';
+import { notificationMeta, notificationTarget } from '@/lib/notification-meta';
+import type { AppNotification } from '@/types';
 import { formatDistanceToNow } from 'date-fns';
-
-const TYPE_META: Record<NotificationType, { icon: typeof Bell; color: string }> = {
-  problem_approved:  { icon: CheckCircle2, color: 'text-accent-600 bg-accent-50' },
-  problem_rejected:  { icon: XCircle,      color: 'text-rose-600 bg-rose-50' },
-  solution_accepted: { icon: Sparkles,     color: 'text-violet-600 bg-violet-50' },
-  solution_rejected: { icon: XCircle,      color: 'text-rose-600 bg-rose-50' },
-  system:            { icon: Info,         color: 'text-sky-600 bg-sky-50' },
-};
 
 export function NotificationBell() {
   const { token } = useAuthStore();
@@ -60,13 +51,21 @@ export function NotificationBell() {
   }
 
   async function openNotification(n: AppNotification) {
-    if (!n.isRead) {
-      await notificationsApi.markRead(n.id).catch(() => undefined);
-      void qc.invalidateQueries({ queryKey: ['notifications-unread'] });
-      void qc.invalidateQueries({ queryKey: ['notifications-recent'] });
-    }
     setOpen(false);
-    if (n.link) router.push(n.link);
+    // getById — aynan shu bildirishnomani serverdan olamiz (yangi link bilan) va
+    // o'qilgan deb belgilaymiz; shunda doim to'g'ri manzilga o'tamiz.
+    let link = n.link;
+    try {
+      link = (await notificationsApi.getById(n.id)).link;
+    } catch {
+      if (!n.isRead) await notificationsApi.markRead(n.id).catch(() => undefined);
+    }
+    void qc.invalidateQueries({ queryKey: ['notifications-unread'] });
+    void qc.invalidateQueries({ queryKey: ['notifications-recent'] });
+    void qc.invalidateQueries({ queryKey: ['notifications'] });
+    // Noma'lum/yaroqsiz havolada 404 chiqmasligi uchun xavfsiz manzilga aylantiramiz
+    const target = notificationTarget(link);
+    if (target) router.push(target);
   }
 
   if (!token) return null;
@@ -107,7 +106,7 @@ export function NotificationBell() {
               </div>
             ) : list && list.data.length > 0 ? (
               list.data.map((n) => {
-                const meta = TYPE_META[n.type] ?? TYPE_META.system;
+                const meta = notificationMeta(n.type);
                 const Icon = meta.icon;
                 return (
                   <button

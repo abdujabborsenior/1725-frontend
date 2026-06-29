@@ -12,6 +12,7 @@ import { Avatar } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import { BackButton } from '@/components/ui/back-button';
 import { FollowButton } from '@/components/social/follow-button';
+import { ReportButton } from '@/components/reports/report-dialog';
 import { FollowListModal } from '@/components/social/follow-list-modal';
 import { StartupCard } from '@/components/startups/startup-card';
 import { ROLE_LABEL, ROLE_BADGE } from '@/lib/constants';
@@ -108,6 +109,13 @@ export default function ProfilePage() {
                     userId={profile.id}
                     initialFollowing={profile.isFollowing}
                     onChange={(_, c) => setFollowerCount(c)}
+                  />
+                  <ReportButton
+                    targetType="user"
+                    targetId={profile.id}
+                    variant="icon"
+                    label="Foydalanuvchi ustidan shikoyat"
+                    className="border border-slate-200"
                   />
                 </>
               )}

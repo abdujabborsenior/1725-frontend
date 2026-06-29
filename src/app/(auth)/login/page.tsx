@@ -51,7 +51,7 @@ export default function LoginPage() {
       const msg = getErrorMessage(err, "Email yoki parol noto'g'ri");
       if (msg.includes('tasdiql') || msg.toLowerCase().includes('verif')) {
         setPendingEmail(data.email);
-        toast(msg, { icon: '📧' });
+        toast(msg, { icon: <Mail className="h-5 w-5 text-accent-600" /> });
         router.push('/verify-email');
       } else {
         toast.error(msg);

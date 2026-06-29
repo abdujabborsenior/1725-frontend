@@ -9,6 +9,7 @@ import { Modal } from '@/components/ui/modal';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Button } from '@/components/ui/button';
+import { GroupAvatarPicker } from './group-avatar-picker';
 import toast from 'react-hot-toast';
 
 export function CreateGroupModal({ open, onClose }: { open: boolean; onClose: () => void }) {
@@ -17,6 +18,7 @@ export function CreateGroupModal({ open, onClose }: { open: boolean; onClose: ()
   const [title, setTitle] = useState('');
   const [username, setUsername] = useState('');
   const [description, setDescription] = useState('');
+  const [avatarUrl, setAvatarUrl] = useState<string | null>(null);
   const [isPublic, setIsPublic] = useState(true);
   const [saving, setSaving] = useState(false);
 
@@ -30,6 +32,7 @@ export function CreateGroupModal({ open, onClose }: { open: boolean; onClose: ()
       const conv = await chatApi.createGroup({
         title: title.trim(),
         description: description.trim() || undefined,
+        avatarUrl: avatarUrl ?? undefined,
         isPublic,
         username: username.trim() || undefined,
       });
@@ -47,7 +50,11 @@ export function CreateGroupModal({ open, onClose }: { open: boolean; onClose: ()
   return (
     <Modal open={open} onClose={onClose} title="Yangi guruh">
       <div className="space-y-4">
-        <Input label="Guruh nomi" value={title} onChange={(e) => setTitle(e.target.value)} placeholder="Masalan: AI ishqibozlari" />
+        <div className="flex justify-center pt-1">
+          <GroupAvatarPicker value={avatarUrl} name={title} onChange={setAvatarUrl} />
+        </div>
+
+        <Input label="Guruh nomi" value={title} onChange={(e) => setTitle(e.target.value)} placeholder="Masalan: Frontend jamoasi" />
 
         {/* Username — Telegram uslubi (@ adornment) */}
         <Input

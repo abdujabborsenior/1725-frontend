@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
-import { Plus, Sparkles } from 'lucide-react';
+import { Plus, Lightbulb } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 /**
@@ -71,7 +71,7 @@ export function Doubts() {
                   className="overflow-hidden"
                 >
                   <p className="flex gap-2.5 pt-3 text-sm leading-relaxed text-slate-600 md:text-[15px]">
-                    <Sparkles className="mt-0.5 h-4 w-4 flex-none text-accent-500" />
+                    <Lightbulb className="mt-0.5 h-4 w-4 flex-none text-accent-500" />
                     <span>{d.a}</span>
                   </p>
                 </motion.div>

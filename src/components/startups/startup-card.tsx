@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import { Eye, Sparkles, Rocket } from 'lucide-react';
+import { Eye, Star, Rocket } from 'lucide-react';
 import { PLATFORM_ORDER } from '@/lib/constants';
 import { PlatformIcon } from './platform';
 import { LikeButton, BookmarkButton } from './engagement';
@@ -32,7 +32,7 @@ export function StartupCard({ startup }: { startup: Startup }) {
           )}
           {startup.isFeatured && (
             <span className="absolute top-2.5 right-2.5 inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-accent-500 text-white text-[10px] font-bold shadow-glow-accent">
-              <Sparkles className="h-3 w-3" /> TOP
+              <Star className="h-3 w-3 fill-current" /> TOP
             </span>
           )}
           <div className="absolute top-2.5 left-2.5">

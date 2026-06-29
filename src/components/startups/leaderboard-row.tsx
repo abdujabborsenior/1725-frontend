@@ -7,6 +7,7 @@ import { StarRating } from './rating';
 import { PlatformIcon } from './platform';
 import { PLATFORM_ORDER } from '@/lib/constants';
 import { RankMovement, RankNumber, ScoreBadge } from './leaderboard-bits';
+import { StartupLogo } from './startup-logo';
 
 export function LeaderboardRow({ entry }: { entry: LeaderboardEntry }) {
   const platformTypes = Array.from(
@@ -24,21 +25,13 @@ export function LeaderboardRow({ entry }: { entry: LeaderboardEntry }) {
         <RankMovement delta={entry.rankDelta} />
       </div>
 
-      {/* Logo */}
-      <div className="flex h-12 w-12 shrink-0 items-center justify-center overflow-hidden rounded-xl border border-slate-200 bg-white sm:h-14 sm:w-14">
-        {entry.logoUrl ? (
-          // eslint-disable-next-line @next/next/no-img-element
-          <img
-            src={entry.logoUrl}
-            alt={entry.title}
-            className="h-full w-full object-cover"
-          />
-        ) : (
-          <span className="text-lg font-black text-brand-900">
-            {entry.title.charAt(0).toUpperCase()}
-          </span>
-        )}
-      </div>
+      {/* Logo — har doim ko'rinadi */}
+      <StartupLogo
+        src={entry.logoUrl}
+        title={entry.title}
+        size={56}
+        className="h-12 w-12 ring-1 ring-slate-200/70 sm:h-14 sm:w-14"
+      />
 
       {/* Nom + meta */}
       <div className="min-w-0 flex-1">
