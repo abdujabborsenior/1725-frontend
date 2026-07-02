@@ -349,7 +349,7 @@ export default function ProblemDetailPage() {
           </div>
         </div>
 
-        <h1 className="relative mb-4 text-2xl font-black leading-tight tracking-tight text-brand-900 md:text-[1.75rem]">{problem.title}</h1>
+        <h1 className="relative mb-4 text-2xl font-bold leading-tight tracking-tight text-brand-900 md:text-[1.75rem]">{problem.title}</h1>
         <p className="relative leading-relaxed text-slate-600 whitespace-pre-wrap break-words">{problem.description}</p>
 
         {problem.imageUrls.length > 0 && (

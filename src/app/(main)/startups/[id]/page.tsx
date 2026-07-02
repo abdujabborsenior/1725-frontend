@@ -122,7 +122,7 @@ export default function StartupDetailPage() {
             )}
           </div>
           {/* Sarlavha + shior — oq maydonda, to'liq ko'rinadi */}
-          <h1 className="text-2xl md:text-3xl font-black text-brand-900">{startup.title}</h1>
+          <h1 className="text-2xl md:text-3xl font-bold tracking-tight text-brand-900">{startup.title}</h1>
           {startup.tagline && (
             <p className="mt-1 text-sm text-slate-600">{startup.tagline}</p>
           )}

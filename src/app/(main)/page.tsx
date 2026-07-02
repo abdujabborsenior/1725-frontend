@@ -58,6 +58,16 @@ const WHAT_IS = [
   },
 ];
 
+/** Bo'lim ustidagi yagona, izchil kicker — rang-baranglik yo'q (restraint). */
+function Kicker({ icon: Icon, children }: { icon: React.ElementType; children: React.ReactNode }) {
+  return (
+    <div className="inline-flex items-center gap-2 rounded-full border border-slate-200 bg-white px-3 py-1 shadow-soft">
+      <Icon className="h-3.5 w-3.5 text-accent-600" />
+      <span className="text-xs font-semibold text-slate-600">{children}</span>
+    </div>
+  );
+}
+
 function SectionHeader({
   kicker, icon: Icon, title, subtitle, href, hrefLabel,
 }: {
@@ -67,12 +77,11 @@ function SectionHeader({
   return (
     <div className="flex items-end justify-between gap-3">
       <div>
-        <div className="mb-2 inline-flex items-center gap-2 rounded-full border border-accent-200 bg-accent-50 px-3 py-1">
-          <Icon className="h-3.5 w-3.5 text-accent-600" />
-          <span className="text-xs font-semibold text-accent-700">{kicker}</span>
+        <div className="mb-2.5">
+          <Kicker icon={Icon}>{kicker}</Kicker>
         </div>
-        <h2 className="text-2xl font-bold text-brand-900 md:text-3xl">{title}</h2>
-        {subtitle && <p className="mt-0.5 text-sm text-slate-500">{subtitle}</p>}
+        <h2 className="text-2xl font-bold tracking-tight text-brand-900 md:text-3xl">{title}</h2>
+        {subtitle && <p className="mt-1 text-sm text-slate-500">{subtitle}</p>}
       </div>
       {href && (
         <Link href={href} className="flex-none">
@@ -121,34 +130,28 @@ export default function LandingPage() {
   const activePoll = polls?.find((p) => !p.isClosed) ?? polls?.[0];
 
   const stats = [
-    { icon: Rocket, label: 'Startaplar', value: featuredStartups?.meta.total, color: 'text-accent-600' },
-    { icon: FileQuestion, label: 'Muammolar', value: recentProblems?.meta.total, color: 'text-amber-600' },
-    { icon: Vote, label: 'Ovoz berishlar', value: polls?.length, color: 'text-iris-600' },
-    { icon: Users, label: 'Guruhlar', value: groups?.length, color: 'text-sky-600' },
+    { icon: Rocket, label: 'Startaplar', value: featuredStartups?.meta.total },
+    { icon: FileQuestion, label: 'Muammolar', value: recentProblems?.meta.total },
+    { icon: Vote, label: 'Ovoz berishlar', value: polls?.length },
+    { icon: Users, label: 'Guruhlar', value: groups?.length },
   ];
 
   return (
-    <div className="space-y-20 md:space-y-28">
+    <div className="space-y-16 md:space-y-24">
       {/* ── Hero ─────────────────────────────────────────── */}
       <section className="relative -mx-4 overflow-hidden rounded-b-[2.5rem] border-b border-slate-200/70 px-4 pb-16 pt-10 md:mx-0 md:rounded-[2.5rem] md:border md:px-6 md:pb-24 md:pt-20">
-        {/* Animatsiyalangan aurora fon */}
+        {/* Sokin gradient fon + nozik to'r */}
         <div className="pointer-events-none absolute inset-0 -z-10 bg-gradient-hero" />
         <div className="pointer-events-none absolute inset-0 -z-10 grid-pattern" />
-        <div className="pointer-events-none absolute -left-24 -top-24 -z-10 h-[28rem] w-[28rem] animate-aurora rounded-full bg-accent-300/30 blur-[90px]" />
-        <div className="pointer-events-none absolute -right-24 top-10 -z-10 h-[26rem] w-[26rem] animate-aurora rounded-full bg-iris-300/30 blur-[90px] [animation-delay:-6s]" />
-        <div className="pointer-events-none absolute bottom-0 left-1/3 -z-10 h-72 w-72 animate-aurora rounded-full bg-emerald-200/30 blur-[80px] [animation-delay:-10s]" />
-
-        {/* Suzuvchi belgilar (faqat katta ekran) */}
-        <FloatingChip className="left-[6%] top-[18%]" icon={Lightbulb} label="G‘oya" tone="accent" delay="0s" />
-        <FloatingChip className="right-[7%] top-[26%]" icon={Rocket} label="Startap" tone="iris" delay="-2s" />
-        <FloatingChip className="left-[9%] bottom-[14%]" icon={Users} label="Jamoa" tone="sky" delay="-4s" />
-        <FloatingChip className="right-[8%] bottom-[18%]" icon={MessageCircle} label="Suhbat" tone="accent" delay="-3s" />
+        {/* Ikki nozik atmosfera nuri (aurora emas — tinch) */}
+        <div className="pointer-events-none absolute -left-32 -top-32 -z-10 h-[30rem] w-[30rem] rounded-full bg-accent-300/20 blur-[120px]" />
+        <div className="pointer-events-none absolute -right-32 top-0 -z-10 h-[26rem] w-[26rem] rounded-full bg-iris-300/15 blur-[120px]" />
 
         <div className="relative z-10 mx-auto max-w-3xl text-center">
           <motion.div
             initial={{ opacity: 0, y: 12 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5 }}
+            transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
             className="inline-flex items-center gap-2 rounded-full border border-slate-200 bg-white/80 px-4 py-1.5 shadow-soft backdrop-blur"
           >
             <span className="relative flex h-2 w-2">
@@ -163,7 +166,7 @@ export default function LandingPage() {
           <motion.h1
             initial={{ opacity: 0, y: 18 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.06 }}
+            transition={{ duration: 0.6, delay: 0.06, ease: [0.22, 1, 0.36, 1] }}
             className="mt-6 text-[2.6rem] font-black leading-[1.04] tracking-tight text-brand-900 md:text-7xl"
           >
             Bugun — g‘oya.
@@ -174,7 +177,7 @@ export default function LandingPage() {
           <motion.p
             initial={{ opacity: 0, y: 18 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.14 }}
+            transition={{ duration: 0.6, delay: 0.14, ease: [0.22, 1, 0.36, 1] }}
             className="mx-auto mt-6 max-w-xl text-base leading-relaxed text-slate-600 md:text-lg"
           >
             StartupHub — o‘quvchilar, talabalar va kreativ yoshlar yig‘iladigan maydon.
@@ -185,7 +188,7 @@ export default function LandingPage() {
           <motion.div
             initial={{ opacity: 0, y: 18 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.22 }}
+            transition={{ duration: 0.6, delay: 0.22, ease: [0.22, 1, 0.36, 1] }}
             className="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row"
           >
             {token ? (
@@ -229,10 +232,10 @@ export default function LandingPage() {
               <Heart className="h-3.5 w-3.5 text-accent-500" /> Butunlay bepul
             </span>
             <span className="inline-flex items-center gap-1.5">
-              <Zap className="h-3.5 w-3.5 text-amber-500" /> Ro‘yxatdan o‘tish 1 daqiqa
+              <Zap className="h-3.5 w-3.5 text-accent-500" /> Ro‘yxatdan o‘tish 1 daqiqa
             </span>
             <span className="inline-flex items-center gap-1.5">
-              <Users className="h-3.5 w-3.5 text-iris-500" /> Jonli hamjamiyat
+              <Users className="h-3.5 w-3.5 text-accent-500" /> Jonli hamjamiyat
             </span>
           </motion.div>
         </div>
@@ -242,7 +245,7 @@ export default function LandingPage() {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 0.6, delay: 0.42 }}
-          className="relative z-10 mx-auto mt-12 max-w-4xl"
+          className="relative z-10 mx-auto mt-14 max-w-4xl"
         >
           <p className="mb-3 text-center text-[11px] font-semibold uppercase tracking-wider text-slate-400">
             Hamjamiyat shu yerda nimalar quryapti
@@ -253,10 +256,10 @@ export default function LandingPage() {
 
       {/* ── Stats ────────────────────────────────────────── */}
       <RevealGroup className="grid grid-cols-2 gap-3 md:grid-cols-4 md:gap-4">
-        {stats.map(({ icon: Icon, label, value, color }) => (
+        {stats.map(({ icon: Icon, label, value }) => (
           <RevealItem key={label}>
-            <div className="group rounded-2xl border border-slate-200 bg-white p-5 text-center transition-all hover:-translate-y-1 hover:border-accent-200 hover:shadow-card-hover">
-              <Icon className={cn('mx-auto mb-3 h-6 w-6 transition-transform group-hover:scale-110', color)} />
+            <div className="group rounded-2xl border border-slate-200 bg-white p-5 text-center transition-all duration-200 hover:-translate-y-0.5 hover:border-accent-200 hover:shadow-card-hover">
+              <Icon className="mx-auto mb-3 h-6 w-6 text-slate-400 transition-colors group-hover:text-accent-600" />
               <p className="text-3xl font-black text-brand-900">
                 <CountUp value={value} />
                 {value !== undefined && '+'}
@@ -270,12 +273,11 @@ export default function LandingPage() {
       {/* ── Startap nima? Startapper kim? ────────────────── */}
       <section id="startap-nima" className="scroll-mt-24 space-y-10">
         <Reveal className="mx-auto max-w-2xl text-center">
-          <div className="mb-3 inline-flex items-center gap-2 rounded-full border border-iris-200 bg-iris-50 px-3 py-1">
-            <HelpCircle className="h-3.5 w-3.5 text-iris-600" />
-            <span className="text-xs font-semibold text-iris-700">Bu savollar sizni o‘ylantiryaptimi?</span>
+          <div className="mb-3 flex justify-center">
+            <Kicker icon={HelpCircle}>Bu savollar sizni o‘ylantiryaptimi?</Kicker>
           </div>
-          <h2 className="text-3xl font-black tracking-tight text-brand-900 md:text-4xl">
-            Startap nima? <span className="gradient-text-emerald-iris">Startapper</span> kim?
+          <h2 className="text-3xl font-bold tracking-tight text-brand-900 md:text-4xl">
+            Startap nima? <span className="text-accent-600">Startapper</span> kim?
           </h2>
           <p className="mt-3 text-slate-600">
             Keling, soddagina qilib tushuntiramiz — ortiqcha atamalarsiz, hayotiy tilda.
@@ -285,10 +287,9 @@ export default function LandingPage() {
         <RevealGroup className="grid grid-cols-1 gap-5 md:grid-cols-3">
           {WHAT_IS.map(({ icon: Icon, title, body }) => (
             <RevealItem key={title}>
-              <div className="group relative h-full overflow-hidden rounded-3xl border border-slate-200 bg-white p-7 transition-all hover:-translate-y-1 hover:border-accent-200 hover:shadow-card-hover">
-                <div className="pointer-events-none absolute -right-10 -top-10 h-32 w-32 rounded-full bg-gradient-emerald-iris opacity-[0.07] blur-2xl transition-opacity group-hover:opacity-[0.14]" />
-                <div className="mb-5 inline-flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-emerald-iris text-white shadow-glow-accent">
-                  <Icon className="h-7 w-7" />
+              <div className="group relative h-full overflow-hidden rounded-3xl border border-slate-200 bg-white p-7 transition-all duration-200 hover:-translate-y-0.5 hover:border-accent-200 hover:shadow-card-hover">
+                <div className="mb-5 inline-flex h-14 w-14 items-center justify-center rounded-2xl bg-brand-900 text-accent-400 ring-1 ring-brand-900/5">
+                  <Icon className="h-6 w-6" />
                 </div>
                 <h3 className="mb-2 text-xl font-bold text-brand-900">{title}</h3>
                 <p className="text-[15px] leading-relaxed text-slate-600">{body}</p>
@@ -301,11 +302,10 @@ export default function LandingPage() {
       {/* ── Sizni nima to'xtatib turibdi? (e'tirozlar) ───── */}
       <section className="space-y-10">
         <Reveal className="mx-auto max-w-2xl text-center">
-          <div className="mb-3 inline-flex items-center gap-2 rounded-full border border-amber-200 bg-amber-50 px-3 py-1">
-            <Zap className="h-3.5 w-3.5 text-amber-600" />
-            <span className="text-xs font-semibold text-amber-700">Halol gaplashamiz</span>
+          <div className="mb-3 flex justify-center">
+            <Kicker icon={Zap}>Halol gaplashamiz</Kicker>
           </div>
-          <h2 className="text-3xl font-black tracking-tight text-brand-900 md:text-4xl">
+          <h2 className="text-3xl font-bold tracking-tight text-brand-900 md:text-4xl">
             Sizni nima to‘xtatib turibdi?
           </h2>
           <p className="mt-3 text-slate-600">
@@ -393,10 +393,7 @@ export default function LandingPage() {
 
         <div className="space-y-4">
           <Reveal>
-            <div className="inline-flex items-center gap-2 rounded-full border border-iris-200 bg-iris-50 px-3 py-1">
-              <UserPlus className="h-3.5 w-3.5 text-iris-600" />
-              <span className="text-xs font-semibold text-iris-700">Kuzatish uchun</span>
-            </div>
+            <Kicker icon={UserPlus}>Kuzatish uchun</Kicker>
           </Reveal>
           <Reveal delay={0.08}>
             <div className="rounded-3xl border border-slate-200 bg-white p-2 shadow-soft">
@@ -405,8 +402,8 @@ export default function LandingPage() {
               ) : (
                 <p className="px-3 py-8 text-center text-sm text-slate-400">Tavsiyalar yuklanmoqda…</p>
               )}
-              <Link href="/discover" className="block px-3 py-3 text-center text-xs font-semibold text-iris-700 hover:underline">
-                Ko‘proq odamlarni topish →
+              <Link href="/discover" className="flex items-center justify-center gap-1 px-3 py-3 text-center text-xs font-semibold text-accent-700 hover:underline">
+                Ko‘proq odamlarni topish <ArrowRight className="h-3.5 w-3.5" />
               </Link>
             </div>
           </Reveal>
@@ -436,21 +433,20 @@ export default function LandingPage() {
       {/* ── How it works ─────────────────────────────────── */}
       <section className="space-y-10">
         <Reveal className="text-center">
-          <div className="mb-3 inline-flex items-center gap-2 rounded-full border border-accent-200 bg-accent-50 px-3 py-1">
-            <Compass className="h-3.5 w-3.5 text-accent-600" />
-            <span className="text-xs font-semibold text-accent-700">Yo‘l xaritasi</span>
+          <div className="mb-3 flex justify-center">
+            <Kicker icon={Compass}>Yo‘l xaritasi</Kicker>
           </div>
-          <h2 className="text-3xl font-black tracking-tight text-brand-900 md:text-4xl">Qanday ishlaydi?</h2>
+          <h2 className="text-3xl font-bold tracking-tight text-brand-900 md:text-4xl">Qanday ishlaydi?</h2>
           <p className="mt-3 text-slate-600">G‘oyadan startapgacha — uch oddiy qadam.</p>
         </Reveal>
         <RevealGroup className="relative grid grid-cols-1 gap-5 md:grid-cols-3">
           {/* Bog'lovchi chiziq (desktop) */}
-          <div className="pointer-events-none absolute left-[16%] right-[16%] top-[2.75rem] hidden h-px bg-gradient-to-r from-accent-200 via-iris-200 to-accent-200 md:block" />
+          <div className="pointer-events-none absolute left-[16%] right-[16%] top-[2.75rem] hidden h-px bg-slate-200 md:block" />
           {HOW_IT_WORKS.map(({ step, title, desc }) => (
             <RevealItem key={step}>
-              <div className="group relative h-full rounded-3xl border border-slate-200 bg-white p-7 transition-all hover:-translate-y-1 hover:border-accent-300 hover:shadow-card-hover">
-                <div className="relative z-10 mb-5 flex h-14 w-14 items-center justify-center rounded-2xl bg-brand-900 ring-4 ring-white transition-transform group-hover:scale-105">
-                  <span className="text-lg font-black text-accent-400">{step}</span>
+              <div className="group relative h-full rounded-3xl border border-slate-200 bg-white p-7 transition-all duration-200 hover:-translate-y-0.5 hover:border-accent-200 hover:shadow-card-hover">
+                <div className="relative z-10 mb-5 flex h-14 w-14 items-center justify-center rounded-2xl bg-brand-900 text-accent-400 ring-4 ring-white">
+                  <span className="text-lg font-black">{step}</span>
                 </div>
                 <h3 className="mb-2 text-lg font-bold text-brand-900">{title}</h3>
                 <p className="text-sm leading-relaxed text-slate-600">{desc}</p>
@@ -464,17 +460,16 @@ export default function LandingPage() {
       {!token && (
         <Reveal>
           <section className="relative -mx-4 overflow-hidden rounded-[2.5rem] bg-brand-900 px-6 py-14 text-center md:mx-0 md:px-12 md:py-20">
-            <div className="pointer-events-none absolute inset-0 bg-gradient-to-br from-brand-900 via-brand-800 to-iris-900/50" />
             <div className="pointer-events-none absolute inset-0 grid-pattern-dark" />
-            <div className="pointer-events-none absolute -left-20 top-0 h-72 w-72 animate-aurora rounded-full bg-accent-500/20 blur-[80px]" />
-            <div className="pointer-events-none absolute -right-20 bottom-0 h-72 w-72 animate-aurora rounded-full bg-iris-500/20 blur-[80px] [animation-delay:-7s]" />
+            <div className="pointer-events-none absolute -left-24 -top-16 h-72 w-72 rounded-full bg-accent-500/15 blur-[110px]" />
+            <div className="pointer-events-none absolute -right-24 -bottom-16 h-72 w-72 rounded-full bg-iris-500/15 blur-[110px]" />
             <div className="relative z-10 mx-auto max-w-2xl space-y-6">
               <div className="flex justify-center">
-                <div className="flex h-16 w-16 animate-float items-center justify-center rounded-2xl bg-gradient-emerald-iris shadow-glow-accent">
+                <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-gradient-emerald-iris shadow-glow-accent">
                   <Rocket className="h-8 w-8 text-white" />
                 </div>
               </div>
-              <h2 className="text-3xl font-black tracking-tight text-white md:text-4xl">
+              <h2 className="text-3xl font-bold tracking-tight text-white md:text-4xl">
                 G‘oyangiz boshlanishini kutyapti
               </h2>
               <p className="mx-auto max-w-md text-slate-300">
@@ -501,36 +496,10 @@ export default function LandingPage() {
 
       {user && (
         <p className="flex items-center justify-center gap-1.5 text-xs text-slate-400">
-          <Hand className="h-3.5 w-3.5 text-amber-500" />
+          <Hand className="h-3.5 w-3.5 text-accent-500" />
           Xush kelibsiz, {user.fullName}
         </p>
       )}
-    </div>
-  );
-}
-
-/* ── Hero suzuvchi belgisi ─────────────────────────────── */
-function FloatingChip({
-  className, icon: Icon, label, tone, delay,
-}: {
-  className: string; icon: React.ElementType; label: string;
-  tone: 'accent' | 'iris' | 'sky'; delay: string;
-}) {
-  const tones = {
-    accent: 'text-accent-600',
-    iris: 'text-iris-600',
-    sky: 'text-sky-600',
-  };
-  return (
-    <div
-      style={{ animationDelay: delay }}
-      className={cn(
-        'pointer-events-none absolute z-0 hidden animate-float items-center gap-2 rounded-2xl border border-slate-200 bg-white/70 px-3.5 py-2 shadow-soft backdrop-blur lg:flex',
-        className,
-      )}
-    >
-      <Icon className={cn('h-4 w-4', tones[tone])} />
-      <span className="text-sm font-bold text-brand-800">{label}</span>
     </div>
   );
 }

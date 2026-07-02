@@ -26,7 +26,7 @@ export default function PollsPage() {
         <div className="h-1 w-full bg-gradient-emerald-iris" />
         <div className="px-6 py-6 md:px-8 md:py-7">
           <p className="text-[11px] font-bold uppercase tracking-[0.2em] text-accent-600">Hamjamiyat tanlovi</p>
-          <h1 className="mt-1.5 text-3xl font-black tracking-tight text-brand-900">Ovoz berish</h1>
+          <h1 className="mt-1.5 text-3xl font-bold tracking-tight text-brand-900">Ovoz berish</h1>
           <p className="mt-1.5 max-w-md text-sm leading-relaxed text-slate-500">
             Eng kuchli startaplarni hamjamiyat tanlaydi. Yoqqan loyihangizga ovoz bering — natijalar jonli yangilanadi.
           </p>

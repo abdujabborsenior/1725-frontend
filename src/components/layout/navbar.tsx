@@ -112,7 +112,7 @@ export function Navbar() {
                 key={href}
                 href={href}
                 className={cn(
-                  'relative px-3.5 py-2 rounded-lg text-sm font-semibold transition-all duration-150',
+                  'relative whitespace-nowrap px-3.5 py-2 rounded-lg text-sm font-semibold transition-all duration-150',
                   active
                     ? 'text-brand-900'
                     : 'text-slate-600 hover:text-brand-900 hover:bg-slate-50',
@@ -120,7 +120,7 @@ export function Navbar() {
               >
                 {label}
                 {active && (
-                  <span className="absolute inset-x-3.5 -bottom-px h-0.5 rounded-full bg-gradient-emerald-iris" />
+                  <span className="absolute inset-x-3.5 -bottom-px h-0.5 rounded-full bg-accent-500" />
                 )}
               </Link>
             );

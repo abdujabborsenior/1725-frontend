@@ -73,7 +73,7 @@ export default function LeaderboardPage() {
                 Startaplar reytingi
               </span>
             </div>
-            <h1 className="text-2xl font-black tracking-tight text-white md:text-[2rem]">
+            <h1 className="text-2xl font-bold tracking-tight text-white md:text-[2rem]">
               Top Startaplar
             </h1>
             <p className="mt-1.5 max-w-xl text-sm leading-relaxed text-slate-300">

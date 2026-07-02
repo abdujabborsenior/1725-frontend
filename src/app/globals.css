@@ -4,8 +4,11 @@
 
 :root {
   color-scheme: light;
-  /* next/font o'rniga — tailwind `sans` stack'i shu o'zgaruvchiga tayanadi */
-  --font-inter: 'Inter';
+  /* next/font o'rniga — tailwind `sans` stack'i shu o'zgaruvchiga tayanadi.
+     Inter yuklanmaguncha (yoki offline) har platformada Inter'ga eng yaqin
+     tizim shrifti: SF Pro (Apple), Segoe UI (Windows), Roboto (Android). */
+  --font-inter: 'Inter', 'SF Pro Text', -apple-system, BlinkMacSystemFont,
+    'Segoe UI', Roboto, Helvetica, Arial;
 }
 
 * { box-sizing: border-box; }
@@ -22,7 +25,23 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-rendering: optimizeLegibility;
-  font-feature-settings: 'cv11', 'ss01';
+  /* Inter OpenType: to'g'ri tirnoqlar, bir xil raqamlar (cv), stilistik to'plam */
+  font-feature-settings: 'cv02', 'cv03', 'cv04', 'cv11', 'ss01';
+  letter-spacing: -0.006em; /* nozik premium tightlash (Inter body uchun) */
+}
+
+/* ── Global tipografiya tizimi (barcha yozuvlarga izchil sayqal) ─────────
+   Sarlavhalar tekis sinadi (balance) + premium tracking; paragraflarда
+   yolg'iz so'z (orphan) qolmaydi. Inline `tracking-*`/`leading-*` utilitalari
+   kerak joyda buni bemalol bekor qiladi. */
+@layer base {
+  h1, h2, h3, h4 {
+    text-wrap: balance;
+    letter-spacing: -0.021em;
+    color: #0a192f; /* brand-900 — sarlavha default rangi */
+  }
+  h5, h6 { text-wrap: balance; letter-spacing: -0.014em; }
+  p, li { text-wrap: pretty; }
 }
 
 /* Native select option — oq fon */

@@ -60,7 +60,7 @@ export function BottomNav() {
                 )}
               </span>
               {label}
-              {active && <span className="absolute top-0 h-0.5 w-8 rounded-full bg-gradient-emerald-iris" />}
+              {active && <span className="absolute top-0 h-0.5 w-8 rounded-full bg-accent-500" />}
             </Link>
           );
         })}

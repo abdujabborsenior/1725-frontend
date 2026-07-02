@@ -54,7 +54,7 @@ export default function ProblemsPage() {
               </span>
               Jamoaviy aql
             </span>
-            <h1 className="mt-3 text-[1.75rem] font-black tracking-tight text-brand-900 sm:text-[2rem]">Muammolar</h1>
+            <h1 className="mt-3 text-[1.75rem] font-bold tracking-tight text-brand-900 sm:text-[2rem]">Muammolar</h1>
             <p className="mt-1 text-sm text-slate-500">
               Jami <span className="font-bold text-brand-900">{data?.meta.total ?? '—'}</span> ta muammo · yechim kutmoqda
             </p>

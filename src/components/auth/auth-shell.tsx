@@ -16,8 +16,8 @@ export function AuthBrandPanel() {
     <div className="relative hidden overflow-hidden bg-brand-900 lg:flex lg:w-[46%] xl:w-[42%]">
       {/* Fon: mesh + aurora + grid */}
       <div className="pointer-events-none absolute inset-0 bg-gradient-to-br from-brand-900 via-brand-900 to-[#0c1f3a]" />
-      <div className="pointer-events-none absolute -left-24 -top-24 h-[30rem] w-[30rem] animate-aurora rounded-full bg-accent-500/20 blur-[100px]" />
-      <div className="pointer-events-none absolute -bottom-28 -right-24 h-[28rem] w-[28rem] animate-aurora rounded-full bg-iris-500/20 blur-[100px] [animation-delay:-6s]" />
+      <div className="pointer-events-none absolute -left-24 -top-24 h-[30rem] w-[30rem] rounded-full bg-accent-500/15 blur-[110px]" />
+      <div className="pointer-events-none absolute -bottom-28 -right-24 h-[28rem] w-[28rem] rounded-full bg-iris-500/15 blur-[110px]" />
       <div
         className="pointer-events-none absolute inset-0 opacity-[0.05]"
         style={{
@@ -40,7 +40,7 @@ export function AuthBrandPanel() {
 
         {/* Sarlavha + xususiyatlar */}
         <div className="max-w-md">
-          <h2 className="text-3xl font-black leading-tight text-white xl:text-4xl">
+          <h2 className="text-3xl font-bold leading-tight tracking-tight text-white xl:text-4xl">
             G‘oyadan startapgacha —{' '}
             <span className="gradient-text-emerald-iris">bitta platformada.</span>
           </h2>
@@ -115,7 +115,7 @@ export function AuthCard({
               {eyebrow}
             </span>
           )}
-          <h1 className="text-2xl font-black text-brand-900">{title}</h1>
+          <h1 className="text-2xl font-bold tracking-tight text-brand-900">{title}</h1>
           {subtitle && <p className="mt-1.5 text-sm leading-relaxed text-slate-500">{subtitle}</p>}
         </div>
         {children}

@@ -92,7 +92,7 @@ export default function DiscoverPage() {
   return (
     <div className="mx-auto max-w-4xl animate-fade-in space-y-7">
       <div>
-        <h1 className="text-3xl font-black tracking-tight text-brand-900">Hamjamiyat</h1>
+        <h1 className="text-3xl font-bold tracking-tight text-brand-900">Hamjamiyat</h1>
         <p className="mt-1 text-sm text-slate-500">Odamlarni toping, kuzating va guruhlarga qo&lsquo;shiling.</p>
       </div>
 

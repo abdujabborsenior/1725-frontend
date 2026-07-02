@@ -125,7 +125,7 @@ export default function ProfilePage() {
           {/* Identity */}
           <div className="mt-4">
             <div className="flex flex-wrap items-center gap-2">
-              <h1 className="text-2xl font-black text-brand-900">{profile.fullName}</h1>
+              <h1 className="text-2xl font-bold tracking-tight text-brand-900">{profile.fullName}</h1>
               <span className={cn('rounded-md border px-2 py-0.5 text-[11px] font-semibold', ROLE_BADGE[profile.role])}>
                 {ROLE_LABEL[profile.role]}
               </span>

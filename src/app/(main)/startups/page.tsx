@@ -65,7 +65,7 @@ export default function StartupsPage() {
             <Rocket className="h-3.5 w-3.5 text-accent-400" />
             <span className="text-xs font-semibold text-white/90">Startaplar katalogi</span>
           </div>
-          <h1 className="text-2xl md:text-3xl font-black text-white">
+          <h1 className="text-2xl md:text-3xl font-bold tracking-tight text-white">
             Yaratilgan mahsulotlar
           </h1>
           <p className="mt-1.5 text-sm text-slate-300 max-w-lg">
