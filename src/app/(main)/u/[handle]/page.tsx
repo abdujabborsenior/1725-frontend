@@ -12,6 +12,8 @@ import { Avatar } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import { BackButton } from '@/components/ui/back-button';
 import { FollowButton } from '@/components/social/follow-button';
+import { FounderBadge } from '@/components/social/founder-badge';
+import { FounderVoteButton } from '@/components/social/founder-vote-button';
 import { ReportButton } from '@/components/reports/report-dialog';
 import { FollowListModal } from '@/components/social/follow-list-modal';
 import { StartupCard } from '@/components/startups/startup-card';
@@ -129,6 +131,7 @@ export default function ProfilePage() {
               <span className={cn('rounded-md border px-2 py-0.5 text-[11px] font-semibold', ROLE_BADGE[profile.role])}>
                 {ROLE_LABEL[profile.role]}
               </span>
+              {profile.isFounder && <FounderBadge />}
               {profile.isFollowedBy && !profile.isMe && (
                 <span className="rounded-md bg-slate-100 px-2 py-0.5 text-[11px] font-medium text-slate-500">
                   Sizni kuzatadi
@@ -162,7 +165,7 @@ export default function ProfilePage() {
             )}
 
             {/* Counts */}
-            <div className="mt-4 flex items-center gap-6">
+            <div className="mt-4 flex flex-wrap items-center gap-x-6 gap-y-3">
               <button onClick={() => setListMode('followers')} className="group text-left">
                 <span className="text-lg font-black text-brand-900">{followers.toLocaleString('uz')}</span>
                 <span className="ml-1 text-sm text-slate-500 group-hover:text-brand-900">obunachi</span>
@@ -171,6 +174,15 @@ export default function ProfilePage() {
                 <span className="text-lg font-black text-brand-900">{profile.followingCount.toLocaleString('uz')}</span>
                 <span className="ml-1 text-sm text-slate-500 group-hover:text-brand-900">obuna</span>
               </button>
+              {/* Asoschiga ovoz — toggle (o'z profilida faqat hisob) */}
+              {profile.isFounder && (
+                <FounderVoteButton
+                  userId={profile.id}
+                  initialVoted={profile.founderVotedByMe}
+                  initialCount={profile.founderVoteCount}
+                  size="sm"
+                />
+              )}
             </div>
           </div>
         </div>

@@ -3,37 +3,22 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import { useQuery } from '@tanstack/react-query';
-import {
-  Clock, CheckCircle2, XCircle, Hourglass, Lightbulb, FileText, Video,
-} from 'lucide-react';
+import { Clock, Lightbulb, FileText, Video } from 'lucide-react';
 import { solutionsApi } from '@/lib/api';
 import { useAuthStore } from '@/store/auth.store';
-import type { Solution, SolutionStatus } from '@/types';
-import { cn } from '@/lib/utils';
+import type { Solution } from '@/types';
 import { Pagination } from '@/components/ui/pagination';
-import { SolutionStatusBadge } from '@/components/ui/badge';
+import { StartupMiniCard } from '@/components/startups/startup-mini-card';
 import { formatDistanceToNow } from 'date-fns';
-
-const STATUS_TABS: { value: SolutionStatus | ''; label: string }[] = [
-  { value: '', label: 'Barchasi' },
-  { value: 'accepted', label: 'Qabul qilingan' },
-  { value: 'pending', label: 'Kutilmoqda' },
-  { value: 'rejected', label: 'Rad etilgan' },
-];
-
-const STATUS_ICON: Record<SolutionStatus, React.ReactNode> = {
-  accepted: <CheckCircle2 className="h-3.5 w-3.5 text-accent-600" />,
-  pending: <Hourglass className="h-3.5 w-3.5 text-amber-600" />,
-  rejected: <XCircle className="h-3.5 w-3.5 text-rose-600" />,
-};
 
 function SolutionCard({ solution }: { solution: Solution }) {
   return (
     <article className="bg-white border border-slate-200 rounded-xl p-5 hover:border-accent-300 hover:shadow-card-hover transition-all duration-200 flex flex-col h-full">
       <div className="flex items-start justify-between gap-3 mb-3">
-        <span className="inline-flex items-center gap-1.5">
-          {STATUS_ICON[solution.status]}
-          <SolutionStatusBadge status={solution.status} />
+        {/* "Foydali" hisobi — yechim qadri (moderatsiya o'rniga hamjamiyat bahosi) */}
+        <span className="inline-flex items-center gap-1.5 rounded-lg border border-accent-200 bg-accent-50 px-2 py-1 text-[11px] font-semibold text-accent-700">
+          <Lightbulb className="h-3 w-3" />
+          {(solution.helpfulCount ?? 0).toLocaleString('uz')} foydali
         </span>
         {solution.problem && (
           <Link
@@ -49,6 +34,13 @@ function SolutionCard({ solution }: { solution: Solution }) {
         {solution.content}
       </p>
 
+      {/* Yechim sifatida biriktirilgan startap — card */}
+      {solution.startup && (
+        <div className="mb-4">
+          <StartupMiniCard startup={solution.startup} />
+        </div>
+      )}
+
       {(solution.presentationUrl || solution.videoUrl) && (
         <div className="flex gap-2 mb-4">
           {solution.presentationUrl && (
@@ -63,12 +55,6 @@ function SolutionCard({ solution }: { solution: Solution }) {
               <Video className="h-3 w-3" /> Video
             </a>
           )}
-        </div>
-      )}
-
-      {solution.analyzerNote && (
-        <div className="mb-4 p-3 rounded-lg bg-slate-50 border border-slate-200 text-xs text-slate-600 italic">
-          &ldquo;{solution.analyzerNote}&rdquo;
         </div>
       )}
 
@@ -104,15 +90,12 @@ function SkeletonCard() {
 export default function SolutionsPage() {
   const { token } = useAuthStore();
   const [page, setPage] = useState(1);
-  const [status, setStatus] = useState<SolutionStatus | ''>('');
 
   const { data, isLoading } = useQuery({
-    queryKey: ['my-solutions', { page, status }],
-    queryFn: () => solutionsApi.my({ page, limit: 9, status: status || undefined }),
+    queryKey: ['my-solutions', { page }],
+    queryFn: () => solutionsApi.my({ page, limit: 9 }),
     enabled: !!token,
   });
-
-  const visibleTabs = STATUS_TABS;
 
   const items = data?.data ?? [];
 
@@ -124,10 +107,10 @@ export default function SolutionsPage() {
         </div>
         <p className="text-brand-900 font-semibold">Yechimlaringizni kuzating</p>
         <p className="text-sm text-slate-500 mt-1 mb-5">
-          Yuborgan yechimlaringiz holatini ko&apos;rish uchun tizimga kiring
+          Yuborgan yechimlaringizni ko&apos;rish uchun tizimga kiring
         </p>
         <Link
-          href="/login"
+          href="/login?next=%2Fsolutions"
           className="inline-flex items-center gap-2 rounded-xl bg-brand-900 px-5 py-2.5 text-sm font-semibold text-white hover:bg-brand-800 transition-colors"
         >
           Tizimga kirish
@@ -142,30 +125,16 @@ export default function SolutionsPage() {
         <div>
           <h1 className="text-2xl font-bold text-brand-900">Yechimlarim</h1>
           <p className="text-sm text-slate-500 mt-0.5">
-            Siz yuborgan {data?.meta.total ?? '—'} ta yechim
+            Siz yuborgan {data?.meta.total ?? '—'} ta yechim — barchasi joylangan
+            zahoti hammaga ko&apos;rinadi
           </p>
         </div>
         <div className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-white border border-slate-200">
-          <Lightbulb className="h-4 w-4 text-amber-600" />
+          <Lightbulb className="h-4 w-4 text-accent-600" />
           <span className="text-xs text-slate-600 font-medium">
             Shaxsiy yechimlar
           </span>
         </div>
-      </div>
-
-      <div className="flex items-center gap-1 p-1 bg-white border border-slate-200 rounded-xl w-fit max-w-full overflow-x-auto">
-        {visibleTabs.map((tab) => (
-          <button
-            key={tab.value}
-            onClick={() => { setStatus(tab.value); setPage(1); }}
-            className={cn(
-              'px-3.5 py-1.5 rounded-lg text-xs font-semibold transition-all duration-150 whitespace-nowrap',
-              status === tab.value ? 'bg-brand-900 text-white' : 'text-slate-600 hover:text-brand-900 hover:bg-slate-50',
-            )}
-          >
-            {tab.label}
-          </button>
-        ))}
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">

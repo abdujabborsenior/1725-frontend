@@ -17,12 +17,13 @@ import { SearchPalette, openSearchPalette } from '@/components/layout/search-pal
 import { disconnectSocket } from '@/lib/socket';
 import toast from 'react-hot-toast';
 
-const NAV_LINKS = [
+const NAV_LINKS: { href: string; label: string; authOnly?: boolean }[] = [
   { href: '/startups',    label: 'Startaplar' },
   { href: '/leaderboard', label: 'Reyting' },
   { href: '/polls',       label: 'Ovoz berish' },
   { href: '/problems',    label: 'Muammolar' },
-  { href: '/solutions',   label: 'Yechimlarim' },
+  // Shaxsiy sahifa — faqat kirgan foydalanuvchiga ko'rinadi
+  { href: '/solutions',   label: 'Yechimlarim', authOnly: true },
   { href: '/discover',    label: 'Hamjamiyat' },
 ];
 
@@ -105,7 +106,7 @@ export function Navbar() {
 
         {/* Desktop nav */}
         <nav className="hidden md:flex items-center gap-1">
-          {NAV_LINKS.map(({ href, label }) => {
+          {NAV_LINKS.filter((l) => !l.authOnly || token).map(({ href, label }) => {
             const active = pathname.startsWith(href);
             return (
               <Link
@@ -129,18 +130,34 @@ export function Navbar() {
 
         {/* Right actions */}
         <div className="hidden md:flex items-center gap-2">
-          <button
-            onClick={openSearchPalette}
-            className="flex items-center gap-2 h-9 pl-3 pr-2 rounded-lg border border-slate-200 text-slate-400 hover:border-slate-300 hover:text-slate-600 transition-all"
-          >
-            <Search className="h-4 w-4" />
-            <span className="text-sm">Qidirish</span>
-            <kbd className="ml-1 text-[10px] font-semibold bg-slate-100 text-slate-500 rounded px-1.5 py-0.5 border border-slate-200">⌘K</kbd>
-          </button>
+          {token ? (
+            <button
+              onClick={openSearchPalette}
+              className="flex items-center gap-2 h-9 pl-3 pr-2 rounded-lg border border-slate-200 text-slate-400 hover:border-slate-300 hover:text-slate-600 transition-all"
+            >
+              <Search className="h-4 w-4" />
+              <span className="text-sm">Qidirish</span>
+              <kbd className="ml-1 text-[10px] font-semibold bg-slate-100 text-slate-500 rounded px-1.5 py-0.5 border border-slate-200">⌘K</kbd>
+            </button>
+          ) : (
+            <button
+              onClick={openSearchPalette}
+              aria-label="Qidirish"
+              className="h-9 w-9 flex items-center justify-center rounded-lg border border-slate-200 text-slate-400 hover:border-slate-300 hover:text-slate-600 transition-all"
+            >
+              <Search className="h-4 w-4" />
+            </button>
+          )}
+          {/* Joylash CTA — guest ham ko'radi (bosganда register orqali qaytadi) */}
+          <Link href="/startups/create">
+            <Button size="sm" variant="accent">
+              <Plus className="h-3.5 w-3.5" /> Startap
+            </Button>
+          </Link>
           {token ? (
             <>
-              <Link href="/problems/create">
-                <Button size="sm" variant="accent">
+              <Link href="/problems/create" className="hidden lg:block">
+                <Button size="sm" variant="outline">
                   <Plus className="h-3.5 w-3.5" /> Muammo
                 </Button>
               </Link>
@@ -199,19 +216,24 @@ export function Navbar() {
       {/* Mobile menu */}
       {menuOpen && (
         <div className="md:hidden border-t border-slate-200 px-4 py-4 space-y-2 bg-white animate-slide-down">
-          {NAV_LINKS.map(({ href, label }) => (
+          {NAV_LINKS.filter((l) => !l.authOnly || token).map(({ href, label }) => (
             <Link key={href} href={href} onClick={() => setMenuOpen(false)}
               className="block px-4 py-2.5 rounded-lg text-sm font-medium text-slate-700 hover:text-brand-900 hover:bg-slate-50 transition-all">
               {label}
             </Link>
           ))}
+          {/* Joylash CTA'lari — guest ham ko'radi (register orqali qaytadi) */}
+          <Link href="/startups/create" onClick={() => setMenuOpen(false)}
+            className="block px-4 py-2.5 rounded-lg text-sm font-semibold text-accent-700 bg-accent-50 hover:bg-accent-100 transition-all">
+            + Startap joylash
+          </Link>
+          <Link href="/problems/create" onClick={() => setMenuOpen(false)}
+            className="block px-4 py-2.5 rounded-lg text-sm font-semibold text-slate-700 border border-slate-200 hover:bg-slate-50 transition-all">
+            + Muammo yuborish
+          </Link>
           {token ? (
             <>
               <ChatLink mobile />
-              <Link href="/problems/create" onClick={() => setMenuOpen(false)}
-                className="block px-4 py-2.5 rounded-lg text-sm font-semibold text-accent-700 bg-accent-50 hover:bg-accent-100 transition-all">
-                + Muammo yuborish
-              </Link>
               <Link href="/profile" onClick={() => setMenuOpen(false)}
                 className="flex items-center gap-2.5 px-4 py-2.5 rounded-lg text-sm font-medium text-slate-700 hover:bg-slate-50 transition-all">
                 <Avatar src={user?.avatarUrl} name={user?.fullName} size={28} />

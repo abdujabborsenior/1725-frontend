@@ -1,8 +1,11 @@
 import { AuthBrandPanel } from '@/components/auth/auth-shell';
+import { NextCapture } from '@/components/auth/next-capture';
 
 export default function AuthLayout({ children }: { children: React.ReactNode }) {
   return (
     <div className="flex min-h-screen bg-surface-soft">
+      {/* ?next= ni saqlaymiz — auth tugagach maqsad sahifasiga qaytish uchun */}
+      <NextCapture />
       {/* Chap: brend showcase (lg+) */}
       <AuthBrandPanel />
 

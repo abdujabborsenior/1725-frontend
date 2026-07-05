@@ -9,11 +9,12 @@ import { useAuthStore } from '@/store/auth.store';
 import { Button } from '@/components/ui/button';
 import { OtpInput } from '@/components/ui/otp-input';
 import { AuthMobileLogo } from '@/components/auth/auth-shell';
+import { consumeNext } from '@/components/auth/next-capture';
 import toast from 'react-hot-toast';
 
 export default function VerifyEmailPage() {
   const router = useRouter();
-  const { pendingEmail, hasHydrated, clearAuth } = useAuthStore();
+  const { pendingEmail, hasHydrated, clearAuth, setAuth } = useAuthStore();
   const [otp, setOtp] = useState('');
   const [loading, setLoading] = useState(false);
   const [resendLoading, setResendLoading] = useState(false);
@@ -37,10 +38,19 @@ export default function VerifyEmailPage() {
     setLoading(true);
     setOtpError(false);
     try {
-      await authApi.verifyOtp(pendingEmail, otp);
+      const res = await authApi.verifyOtp(pendingEmail, otp);
       setSuccess(true);
-      toast.success('Email tasdiqlandi!');
-      setTimeout(() => router.push('/login'), 1500);
+      if (res.accessToken && res.refreshToken && res.user) {
+        // Avto-login: qayta parol kiritmasdan maqsad sahifasiga qaytamiz
+        // (masalan startap joylash / muammo yuborish / yechim berish).
+        setAuth(res.accessToken, res.refreshToken, res.user);
+        const next = consumeNext();
+        toast.success(`Xush kelibsiz, ${res.user.fullName}!`);
+        setTimeout(() => router.push(next ?? '/problems'), 1200);
+      } else {
+        toast.success('Email tasdiqlandi!');
+        setTimeout(() => router.push('/login'), 1500);
+      }
     } catch {
       setOtpError(true);
       toast.error("Kod noto'g'ri yoki muddati o'tgan");
@@ -73,7 +83,7 @@ export default function VerifyEmailPage() {
           <CheckCircle2 className="h-12 w-12 text-accent-600" />
         </div>
         <h1 className="text-2xl font-bold text-brand-900 mb-2">Tasdiqlandi!</h1>
-        <p className="text-slate-500">Kirish sahifasiga yo&apos;naltirilmoqda...</p>
+        <p className="text-slate-500">Yo&apos;naltirilmoqda...</p>
       </div>
     );
   }

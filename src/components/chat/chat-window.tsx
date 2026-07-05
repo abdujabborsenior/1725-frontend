@@ -233,6 +233,8 @@ export function ChatWindow({ conversationId }: { conversationId: string }) {
   const isOwner = conv.myRole === 'owner';
   const isSuperadmin = me?.role === 'superadmin';
   const canBypassRestrictions = isOwner || conv.myRole === 'admin' || isSuperadmin;
+  // Guruh sozlamalari — egasi YOKI superadmin (backend ham shu qoidани tekshiradi)
+  const canManageGroup = isOwner || isSuperadmin;
 
   return (
     <div className="flex h-full w-full flex-col overflow-hidden">
@@ -290,7 +292,7 @@ export function ChatWindow({ conversationId }: { conversationId: string }) {
                     <button onClick={() => { setInfoOpen(true); setMenuOpen(false); }} className="flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium text-brand-900 hover:bg-surface-soft">
                       <Info className="h-4 w-4 text-slate-400" /> Guruh ma&apos;lumoti
                     </button>
-                    {isSuperadmin && (
+                    {canManageGroup && (
                       <button onClick={() => { setSettingsOpen(true); setMenuOpen(false); }} className="flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium text-brand-900 hover:bg-surface-soft">
                         <Settings className="h-4 w-4 text-slate-400" /> Guruh sozlamalari
                       </button>
@@ -374,8 +376,8 @@ export function ChatWindow({ conversationId }: { conversationId: string }) {
         </div>
       </Modal>
 
-      {/* Superadmin settings */}
-      {isSuperadmin && (
+      {/* Guruh sozlamalari — egasi yoki superadmin */}
+      {canManageGroup && (
         <GroupSettingsModal
           open={settingsOpen}
           onClose={() => setSettingsOpen(false)}

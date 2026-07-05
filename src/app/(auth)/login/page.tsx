@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useForm } from 'react-hook-form';
@@ -12,6 +12,7 @@ import { useAuthStore } from '@/store/auth.store';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { AuthCard } from '@/components/auth/auth-shell';
+import { consumeNext } from '@/components/auth/next-capture';
 import toast from 'react-hot-toast';
 
 const schema = z.object({
@@ -29,16 +30,9 @@ export default function LoginPage() {
   const { register, handleSubmit, formState: { errors, isSubmitting } } =
     useForm<FormData>({ resolver: zodResolver(schema) });
 
-  // Ulashilgan havoladan kelgan bo'lsa — qaytib boriladigan manzilni saqlaymiz
-  useEffect(() => {
-    const next = new URLSearchParams(window.location.search).get('next');
-    if (next && next.startsWith('/')) sessionStorage.setItem('sh_next', next);
-  }, []);
-
+  // ?next= ni (auth) layout'dagi NextCapture saqlaydi — bu yerda faqat o'qiymiz.
   function redirectAfterAuth() {
-    const next = sessionStorage.getItem('sh_next');
-    sessionStorage.removeItem('sh_next');
-    router.push(next && next.startsWith('/') ? next : '/problems');
+    router.push(consumeNext() ?? '/problems');
   }
 
   async function onSubmit(data: FormData) {

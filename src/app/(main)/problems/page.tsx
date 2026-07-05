@@ -5,7 +5,6 @@ import Link from 'next/link';
 import { useQuery } from '@tanstack/react-query';
 import { Search, Plus, FileQuestion } from 'lucide-react';
 import { problemsApi } from '@/lib/api';
-import { useAuthStore } from '@/store/auth.store';
 import type { ProblemStatus } from '@/types';
 import { Button } from '@/components/ui/button';
 import { Pagination } from '@/components/ui/pagination';
@@ -21,7 +20,6 @@ const STATUS_TABS: { value: ProblemStatus | ''; label: string }[] = [
 ];
 
 export default function ProblemsPage() {
-  const { token } = useAuthStore();
   const [page, setPage] = useState(1);
   const [search, setSearch] = useState('');
   const debouncedSearch = useDebounce(search, 400);
@@ -59,13 +57,12 @@ export default function ProblemsPage() {
               Jami <span className="font-bold text-brand-900">{data?.meta.total ?? '—'}</span> ta muammo · yechim kutmoqda
             </p>
           </div>
-          {token && (
-            <Link href="/problems/create">
-              <Button variant="accent" size="md">
-                <Plus className="h-4 w-4" /> Muammo yuborish
-              </Button>
-            </Link>
-          )}
+          {/* Guest ham ko'radi — bosganда register orqali aynan shu yerga qaytadi */}
+          <Link href="/problems/create">
+            <Button variant="accent" size="md">
+              <Plus className="h-4 w-4" /> Muammo yuborish
+            </Button>
+          </Link>
         </div>
       </div>
 

@@ -3,6 +3,7 @@
 import Link from 'next/link';
 import { Avatar } from '@/components/ui/avatar';
 import { FollowButton } from './follow-button';
+import { FounderBadge } from './founder-badge';
 import { useAuthStore } from '@/store/auth.store';
 import { cn } from '@/lib/utils';
 import type { PublicUserCard } from '@/types';
@@ -34,8 +35,9 @@ export function UserListItem({ user, onClick, className, showFollow = true }: Pr
         <Avatar src={user.avatarUrl} name={user.fullName} size={46} />
       </Link>
       <Link href={href} onClick={onClick} className="min-w-0 flex-1">
-        <p className="truncate text-sm font-bold text-brand-900">
-          {user.fullName}
+        <p className="flex items-center gap-1.5 text-sm font-bold text-brand-900">
+          <span className="truncate">{user.fullName}</span>
+          {user.isFounder && <FounderBadge size="xs" className="shrink-0" />}
         </p>
         <p className="truncate text-xs text-slate-500">
           {user.username ? `@${user.username}` : null}

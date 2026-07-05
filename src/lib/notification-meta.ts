@@ -5,6 +5,7 @@ import {
   UserPlus,
   MessageCircle,
   Info,
+  Rocket,
   type LucideIcon,
 } from 'lucide-react';
 import type { NotificationType } from '@/types';
@@ -22,6 +23,7 @@ export const NOTIFICATION_META: Record<
   solution_accepted: { icon: Award, color: 'text-amber-600 bg-amber-50' },
   solution_rejected: { icon: XCircle, color: 'text-rose-600 bg-rose-50' },
   new_follower: { icon: UserPlus, color: 'text-iris-600 bg-iris-50' },
+  founder_badge: { icon: Rocket, color: 'text-accent-700 bg-accent-50' },
   new_message: { icon: MessageCircle, color: 'text-sky-600 bg-sky-50' },
   system: { icon: Info, color: 'text-slate-600 bg-slate-100' },
 };

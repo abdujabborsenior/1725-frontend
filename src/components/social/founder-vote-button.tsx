@@ -1,0 +1,103 @@
+'use client';
+
+import { useState } from 'react';
+import { usePathname, useRouter } from 'next/navigation';
+import { ThumbsUp } from 'lucide-react';
+import { usersApi, getErrorMessage } from '@/lib/api';
+import { useAuthStore } from '@/store/auth.store';
+import { cn } from '@/lib/utils';
+import toast from 'react-hot-toast';
+
+/**
+ * Asoschiga ovoz — TOGGLE (bitta endpoint): bosilsa ovoz beradi, qayta bosilsa
+ * qaytarib oladi. Guest bosса register orqali aynan shu sahifaga qaytadi.
+ */
+export function FounderVoteButton({
+  userId,
+  initialVoted,
+  initialCount,
+  size = 'md',
+  onChange,
+}: {
+  userId: string;
+  initialVoted: boolean;
+  initialCount: number;
+  size?: 'sm' | 'md';
+  onChange?: (voted: boolean, count: number) => void;
+}) {
+  const router = useRouter();
+  const pathname = usePathname();
+  const { token, user } = useAuthStore();
+  const [voted, setVoted] = useState(initialVoted);
+  const [count, setCount] = useState(initialCount);
+  const [busy, setBusy] = useState(false);
+
+  const isMe = user?.id === userId;
+
+  async function toggle() {
+    if (!token) {
+      router.push(`/register?next=${encodeURIComponent(pathname)}`);
+      return;
+    }
+    if (isMe || busy) return;
+
+    // Optimistik yangilash — xatoда orqaga qaytariladi
+    const prev = { voted, count };
+    setVoted(!voted);
+    setCount((c) => (voted ? Math.max(c - 1, 0) : c + 1));
+    setBusy(true);
+    try {
+      const res = await usersApi.toggleFounderVote(userId);
+      setVoted(res.voted);
+      setCount(res.voteCount);
+      onChange?.(res.voted, res.voteCount);
+    } catch (err) {
+      setVoted(prev.voted);
+      setCount(prev.count);
+      toast.error(getErrorMessage(err));
+    } finally {
+      setBusy(false);
+    }
+  }
+
+  if (isMe) {
+    // O'ziga ovoz berib bo'lmaydi — faqat hisob ko'rsatiladi
+    return (
+      <span
+        className={cn(
+          'inline-flex items-center gap-1.5 rounded-full border border-slate-200 bg-surface-soft font-semibold text-slate-600',
+          size === 'sm' ? 'h-8 px-3 text-xs' : 'h-10 px-4 text-sm',
+        )}
+      >
+        <ThumbsUp className={size === 'sm' ? 'h-3.5 w-3.5' : 'h-4 w-4'} />
+        {count.toLocaleString('uz')} ovoz
+      </span>
+    );
+  }
+
+  return (
+    <button
+      onClick={toggle}
+      disabled={busy}
+      aria-pressed={voted}
+      className={cn(
+        'btn-lift inline-flex items-center gap-1.5 rounded-full border font-semibold transition-all',
+        size === 'sm' ? 'h-8 px-3 text-xs' : 'h-10 px-4 text-sm',
+        voted
+          ? 'border-accent-500 bg-accent-500 text-white hover:bg-accent-600'
+          : 'border-slate-200 bg-white text-slate-600 hover:border-accent-300 hover:text-accent-700',
+      )}
+    >
+      <ThumbsUp
+        className={cn(
+          size === 'sm' ? 'h-3.5 w-3.5' : 'h-4 w-4',
+          voted && 'fill-current',
+        )}
+      />
+      {voted ? 'Ovoz berilgan' : 'Ovoz berish'}
+      <span className={cn('font-bold', voted ? 'text-white/90' : 'text-brand-900')}>
+        {count.toLocaleString('uz')}
+      </span>
+    </button>
+  );
+}

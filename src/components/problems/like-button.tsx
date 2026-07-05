@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { usePathname, useRouter } from 'next/navigation';
-import { ThumbsUp } from 'lucide-react';
+import { Lightbulb } from 'lucide-react';
 import { problemsApi, getErrorMessage } from '@/lib/api';
 import { useAuthStore } from '@/store/auth.store';
 import { cn } from '@/lib/utils';
@@ -61,7 +61,7 @@ export function ProblemLikeButton({
       onClick={toggle}
       disabled={loading}
       aria-pressed={liked}
-      title="Zo'r"
+      title="Foydali deb belgilash"
       className={cn(
         'group inline-flex items-center font-semibold rounded-full transition-all btn-lift',
         sm ? 'h-8 gap-1.5 px-3 text-xs' : 'h-10 gap-2 px-4 text-sm',
@@ -71,8 +71,8 @@ export function ProblemLikeButton({
         className,
       )}
     >
-      <ThumbsUp className={cn(sm ? 'h-3.5 w-3.5' : 'h-4 w-4', liked && 'fill-white', 'transition-transform group-active:scale-110')} />
-      <span>Zo&apos;r</span>
+      <Lightbulb className={cn(sm ? 'h-3.5 w-3.5' : 'h-4 w-4', liked && 'fill-white', 'transition-transform group-active:scale-110')} />
+      <span>Foydali</span>
       {count > 0 && (
         <span className={cn('tabular-nums', liked ? 'text-white/90' : 'text-slate-400')}>
           · {count.toLocaleString('uz')}

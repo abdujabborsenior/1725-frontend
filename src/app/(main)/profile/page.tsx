@@ -15,9 +15,10 @@ import type { Solution } from '@/types';
 import { Button } from '@/components/ui/button';
 import { Modal } from '@/components/ui/modal';
 import { Avatar } from '@/components/ui/avatar';
-import { ProblemStatusBadge, SolutionStatusBadge } from '@/components/ui/badge';
+import { ProblemStatusBadge } from '@/components/ui/badge';
 import { StartupCard } from '@/components/startups/startup-card';
 import { ROLE_LABEL, ROLE_BADGE } from '@/lib/constants';
+import { FounderBadge } from '@/components/social/founder-badge';
 import { formatDistanceToNow } from 'date-fns';
 import toast from 'react-hot-toast';
 
@@ -100,6 +101,7 @@ export default function ProfilePage() {
               <span className={`px-2.5 py-1 rounded-md text-xs font-semibold border ${ROLE_BADGE[user.role]}`}>
                 {ROLE_LABEL[user.role] ?? user.role}
               </span>
+              {user.isFounder && <FounderBadge />}
               {user.isEmailVerified && (
                 <span className="flex items-center gap-1 text-[11px] text-accent-700 font-semibold">
                   <ShieldCheck className="h-3.5 w-3.5" /> Tasdiqlangan
@@ -224,7 +226,11 @@ export default function ProfilePage() {
                       )}
                       <p className="text-sm text-slate-700 line-clamp-2">{s.content}</p>
                     </div>
-                    <SolutionStatusBadge status={s.status} className="px-2 py-0.5 text-[10px] flex-shrink-0" />
+                    {/* Moderatsiya bekor — hamjamiyat "Foydali" bahosi ko'rsatiladi */}
+                    <span className="inline-flex flex-shrink-0 items-center gap-1 rounded-md border border-accent-200 bg-accent-50 px-2 py-0.5 text-[10px] font-semibold text-accent-700">
+                      <Lightbulb className="h-2.5 w-2.5" />
+                      {(s.helpfulCount ?? 0).toLocaleString('uz')} foydali
+                    </span>
                   </div>
                 </div>
               </Link>

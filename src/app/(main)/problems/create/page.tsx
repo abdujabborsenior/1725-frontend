@@ -73,16 +73,19 @@ export default function CreateProblemPage() {
   const { mutate: create, isPending } = useMutation({
     mutationFn: (data: FormData) =>
       problemsApi.create({ ...data, imageUrls, videoUrls }),
-    onSuccess: () => {
+    onSuccess: (res) => {
       void qc.invalidateQueries({ queryKey: ['problems'] });
-      toast.success('Muammo yuborildi! Tasdiqlash kutilmoqda.');
-      router.push('/problems');
+      toast.success("Muammo e'lon qilindi!");
+      router.push(res.data?.id ? `/problems/${res.data.id}` : '/problems');
     },
     onError: (err) => toast.error(getErrorMessage(err)),
   });
 
+  // Guest — register'ga (ro'yxatdan o'tgach aynan shu sahifaga qaytadi)
   useEffect(() => {
-    if (hasHydrated && !token) router.replace('/login');
+    if (hasHydrated && !token) {
+      router.replace(`/register?next=${encodeURIComponent('/problems/create')}`);
+    }
   }, [hasHydrated, token, router]);
 
   function addUrl(type: 'image' | 'video') {
@@ -118,7 +121,7 @@ export default function CreateProblemPage() {
         </span>
         <h1 className="mt-3 text-[1.75rem] font-bold tracking-tight text-brand-900">Muammo yuborish</h1>
         <p className="mt-1 text-sm text-slate-500">
-          Muammoni batafsil tasvirlab bering — mutaxassislar ko&apos;rib chiqadi
+          Muammoni batafsil tasvirlab bering — hamjamiyat yechim taklif qiladi
         </p>
       </div>
 
@@ -242,8 +245,9 @@ export default function CreateProblemPage() {
         </div>
 
         <div className="p-4 rounded-lg bg-accent-50 border border-accent-200 text-sm text-slate-700 leading-relaxed">
-          <strong className="text-accent-700">Eslatma:</strong> Muammongiz superadmin tomonidan
-          ko&apos;rib chiqilgach, tasdiqlansa <span className="text-accent-700 font-semibold">Ochiq</span> holatiga o&apos;tadi.
+          <strong className="text-accent-700">Eslatma:</strong> Muammongiz yuborilgan zahoti{' '}
+          <span className="text-accent-700 font-semibold">e&apos;lon qilinadi</span> — hamjamiyat
+          darhol yechim taklif qilishi mumkin.
         </div>
 
         <div className="flex gap-3 pt-2">

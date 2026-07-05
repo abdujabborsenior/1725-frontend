@@ -75,6 +75,10 @@ export interface User {
   links: string[];
   followerCount: number;
   followingCount: number;
+  /** Asoschi (Founder) tamg'asi — kamida bitta startap joylagan, doimiy */
+  isFounder?: boolean;
+  founderSince?: string | null;
+  founderVoteCount?: number;
   age: number | null;
   region: string | null;
   district: string | null;
@@ -95,6 +99,8 @@ export interface PublicUserCard {
   role: UserRole;
   followerCount: number;
   isFollowedByMe: boolean;
+  /** Asoschi (Founder) tamg'asi */
+  isFounder?: boolean;
 }
 
 export interface PublicProfile {
@@ -110,11 +116,27 @@ export interface PublicProfile {
   region: string | null;
   followerCount: number;
   followingCount: number;
+  /** Asoschi (Founder) tamg'asi — doimiy */
+  isFounder: boolean;
+  founderSince: string | null;
+  founderVoteCount: number;
+  /** Joriy foydalanuvchi bu asoschiga ovoz berganmi */
+  founderVotedByMe: boolean;
   lastSeenAt: string | null;
   createdAt: string;
   isMe: boolean;
   isFollowing: boolean;
   isFollowedBy: boolean;
+}
+
+/** Asoschilar liderbordi elementi */
+export interface FounderEntry extends PublicUserCard {
+  rank: number;
+  isFounder: true;
+  founderVoteCount: number;
+  founderSince: string | null;
+  startupCount: number;
+  votedByMe: boolean;
 }
 
 /* ── Chat ─────────────────────────────────────────────────────── */
@@ -194,6 +216,9 @@ export interface PublicGroup {
   lastMessageAt: string | null;
   /** Joriy foydalanuvchi a'zomi (autentifikatsiya bo'lsa) */
   isMember?: boolean;
+  /** Guruh yaratuvchisi (admin ro'yxatida keladi) */
+  createdById?: string | null;
+  createdBy?: ChatUserMini | null;
 }
 
 export interface Comment {
@@ -212,12 +237,25 @@ export interface Solution {
   content: string;
   presentationUrl: string | null;
   videoUrl: string | null;
+  /** LEGACY: moderatsiya bekor qilingan — UI'da ko'rsatilmaydi */
   status: SolutionStatus;
+  /** LEGACY: moderatsiya davridan qolgan — UI'da ko'rsatilmaydi */
   analyzerNote: string | null;
+  /** "Foydali" deb belgilaganlar soni */
+  helpfulCount: number;
+  /** Joriy foydalanuvchi foydali deganmi (auth bo'lsa) */
+  helpfulByMe?: boolean;
   problemId: string;
   submittedById: string | null;
   submittedBy: PublicAuthor | null;
   problem?: Pick<Problem, 'id' | 'title' | 'status'>;
+  /** Yechim sifatida biriktirilgan startap (published+public bo'lsa keladi) */
+  startupId?: string | null;
+  startup?: Pick<
+    Startup,
+    | 'id' | 'title' | 'slug' | 'tagline' | 'logoUrl' | 'coverUrl'
+    | 'category' | 'ratingAvg' | 'ratingCount' | 'likeCount' | 'viewCount'
+  > | null;
   createdAt: string;
   updatedAt: string;
 }
@@ -303,6 +341,8 @@ export interface Startup {
   videoUrl: string | null;
   screenshots: string[];
   category: string | null;
+  region: string | null;
+  district: string | null;
   tags: string[];
   platforms: StartupPlatform[];
   status: StartupStatus;
@@ -401,6 +441,7 @@ export type NotificationType =
   | 'solution_accepted'
   | 'solution_rejected'
   | 'new_follower'
+  | 'founder_badge'
   | 'new_message'
   | 'system';
 

@@ -1,12 +1,15 @@
 'use client';
 
 import { useState } from 'react';
+import Link from 'next/link';
 import { useParams, useRouter } from 'next/navigation';
 import { useQuery } from '@tanstack/react-query';
 import {
   ArrowLeft, Eye, Calendar, Users, Rocket, Tag, ExternalLink, Share2, Check, Flag,
+  PencilLine,
 } from 'lucide-react';
 import { startupsApi } from '@/lib/api';
+import { useAuthStore } from '@/store/auth.store';
 import { PLATFORM_ORDER } from '@/lib/constants';
 import { StoreButton } from '@/components/startups/platform';
 import { StartupCard } from '@/components/startups/startup-card';
@@ -21,6 +24,7 @@ export default function StartupDetailPage() {
   const router = useRouter();
   const slug = params.id;
 
+  const { user } = useAuthStore();
   const [copied, setCopied] = useState(false);
   const [reportOpen, setReportOpen] = useState(false);
 
@@ -87,6 +91,12 @@ export default function StartupDetailPage() {
   const orderedPlatforms = [...startup.platforms].sort(
     (a, b) => PLATFORM_ORDER.indexOf(a.type) - PLATFORM_ORDER.indexOf(b.type),
   );
+
+  // Egasi (yoki admin) — o'z startapini tahrirlashi mumkin
+  const isOwner =
+    !!user &&
+    (startup.createdById === user.id ||
+      user.role === 'superadmin' || user.role === 'analyzer');
 
   return (
     <div className="max-w-4xl mx-auto space-y-8 animate-fade-in">
@@ -173,6 +183,14 @@ export default function StartupDetailPage() {
             >
               <Flag className="h-4 w-4" /> Shikoyat
             </button>
+            {isOwner && (
+              <Link
+                href={`/startups/${startup.id}/edit`}
+                className="inline-flex items-center gap-2 h-11 px-4 rounded-xl border border-slate-200 bg-white text-slate-600 font-semibold hover:text-brand-900 hover:border-slate-300 transition-all btn-lift"
+              >
+                <PencilLine className="h-4 w-4" /> Tahrirlash
+              </Link>
+            )}
           </div>
           <ReportDialog
             open={reportOpen}

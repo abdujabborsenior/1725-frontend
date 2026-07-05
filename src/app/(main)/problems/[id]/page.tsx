@@ -8,13 +8,16 @@ import {
   ArrowLeft, Eye, Clock, MessageSquare, Link2,
   Send, Trash2, CheckCircle2, ExternalLink, X, FileText, Video,
 } from 'lucide-react';
-import { problemsApi, commentsApi, solutionsApi, getErrorMessage } from '@/lib/api';
+import { problemsApi, commentsApi, solutionsApi, startupsApi, getErrorMessage } from '@/lib/api';
 import { useAuthStore } from '@/store/auth.store';
 import type { Comment, Solution } from '@/types';
+import { ProblemCard } from '@/components/problems/problem-card';
+import { StartupMiniCard } from '@/components/startups/startup-mini-card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { ProblemStatusPill } from '@/components/ui/badge';
+import { SolutionHelpfulButton } from '@/components/solutions/helpful-button';
 import { PROBLEM_STATUS_META } from '@/lib/constants';
 import { Avatar } from '@/components/ui/avatar';
 import { cn } from '@/lib/utils';
@@ -166,13 +169,28 @@ function CommentForm({ problemId }: { problemId: string }) {
 
 /* ── Solution form ───────────────────────────────────────────── */
 function SolutionForm({
-  problemId, defaultName, onClose,
-}: { problemId: string; defaultName: string; onClose: () => void }) {
+  problemId, defaultName, userId, onClose,
+}: { problemId: string; defaultName: string; userId?: string; onClose: () => void }) {
   const qc = useQueryClient();
   const [fullName, setFullName] = useState(defaultName);
   const [content, setContent] = useState('');
   const [presentationUrl, setPresentationUrl] = useState('');
   const [videoUrl, setVideoUrl] = useState('');
+  const [startupId, setStartupId] = useState('');
+
+  // O'z startapini yechim sifatida biriktirish — foydalanuvchining
+  // e'lon qilingan (public) startaplari ro'yxati
+  const { data: myStartups } = useQuery({
+    queryKey: ['my-startups-attach', userId],
+    queryFn: async () =>
+      (await startupsApi.list({ userId, limit: 50, sort: 'newest' })).data,
+    enabled: !!userId,
+    staleTime: 60_000,
+  });
+  const attachable = (myStartups ?? []).filter(
+    (s) => s.status === 'published' && s.visibility === 'public',
+  );
+  const selectedStartup = attachable.find((s) => s.id === startupId);
 
   const { mutate: submit, isPending } = useMutation({
     mutationFn: () =>
@@ -182,10 +200,11 @@ function SolutionForm({
         content: content.trim(),
         presentationUrl: presentationUrl.trim() || undefined,
         videoUrl: videoUrl.trim() || undefined,
+        startupId: startupId || undefined,
       }),
     onSuccess: () => {
       void qc.invalidateQueries({ queryKey: ['solutions', problemId] });
-      toast.success("Yechim yuborildi! Tasdiqlangach ko'rinadi.");
+      toast.success('Yechim yuborildi!');
       onClose();
     },
     onError: (e) => toast.error(getErrorMessage(e)),
@@ -245,6 +264,31 @@ function SolutionForm({
         />
       </div>
 
+      {/* O'z startapini biriktirish (ixtiyoriy) — yechim startap card bo'lib chiqadi */}
+      {attachable.length > 0 && (
+        <div className="space-y-2">
+          <label className="block text-sm font-medium text-brand-900">
+            Startapni biriktirish <span className="font-normal text-slate-400">(ixtiyoriy)</span>
+          </label>
+          <select
+            value={startupId}
+            onChange={(e) => setStartupId(e.target.value)}
+            className="h-10 w-full rounded-lg border border-slate-200 bg-white px-3 text-sm text-brand-900 transition-all input-focus focus:outline-none hover:border-slate-300"
+          >
+            <option value="">Biriktirilmasin</option>
+            {attachable.map((s) => (
+              <option key={s.id} value={s.id}>{s.title}</option>
+            ))}
+          </select>
+          {selectedStartup && (
+            <StartupMiniCard startup={selectedStartup} />
+          )}
+          <p className="text-xs text-slate-500">
+            Yechimingiz shu startap kartochkasi bilan birga ko&apos;rsatiladi.
+          </p>
+        </div>
+      )}
+
       <Button variant="accent" loading={isPending} disabled={!canSubmit} onClick={() => submit()}>
         <Send className="h-4 w-4" /> Yechimni yuborish
       </Button>
@@ -256,23 +300,26 @@ function SolutionForm({
 export default function ProblemDetailPage() {
   const { id } = useParams<{ id: string }>();
   const router = useRouter();
-  const { token, user, hasHydrated } = useAuthStore();
+  const { token, user } = useAuthStore();
   const [showSolutionForm, setShowSolutionForm] = useState(false);
   const [activeTab, setActiveTab] = useState<'comments' | 'solutions'>('comments');
   const [shareOpen, setShareOpen] = useState(false);
 
-  // Ulashilgan havola: kirmagan foydalanuvchini login → ro'yxatdan o'tgach
-  // aynan shu muammoga qaytaramiz (?next=).
+  // Muammo sahifasi guestga ham ochiq. ?solve=1 bilan kelgan (masalan,
+  // register'dan qaytgan) foydalanuvchiga yechim formasini darhol ochamiz.
   useEffect(() => {
-    if (hasHydrated && !token) {
-      router.replace(`/login?next=${encodeURIComponent(`/problems/${id}`)}`);
+    if (!token) return;
+    const params = new URLSearchParams(window.location.search);
+    if (params.get('solve') === '1') {
+      setShowSolutionForm(true);
+      setActiveTab('solutions');
     }
-  }, [hasHydrated, token, id, router]);
+  }, [token]);
 
   const { data: problem, isLoading } = useQuery({
     queryKey: ['problem', id],
     queryFn: () => problemsApi.findOne(id),
-    enabled: !!token,
+    enabled: !!id,
   });
 
   const commentsEnabled =
@@ -284,16 +331,20 @@ export default function ProblemDetailPage() {
     enabled: commentsEnabled,
   });
 
-  // Yechimlar ommaviy saytda ko'rsatilmaydi — faqat analizator/superadmin
-  // ko'ra oladi (ular asosan admin panelda ishlaydi).
-  const canSeeSolutions =
-    user?.role === 'analyzer' || user?.role === 'superadmin';
-
+  // Yechimlar ochiq kontent — joylangan zahoti hammaga (guest ham) ko'rinadi.
   const { data: solutions = [] } = useQuery({
     queryKey: ['solutions', id],
     queryFn: async () =>
-      (await solutionsApi.list({ problemId: id, status: 'accepted', limit: 100 })).data,
-    enabled: !!problem && canSeeSolutions,
+      (await solutionsApi.list({ problemId: id, limit: 100 })).data,
+    enabled: !!problem,
+  });
+
+  // O'xshash muammolar (kategoriya + matn o'xshashligi) — sahifa pastida
+  const { data: similar } = useQuery({
+    queryKey: ['problem-similar', id],
+    queryFn: () => problemsApi.similar(id),
+    enabled: !!problem && problem.status === 'open',
+    staleTime: 60_000,
   });
 
   if (isLoading) {
@@ -417,12 +468,20 @@ export default function ProblemDetailPage() {
         )}
       </article>
 
-      {/* Solution CTA */}
-      {token && isOpen && !showSolutionForm && (
+      {/* Solution CTA — guest bosса register orqali aynan shu yerga qaytadi */}
+      {isOpen && !showSolutionForm && (
         <div className="flex justify-center">
-          <Button variant="accent" size="lg" onClick={() => setShowSolutionForm(true)}>
-            <CheckCircle2 className="h-4 w-4" /> Yechim taqdim etish
-          </Button>
+          {token ? (
+            <Button variant="accent" size="lg" onClick={() => { setShowSolutionForm(true); setActiveTab('solutions'); }}>
+              <CheckCircle2 className="h-4 w-4" /> Yechim taqdim etish
+            </Button>
+          ) : (
+            <Link href={`/register?next=${encodeURIComponent(`/problems/${id}?solve=1`)}`}>
+              <Button variant="accent" size="lg">
+                <CheckCircle2 className="h-4 w-4" /> Yechim taqdim etish
+              </Button>
+            </Link>
+          )}
         </div>
       )}
 
@@ -430,6 +489,7 @@ export default function ProblemDetailPage() {
         <SolutionForm
           problemId={id}
           defaultName={user?.fullName ?? ''}
+          userId={user?.id}
           onClose={() => setShowSolutionForm(false)}
         />
       )}
@@ -439,9 +499,7 @@ export default function ProblemDetailPage() {
         <div className="flex gap-1 p-1 bg-white border border-slate-200 rounded-xl w-fit mb-5">
           {([
             { key: 'comments' as const, label: 'Izohlar', count: comments.length },
-            ...(canSeeSolutions
-              ? [{ key: 'solutions' as const, label: 'Yechimlar', count: solutions.length }]
-              : []),
+            { key: 'solutions' as const, label: 'Yechimlar', count: solutions.length },
           ]).map(({ key, label, count }) => (
             <button
               key={key}
@@ -471,7 +529,16 @@ export default function ProblemDetailPage() {
                 <CommentForm problemId={id} />
               </div>
             ) : !token ? (
-              <p className="text-xs text-slate-500">Izoh yozish uchun tizimga kiring.</p>
+              <p className="text-xs text-slate-500">
+                Izoh yozish uchun{' '}
+                <Link
+                  href={`/register?next=${encodeURIComponent(`/problems/${id}`)}`}
+                  className="font-semibold text-accent-700 hover:underline"
+                >
+                  ro&apos;yxatdan o&apos;ting
+                </Link>
+                .
+              </p>
             ) : null}
 
             {comments.length === 0 ? (
@@ -495,7 +562,7 @@ export default function ProblemDetailPage() {
             {solutions.length === 0 ? (
               <div className="text-center py-12">
                 <CheckCircle2 className="h-10 w-10 text-slate-300 mx-auto mb-3" />
-                <p className="text-slate-500 text-sm">Hali tasdiqlangan yechim yo&apos;q</p>
+                <p className="text-slate-500 text-sm">Hali yechim yo&apos;q — birinchi bo&apos;ling!</p>
               </div>
             ) : solutions.map((s: Solution) => (
               <div key={s.id} className="bg-white border border-accent-200 rounded-2xl p-5 shadow-card">
@@ -515,11 +582,14 @@ export default function ProblemDetailPage() {
                       </p>
                     </div>
                   </div>
-                  <span className="px-2 py-0.5 rounded-md text-[11px] font-semibold bg-accent-50 text-accent-700 border border-accent-200">
-                    Qabul qilingan
-                  </span>
                 </div>
                 <p className="text-sm text-slate-700 leading-relaxed whitespace-pre-wrap break-words">{s.content}</p>
+                {/* Yechim sifatida biriktirilgan startap — card */}
+                {s.startup && (
+                  <div className="mt-3">
+                    <StartupMiniCard startup={s.startup} />
+                  </div>
+                )}
                 {(s.presentationUrl || s.videoUrl) && (
                   <div className="flex flex-wrap gap-2 mt-3">
                     {s.presentationUrl && (
@@ -536,12 +606,13 @@ export default function ProblemDetailPage() {
                     )}
                   </div>
                 )}
-                {s.analyzerNote && (
-                  <div className="mt-3 p-3 rounded-lg bg-slate-50 border border-slate-200 text-xs text-slate-600 italic">
-                    &ldquo;{s.analyzerNote}&rdquo;
-                  </div>
-                )}
-                <div className="mt-3 flex justify-end border-t border-slate-100 pt-2.5">
+                <div className="mt-3 flex items-center justify-between gap-2 border-t border-slate-100 pt-2.5">
+                  <SolutionHelpfulButton
+                    solutionId={s.id}
+                    ownerId={s.submittedById}
+                    initialHelpful={s.helpfulByMe ?? false}
+                    initialCount={s.helpfulCount ?? 0}
+                  />
                   <ReportButton targetType="solution" targetId={s.id} />
                 </div>
               </div>
@@ -549,6 +620,18 @@ export default function ProblemDetailPage() {
           </div>
         )}
       </div>
+
+      {/* O'xshash muammolar */}
+      {similar && similar.length > 0 && (
+        <section className="space-y-3 border-t border-slate-200 pt-6">
+          <h2 className="text-lg font-bold text-brand-900">O&apos;xshash muammolar</h2>
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            {similar.slice(0, 6).map((p) => (
+              <ProblemCard key={p.id} problem={p} compact />
+            ))}
+          </div>
+        </section>
+      )}
 
       <ProblemShareModal
         open={shareOpen}

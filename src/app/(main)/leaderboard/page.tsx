@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { useQuery, keepPreviousData } from '@tanstack/react-query';
-import { Trophy, Flame } from 'lucide-react';
+import { Trophy, Flame, Rocket, UserRound } from 'lucide-react';
 import { startupsApi } from '@/lib/api';
 import { LEADERBOARD_PERIOD_OPTIONS } from '@/lib/constants';
 import type { LeaderboardPeriod } from '@/types';
@@ -14,10 +14,14 @@ import {
   LeaderboardRowSkeleton,
 } from '@/components/startups/leaderboard-row';
 import { FormulaExplainer } from '@/components/startups/leaderboard-formula';
+import { FoundersBoard } from '@/components/social/founders-board';
 
 const LIMIT = 20;
 
+type BoardTab = 'startups' | 'founders';
+
 export default function LeaderboardPage() {
+  const [tab, setTab] = useState<BoardTab>('startups');
   const [period, setPeriod] = useState<LeaderboardPeriod>('all');
   const [category, setCategory] = useState('');
   const [page, setPage] = useState(1);
@@ -38,6 +42,7 @@ export default function LeaderboardPage() {
         limit: LIMIT,
       }),
     placeholderData: keepPreviousData,
+    enabled: tab === 'startups',
   });
 
   const entries = data?.data ?? [];
@@ -70,17 +75,18 @@ export default function LeaderboardPage() {
             <div className="mb-3 inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/10 px-3 py-1 backdrop-blur">
               <Trophy className="h-3.5 w-3.5 text-amber-300" />
               <span className="text-xs font-semibold tracking-wide text-white/90">
-                Startaplar reytingi
+                {tab === 'startups' ? 'Startaplar reytingi' : 'Asoschilar reytingi'}
               </span>
             </div>
             <h1 className="text-2xl font-bold tracking-tight text-white md:text-[2rem]">
-              Top Startaplar
+              {tab === 'startups' ? 'Top Startaplar' : 'Top Asoschilar'}
             </h1>
             <p className="mt-1.5 max-w-xl text-sm leading-relaxed text-slate-300">
-              Foydalanuvchilar baholari asosida, IMDB uslubidagi vaznli (Bayes)
-              reyting bilan tartiblangan eng yaxshi startaplar.
+              {tab === 'startups'
+                ? 'Foydalanuvchilar baholari asosida, IMDB uslubidagi vaznli (Bayes) reyting bilan tartiblangan eng yaxshi startaplar.'
+                : "Hamjamiyat ovozlari asosida tartiblangan startap asoschilari — o'z asoschingizga ovoz bering."}
             </p>
-            {total > 0 && (
+            {tab === 'startups' && total > 0 && (
               <p className="mt-3 inline-flex items-center gap-1.5 text-xs font-medium text-amber-200/90">
                 <Flame className="h-3.5 w-3.5" />
                 {total} ta baholangan startap raqobatda
@@ -96,6 +102,33 @@ export default function LeaderboardPage() {
         </div>
       </div>
 
+      {/* Reyting turi: Startaplar / Asoschilar */}
+      <div className="flex w-fit gap-1 rounded-xl border border-slate-200 bg-white p-1">
+        {(
+          [
+            { key: 'startups' as const, label: 'Startaplar', icon: Rocket },
+            { key: 'founders' as const, label: 'Asoschilar', icon: UserRound },
+          ]
+        ).map(({ key, label, icon: Icon }) => (
+          <button
+            key={key}
+            onClick={() => setTab(key)}
+            className={cn(
+              'flex items-center gap-2 rounded-lg px-4 py-2 text-sm font-semibold transition-all duration-150',
+              tab === key
+                ? 'bg-brand-900 text-white'
+                : 'text-slate-600 hover:bg-slate-50 hover:text-brand-900',
+            )}
+          >
+            <Icon className="h-4 w-4" /> {label}
+          </button>
+        ))}
+      </div>
+
+      {tab === 'founders' ? (
+        <FoundersBoard />
+      ) : (
+        <>
       {/* Davr filtri */}
       <div className="flex flex-wrap items-center gap-2">
         {LEADERBOARD_PERIOD_OPTIONS.map((o) => (
@@ -183,6 +216,8 @@ export default function LeaderboardPage() {
             onChange={setPage}
           />
         </div>
+      )}
+        </>
       )}
     </div>
   );

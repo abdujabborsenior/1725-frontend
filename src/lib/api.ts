@@ -12,6 +12,7 @@ import type {
   ChatMessage,
   Comment,
   Conversation,
+  FounderEntry,
   LeaderboardPeriod,
   LeaderboardResponse,
   LinkPreview,
@@ -183,8 +184,12 @@ export const authApi = {
   registerUniversity: (data: Record<string, unknown>) =>
     unwrap<{ message: string }>(api.post('/auth/register/university', data)),
 
+  // Email tasdiqlashда backend avto-login qiladi (token juftligi qaytadi) —
+  // foydalanuvchi qayta parol kiritmasdan maqsad sahifasiga qaytadi.
   verifyOtp: (email: string, code: string, type: OtpType = 'email_verification') =>
-    unwrap<{ message: string }>(api.post('/auth/verify-otp', { email, code, type })),
+    unwrap<{ message: string } & Partial<Omit<LoginResponse, 'message'>>>(
+      api.post('/auth/verify-otp', { email, code, type }),
+    ),
   resendOtp: (email: string, type: OtpType = 'email_verification') =>
     unwrap<{ message: string }>(api.post('/auth/resend-otp', { email, type })),
 
@@ -220,6 +225,10 @@ export const problemsApi = {
   toggleLike: (id: string) =>
     unwrap<{ liked: boolean; likeCount: number }>(api.post(`/problems/${id}/like`)),
 
+  // O'xshash muammolar (kategoriya + matn o'xshashligi, backend'da keshlangan)
+  similar: (id: string, limit = 6) =>
+    unwrap<Problem[]>(api.get(`/problems/${id}/similar`, { params: { limit } })),
+
   // Admin moderation
   approve: (id: string) =>
     unwrap<{ message: string }>(api.patch(`/problems/${id}/approve`)),
@@ -249,28 +258,31 @@ export const commentsApi = {
     api.delete(`/problems/${problemId}/comments/${id}`),
 };
 
-/* ── Solutions ────────────────────────────────────────────────── */
+/* ── Solutions (moderatsiyasiz — joylangan zahoti ko'rinadi) ──── */
 export const solutionsApi = {
   list: (params?: {
     page?: number;
     limit?: number;
-    status?: SolutionStatus;
     problemId?: string;
   }) => unwrap<PaginatedResponse<Solution>>(api.get('/solutions', { params })),
   findOne: (id: string) => unwrap<Solution>(api.get(`/solutions/${id}`)),
-  my: (params?: { page?: number; limit?: number; status?: SolutionStatus }) =>
+  my: (params?: { page?: number; limit?: number }) =>
     unwrap<PaginatedResponse<Solution>>(api.get('/solutions/my', { params })),
+
+  // "Foydali" toggle — bosilsa belgilaydi, qayta bosilsa qaytarib oladi
+  toggleHelpful: (id: string) =>
+    unwrap<{ helpful: boolean; helpfulCount: number }>(
+      api.post(`/solutions/${id}/helpful`),
+    ),
   submit: (data: {
     problemId: string;
     fullName: string;
     content: string;
     presentationUrl?: string;
     videoUrl?: string;
+    /** O'z startapini yechim sifatida biriktirish (ixtiyoriy) */
+    startupId?: string;
   }) => unwrap<{ data: Solution; message: string }>(api.post('/solutions', data)),
-  updateStatus: (id: string, status: SolutionStatus, analyzerNote?: string) =>
-    unwrap<{ message: string }>(
-      api.patch(`/solutions/${id}/status`, { status, analyzerNote }),
-    ),
 };
 
 /* ── Startups ─────────────────────────────────────────────────── */
@@ -304,6 +316,8 @@ export interface StartupPayload {
   videoUrl?: string | null;
   screenshots?: string[];
   category?: string | null;
+  region?: string | null;
+  district?: string | null;
   tags?: string[];
   platforms?: { type: PlatformType; url: string; label?: string; iconUrl?: string }[];
   status?: StartupStatus;
@@ -548,6 +562,16 @@ export const usersApi = {
   following: (id: string, params?: { page?: number; limit?: number }) =>
     unwrap<PaginatedResponse<PublicUserCard>>(
       api.get(`/users/${id}/following`, { params }),
+    ),
+
+  // ── Asoschilar (Founder): liderbord + ovoz (toggle) ──
+  foundersLeaderboard: (params?: { page?: number; limit?: number }) =>
+    unwrap<PaginatedResponse<FounderEntry>>(
+      api.get('/users/founders/leaderboard', { params }),
+    ),
+  toggleFounderVote: (id: string) =>
+    unwrap<{ voted: boolean; voteCount: number }>(
+      api.post(`/users/${id}/founder-vote`),
     ),
 
   // Admin

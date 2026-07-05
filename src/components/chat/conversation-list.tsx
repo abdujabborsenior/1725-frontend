@@ -30,7 +30,9 @@ export function ConversationList({ activeId }: { activeId?: string }) {
   const qc = useQueryClient();
   const [groupModal, setGroupModal] = useState(false);
   const [filter, setFilter] = useState<Filter>('all');
-  const isSuperadmin = user?.role === 'superadmin';
+  // Guruh ochish endi barcha foydalanuvchilarga ochiq (oddiy user — 3 tagacha,
+  // limitni backend tekshiradi)
+  const canCreateGroup = !!user;
 
   // localStorage'dan oxirgi tanlangan filtrni tiklash
   useEffect(() => {
@@ -106,7 +108,7 @@ export function ConversationList({ activeId }: { activeId?: string }) {
           <h2 className="text-lg font-black text-brand-900">Suhbatlar</h2>
         </div>
         <div className="flex items-center gap-1">
-          {isSuperadmin && (
+          {canCreateGroup && (
             <button onClick={() => setGroupModal(true)} aria-label="Guruh yaratish" className="flex h-9 w-9 items-center justify-center rounded-lg text-slate-500 hover:bg-slate-100 hover:text-iris-600 active:scale-95">
               <UsersRound className="h-5 w-5" />
             </button>
@@ -156,7 +158,7 @@ export function ConversationList({ activeId }: { activeId?: string }) {
         </div>
       </div>
 
-      {isSuperadmin && <CreateGroupModal open={groupModal} onClose={() => setGroupModal(false)} />}
+      {canCreateGroup && <CreateGroupModal open={groupModal} onClose={() => setGroupModal(false)} />}
 
       <div className="chat-scroll flex-1 overflow-y-auto p-2">
         {isLoading ? (

@@ -1,8 +1,9 @@
 'use client';
 
 import { useState } from 'react';
+import Link from 'next/link';
 import { useQuery, keepPreviousData } from '@tanstack/react-query';
-import { Search, Rocket, SlidersHorizontal, X } from 'lucide-react';
+import { Search, Rocket, SlidersHorizontal, X, Plus } from 'lucide-react';
 import { startupsApi } from '@/lib/api';
 import {
   PLATFORM_META,
@@ -60,18 +61,27 @@ export default function StartupsPage() {
       {/* Header */}
       <div className="relative overflow-hidden rounded-2xl bg-gradient-brand p-6 md:p-8">
         <div className="absolute -top-10 -right-10 h-40 w-40 rounded-full bg-accent-500/20 blur-3xl" />
-        <div className="relative z-10">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/10 border border-white/15 mb-3">
-            <Rocket className="h-3.5 w-3.5 text-accent-400" />
-            <span className="text-xs font-semibold text-white/90">Startaplar katalogi</span>
+        <div className="relative z-10 flex flex-col md:flex-row md:items-end md:justify-between gap-5">
+          <div>
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/10 border border-white/15 mb-3">
+              <Rocket className="h-3.5 w-3.5 text-accent-400" />
+              <span className="text-xs font-semibold text-white/90">Startaplar katalogi</span>
+            </div>
+            <h1 className="text-2xl md:text-3xl font-bold tracking-tight text-white">
+              Yaratilgan mahsulotlar
+            </h1>
+            <p className="mt-1.5 text-sm text-slate-300 max-w-lg">
+              Hamjamiyat tomonidan ishlab chiqilgan startaplar — ilovalar, saytlar
+              va Telegram botlar bir joyda.
+            </p>
           </div>
-          <h1 className="text-2xl md:text-3xl font-bold tracking-tight text-white">
-            Yaratilgan mahsulotlar
-          </h1>
-          <p className="mt-1.5 text-sm text-slate-300 max-w-lg">
-            Hamjamiyat tomonidan ishlab chiqilgan startaplar — ilovalar, saytlar
-            va Telegram botlar bir joyda.
-          </p>
+          {/* Joylash CTA — guest bosganда register orqali aynan shu yerga qaytadi */}
+          <Link
+            href="/startups/create"
+            className="inline-flex items-center justify-center gap-2 h-11 px-5 rounded-xl bg-accent-500 text-sm font-semibold text-white shadow-glow-accent hover:bg-accent-600 transition-all btn-lift shrink-0 self-start md:self-auto"
+          >
+            <Plus className="h-4 w-4" /> Startap joylash
+          </Link>
         </div>
       </div>
 
