@@ -180,7 +180,7 @@ export default function LandingPage() {
             transition={{ duration: 0.6, delay: 0.14, ease: [0.22, 1, 0.36, 1] }}
             className="mx-auto mt-6 max-w-xl text-base leading-relaxed text-slate-600 md:text-lg"
           >
-            StartupHub — o‘quvchilar, talabalar va kreativ yoshlar yig‘iladigan maydon.
+            MYMarkaz — o‘quvchilar, talabalar va kreativ yoshlar yig‘iladigan maydon.
             Sizni qiynayotgan muammoni yozing, yechimini hamjamiyat bilan quring, jamoa toping
             va g‘oyangizni real mahsulotga aylantiring. Bu yo‘lda yolg‘iz emassiz.
           </motion.p>

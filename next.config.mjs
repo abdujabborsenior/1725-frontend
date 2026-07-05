@@ -1,5 +1,8 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  // Docker deploy uchun minimal, mustaqil server chiqishi (.next/standalone).
+  // Eslatma: lokal `npm run start` odatdagidek ishlayveradi (dev oqimiga ta'sir yo'q).
+  output: 'standalone',
   // Production'da console.* (error/warn'dan tashqari) olib tashlanadi.
   compiler: {
     removeConsole:
@@ -17,7 +20,7 @@ const nextConfig = {
       // Lokal disk fallback (dev) — backend static.
       { protocol: 'http', hostname: 'localhost' },
       // Prod backend (lokal driver ishlatilsa) — domeningizni qo'shing:
-      // { protocol: 'https', hostname: 'api.startuphub.uz' },
+      // { protocol: 'https', hostname: 'api.mymarkaz.uz' },
     ],
   },
 };

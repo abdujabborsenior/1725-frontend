@@ -1,0 +1,45 @@
+name: CI
+
+# Har push (main) va har PR'da ishlaydi. PROD'ga umuman tegmaydi —
+# faqat GitHub runner'da sifat tekshiruvi (lint + build/typecheck).
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+# Yangi push eski (tugamagan) run'ni bekor qiladi → runner resursi tejaladi.
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+# Eng kam imtiyoz — CI faqat kodni o'qiydi.
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    env:
+      # Build-check uchun placeholder — bu qiymat hech qayerga deploy bo'lmaydi.
+      NEXT_PUBLIC_API_URL: https://api.example.com/api
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+          cache: npm
+
+      # Aniq, takrorlanuvchi o'rnatish (lockfile bo'yicha).
+      - name: Install
+        run: npm ci
+
+      - name: Lint
+        run: npm run lint
+
+      - name: Build (typecheck ham shu yerda)
+        run: npm run build

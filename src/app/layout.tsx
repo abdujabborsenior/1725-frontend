@@ -3,7 +3,7 @@ import './globals.css';
 import { Providers } from '@/components/layout/providers';
 
 export const metadata: Metadata = {
-  title: { default: 'StartupHub', template: '%s | StartupHub' },
+  title: { default: 'MYMarkaz', template: '%s | MYMarkaz' },
   description:
     'G‘oyadan startapgacha — o‘quvchilar va talabalar uchun ijtimoiy platforma: muammolar, startaplar, hamjamiyat va real-vaqt chat.',
 };

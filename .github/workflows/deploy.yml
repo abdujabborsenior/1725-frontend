@@ -1,0 +1,119 @@
+name: Deploy
+
+# Maksimal xavfsiz CD (backend bilan bir xil siyosat):
+#  - Oddiy push'da HECH QACHON avtomatik deploy yo'q.
+#  - Image faqat qo'lda (workflow_dispatch) yoki versiya tag (v*) da quriladi/push bo'ladi.
+#  - Serverga deploy esa faqat: `production` environment tasdig'i (required reviewers)
+#    + repo o'zgaruvchisi DEPLOY_ENABLED='true' bo'lganda. Aks holda xavfsiz skip.
+on:
+  workflow_dispatch:
+    inputs:
+      ref:
+        description: 'Deploy qilinadigan git ref'
+        default: main
+        required: false
+  push:
+    tags: ['v*']
+
+# Deploy'lar navbatda — bir-birini bekor qilmaydi (yarim deploy yo'q).
+concurrency:
+  group: production-deploy
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+  packages: write # GHCR'ga push uchun
+
+jobs:
+  # ── 1) Image qurib, GHCR'ga push qilish ─────────────────────────────────
+  build-push:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.inputs.ref || github.ref }}
+
+      # NEXT_PUBLIC_* build paytida kodga muhrlanadi — prod API URL majburiy.
+      # Repo Variables: NEXT_PUBLIC_API_URL (masalan https://api.mymarkaz.uz/api)
+      - name: Guard — build konfiguratsiyasi to'liqligini tekshir
+        run: |
+          if [ -z "${{ vars.NEXT_PUBLIC_API_URL }}" ]; then
+            echo "::error::Repo variable NEXT_PUBLIC_API_URL o'rnatilmagan (Settings → Variables)."
+            exit 1
+          fi
+
+      - uses: docker/setup-buildx-action@v3
+
+      - name: Login to GHCR
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Image metadata (teglar)
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: ghcr.io/${{ github.repository }}
+          tags: |
+            type=sha,format=long
+            type=ref,event=tag
+            type=raw,value=latest,enable={{is_default_branch}}
+
+      - name: Build & push
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          target: runner
+          push: true
+          build-args: |
+            NEXT_PUBLIC_API_URL=${{ vars.NEXT_PUBLIC_API_URL }}
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+          # GitHub Actions layer cache → build tez, runner yuki past.
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+  # ── 2) Serverga deploy (gated: faqat aniq yoqilganda) ──────────────────
+  deploy:
+    needs: build-push
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    # DEPLOY_ENABLED='true' bo'lmasa — job o'tkazib yuboriladi (xato emas, skip).
+    if: ${{ vars.DEPLOY_ENABLED == 'true' }}
+    # `production` environment — required reviewers qo'yilsa, qo'lda TASDIQ kutiladi.
+    environment: production
+    steps:
+      - name: Guard — deploy sirlari to'liqligini tekshir
+        run: |
+          missing=""
+          [ -n "${{ secrets.DEPLOY_HOST }}" ] || missing="$missing DEPLOY_HOST"
+          [ -n "${{ secrets.DEPLOY_USER }}" ] || missing="$missing DEPLOY_USER"
+          [ -n "${{ secrets.DEPLOY_SSH_KEY }}" ] || missing="$missing DEPLOY_SSH_KEY"
+          [ -n "${{ secrets.DEPLOY_PATH }}" ] || missing="$missing DEPLOY_PATH"
+          if [ -n "$missing" ]; then
+            echo "::error::Deploy sirlari yetishmayapti:$missing"
+            exit 1
+          fi
+          echo "Barcha deploy sirlari mavjud."
+
+      # Serverda: yangi image'ni tort → restart. Boshqa loyihalarga TEGILMAYDI —
+      # faqat shu compose loyihasining o'z konteyneri (3330-port) yangilanadi.
+      - name: SSH deploy (pull → restart)
+        uses: appleboy/ssh-action@v1
+        with:
+          host: ${{ secrets.DEPLOY_HOST }}
+          username: ${{ secrets.DEPLOY_USER }}
+          key: ${{ secrets.DEPLOY_SSH_KEY }}
+          script_stop: true # birinchi xatoda to'xta (yarim deploy yo'q)
+          script: |
+            set -euo pipefail
+            cd "${{ secrets.DEPLOY_PATH }}"
+            export IMAGE="ghcr.io/${{ github.repository }}:latest"
+            echo "${{ secrets.GHCR_TOKEN || secrets.GITHUB_TOKEN }}" \
+              | docker login ghcr.io -u "${{ github.actor }}" --password-stdin
+            docker compose -f docker-compose.prod.yml pull
+            docker compose -f docker-compose.prod.yml up -d
+            docker image prune -f

@@ -1,6 +1,6 @@
-# CLAUDE.md — StartupHub Frontend · Design Charter
+# CLAUDE.md — MYMarkaz Frontend · Design Charter
 
-Bu fayl `startuphub-frontend` (Next.js 14 app router) uchun **UI/UX & dizayn
+Bu fayl `mymarkaz-frontend` (Next.js 14 app router) uchun **UI/UX & dizayn
 manbai**. Backend `../1725/CLAUDE.md` §8 dagi mandatning operatsion davomi.
 Maqsad: butun mahsulotni **Apple / Linear / Google darajasidagi premium, silliq**
 holatga keltirish — **restraint** (kamroq, lekin mukammal), izchillik va sayqal
@@ -97,7 +97,7 @@ global uslub: `src/app/globals.css`.
 
 ## 5. Buyruqlar
 ```bash
-npm run dev      # localhost:3000
+npm run dev      # localhost:3330
 npm run build    # har o'zgarishdan keyin TOZA bo'lsin
 npm run lint     # eslint
 ```

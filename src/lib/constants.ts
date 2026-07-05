@@ -11,7 +11,7 @@ import type {
 } from '@/types';
 
 export const API_URL =
-  process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:3333/api';
+  process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:3331/api';
 
 /* ── Storage keys ─────────────────────────────────────────────── */
 export const STORAGE = {

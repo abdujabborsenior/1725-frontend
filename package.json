@@ -1,11 +1,11 @@
 {
-  "name": "startuphub-frontend",
+  "name": "mymarkaz-frontend",
   "version": "1.0.0",
   "private": true,
   "scripts": {
-    "dev": "next dev -p 3000",
+    "dev": "next dev -p 3330",
     "build": "next build",
-    "start": "next start -p 3000",
+    "start": "next start -p 3330",
     "lint": "next lint"
   },
   "dependencies": {

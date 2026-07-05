@@ -1,0 +1,20 @@
+# MYMarkaz Frontend — production (single-host).
+# Bu fayl serverda turadi. Image QURILMAYDI — registry'dan (GHCR) tortiladi.
+# CI/CD (deploy.yml) yangi image'ni push qiladi, server quyidagicha yangilaydi:
+#
+#   export IMAGE=ghcr.io/<owner>/<repo>:latest
+#   docker compose -f docker-compose.prod.yml pull
+#   docker compose -f docker-compose.prod.yml up -d
+#
+# Serverda boshqa loyihalar bor — bu stack FAQAT 3330-portni band qiladi,
+# boshqa hech narsaga tegmaydi (o'z compose loyihasi, o'z tarmog'i).
+
+name: mymarkaz-frontend
+
+services:
+  web:
+    image: ${IMAGE:?IMAGE majburiy, masalan ghcr.io/<owner>/<repo>:latest}
+    pull_policy: always
+    restart: always
+    ports:
+      - '${PORT:-3330}:3330'

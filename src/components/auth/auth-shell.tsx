@@ -34,7 +34,7 @@ export function AuthBrandPanel() {
             <Rocket className="h-[22px] w-[22px] text-white" />
           </span>
           <span className="text-2xl font-black tracking-tight text-white">
-            Startup<span className="gradient-text-emerald-iris">Hub</span>
+            MY<span className="gradient-text-emerald-iris">Markaz</span>
           </span>
         </Link>
 
@@ -85,7 +85,7 @@ export function AuthMobileLogo() {
         <Rocket className="h-[22px] w-[22px] text-white" />
       </span>
       <span className="text-2xl font-black tracking-tight text-brand-900">
-        Startup<span className="gradient-text-emerald-iris">Hub</span>
+        MY<span className="gradient-text-emerald-iris">Markaz</span>
       </span>
     </Link>
   );

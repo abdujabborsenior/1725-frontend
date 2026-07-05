@@ -1,0 +1,20 @@
+# Sirlar va lokal muhit — image'ga hech qachon tushmaydi
+.env
+.env.*
+!.env.example
+
+# Bog'liqliklar va build natijalari (image ichida qayta quriladi)
+node_modules
+.next
+out
+
+# Git / CI / dev-asboblar
+.git
+.github
+.gitignore
+*.md
+.eslintcache
+tsconfig.tsbuildinfo
+
+# OS / editor
+.DS_Store

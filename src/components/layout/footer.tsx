@@ -44,7 +44,7 @@ export function Footer() {
               <Rocket className="h-[18px] w-[18px] text-white" />
             </div>
             <span className="text-lg font-black tracking-tight text-brand-900">
-              Startup<span className="gradient-text-emerald-iris">Hub</span>
+              MY<span className="gradient-text-emerald-iris">Markaz</span>
             </span>
           </Link>
           <p className="mt-4 max-w-xs text-sm leading-relaxed text-slate-500">
@@ -76,7 +76,7 @@ export function Footer() {
 
       <div className="border-t border-slate-100">
         <div className="mx-auto flex max-w-6xl flex-col items-center justify-between gap-2 px-6 py-5 text-xs text-slate-400 sm:flex-row">
-          <p>© {new Date().getFullYear()} StartupHub · Barcha huquqlar himoyalangan</p>
+          <p>© {new Date().getFullYear()} MYMarkaz · Barcha huquqlar himoyalangan</p>
           <p className="inline-flex items-center gap-1.5">
             O‘zbekistonda yoshlar uchun yaratildi
             <Heart className="h-3.5 w-3.5 fill-rose-500 text-rose-500" />

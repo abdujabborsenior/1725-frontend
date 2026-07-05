@@ -100,7 +100,7 @@ export function Navbar() {
             <Rocket className="h-[18px] w-[18px] text-white" />
           </div>
           <span className="text-lg font-black tracking-tight text-brand-900">
-            Startup<span className="gradient-text-emerald-iris">Hub</span>
+            MY<span className="gradient-text-emerald-iris">Markaz</span>
           </span>
         </Link>
 
