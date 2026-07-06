@@ -34,6 +34,10 @@ export const useAuthStore = create<AuthState>((set, get) => ({
     const pendingEmail = sessionStorage.getItem(STORAGE.pendingEmail);
     let user: User | null = null;
     try { user = userRaw ? (JSON.parse(userRaw) as User) : null; } catch { /* ignore */ }
+    // Sinxronlash: sessiya yo'q (localStorage bo'sh), lekin eski cookie qolgan
+    // bo'lsa — o'chiramiz. Aks holda middleware "kirgan" deb o'ylab, guest'ni
+    // auth sahifalaridan bosh sahifaga qaytarib qulflab qo'yadi.
+    if (!token) deleteCookie(STORAGE.token);
     set({ token, refreshToken, user, pendingEmail, hasHydrated: true });
   },
 

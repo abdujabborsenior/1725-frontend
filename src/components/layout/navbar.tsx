@@ -3,8 +3,9 @@
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import {
-  Plus, LogOut, Menu, X, Search, MessageCircle, Rocket,
+  Plus, LogOut, Menu, X, Search, MessageCircle,
 } from 'lucide-react';
+import { LogoMark } from '@/components/brand/logo-mark';
 import { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { cn } from '@/lib/utils';
@@ -96,9 +97,7 @@ export function Navbar() {
       <div className="max-w-6xl mx-auto px-4 h-16 flex items-center justify-between">
         {/* Logo */}
         <Link href="/" className="flex items-center gap-2.5 group">
-          <div className="relative h-9 w-9 rounded-xl bg-gradient-emerald-iris flex items-center justify-center shadow-glow-accent group-hover:scale-105 transition-transform">
-            <Rocket className="h-[18px] w-[18px] text-white" />
-          </div>
+          <LogoMark className="h-9 w-9 transition-transform group-hover:scale-105" />
           <span className="text-lg font-black tracking-tight text-brand-900">
             MY<span className="gradient-text-emerald-iris">Markaz</span>
           </span>

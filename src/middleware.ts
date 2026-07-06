@@ -21,6 +21,26 @@ const PROTECTED_PATHS = [
 const CREATE_INTENT_PATHS = ['/problems/create', '/startups/create'];
 const EDIT_RE = /^\/startups\/[^/]+\/edit$/;
 
+/**
+ * Cookie'dagi JWT hali amal qilyaptimi (exp bo'yicha)? Cookie 30 kun yashaydi,
+ * ichidagi access token esa tez eskiradi — shuning uchun "cookie bor" degani
+ * "kirgan" degani EMAS. Eskirgan/buzuq token guest deb qaraladi, aks holda
+ * guest auth sahifalaridan bosh sahifaga qaytarilib qulflanib qoladi.
+ */
+function tokenIsLive(token: string | undefined): boolean {
+  if (!token) return false;
+  const parts = token.split('.');
+  if (parts.length !== 3) return false;
+  try {
+    const payload = JSON.parse(
+      atob(parts[1].replace(/-/g, '+').replace(/_/g, '/')),
+    ) as { exp?: number };
+    return typeof payload.exp === 'number' && payload.exp * 1000 > Date.now();
+  } catch {
+    return false;
+  }
+}
+
 export function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
   const token = request.cookies.get('sh_token')?.value;
@@ -29,12 +49,20 @@ export function middleware(request: NextRequest) {
   const isProtected =
     PROTECTED_PATHS.some((p) => pathname.startsWith(p)) || EDIT_RE.test(pathname);
 
-  // Kirgan foydalanuvchi auth sahifalariga kirmasin
+  // Kirgan (tokeni HALI AMALDAGI) foydalanuvchi auth sahifalariga kirmasin.
   if (isPublic && token) {
-    return NextResponse.redirect(new URL('/', request.url));
+    if (tokenIsLive(token)) {
+      return NextResponse.redirect(new URL('/', request.url));
+    }
+    // Eskirgan/buzuq cookie — tozalab, sahifaga kiritamiz (deadlock yo'q).
+    const res = NextResponse.next();
+    res.cookies.delete('sh_token');
+    return res;
   }
 
   // Himoyalangan sahifalar uchun token majburiy — qaytib kelish uchun ?next=
+  // (Mavjud, lekin eskirgan token bilan KIRITAMIZ: client axios refresh orqali
+  // sessiyani o'zi yangilaydi — har 15 daqiqada login'ga otib yubormaymiz.)
   if (isProtected && !token) {
     const isCreateIntent = CREATE_INTENT_PATHS.some((p) => pathname.startsWith(p));
     const authUrl = new URL(isCreateIntent ? '/register' : '/login', request.url);

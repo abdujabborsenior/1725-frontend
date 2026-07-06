@@ -1,10 +1,12 @@
 name: Deploy
 
-# Maksimal xavfsiz CD (backend bilan bir xil siyosat):
+# DOCKER'SIZ CD (frontend): build GitHub runner'da bo'ladi (serverga yuk 0),
+# serverga faqat tayyor Next.js standalone artefakt boradi, pm2 ishga tushiradi.
+# Xavfsizlik siyosati backend bilan bir xil:
 #  - Oddiy push'da HECH QACHON avtomatik deploy yo'q.
-#  - Image faqat qo'lda (workflow_dispatch) yoki versiya tag (v*) da quriladi/push bo'ladi.
-#  - Serverga deploy esa faqat: `production` environment tasdig'i (required reviewers)
-#    + repo o'zgaruvchisi DEPLOY_ENABLED='true' bo'lganda. Aks holda xavfsiz skip.
+#  - Faqat qo'lda (workflow_dispatch) yoki versiya tag (v*) da ishlaydi.
+#  - Serverga chiqish: `production` environment tasdig'i (required reviewers)
+#    + repo o'zgaruvchisi DEPLOY_ENABLED='true'. Aks holda xavfsiz skip.
 on:
   workflow_dispatch:
     inputs:
@@ -22,13 +24,12 @@ concurrency:
 
 permissions:
   contents: read
-  packages: write # GHCR'ga push uchun
 
 jobs:
-  # ── 1) Image qurib, GHCR'ga push qilish ─────────────────────────────────
-  build-push:
+  # ── 1) Build (runner'da) — serverga hech qanday yuk tushmaydi ────────────
+  build:
     runs-on: ubuntu-latest
-    timeout-minutes: 20
+    timeout-minutes: 15
     steps:
       - uses: actions/checkout@v4
         with:
@@ -43,42 +44,38 @@ jobs:
             exit 1
           fi
 
-      - uses: docker/setup-buildx-action@v3
-
-      - name: Login to GHCR
-        uses: docker/login-action@v3
+      - uses: actions/setup-node@v4
         with:
-          registry: ghcr.io
-          username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }}
+          node-version: '24'
+          cache: npm
 
-      - name: Image metadata (teglar)
-        id: meta
-        uses: docker/metadata-action@v5
+      - name: Install
+        run: npm ci
+
+      - name: Build (standalone)
+        env:
+          NEXT_PUBLIC_API_URL: ${{ vars.NEXT_PUBLIC_API_URL }}
+        run: npm run build
+
+      # Standalone artefakt: server.js + minimal node_modules + static + public.
+      - name: Artefakt yig'ish
+        run: |
+          mkdir -p out
+          cp -r .next/standalone/. out/
+          mkdir -p out/.next/static
+          cp -r .next/static/. out/.next/static/
+          if [ -d public ]; then cp -r public out/public; fi
+          tar -czf front-build.tar.gz -C out .
+
+      - uses: actions/upload-artifact@v4
         with:
-          images: ghcr.io/${{ github.repository }}
-          tags: |
-            type=sha,format=long
-            type=ref,event=tag
-            type=raw,value=latest,enable={{is_default_branch}}
+          name: front-build
+          path: front-build.tar.gz
+          retention-days: 3
 
-      - name: Build & push
-        uses: docker/build-push-action@v6
-        with:
-          context: .
-          target: runner
-          push: true
-          build-args: |
-            NEXT_PUBLIC_API_URL=${{ vars.NEXT_PUBLIC_API_URL }}
-          tags: ${{ steps.meta.outputs.tags }}
-          labels: ${{ steps.meta.outputs.labels }}
-          # GitHub Actions layer cache → build tez, runner yuki past.
-          cache-from: type=gha
-          cache-to: type=gha,mode=max
-
-  # ── 2) Serverga deploy (gated: faqat aniq yoqilganda) ──────────────────
+  # ── 2) Serverga deploy (gated: faqat aniq yoqilganda) ────────────────────
   deploy:
-    needs: build-push
+    needs: build
     runs-on: ubuntu-latest
     timeout-minutes: 10
     # DEPLOY_ENABLED='true' bo'lmasa — job o'tkazib yuboriladi (xato emas, skip).
@@ -99,9 +96,23 @@ jobs:
           fi
           echo "Barcha deploy sirlari mavjud."
 
-      # Serverda: yangi image'ni tort → restart. Boshqa loyihalarga TEGILMAYDI —
-      # faqat shu compose loyihasining o'z konteyneri (3330-port) yangilanadi.
-      - name: SSH deploy (pull → restart)
+      - uses: actions/download-artifact@v4
+        with:
+          name: front-build
+
+      # Artefaktni serverga yuborish (faqat o'z papkasiga — boshqa loyihalarga tegilmaydi).
+      - name: Artefaktni yuklash (scp)
+        uses: appleboy/scp-action@v1
+        with:
+          host: ${{ secrets.DEPLOY_HOST }}
+          username: ${{ secrets.DEPLOY_USER }}
+          key: ${{ secrets.DEPLOY_SSH_KEY }}
+          source: front-build.tar.gz
+          target: ${{ secrets.DEPLOY_PATH }}/incoming/
+
+      # Atomar deploy: releases/<vaqt> → `current` symlink → pm2 restart.
+      # Eski release saqlanadi (tez rollback: symlink'ni orqaga o'tkazish kifoya).
+      - name: SSH deploy (unpack → pm2)
         uses: appleboy/ssh-action@v1
         with:
           host: ${{ secrets.DEPLOY_HOST }}
@@ -111,9 +122,24 @@ jobs:
           script: |
             set -euo pipefail
             cd "${{ secrets.DEPLOY_PATH }}"
-            export IMAGE="ghcr.io/${{ github.repository }}:latest"
-            echo "${{ secrets.GHCR_TOKEN || secrets.GITHUB_TOKEN }}" \
-              | docker login ghcr.io -u "${{ github.actor }}" --password-stdin
-            docker compose -f docker-compose.prod.yml pull
-            docker compose -f docker-compose.prod.yml up -d
-            docker image prune -f
+            REL="releases/$(date +%Y%m%d%H%M%S)"
+            mkdir -p "$REL"
+            tar -xzf incoming/front-build.tar.gz -C "$REL"
+            rm -f incoming/front-build.tar.gz
+            ln -sfn "$PWD/$REL" current
+            # pm2 konfiguratsiyasi (idempotent: bor bo'lsa restart, yo'q bo'lsa start)
+            cat > ecosystem.config.js <<'EOC'
+            module.exports = {
+              apps: [{
+                name: 'mymarkaz-front',
+                script: './current/server.js',
+                time: true,
+                env: { NODE_ENV: 'production', PORT: 3330, HOSTNAME: '0.0.0.0' },
+              }],
+            };
+            EOC
+            pm2 startOrRestart ecosystem.config.js --update-env
+            pm2 save
+            # Faqat oxirgi 3 ta release qoladi (disk to'lmasin)
+            ls -1dt releases/* | tail -n +4 | xargs -r rm -rf
+            echo "Deploy OK: $REL"

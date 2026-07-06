@@ -2,6 +2,7 @@
 
 import Link from 'next/link';
 import { Rocket, Lightbulb, Trophy, Users, ShieldCheck } from 'lucide-react';
+import { LogoMark } from '@/components/brand/logo-mark';
 import { cn } from '@/lib/utils';
 
 /* ── Chap brend paneli (faqat lg+) — jiddiy, zamonaviy showcase ── */
@@ -30,8 +31,8 @@ export function AuthBrandPanel() {
       <div className="relative z-10 flex w-full flex-col justify-between p-10 xl:p-14">
         {/* Logo */}
         <Link href="/" className="group inline-flex items-center gap-3 self-start">
-          <span className="flex h-11 w-11 items-center justify-center rounded-2xl bg-gradient-emerald-iris shadow-glow-accent transition-transform group-hover:scale-105">
-            <Rocket className="h-[22px] w-[22px] text-white" />
+          <span className="flex h-11 w-11 items-center justify-center rounded-2xl bg-white shadow-glow-accent transition-transform group-hover:scale-105">
+            <LogoMark className="h-8 w-8" />
           </span>
           <span className="text-2xl font-black tracking-tight text-white">
             MY<span className="gradient-text-emerald-iris">Markaz</span>
@@ -81,9 +82,7 @@ export function AuthBrandPanel() {
 export function AuthMobileLogo() {
   return (
     <Link href="/" className="mb-8 flex items-center justify-center gap-2.5 lg:hidden">
-      <span className="flex h-11 w-11 items-center justify-center rounded-2xl bg-gradient-emerald-iris shadow-glow-accent">
-        <Rocket className="h-[22px] w-[22px] text-white" />
-      </span>
+      <LogoMark className="h-11 w-11" />
       <span className="text-2xl font-black tracking-tight text-brand-900">
         MY<span className="gradient-text-emerald-iris">Markaz</span>
       </span>

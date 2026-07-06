@@ -1,5 +1,6 @@
 import Link from 'next/link';
-import { Rocket, ArrowUpRight, Heart } from 'lucide-react';
+import { ArrowUpRight, Heart } from 'lucide-react';
+import { LogoMark } from '@/components/brand/logo-mark';
 
 const COLS: { title: string; links: { label: string; href: string }[] }[] = [
   {
@@ -40,9 +41,7 @@ export function Footer() {
         {/* Brand */}
         <div className="col-span-2">
           <Link href="/" className="group inline-flex items-center gap-2.5">
-            <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-emerald-iris shadow-glow-accent transition-transform group-hover:scale-105">
-              <Rocket className="h-[18px] w-[18px] text-white" />
-            </div>
+            <LogoMark className="h-9 w-9 transition-transform group-hover:scale-105" />
             <span className="text-lg font-black tracking-tight text-brand-900">
               MY<span className="gradient-text-emerald-iris">Markaz</span>
             </span>

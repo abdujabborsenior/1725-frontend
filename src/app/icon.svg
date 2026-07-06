@@ -1,0 +1,13 @@
+<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+  <g stroke-width="6" stroke-linejoin="round">
+      <path d="M46.93 28.22L38.14 7L61.86 7L53.07 28.22Z" fill="#74ABD8" stroke="#74ABD8" />
+      <path d="M46.93 28.22L38.14 7L61.86 7L53.07 28.22Z" transform="rotate(45 50 50)" fill="#578EBE" stroke="#578EBE" />
+      <path d="M46.93 28.22L38.14 7L61.86 7L53.07 28.22Z" transform="rotate(90 50 50)" fill="#3D6F9E" stroke="#3D6F9E" />
+      <path d="M46.93 28.22L38.14 7L61.86 7L53.07 28.22Z" transform="rotate(135 50 50)" fill="#2A527E" stroke="#2A527E" />
+      <path d="M46.93 28.22L38.14 7L61.86 7L53.07 28.22Z" transform="rotate(180 50 50)" fill="#1C3B60" stroke="#1C3B60" />
+      <path d="M46.93 28.22L38.14 7L61.86 7L53.07 28.22Z" transform="rotate(225 50 50)" fill="#2A527E" stroke="#2A527E" />
+      <path d="M46.93 28.22L38.14 7L61.86 7L53.07 28.22Z" transform="rotate(270 50 50)" fill="#3D6F9E" stroke="#3D6F9E" />
+      <path d="M46.93 28.22L38.14 7L61.86 7L53.07 28.22Z" transform="rotate(315 50 50)" fill="#578EBE" stroke="#578EBE" />
+  </g>
+  <circle cx="50" cy="50" r="11" fill="#0A192F"/>
+</svg>
