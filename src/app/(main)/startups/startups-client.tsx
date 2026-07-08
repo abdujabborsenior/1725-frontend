@@ -10,14 +10,25 @@ import {
   PLATFORM_ORDER,
   STARTUP_SORT_OPTIONS,
 } from '@/lib/constants';
-import type { PlatformType, StartupSort } from '@/types';
+import type { CategoryCount, PaginatedResponse, PlatformType, Startup, StartupSort } from '@/types';
 import { useDebounce } from '@/lib/use-debounce';
 import { cn } from '@/lib/utils';
 import { Pagination } from '@/components/ui/pagination';
 import { StartupCard, StartupCardSkeleton } from '@/components/startups/startup-card';
 import { PlatformIcon } from '@/components/startups/platform';
 
-export default function StartupsPage() {
+/**
+ * initialList — server component (page.tsx) SSR'da keltirgan 1-sahifa:
+ * kartalar (LCP rasm) HTML'da darhol chiqadi. Filtr/sahifa o'zgarsa odatdagi
+ * client fetch; shaxsiy flaglar (likedByMe) background refetch'da yangilanadi.
+ */
+export function StartupsClient({
+  initialList,
+  initialCategories,
+}: {
+  initialList: PaginatedResponse<Startup> | null;
+  initialCategories: CategoryCount[] | null;
+}) {
   const [page, setPage] = useState(1);
   const [search, setSearch] = useState('');
   const [category, setCategory] = useState('');
@@ -30,9 +41,13 @@ export default function StartupsPage() {
     queryKey: ['startup-categories'],
     queryFn: () => startupsApi.categories(),
     staleTime: 5 * 60_000,
+    initialData: initialCategories ?? undefined,
   });
 
-  const { data, isLoading, isFetching } = useQuery({
+  const isDefaultView =
+    page === 1 && !debouncedSearch && !category && !platform && sort === 'featured';
+
+  const { data, isLoading } = useQuery({
     queryKey: ['startups', { page, search: debouncedSearch, category, platform, sort }],
     queryFn: () =>
       startupsApi.list({
@@ -44,6 +59,9 @@ export default function StartupsPage() {
         sort,
       }),
     placeholderData: keepPreviousData,
+    // SSR ma'lumoti — darhol ko'rsatiladi; updatedAt=0 → stale → jimgina yangilanadi
+    initialData: isDefaultView ? (initialList ?? undefined) : undefined,
+    initialDataUpdatedAt: 0,
   });
 
   const items = data?.data ?? [];
@@ -57,7 +75,7 @@ export default function StartupsPage() {
   }
 
   return (
-    <div className="space-y-6 animate-fade-in">
+    <div className="space-y-6">
       {/* Header */}
       <div className="relative overflow-hidden rounded-2xl bg-gradient-brand p-6 md:p-8">
         <div className="absolute -top-10 -right-10 h-40 w-40 rounded-full bg-accent-500/20 blur-3xl" />
@@ -78,7 +96,7 @@ export default function StartupsPage() {
           {/* Joylash CTA — guest bosganда register orqali aynan shu yerga qaytadi */}
           <Link
             href="/startups/create"
-            className="inline-flex items-center justify-center gap-2 h-11 px-5 rounded-xl bg-accent-500 text-sm font-semibold text-white shadow-glow-accent hover:bg-accent-600 transition-all btn-lift shrink-0 self-start md:self-auto"
+            className="inline-flex items-center justify-center gap-2 h-11 px-5 rounded-xl bg-accent-700 text-sm font-semibold text-white shadow-glow-accent hover:bg-accent-800 transition-all btn-lift shrink-0 self-start md:self-auto"
           >
             <Plus className="h-4 w-4" /> Startap joylash
           </Link>
@@ -102,6 +120,7 @@ export default function StartupsPage() {
         <div className="relative">
           <SlidersHorizontal className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400 pointer-events-none" />
           <select
+            aria-label="Saralash"
             value={sort}
             onChange={(e) => {
               setSort(e.target.value as StartupSort);
@@ -167,12 +186,12 @@ export default function StartupsPage() {
               className={cn(
                 'px-3 py-1 rounded-full text-xs font-medium border transition-all',
                 category === c.category
-                  ? 'bg-accent-500 text-white border-accent-500'
+                  ? 'bg-accent-700 text-white border-accent-700'
                   : 'bg-surface-soft text-slate-600 border-slate-200 hover:border-accent-300',
               )}
             >
               {c.category}
-              <span className="ml-1.5 opacity-60">{c.count}</span>
+              <span className={cn('ml-1.5', category === c.category ? 'text-white/90' : 'text-slate-600')}>{c.count}</span>
             </button>
           ))}
           {hasFilters && (
@@ -190,10 +209,11 @@ export default function StartupsPage() {
       <p className="text-sm text-slate-500">
         Jami{' '}
         <span className="font-semibold text-brand-900">{data?.meta.total ?? '—'}</span> ta
-        startap {isFetching && <span className="text-slate-400">· yangilanmoqda…</span>}
+        startap
       </p>
 
       {/* Grid */}
+      <h2 className="sr-only">Startaplar ro&apos;yxati</h2>
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
         {isLoading ? (
           Array.from({ length: 8 }).map((_, i) => <StartupCardSkeleton key={i} />)
@@ -210,7 +230,7 @@ export default function StartupsPage() {
             </p>
           </div>
         ) : (
-          items.map((s) => <StartupCard key={s.id} startup={s} />)
+          items.map((s, i) => <StartupCard key={s.id} startup={s} priority={i < 2} />)
         )}
       </div>
 

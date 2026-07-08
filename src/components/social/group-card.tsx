@@ -2,7 +2,6 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { motion } from 'framer-motion';
 import { Users, ArrowRight, Loader2, Hash, MessageCircle } from 'lucide-react';
 import { chatApi, getErrorMessage } from '@/lib/api';
 import { useAuthStore } from '@/store/auth.store';
@@ -38,11 +37,9 @@ export function GroupCard({ group, className }: { group: PublicGroup; className?
   }
 
   return (
-    <motion.div
-      whileHover={{ y: -3 }}
-      transition={{ type: 'spring', stiffness: 400, damping: 28 }}
+    <div
       className={cn(
-        'group flex h-full flex-col rounded-3xl border border-slate-200/80 bg-white p-5 shadow-soft transition-colors hover:border-iris-200 hover:shadow-card-hover',
+        'group flex h-full flex-col rounded-3xl border border-slate-200/80 bg-white p-5 shadow-soft transition-all duration-200 hover:-translate-y-[3px] hover:border-iris-200 hover:shadow-card-hover',
         className,
       )}
     >
@@ -72,7 +69,7 @@ export function GroupCard({ group, className }: { group: PublicGroup; className?
       )}
 
       {group.lastMessagePreview && (
-        <p className="mt-3 truncate rounded-xl bg-surface-soft px-3 py-2 text-xs text-slate-500">
+        <p className="mt-3 truncate rounded-xl bg-surface-soft px-3 py-2 text-xs text-slate-600">
           {group.lastMessagePreview}
         </p>
       )}
@@ -97,6 +94,6 @@ export function GroupCard({ group, className }: { group: PublicGroup; className?
           </>
         )}
       </button>
-    </motion.div>
+    </div>
   );
 }

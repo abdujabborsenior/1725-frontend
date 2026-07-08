@@ -2,6 +2,14 @@
   "name": "mymarkaz-frontend",
   "version": "1.0.0",
   "private": true,
+  "browserslist": [
+    "chrome >= 92",
+    "edge >= 92",
+    "firefox >= 91",
+    "safari >= 15",
+    "and_chr >= 92",
+    "ios_saf >= 15"
+  ],
   "scripts": {
     "dev": "next dev -p 3330",
     "build": "next build",

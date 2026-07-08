@@ -5,7 +5,7 @@ import Link from 'next/link';
 import { useQuery } from '@tanstack/react-query';
 import { Search, Plus, FileQuestion } from 'lucide-react';
 import { problemsApi } from '@/lib/api';
-import type { ProblemStatus } from '@/types';
+import type { PaginatedResponse, Problem, ProblemStatus } from '@/types';
 import { Button } from '@/components/ui/button';
 import { Pagination } from '@/components/ui/pagination';
 import { ProblemCard, ProblemCardSkeleton } from '@/components/problems/problem-card';
@@ -19,11 +19,13 @@ const STATUS_TABS: { value: ProblemStatus | ''; label: string }[] = [
   { value: 'resolved', label: 'Hal qilindi' },
 ];
 
-export default function ProblemsPage() {
+export function ProblemsClient({ initialList }: { initialList: PaginatedResponse<Problem> | null }) {
   const [page, setPage] = useState(1);
   const [search, setSearch] = useState('');
   const debouncedSearch = useDebounce(search, 400);
   const [status, setStatus] = useState<ProblemStatus | ''>('');
+
+  const isDefaultView = page === 1 && !debouncedSearch && !status;
 
   const { data, isLoading } = useQuery({
     queryKey: ['problems', { page, search: debouncedSearch, status }],
@@ -34,20 +36,23 @@ export default function ProblemsPage() {
         status: status || undefined,
         search: debouncedSearch || undefined,
       }),
+    // SSR ma'lumoti — darhol ko'rsatiladi; updatedAt=0 → stale → jimgina yangilanadi
+    initialData: isDefaultView ? (initialList ?? undefined) : undefined,
+    initialDataUpdatedAt: 0,
   });
 
   const items = data?.data ?? [];
 
   return (
-    <div className="space-y-7 animate-fade-in">
+    <div className="space-y-7">
       {/* ── Hero header ──────────────────────────────────── */}
       <div className="relative overflow-hidden rounded-[26px] border border-slate-200/70 bg-white p-6 shadow-soft sm:p-8">
         <div className="pointer-events-none absolute -right-16 -top-20 h-56 w-56 rounded-full bg-accent-500/[0.08] blur-3xl" />
         <div className="pointer-events-none absolute -bottom-24 left-1/3 h-56 w-56 rounded-full bg-iris-500/[0.07] blur-3xl" />
         <div className="relative flex flex-wrap items-end justify-between gap-4">
           <div>
-            <span className="inline-flex items-center gap-2 text-[11px] font-bold uppercase tracking-[0.2em] text-slate-400">
-              <span className="grid h-7 w-7 place-items-center rounded-lg bg-gradient-emerald-iris text-white shadow-glow-iris">
+            <span className="inline-flex items-center gap-2 text-[11px] font-bold uppercase tracking-[0.2em] text-slate-500">
+              <span className="grid h-7 w-7 place-items-center rounded-lg bg-brand-900 text-accent-400">
                 <FileQuestion className="h-3.5 w-3.5" strokeWidth={2.5} />
               </span>
               Jamoaviy aql
@@ -96,6 +101,7 @@ export default function ProblemsPage() {
       </div>
 
       {/* ── Grid ─────────────────────────────────────────── */}
+      <h2 className="sr-only">Muammolar ro&apos;yxati</h2>
       <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
         {isLoading
           ? Array.from({ length: 9 }).map((_, i) => <ProblemCardSkeleton key={i} />)

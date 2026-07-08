@@ -57,7 +57,7 @@ function PodiumCard({
         {entry.title}
       </h3>
       {entry.category && (
-        <span className="mt-0.5 line-clamp-1 text-[11px] font-medium text-slate-400">
+        <span className="mt-0.5 line-clamp-1 text-[11px] font-medium text-slate-500">
           {entry.category}
         </span>
       )}
@@ -66,7 +66,7 @@ function PodiumCard({
         <ScoreBadge score={entry.score} size={elevated ? 'lg' : 'md'} />
       </div>
 
-      <div className="mt-3 flex items-center gap-3 text-[11px] text-slate-400">
+      <div className="mt-3 flex items-center gap-3 text-[11px] text-slate-500">
         <span className="inline-flex items-center gap-1">
           <Users className="h-3 w-3" /> {entry.leaderboardVotes}
         </span>

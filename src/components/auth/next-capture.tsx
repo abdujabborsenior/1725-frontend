@@ -9,12 +9,27 @@ import { usePathname } from 'next/navigation';
  * ro'yxatdan o'tish/kirish tugagach foydalanuvchi AYNAN maqsad sahifasiga
  * qaytadi (masalan, startap joylash yoki yechim berish).
  */
+/**
+ * Faqat XAVFSIZ ichki yo'l — open-redirect'ni to'sadi. `/`bilan boshlanishi
+ * yetarli emas: `//evil.com` va `/\evil.com` brauzerда tashqi saytga
+ * (protocol-relative) yo'naltiriladi. Shuning uchun bitta `/` + harf/raqam
+ * talab qilinadi (ikkinchi belgi `/` yoki `\` bo'lmasin).
+ */
+function safeInternalPath(next: string | null): string | null {
+  if (!next) return null;
+  if (next[0] !== '/') return null;
+  if (next[1] === '/' || next[1] === '\\') return null;
+  return next;
+}
+
 export function NextCapture() {
   const pathname = usePathname();
 
   useEffect(() => {
-    const next = new URLSearchParams(window.location.search).get('next');
-    if (next && next.startsWith('/')) sessionStorage.setItem('sh_next', next);
+    const next = safeInternalPath(
+      new URLSearchParams(window.location.search).get('next'),
+    );
+    if (next) sessionStorage.setItem('sh_next', next);
   }, [pathname]);
 
   return null;
@@ -24,5 +39,5 @@ export function NextCapture() {
 export function consumeNext(): string | null {
   const next = sessionStorage.getItem('sh_next');
   sessionStorage.removeItem('sh_next');
-  return next && next.startsWith('/') ? next : null;
+  return safeInternalPath(next);
 }

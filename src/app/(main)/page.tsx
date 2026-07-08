@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import { motion } from 'framer-motion';
+import type { CSSProperties } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import {
   ArrowRight, FileQuestion, ChevronRight, Rocket, Vote, Users,
@@ -9,18 +9,50 @@ import {
 } from 'lucide-react';
 import { problemsApi, startupsApi, chatApi, usersApi, pollsApi } from '@/lib/api';
 import { useAuthStore } from '@/store/auth.store';
+import dynamic from 'next/dynamic';
 import { Button } from '@/components/ui/button';
-import { ProblemCard } from '@/components/problems/problem-card';
-import { StartupCard, StartupCardSkeleton } from '@/components/startups/startup-card';
-import { LeaderboardMini } from '@/components/startups/leaderboard-mini';
-import { GroupCard } from '@/components/social/group-card';
-import { PollCard } from '@/components/polls/poll-card';
-import { UserListItem } from '@/components/social/user-list-item';
 import { Reveal, RevealGroup, RevealItem } from '@/components/landing/reveal';
 import { CountUp } from '@/components/landing/count-up';
-import { Doubts } from '@/components/landing/doubts';
 import { Marquee } from '@/components/landing/marquee';
+import { LazySection } from '@/components/landing/lazy-section';
 import { cn } from '@/lib/utils';
+
+/* Below-fold kartalar — alohida chunk'larda (next/dynamic): boshlang'ich JS
+   kichik qoladi, kod LazySection viewport'ga yaqinlashganda yuklanadi. */
+const ProblemCard = dynamic(() =>
+  import('@/components/problems/problem-card').then((m) => m.ProblemCard),
+);
+const StartupCard = dynamic(() =>
+  import('@/components/startups/startup-card').then((m) => m.StartupCard),
+);
+const LeaderboardMini = dynamic(() =>
+  import('@/components/startups/leaderboard-mini').then((m) => m.LeaderboardMini),
+);
+const GroupCard = dynamic(() =>
+  import('@/components/social/group-card').then((m) => m.GroupCard),
+);
+const PollCard = dynamic(() =>
+  import('@/components/polls/poll-card').then((m) => m.PollCard),
+);
+const UserListItem = dynamic(() =>
+  import('@/components/social/user-list-item').then((m) => m.UserListItem),
+);
+const Doubts = dynamic(() =>
+  import('@/components/landing/doubts').then((m) => m.Doubts),
+);
+
+/* Yengil lokal skelet — StartupCardSkeleton'ni statik import qilmaslik uchun */
+function CardSkeleton() {
+  return (
+    <div className="animate-pulse overflow-hidden rounded-2xl border border-slate-200 bg-white">
+      <div className="h-28 bg-slate-100" />
+      <div className="p-4">
+        <div className="mb-2 h-4 w-2/3 rounded bg-slate-100" />
+        <div className="h-3 w-full rounded bg-slate-100" />
+      </div>
+    </div>
+  );
+}
 
 const HOW_IT_WORKS = [
   {
@@ -147,12 +179,11 @@ export default function LandingPage() {
         <div className="pointer-events-none absolute -left-32 -top-32 -z-10 h-[30rem] w-[30rem] rounded-full bg-accent-300/20 blur-[120px]" />
         <div className="pointer-events-none absolute -right-32 top-0 -z-10 h-[26rem] w-[26rem] rounded-full bg-iris-300/15 blur-[120px]" />
 
+        {/* Hero kirish harakati — sof CSS (`.hero-enter`): birinchi paint bilanoq
+            boshlanadi, framer hydration'ини kutmaydi (LCP 2+ s tezlashdi) */}
         <div className="relative z-10 mx-auto max-w-3xl text-center">
-          <motion.div
-            initial={{ opacity: 0, y: 12 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
-            className="inline-flex items-center gap-2 rounded-full border border-slate-200 bg-white/80 px-4 py-1.5 shadow-soft backdrop-blur"
+          <div
+            className="hero-enter inline-flex items-center gap-2 rounded-full border border-slate-200 bg-white/80 px-4 py-1.5 shadow-soft backdrop-blur"
           >
             <span className="relative flex h-2 w-2">
               <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-accent-500 opacity-70" />
@@ -161,35 +192,27 @@ export default function LandingPage() {
             <span className="text-xs font-semibold text-brand-800 md:text-sm">
               Yangi — real-vaqt chat, hamjamiyat va ovoz berish
             </span>
-          </motion.div>
+          </div>
 
-          <motion.h1
-            initial={{ opacity: 0, y: 18 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.06, ease: [0.22, 1, 0.36, 1] }}
+          <h1
             className="mt-6 text-[2.6rem] font-black leading-[1.04] tracking-tight text-brand-900 md:text-7xl"
           >
             Bugun — g‘oya.
             <br />
             Ertaga — <span className="gradient-text-animated">startap.</span>
-          </motion.h1>
+          </h1>
 
-          <motion.p
-            initial={{ opacity: 0, y: 18 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.14, ease: [0.22, 1, 0.36, 1] }}
+          <p
             className="mx-auto mt-6 max-w-xl text-base leading-relaxed text-slate-600 md:text-lg"
           >
             MYMarkaz — o‘quvchilar, talabalar va kreativ yoshlar yig‘iladigan maydon.
             Sizni qiynayotgan muammoni yozing, yechimini hamjamiyat bilan quring, jamoa toping
             va g‘oyangizni real mahsulotga aylantiring. Bu yo‘lda yolg‘iz emassiz.
-          </motion.p>
+          </p>
 
-          <motion.div
-            initial={{ opacity: 0, y: 18 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.22, ease: [0.22, 1, 0.36, 1] }}
-            className="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row"
+          <div
+            className="hero-enter mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row"
+            style={{ '--enter-delay': '0.22s' } as CSSProperties}
           >
             {token ? (
               <>
@@ -220,13 +243,11 @@ export default function LandingPage() {
                 </a>
               </>
             )}
-          </motion.div>
+          </div>
 
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 0.6, delay: 0.32 }}
-            className="mt-5 flex flex-wrap items-center justify-center gap-x-5 gap-y-2 text-xs font-medium text-slate-500"
+          <div
+            className="hero-enter mt-5 flex flex-wrap items-center justify-center gap-x-5 gap-y-2 text-xs font-medium text-slate-500"
+            style={{ '--enter-delay': '0.32s' } as CSSProperties}
           >
             <span className="inline-flex items-center gap-1.5">
               <Heart className="h-3.5 w-3.5 text-accent-500" /> Butunlay bepul
@@ -237,21 +258,19 @@ export default function LandingPage() {
             <span className="inline-flex items-center gap-1.5">
               <Users className="h-3.5 w-3.5 text-accent-500" /> Jonli hamjamiyat
             </span>
-          </motion.div>
+          </div>
         </div>
 
         {/* Nimalar quriladi — marquee */}
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 0.6, delay: 0.42 }}
-          className="relative z-10 mx-auto mt-14 max-w-4xl"
+        <div
+          className="hero-enter relative z-10 mx-auto mt-14 max-w-4xl"
+          style={{ '--enter-delay': '0.42s' } as CSSProperties}
         >
-          <p className="mb-3 text-center text-[11px] font-semibold uppercase tracking-wider text-slate-400">
+          <p className="mb-3 text-center text-[11px] font-semibold uppercase tracking-wider text-slate-500">
             Hamjamiyat shu yerda nimalar quryapti
           </p>
           <Marquee />
-        </motion.div>
+        </div>
       </section>
 
       {/* ── Stats ────────────────────────────────────────── */}
@@ -271,7 +290,7 @@ export default function LandingPage() {
       </RevealGroup>
 
       {/* ── Startap nima? Startapper kim? ────────────────── */}
-      <section id="startap-nima" className="scroll-mt-24 space-y-10">
+      <LazySection id="startap-nima" className="cv-auto scroll-mt-24 space-y-10" minHeight={520}>
         <Reveal className="mx-auto max-w-2xl text-center">
           <div className="mb-3 flex justify-center">
             <Kicker icon={HelpCircle}>Bu savollar sizni o‘ylantiryaptimi?</Kicker>
@@ -297,10 +316,10 @@ export default function LandingPage() {
             </RevealItem>
           ))}
         </RevealGroup>
-      </section>
+      </LazySection>
 
       {/* ── Sizni nima to'xtatib turibdi? (e'tirozlar) ───── */}
-      <section className="space-y-10">
+      <LazySection className="cv-auto space-y-10" minHeight={520}>
         <Reveal className="mx-auto max-w-2xl text-center">
           <div className="mb-3 flex justify-center">
             <Kicker icon={Zap}>Halol gaplashamiz</Kicker>
@@ -315,11 +334,11 @@ export default function LandingPage() {
         <Reveal>
           <Doubts />
         </Reveal>
-      </section>
+      </LazySection>
 
       {/* ── Community groups ─────────────────────────────── */}
       {groups && groups.length > 0 && (
-        <section className="space-y-6">
+        <LazySection className="cv-auto space-y-6" minHeight={420}>
           <Reveal>
             <SectionHeader
               kicker="Jonli hamjamiyat" icon={MessageCircle}
@@ -331,12 +350,12 @@ export default function LandingPage() {
           <RevealGroup className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
             {groups.slice(0, 3).map((g) => <RevealItem key={g.id}><GroupCard group={g} /></RevealItem>)}
           </RevealGroup>
-        </section>
+        </LazySection>
       )}
 
       {/* ── Active poll ──────────────────────────────────── */}
       {activePoll && (
-        <section className="space-y-6">
+        <LazySection className="cv-auto space-y-6" minHeight={420}>
           <Reveal>
             <SectionHeader
               kicker="Hamjamiyat tanlovi" icon={Star} title="Ovoz berish"
@@ -347,11 +366,11 @@ export default function LandingPage() {
           <Reveal className="mx-auto max-w-2xl">
             <PollCard poll={activePoll} />
           </Reveal>
-        </section>
+        </LazySection>
       )}
 
       {/* ── Featured startups ────────────────────────────── */}
-      <section className="space-y-6">
+      <LazySection className="cv-auto space-y-6" minHeight={520}>
         <Reveal>
           <SectionHeader
             kicker="Vitrina" icon={Rocket} title="Tavsiya etilgan startaplar"
@@ -361,7 +380,7 @@ export default function LandingPage() {
         </Reveal>
         {startupsLoading ? (
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
-            {Array.from({ length: 4 }).map((_, i) => <StartupCardSkeleton key={i} />)}
+            {Array.from({ length: 4 }).map((_, i) => <CardSkeleton key={i} />)}
           </div>
         ) : featuredStartups && featuredStartups.data.length > 0 ? (
           <RevealGroup className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
@@ -370,10 +389,10 @@ export default function LandingPage() {
         ) : (
           <EmptyBox icon={Rocket} title="Tez orada birinchi startaplar" />
         )}
-      </section>
+      </LazySection>
 
       {/* ── Top rated + Who to follow ────────────────────── */}
-      <section className="grid grid-cols-1 gap-8 lg:grid-cols-3">
+      <LazySection className="cv-auto grid grid-cols-1 gap-8 lg:grid-cols-3" minHeight={520}>
         <div className="space-y-6 lg:col-span-2">
           <Reveal>
             <SectionHeader kicker="Reyting taxtasi" icon={Trophy} title="Top startaplar" subtitle="IMDB uslubidagi vaznli reyting bo‘yicha yetakchilar" href="/leaderboard" hrefLabel="To‘liq reyting" />
@@ -384,7 +403,7 @@ export default function LandingPage() {
             ) : (
               <div className="space-y-2">
                 {Array.from({ length: 3 }).map((_, i) => (
-                  <StartupCardSkeleton key={i} />
+                  <CardSkeleton key={i} />
                 ))}
               </div>
             )}
@@ -400,7 +419,7 @@ export default function LandingPage() {
               {suggestions && suggestions.length > 0 ? (
                 suggestions.map((u) => <UserListItem key={u.id} user={u} />)
               ) : (
-                <p className="px-3 py-8 text-center text-sm text-slate-400">Tavsiyalar yuklanmoqda…</p>
+                <p className="px-3 py-8 text-center text-sm text-slate-500">Tavsiyalar yuklanmoqda…</p>
               )}
               <Link href="/discover" className="flex items-center justify-center gap-1 px-3 py-3 text-center text-xs font-semibold text-accent-700 hover:underline">
                 Ko‘proq odamlarni topish <ArrowRight className="h-3.5 w-3.5" />
@@ -408,10 +427,10 @@ export default function LandingPage() {
             </div>
           </Reveal>
         </div>
-      </section>
+      </LazySection>
 
       {/* ── Recent problems ──────────────────────────────── */}
-      <section className="space-y-6">
+      <LazySection className="cv-auto space-y-6" minHeight={520}>
         <Reveal>
           <SectionHeader kicker="Jamoaviy aql" icon={FileQuestion} title="So‘nggi muammolar" subtitle="Ochiq va yechim kutayotgan muammolar" href="/problems" hrefLabel="Barchasi" />
         </Reveal>
@@ -428,10 +447,10 @@ export default function LandingPage() {
                 </div>
               ))}
         </RevealGroup>
-      </section>
+      </LazySection>
 
       {/* ── How it works ─────────────────────────────────── */}
-      <section className="space-y-10">
+      <LazySection className="cv-auto space-y-10" minHeight={520}>
         <Reveal className="text-center">
           <div className="mb-3 flex justify-center">
             <Kicker icon={Compass}>Yo‘l xaritasi</Kicker>
@@ -454,7 +473,7 @@ export default function LandingPage() {
             </RevealItem>
           ))}
         </RevealGroup>
-      </section>
+      </LazySection>
 
       {/* ── Final CTA ────────────────────────────────────── */}
       {!token && (
@@ -465,8 +484,8 @@ export default function LandingPage() {
             <div className="pointer-events-none absolute -right-24 -bottom-16 h-72 w-72 rounded-full bg-iris-500/15 blur-[110px]" />
             <div className="relative z-10 mx-auto max-w-2xl space-y-6">
               <div className="flex justify-center">
-                <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-gradient-emerald-iris shadow-glow-accent">
-                  <Rocket className="h-8 w-8 text-white" />
+                <div className="flex h-16 w-16 items-center justify-center rounded-2xl border border-white/10 bg-white/5 backdrop-blur">
+                  <Rocket className="h-8 w-8 text-accent-400" />
                 </div>
               </div>
               <h2 className="text-3xl font-bold tracking-tight text-white md:text-4xl">

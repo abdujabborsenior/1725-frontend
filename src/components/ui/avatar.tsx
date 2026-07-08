@@ -75,8 +75,11 @@ export function Avatar({
           <img
             src={src as string}
             alt={name ?? ''}
+            width={size}
+            height={size}
             className="h-full w-full object-cover"
             loading="lazy"
+            decoding="async"
             onError={() => setFailed(true)}
           />
         ) : (

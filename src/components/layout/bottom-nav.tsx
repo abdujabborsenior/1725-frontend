@@ -54,7 +54,7 @@ export function BottomNav() {
               <span className="relative">
                 <Icon className={cn('h-[22px] w-[22px] transition-transform', active && 'scale-110')} />
                 {href === '/messages' && unread > 0 && (
-                  <span className="absolute -right-2 -top-1.5 flex h-4 min-w-[16px] items-center justify-center rounded-full bg-accent-500 px-1 text-[9px] font-bold text-white ring-2 ring-white">
+                  <span className="absolute -right-2 -top-1.5 flex h-4 min-w-[16px] items-center justify-center rounded-full bg-accent-700 px-1 text-[9px] font-bold text-white ring-2 ring-white">
                     {unread > 9 ? '9+' : unread}
                   </span>
                 )}

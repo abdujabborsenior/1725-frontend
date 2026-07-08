@@ -32,7 +32,7 @@ export function LeaderboardMini({ entries }: { entries: LeaderboardEntry[] }) {
             <p className="truncate text-sm font-bold text-brand-900 group-hover:text-accent-700">
               {e.title}
             </p>
-            <p className="mt-0.5 flex items-center gap-1 text-[11px] text-slate-400">
+            <p className="mt-0.5 flex items-center gap-1 text-[11px] text-slate-500">
               <Users className="h-3 w-3" /> {e.leaderboardVotes} ovoz
             </p>
           </div>

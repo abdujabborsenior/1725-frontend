@@ -139,3 +139,30 @@ npm run lint     # eslint
 
 > Eslatma: dizayn qarorlari yoki foydalanuvchi yangi direktivasi kelsa — backend
 > `../1725/CLAUDE.md` §8.3 jurnaliga va bu faylga (kerakli bo'limga) yoziladi.
+
+## 7. Performance tizimi (2026-07-07 — Lighthouse optimizatsiyasi, REGRESS QILMA)
+
+Butun front Lighthouse bo'yicha optimallashtirilgan: **desktop 4×100, mobil perf 92–98 +
+a11y/bp/seo 100**. Buzmaslik uchun MAJBURIY qoidalar:
+
+1. **Font**: Inter self-host — lotin subset `globals.css` ichida base64 (so'rov yo'q),
+   metrik-mos `Inter Fallback` (size-adjust) + `font-display: optional` → swap reflow yo'q.
+   Google Fonts linki QAYTARILMAYDI; yangi og'irlik/subset kerak bo'lsa shu tizimga qo'shiladi.
+2. **LCP qoidasi**: sahifa root konteyneriga `animate-fade-in` QO'YILMAYDI; LCP bo'la
+   oladigan element (hero H1/P, ro'yxat kartasi, cover) opacity-0 dan BOSHLANMAYDI.
+   Kirish harakati faqat mayda elementlarda (`.hero-enter`) yoki below-fold (`.reveal`).
+3. **Reveal tizimi**: framer-motion landing/list yo'lida ISHLATILMAYDI — `landing/reveal.tsx`
+   (CSS + IO; Reveal/RevealGroup/RevealItem API) ishlatiladi. framer faqat chat'da qoldi.
+4. **SSR initial data**: public ro'yxat/detail sahifalar server component `page.tsx` →
+   `fetchInitial` (`lib/server-api.ts`, revalidate 30s, fail-open) → `<X>Client` ga
+   `initialData` (+`initialDataUpdatedAt: 0`). Yangi sahifa shu naqshda quriladi.
+   LCP rasm bor bo'lsa — server sahifada `preload(url, { as: 'image', fetchPriority: 'high' })`.
+5. **Rasmlar**: `<img>` (CDN'dan to'g'ridan) — list'da faqat birinchi 1–2 karta
+   `priority` (eager+fetchpriority=high), qolgani `loading="lazy" decoding="async"`;
+   imkon qadar width/height.
+6. **Kontrast (WCAG AA)**: oq matn + accent fon = kamida `accent-700`; meta matn oq
+   fonda `slate-500+`, `surface-soft` fonda `slate-600+`; `opacity-*` bilan matn
+   xiralashtirish taqiqlanadi.
+7. **Home**: below-fold bo'limlar `LazySection` + `next/dynamic` kartalar + `cv-auto` —
+   yangi bo'lim qo'shilsa shu naqsh takrorlanadi.
+8. Doimiy (infinite) animatsiya above-fold'da taqiqlanadi (SI buzadi) — hero gradient statik.

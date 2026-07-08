@@ -8,7 +8,12 @@ import { LikeButton, BookmarkButton } from './engagement';
 import { StarRating } from './rating';
 import type { Startup } from '@/types';
 
-export function StartupCard({ startup }: { startup: Startup }) {
+/**
+ * `priority` — fold ichidagi birinchi kartalar uchun: cover LCP nomzodi bo'lgani
+ * sababli u eager + fetchpriority=high yuklanadi; qolganlari lazy (tarmoqni
+ * LCP bilan talashmaydi).
+ */
+export function StartupCard({ startup, priority = false }: { startup: Startup; priority?: boolean }) {
   const platformTypes = Array.from(
     new Set(startup.platforms.map((p) => p.type)),
   ).sort((a, b) => PLATFORM_ORDER.indexOf(a) - PLATFORM_ORDER.indexOf(b));
@@ -23,6 +28,9 @@ export function StartupCard({ startup }: { startup: Startup }) {
             <img
               src={startup.coverUrl}
               alt=""
+              loading={priority ? 'eager' : 'lazy'}
+              fetchPriority={priority ? 'high' : undefined}
+              decoding="async"
               className="h-full w-full object-cover opacity-90 group-hover:scale-105 transition-transform duration-300"
             />
           ) : (
@@ -31,7 +39,7 @@ export function StartupCard({ startup }: { startup: Startup }) {
             </div>
           )}
           {startup.isFeatured && (
-            <span className="absolute top-2.5 right-2.5 inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-accent-500 text-white text-[10px] font-bold shadow-glow-accent">
+            <span className="absolute top-2.5 right-2.5 inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-accent-700 text-white text-[10px] font-bold shadow-sm">
               <Star className="h-3 w-3 fill-current" /> TOP
             </span>
           )}
@@ -47,7 +55,13 @@ export function StartupCard({ startup }: { startup: Startup }) {
             <div className="h-14 w-14 rounded-2xl bg-white border border-slate-200 shadow-card flex items-center justify-center overflow-hidden shrink-0">
               {startup.logoUrl ? (
                 // eslint-disable-next-line @next/next/no-img-element
-                <img src={startup.logoUrl} alt={startup.title} className="h-full w-full object-cover" />
+                <img
+                  src={startup.logoUrl}
+                  alt={startup.title}
+                  loading={priority ? 'eager' : 'lazy'}
+                  decoding="async"
+                  className="h-full w-full object-cover"
+                />
               ) : (
                 <span className="text-xl font-black text-brand-900">
                   {startup.title.charAt(0).toUpperCase()}
@@ -71,7 +85,7 @@ export function StartupCard({ startup }: { startup: Startup }) {
             <div className="mt-2 flex items-center gap-1.5">
               <StarRating value={startup.ratingAvg} size={12} />
               <span className="text-[11px] font-semibold text-slate-600">{startup.ratingAvg.toFixed(1)}</span>
-              <span className="text-[11px] text-slate-400">({startup.ratingCount})</span>
+              <span className="text-[11px] text-slate-500">({startup.ratingCount})</span>
             </div>
           )}
         </div>
@@ -89,12 +103,12 @@ export function StartupCard({ startup }: { startup: Startup }) {
                 </span>
               ))
             ) : (
-              <span className="text-[11px] text-slate-400 italic">G&apos;oya bosqichida</span>
+              <span className="text-[11px] text-slate-500 italic">G&apos;oya bosqichida</span>
             )}
           </div>
           <div className="flex items-center gap-3">
             <LikeButton startup={startup} variant="card" />
-            <span className="flex items-center gap-1 text-[11px] text-slate-400">
+            <span className="flex items-center gap-1 text-[11px] text-slate-500">
               <Eye className="h-3 w-3" /> {startup.viewCount}
             </span>
           </div>

@@ -70,7 +70,8 @@ export function ProblemCard({ problem, compact = false }: { problem: Problem; co
             {problem.imageUrls.slice(0, 3).map((url, i) => (
               <div key={i} className="h-16 w-20 flex-shrink-0 overflow-hidden rounded-lg bg-slate-100 ring-1 ring-slate-200/70">
                 {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img src={url} alt="" className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
+                <img src={url} alt="" loading="lazy" decoding="async"
+                  className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
                   onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }} />
               </div>
             ))}
@@ -80,7 +81,7 @@ export function ProblemCard({ problem, compact = false }: { problem: Problem; co
         {/* Footer */}
         <div className="mt-auto flex items-center justify-between gap-2 pl-2.5">
           {compact ? (
-            <span className="flex items-center gap-1.5 text-xs font-semibold text-slate-400">
+            <span className="flex items-center gap-1.5 text-xs font-semibold text-slate-500">
               <Eye className="h-3.5 w-3.5" /> {problem.viewCount.toLocaleString('uz')}
             </span>
           ) : (
@@ -92,7 +93,7 @@ export function ProblemCard({ problem, compact = false }: { problem: Problem; co
             />
           )}
 
-          <div className="flex items-center gap-2.5 text-[11px] font-medium text-slate-400">
+          <div className="flex items-center gap-2.5 text-[11px] font-medium text-slate-500">
             {!compact && (
               <span className="flex items-center gap-1">
                 <Eye className="h-3.5 w-3.5" /> {problem.viewCount.toLocaleString('uz')}

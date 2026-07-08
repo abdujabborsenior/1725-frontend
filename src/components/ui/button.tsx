@@ -14,8 +14,9 @@ interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
 const variants = {
   // Brand navy — asosiy harakat (login, registratsiya, jiddiy bloklar)
   primary:   'bg-brand-900 text-white hover:bg-brand-800 shadow-glow-brand',
-  // Emerald CTA — eng muhim harakatlar (Muammo yuborish, Yechim taklif qilish)
-  accent:    'bg-accent-500 text-white hover:bg-accent-600 shadow-glow-accent',
+  // Emerald CTA — eng muhim harakatlar (Muammo yuborish, Yechim taklif qilish).
+  // accent-700: oq matn bilan WCAG AA kontrast (4.98:1) — accent-500 2.5:1 edi.
+  accent:    'bg-accent-700 text-white hover:bg-accent-800 shadow-glow-accent',
   // Secondary — kulrang fon
   secondary: 'bg-slate-100 text-brand-900 hover:bg-slate-200',
   // Outline — chegaralangan

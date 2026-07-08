@@ -74,7 +74,7 @@ export function FollowButton({
           ? hover
             ? 'bg-rose-50 text-rose-600 border border-rose-200'
             : 'bg-white text-brand-900 border border-slate-200'
-          : 'bg-accent-500 text-white border border-transparent hover:bg-accent-600 shadow-glow-accent',
+          : 'bg-accent-700 text-white border border-transparent hover:bg-accent-800',
         sizeCls,
         className,
       )}

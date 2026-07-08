@@ -105,7 +105,7 @@ export function ConversationList({ activeId }: { activeId?: string }) {
           >
             <ArrowLeft className="h-5 w-5" />
           </button>
-          <h2 className="text-lg font-black text-brand-900">Suhbatlar</h2>
+          <h2 className="text-lg font-bold text-brand-900">Suhbatlar</h2>
         </div>
         <div className="flex items-center gap-1">
           {canCreateGroup && (
@@ -146,7 +146,7 @@ export function ConversationList({ activeId }: { activeId?: string }) {
                   <span
                     className={cn(
                       'relative z-10 flex h-4 min-w-[16px] items-center justify-center rounded-full px-1 text-[10px] font-bold',
-                      active ? 'bg-accent-500 text-white' : 'bg-slate-300/70 text-slate-600',
+                      active ? 'bg-accent-700 text-white' : 'bg-slate-300/70 text-slate-600',
                     )}
                   >
                     {count > 99 ? '99+' : count}
@@ -202,7 +202,7 @@ function ConversationRow({ c, active }: { c: Conversation; active: boolean }) {
             {c.lastMessagePreview ?? 'Suhbat boshlang'}
           </p>
           {c.unreadCount > 0 && (
-            <span className="flex h-5 min-w-[20px] shrink-0 items-center justify-center rounded-full bg-accent-500 px-1.5 text-[10px] font-bold text-white">
+            <span className="flex h-5 min-w-[20px] shrink-0 items-center justify-center rounded-full bg-accent-700 px-1.5 text-[10px] font-bold text-white">
               {c.unreadCount > 99 ? '99+' : c.unreadCount}
             </span>
           )}

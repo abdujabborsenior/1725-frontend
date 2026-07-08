@@ -5,7 +5,7 @@ import { useQuery, keepPreviousData } from '@tanstack/react-query';
 import { Trophy, Flame, Rocket, UserRound } from 'lucide-react';
 import { startupsApi } from '@/lib/api';
 import { LEADERBOARD_PERIOD_OPTIONS } from '@/lib/constants';
-import type { LeaderboardPeriod } from '@/types';
+import type { CategoryCount, LeaderboardPeriod, LeaderboardResponse } from '@/types';
 import { cn } from '@/lib/utils';
 import { Pagination } from '@/components/ui/pagination';
 import { LeaderboardPodium } from '@/components/startups/leaderboard-podium';
@@ -20,7 +20,13 @@ const LIMIT = 20;
 
 type BoardTab = 'startups' | 'founders';
 
-export default function LeaderboardPage() {
+export function LeaderboardClient({
+  initialBoard,
+  initialCategories,
+}: {
+  initialBoard: LeaderboardResponse | null;
+  initialCategories: CategoryCount[] | null;
+}) {
   const [tab, setTab] = useState<BoardTab>('startups');
   const [period, setPeriod] = useState<LeaderboardPeriod>('all');
   const [category, setCategory] = useState('');
@@ -30,6 +36,7 @@ export default function LeaderboardPage() {
     queryKey: ['startup-categories'],
     queryFn: () => startupsApi.categories(),
     staleTime: 5 * 60_000,
+    initialData: initialCategories ?? undefined,
   });
 
   const { data, isLoading, isFetching } = useQuery({
@@ -43,6 +50,10 @@ export default function LeaderboardPage() {
       }),
     placeholderData: keepPreviousData,
     enabled: tab === 'startups',
+    // SSR standart ko'rinish (period=all, 1-sahifa) — CLS/LCP uchun
+    initialData:
+      period === 'all' && !category && page === 1 ? (initialBoard ?? undefined) : undefined,
+    initialDataUpdatedAt: 0,
   });
 
   const entries = data?.data ?? [];
@@ -64,7 +75,7 @@ export default function LeaderboardPage() {
   }
 
   return (
-    <div className="animate-fade-in space-y-6">
+    <div className="space-y-6">
       {/* Hero */}
       <div className="relative overflow-hidden rounded-3xl border border-white/5 bg-gradient-brand p-6 md:p-8">
         {/* nozik mesh + bitta vazmin yorug'lik */}
@@ -146,7 +157,7 @@ export default function LeaderboardPage() {
           </button>
         ))}
         {isFetching && (
-          <span className="text-xs text-slate-400">yangilanmoqda…</span>
+          <span className="text-xs text-slate-500">yangilanmoqda…</span>
         )}
       </div>
 
@@ -158,7 +169,7 @@ export default function LeaderboardPage() {
             className={cn(
               'rounded-full border px-3 py-1 text-xs font-medium transition-all',
               category === ''
-                ? 'border-accent-500 bg-accent-500 text-white'
+                ? 'border-accent-700 bg-accent-700 text-white'
                 : 'border-slate-200 bg-surface-soft text-slate-600 hover:border-accent-300',
             )}
           >
@@ -171,16 +182,18 @@ export default function LeaderboardPage() {
               className={cn(
                 'rounded-full border px-3 py-1 text-xs font-medium transition-all',
                 category === c.category
-                  ? 'border-accent-500 bg-accent-500 text-white'
+                  ? 'border-accent-700 bg-accent-700 text-white'
                   : 'border-slate-200 bg-surface-soft text-slate-600 hover:border-accent-300',
               )}
             >
               {c.category}
-              <span className="ml-1.5 opacity-60">{c.count}</span>
+              <span className={cn('ml-1.5', category === c.category ? 'text-white/90' : 'text-slate-600')}>{c.count}</span>
             </button>
           ))}
         </div>
       )}
+
+      <h2 className="sr-only">Reyting ro&apos;yxati</h2>
 
       {/* Formula shaffofligi */}
       {formula && <FormulaExplainer formula={formula} />}

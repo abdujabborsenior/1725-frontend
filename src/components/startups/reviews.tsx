@@ -87,7 +87,7 @@ export function Reviews({ startup }: { startup: Startup }) {
             {startup.ratingCount > 0 ? startup.ratingAvg.toFixed(1) : '—'}
           </p>
           <StarRating value={startup.ratingAvg} size={16} className="mt-1 justify-center" />
-          <p className="text-xs text-slate-400 mt-1">{startup.ratingCount} ta baho</p>
+          <p className="text-xs text-slate-500 mt-1">{startup.ratingCount} ta baho</p>
         </div>
         <div className="flex-1 border-l border-slate-100 pl-6">
           <p className="text-sm text-slate-600">
@@ -132,7 +132,7 @@ export function Reviews({ startup }: { startup: Startup }) {
       ) : (
         <button
           onClick={() => router.push('/login')}
-          className="w-full rounded-2xl border border-dashed border-slate-200 bg-surface-soft py-5 text-sm text-slate-500 hover:border-accent-300 transition-all"
+          className="w-full rounded-2xl border border-dashed border-slate-200 bg-surface-soft py-5 text-sm text-slate-600 hover:border-accent-300 transition-all"
         >
           Baho berish uchun <span className="font-semibold text-accent-700">tizimga kiring</span>
         </button>

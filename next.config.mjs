@@ -1,8 +1,43 @@
+/**
+ * Butun sayt uchun xavfsizlik javob-sarlavhalari. Funksiyani buzmaydigan,
+ * standart himoya to'plami:
+ *  - X-Frame-Options + CSP frame-ancestors — clickjacking (iframe'ga solishning oldi).
+ *  - X-Content-Type-Options nosniff — brauzer content-type'ni "taxmin" qilmasin
+ *    (polyglot/soxta rasm skript sifatida bajarilmaydi).
+ *  - Referrer-Policy — boshqa saytga to'liq URL (token bo'lishi mumkin) sizmasin.
+ *  - Permissions-Policy — kamera/geolokatsiya o'chiq; mikrofon faqat o'zi
+ *    (chat ovozli xabar uchun) ruxsat.
+ *  - HSTS — HTTPS majburiy (brauzer faqat HTTPS'da qo'llaydi; http'da e'tiborsiz).
+ *  - object-src 'none' / base-uri 'self' — plagin va base-teg in'yeksiyasini to'sadi.
+ */
+const securityHeaders = [
+  { key: 'X-Frame-Options', value: 'SAMEORIGIN' },
+  { key: 'X-Content-Type-Options', value: 'nosniff' },
+  { key: 'Referrer-Policy', value: 'strict-origin-when-cross-origin' },
+  {
+    key: 'Permissions-Policy',
+    value: 'camera=(), geolocation=(), browsing-topics=(), microphone=(self)',
+  },
+  {
+    key: 'Strict-Transport-Security',
+    value: 'max-age=63072000; includeSubDomains',
+  },
+  {
+    key: 'Content-Security-Policy',
+    value: "frame-ancestors 'self'; object-src 'none'; base-uri 'self'",
+  },
+];
+
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   // Docker deploy uchun minimal, mustaqil server chiqishi (.next/standalone).
   // Eslatma: lokal `npm run start` odatdagidek ishlayveradi (dev oqimiga ta'sir yo'q).
   output: 'standalone',
+  // Server texnologiyasini oshkor qilmaymiz (X-Powered-By: Next.js olib tashlanadi).
+  poweredByHeader: false,
+  async headers() {
+    return [{ source: '/:path*', headers: securityHeaders }];
+  },
   // Production'da console.* (error/warn'dan tashqari) olib tashlanadi.
   compiler: {
     removeConsole:

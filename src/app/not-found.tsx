@@ -4,7 +4,7 @@ import { Zap, Home, Rocket } from 'lucide-react';
 export default function NotFound() {
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-hero px-4">
-      <div className="text-center max-w-md animate-fade-in">
+      <div className="text-center max-w-md">
         <div className="relative inline-flex mb-8">
           <div className="absolute inset-0 rounded-3xl bg-accent-200/50 blur-2xl" />
           <div className="relative h-20 w-20 rounded-3xl bg-brand-900 flex items-center justify-center mx-auto">

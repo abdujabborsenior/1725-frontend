@@ -61,16 +61,23 @@ api.interceptors.request.use((config) => {
 });
 
 /* ── Silent refresh ───────────────────────────────────────────── */
+// HTTPS'da cookie'ga `Secure` qo'shiladi (token http orqali sizib ketmasin).
+// Lokal http://localhost'da Secure cookie o'rnatilmasligi uchun shartli.
+const cookieSecure =
+  typeof window !== 'undefined' && window.location.protocol === 'https:'
+    ? '; Secure'
+    : '';
+
 function persistTokens(accessToken: string, refreshToken: string) {
   localStorage.setItem(STORAGE.token, accessToken);
   localStorage.setItem(STORAGE.refresh, refreshToken);
-  document.cookie = `${STORAGE.token}=${accessToken}; path=/; max-age=${60 * 60 * 24 * 30}; SameSite=Lax`;
+  document.cookie = `${STORAGE.token}=${accessToken}; path=/; max-age=${60 * 60 * 24 * 30}; SameSite=Lax${cookieSecure}`;
 }
 
 function clearAuthCookie() {
   // Ishonchli o'chirish — max-age=0 + expires (o'tmish). path=/ bilan mos.
   const past = 'Thu, 01 Jan 1970 00:00:00 GMT';
-  document.cookie = `${STORAGE.token}=; path=/; max-age=0; expires=${past}; SameSite=Lax`;
+  document.cookie = `${STORAGE.token}=; path=/; max-age=0; expires=${past}; SameSite=Lax${cookieSecure}`;
 }
 
 /** Sessiya o'lganda chiqarish — loop-guard bilan (5s ichida ko'pi bilan 1 navigatsiya). */

@@ -52,7 +52,7 @@ export function StartupMiniCard({
         {startup.tagline && (
           <span className="mt-0.5 block truncate text-xs text-slate-500">{startup.tagline}</span>
         )}
-        <span className="mt-1 flex items-center gap-3 text-[11px] text-slate-400">
+        <span className="mt-1 flex items-center gap-3 text-[11px] text-slate-500">
           {startup.ratingCount > 0 && (
             <span className="flex items-center gap-1">
               <StarRating value={startup.ratingAvg} size={11} />

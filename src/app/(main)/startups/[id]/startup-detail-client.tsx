@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import { useParams, useRouter } from 'next/navigation';
+import type { Startup } from '@/types';
 import { useQuery } from '@tanstack/react-query';
 import {
   ArrowLeft, Eye, Calendar, Users, Rocket, Tag, ExternalLink, Share2, Check, Flag,
@@ -19,7 +20,7 @@ import { StarRating } from '@/components/startups/rating';
 import { ReportDialog } from '@/components/reports/report-dialog';
 import toast from 'react-hot-toast';
 
-export default function StartupDetailPage() {
+export function StartupDetailClient({ initialStartup }: { initialStartup: Startup | null }) {
   const params = useParams<{ id: string }>();
   const router = useRouter();
   const slug = params.id;
@@ -32,6 +33,9 @@ export default function StartupDetailPage() {
     queryKey: ['startup', slug],
     queryFn: () => startupsApi.findOne(slug),
     enabled: !!slug,
+    // SSR'dan kelgan boshlang'ich kontent; shaxsiy flaglar background'da yangilanadi
+    initialData: initialStartup ?? undefined,
+    initialDataUpdatedAt: 0,
   });
 
   const { data: related } = useQuery({
@@ -99,7 +103,7 @@ export default function StartupDetailPage() {
       user.role === 'superadmin' || user.role === 'analyzer');
 
   return (
-    <div className="max-w-4xl mx-auto space-y-8 animate-fade-in">
+    <div className="max-w-4xl mx-auto space-y-8">
       <button
         onClick={() => router.back()}
         className="flex items-center gap-2 text-sm text-slate-500 hover:text-brand-900 transition-colors group"
@@ -114,7 +118,7 @@ export default function StartupDetailPage() {
         <div className="relative h-44 md:h-56 bg-gradient-brand">
           {startup.coverUrl && (
             // eslint-disable-next-line @next/next/no-img-element
-            <img src={startup.coverUrl} alt="" className="h-full w-full object-cover opacity-90" />
+            <img src={startup.coverUrl} alt="" fetchPriority="high" decoding="async" className="h-full w-full object-cover opacity-90" />
           )}
           <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent" />
         </div>
@@ -161,7 +165,7 @@ export default function StartupDetailPage() {
               <span className="inline-flex items-center gap-1.5">
                 <StarRating value={startup.ratingAvg} size={14} />
                 <span className="font-semibold text-brand-900">{startup.ratingAvg.toFixed(1)}</span>
-                <span className="text-slate-400">({startup.ratingCount})</span>
+                <span className="text-slate-500">({startup.ratingCount})</span>
               </span>
             )}
           </div>
@@ -248,6 +252,10 @@ export default function StartupDetailPage() {
                 <img
                   src={url}
                   alt={`${startup.title} skrinshot ${i + 1}`}
+                  width={162}
+                  height={288}
+                  loading="lazy"
+                  decoding="async"
                   className="h-72 w-auto object-cover"
                 />
               </a>
@@ -309,7 +317,7 @@ export default function StartupDetailPage() {
                   <span className="block text-sm font-medium text-brand-900 truncate">
                     {p.label || p.url}
                   </span>
-                  <span className="block text-xs text-slate-400 truncate">{p.url}</span>
+                  <span className="block text-xs text-slate-500 truncate">{p.url}</span>
                 </span>
                 <ExternalLink className="h-4 w-4 text-slate-400 group-hover:text-accent-600 transition-colors" />
               </a>

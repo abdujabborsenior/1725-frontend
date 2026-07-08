@@ -55,7 +55,7 @@ export function Footer() {
         {/* Link columns */}
         {COLS.map((col) => (
           <div key={col.title}>
-            <h4 className="mb-3 text-xs font-bold uppercase tracking-wider text-brand-900">{col.title}</h4>
+            <h2 className="mb-3 text-xs font-bold uppercase tracking-wider text-brand-900">{col.title}</h2>
             <ul className="space-y-2.5">
               {col.links.map((l) => (
                 <li key={l.label}>
@@ -74,7 +74,7 @@ export function Footer() {
       </div>
 
       <div className="border-t border-slate-100">
-        <div className="mx-auto flex max-w-6xl flex-col items-center justify-between gap-2 px-6 py-5 text-xs text-slate-400 sm:flex-row">
+        <div className="mx-auto flex max-w-6xl flex-col items-center justify-between gap-2 px-6 py-5 text-xs text-slate-500 sm:flex-row">
           <p>© {new Date().getFullYear()} MYMarkaz · Barcha huquqlar himoyalangan</p>
           <p className="inline-flex items-center gap-1.5">
             O‘zbekistonda yoshlar uchun yaratildi

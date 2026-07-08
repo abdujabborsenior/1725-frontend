@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
-import { AnimatePresence, motion } from 'framer-motion';
+import type { PublicGroup, PublicUserCard } from '@/types';
 import { Search, Loader2, Users, UserPlus, MessageCircle, Clock, X } from 'lucide-react';
 import { usersApi, chatApi } from '@/lib/api';
 import { useDebounce } from '@/lib/use-debounce';
@@ -30,7 +30,13 @@ const TABS: { key: Tab; label: string }[] = [
   { key: 'groups', label: 'Guruhlar' },
 ];
 
-export default function DiscoverPage() {
+export function DiscoverClient({
+  initialSuggestions,
+  initialGroups,
+}: {
+  initialSuggestions: PublicUserCard[] | null;
+  initialGroups: PublicGroup[] | null;
+}) {
   const [q, setQ] = useState('');
   const [tab, setTab] = useState<Tab>('all');
   const [recent, setRecent] = useState<string[]>([]);
@@ -74,23 +80,28 @@ export default function DiscoverPage() {
     () => chatApi.groupSearch(debounced),
     searching && (tab === 'all' || tab === 'groups'),
   );
-  const { data: suggestions } = useQuerySafe(
-    ['discover-suggestions'],
-    () => usersApi.suggestions(12),
-    !searching,
-  );
-  const { data: groups } = useQuerySafe(
-    ['discover-groups'],
-    () => chatApi.publicGroups(20),
-    !searching,
-  );
+  const { data: suggestions } = useQuery({
+    queryKey: ['discover-suggestions'],
+    queryFn: () => usersApi.suggestions(12),
+    enabled: !searching,
+    // SSR boshlang'ich ro'yxat — CLS yo'q; follow holati background'da aniqlanadi
+    initialData: initialSuggestions ?? undefined,
+    initialDataUpdatedAt: 0,
+  });
+  const { data: groups } = useQuery({
+    queryKey: ['discover-groups'],
+    queryFn: () => chatApi.publicGroups(20),
+    enabled: !searching,
+    initialData: initialGroups ?? undefined,
+    initialDataUpdatedAt: 0,
+  });
 
   const isFetching = peopleLoading || groupsLoading;
   const peopleArr = people?.data ?? [];
   const groupsArr = groupResults ?? [];
 
   return (
-    <div className="mx-auto max-w-4xl animate-fade-in space-y-7">
+    <div className="mx-auto max-w-4xl space-y-7">
       <div>
         <h1 className="text-3xl font-bold tracking-tight text-brand-900">Hamjamiyat</h1>
         <p className="mt-1 text-sm text-slate-500">Odamlarni toping, kuzating va guruhlarga qo&lsquo;shiling.</p>
@@ -116,14 +127,8 @@ export default function DiscoverPage() {
         </div>
 
         {/* Tabs */}
-        <AnimatePresence>
-          {searching && (
-            <motion.div
-              initial={{ opacity: 0, y: -6 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -6 }}
-              className="mt-3 flex gap-1 rounded-2xl border border-slate-200 bg-white p-1 shadow-soft"
-            >
+        {searching && (
+          <div className="animate-slide-down mt-3 flex gap-1 rounded-2xl border border-slate-200 bg-white p-1 shadow-soft">
               {TABS.map((t) => (
                 <button
                   key={t.key}
@@ -131,22 +136,21 @@ export default function DiscoverPage() {
                   className={cn('relative flex-1 rounded-xl px-3 py-2 text-sm font-semibold transition-colors', tab === t.key ? 'text-white' : 'text-slate-500 hover:text-brand-900')}
                 >
                   {tab === t.key && (
-                    <motion.span layoutId="discover-tab" className="absolute inset-0 rounded-xl bg-gradient-emerald-iris" transition={{ type: 'spring', stiffness: 500, damping: 38 }} />
+                    <span className="absolute inset-0 rounded-xl bg-brand-900" />
                   )}
                   <span className="relative">{t.label}</span>
                 </button>
               ))}
-            </motion.div>
-          )}
-        </AnimatePresence>
+          </div>
+        )}
       </div>
 
       {searching ? (
-        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="space-y-6">
+        <div className="animate-fade-in space-y-6">
           {/* People */}
           {(tab === 'all' || tab === 'people') && (
             <section>
-              <h2 className="mb-2 text-xs font-bold uppercase tracking-wider text-slate-400">Odamlar</h2>
+              <h2 className="mb-2 text-xs font-bold uppercase tracking-wider text-slate-600">Odamlar</h2>
               <div className="rounded-3xl border border-slate-200 bg-white p-2 shadow-soft">
                 {peopleArr.length > 0 ? (
                   peopleArr.map((u) => <UserListItem key={u.id} user={u} />)
@@ -161,7 +165,7 @@ export default function DiscoverPage() {
           {/* Groups */}
           {(tab === 'all' || tab === 'groups') && (
             <section>
-              <h2 className="mb-2 text-xs font-bold uppercase tracking-wider text-slate-400">Guruhlar</h2>
+              <h2 className="mb-2 text-xs font-bold uppercase tracking-wider text-slate-600">Guruhlar</h2>
               {groupsArr.length > 0 ? (
                 <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
                   {groupsArr.map((g) => <GroupCard key={g.id} group={g} />)}
@@ -173,14 +177,14 @@ export default function DiscoverPage() {
               )}
             </section>
           )}
-        </motion.div>
+        </div>
       ) : (
         <div className="space-y-7">
           {/* Recent searches */}
           {recent.length > 0 && (
             <section>
               <div className="mb-3 flex items-center justify-between">
-                <h2 className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-slate-400">
+                <h2 className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-slate-600">
                   <Clock className="h-4 w-4" /> So&lsquo;nggi qidiruvlar
                 </h2>
                 <button onClick={() => persistRecent([])} className="text-xs font-semibold text-slate-400 hover:text-rose-500">Tozalash</button>
@@ -200,7 +204,7 @@ export default function DiscoverPage() {
 
           {/* Suggestions */}
           <section>
-            <h2 className="mb-3 flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-slate-400">
+            <h2 className="mb-3 flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-slate-600">
               <UserPlus className="h-4 w-4 text-iris-500" /> Kuzatish uchun
             </h2>
             <div className="grid grid-cols-1 gap-2 rounded-3xl border border-slate-200 bg-white p-2 shadow-soft sm:grid-cols-2">
@@ -212,7 +216,7 @@ export default function DiscoverPage() {
 
           {/* Groups */}
           <section>
-            <h2 className="mb-3 flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-slate-400">
+            <h2 className="mb-3 flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-slate-600">
               <MessageCircle className="h-4 w-4 text-accent-500" /> Hamjamiyat guruhlari
             </h2>
             {groups && groups.length > 0 ? (

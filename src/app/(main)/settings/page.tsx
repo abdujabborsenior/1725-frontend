@@ -166,7 +166,7 @@ export default function SettingsPage() {
   }
 
   return (
-    <div className="max-w-2xl mx-auto space-y-6 animate-fade-in">
+    <div className="max-w-2xl mx-auto space-y-6">
       <button
         onClick={() => router.push('/profile')}
         className="flex items-center gap-2 text-sm text-slate-500 hover:text-brand-900 transition-colors group"
@@ -320,7 +320,7 @@ export default function SettingsPage() {
             </span>
           )}
         </div>
-        <p className="text-xs text-slate-400 mt-1">Emailni o&apos;zgartirib bo&apos;lmaydi</p>
+        <p className="text-xs text-slate-500 mt-1">Emailni o&apos;zgartirib bo&apos;lmaydi</p>
       </div>
 
       {/* Password */}

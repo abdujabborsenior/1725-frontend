@@ -85,7 +85,7 @@ export function ProblemShareModal({ open, onClose, problemId, problemTitle }: Pr
             <span className="flex-1 truncate text-sm text-slate-600">{shareUrl}</span>
             <button onClick={copy}
               className={cn('flex h-9 shrink-0 items-center gap-1.5 rounded-lg px-3 text-xs font-semibold transition-all',
-                copied ? 'bg-accent-500 text-white' : 'bg-brand-900 text-white hover:bg-brand-800')}>
+                copied ? 'bg-accent-700 text-white' : 'bg-brand-900 text-white hover:bg-brand-800')}>
               {copied ? <Check className="h-3.5 w-3.5" /> : <Copy className="h-3.5 w-3.5" />}
               {copied ? 'Nusxalandi' : 'Nusxalash'}
             </button>
@@ -129,7 +129,7 @@ export function ProblemShareModal({ open, onClose, problemId, problemTitle }: Pr
                       <span className="min-w-0 flex-1 truncate text-sm font-semibold text-brand-900">{c.title}</span>
                       <button onClick={() => sendToConversation(c.id)} disabled={sent || sendingId === c.id}
                         className={cn('flex h-8 items-center gap-1.5 rounded-lg px-3 text-xs font-semibold transition-all',
-                          sent ? 'bg-accent-50 text-accent-700' : 'bg-accent-500 text-white hover:bg-accent-600')}>
+                          sent ? 'bg-accent-50 text-accent-700' : 'bg-accent-700 text-white hover:bg-accent-800')}>
                         {sendingId === c.id ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : sent ? <Check className="h-3.5 w-3.5" /> : <Send className="h-3.5 w-3.5" />}
                         {sent ? 'Yuborildi' : 'Yuborish'}
                       </button>

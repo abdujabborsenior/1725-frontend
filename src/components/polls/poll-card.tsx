@@ -3,9 +3,9 @@
 import { useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { AnimatePresence, motion, useInView } from 'framer-motion';
 import { Check, ExternalLink, Play, X, Lock, Trophy, BarChart3 } from 'lucide-react';
 import { pollsApi, getErrorMessage } from '@/lib/api';
+import { useInViewOnce } from '@/components/landing/reveal';
 import { useAuthStore } from '@/store/auth.store';
 import { Avatar } from '@/components/ui/avatar';
 import { cn } from '@/lib/utils';
@@ -36,15 +36,13 @@ function useCountUp(target: number, active: boolean, duration = 800) {
 
 function VideoModal({ url, onClose }: { url: string; onClose: () => void }) {
   return (
-    <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
-      className="fixed inset-0 z-[60] flex items-center justify-center p-4" onClick={onClose}>
+    <div className="animate-fade-in fixed inset-0 z-[60] flex items-center justify-center p-4" onClick={onClose}>
       <div className="absolute inset-0 bg-brand-900/70 backdrop-blur-sm" />
-      <motion.div initial={{ scale: 0.94, y: 12 }} animate={{ scale: 1, y: 0 }} exit={{ scale: 0.94, y: 12 }}
-        className="relative w-full max-w-2xl" onClick={(e) => e.stopPropagation()}>
-        <button onClick={onClose} className="absolute -top-10 right-0 text-white/80 hover:text-white"><X className="h-6 w-6" /></button>
+      <div className="animate-scale-in relative w-full max-w-2xl" onClick={(e) => e.stopPropagation()}>
+        <button onClick={onClose} aria-label="Yopish" className="absolute -top-10 right-0 text-white/80 hover:text-white"><X className="h-6 w-6" /></button>
         <video src={url} controls autoPlay playsInline className="w-full rounded-2xl bg-black shadow-modal" />
-      </motion.div>
-    </motion.div>
+      </div>
+    </div>
   );
 }
 
@@ -54,8 +52,7 @@ export function PollCard({ poll: initial }: { poll: Poll }) {
   const [poll, setPoll] = useState(initial);
   const [voting, setVoting] = useState<string | null>(null);
   const [video, setVideo] = useState<string | null>(null);
-  const cardRef = useRef<HTMLDivElement>(null);
-  const inView = useInView(cardRef, { once: true, margin: '-40px' });
+  const { ref: cardRef, inView } = useInViewOnce<HTMLDivElement>('-40px');
 
   useEffect(() => setPoll(initial), [initial]);
 
@@ -80,15 +77,16 @@ export function PollCard({ poll: initial }: { poll: Poll }) {
       : 'Bitta startapni tanlang. Ovozingiz anonim qoladi.';
 
   return (
-    <motion.div
+    <div
       ref={cardRef}
-      initial={{ opacity: 0, y: 20 }}
-      animate={inView ? { opacity: 1, y: 0 } : {}}
-      transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
-      className="overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-card transition-shadow duration-300 hover:shadow-card-hover"
+      className={cn(
+        'reveal overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-card hover:shadow-card-hover',
+        inView && 'reveal-in',
+      )}
+      style={{ '--reveal-y': '20px' } as React.CSSProperties}
     >
       {/* refined top hairline — single restrained brand accent */}
-      <div className="h-[3px] w-full bg-gradient-emerald-iris" />
+      <div className="h-[3px] w-full bg-accent-500" />
 
       {/* Header */}
       <div className="px-5 pb-5 pt-5 sm:px-7 sm:pt-6">
@@ -116,18 +114,18 @@ export function PollCard({ poll: initial }: { poll: Poll }) {
           )}
         </div>
 
-        <h3 className="mt-4 text-xl font-black leading-snug tracking-tight text-brand-900 sm:text-[1.4rem]">
+        <h3 className="mt-4 text-xl font-bold leading-snug tracking-tight text-brand-900 sm:text-[1.4rem]">
           {poll.question}
         </h3>
         {poll.description && <p className="mt-1.5 text-sm leading-relaxed text-slate-500">{poll.description}</p>}
-        <p className="mt-2 text-[12.5px] font-medium text-slate-400">{subtitle}</p>
+        <p className="mt-2 text-[12.5px] font-medium text-slate-500">{subtitle}</p>
       </div>
 
       {/* divider */}
       <div className="mx-5 h-px bg-slate-100 sm:mx-7" />
 
       {/* Options */}
-      <motion.div layout className="flex flex-col gap-1.5 p-3 sm:px-4 sm:py-4">
+      <div className="flex flex-col gap-1.5 p-3 sm:px-4 sm:py-4">
         {(showResults ? sorted : poll.options).map((o, i) => (
           <OptionRow
             key={o.id}
@@ -143,21 +141,21 @@ export function PollCard({ poll: initial }: { poll: Poll }) {
             onPlay={setVideo}
           />
         ))}
-      </motion.div>
+      </div>
 
       {/* Footer */}
       <div className="flex items-center justify-between gap-2 border-t border-slate-100 px-5 py-3.5 sm:px-7">
         <span className="flex items-baseline gap-1.5 text-sm">
           <span className="font-black tabular-nums text-brand-900">{poll.totalVotes.toLocaleString('uz')}</span>
-          <span className="text-xs font-medium text-slate-400">ishtirokchi ovoz berdi</span>
+          <span className="text-xs font-medium text-slate-500">ishtirokchi ovoz berdi</span>
         </span>
-        <span className="text-[11.5px] font-medium text-slate-400">
+        <span className="text-[11.5px] font-medium text-slate-500">
           {voted ? 'Boshqasini tanlab fikringizni o‘zgartiring' : poll.isClosed ? 'Ovoz berish yopilgan' : 'Tanlash uchun bosing'}
         </span>
       </div>
 
-      <AnimatePresence>{video && <VideoModal url={video} onClose={() => setVideo(null)} />}</AnimatePresence>
-    </motion.div>
+      {video && <VideoModal url={video} onClose={() => setVideo(null)} />}
+    </div>
   );
 }
 
@@ -175,10 +173,7 @@ function OptionRow({
   const accent = voted || isLeader;
 
   return (
-    <motion.div
-      layout
-      transition={{ layout: { type: 'spring', stiffness: 380, damping: 34 } }}
-      whileTap={!closed ? { scale: 0.99 } : undefined}
+    <div
       onClick={onVote}
       role="button"
       tabIndex={closed ? undefined : 0}
@@ -191,7 +186,7 @@ function OptionRow({
           : isLeader && showResults
             ? 'border-slate-200 bg-slate-50/60'
             : 'border-slate-200',
-        !closed && 'cursor-pointer hover:border-accent-500/50 hover:bg-accent-50/30',
+        !closed && 'cursor-pointer hover:border-accent-500/50 hover:bg-accent-50/30 active:scale-[0.99]',
       )}
     >
       <div className="flex items-center gap-3">
@@ -199,7 +194,7 @@ function OptionRow({
         {showResults && (
           <span className={cn(
             'grid h-6 w-6 shrink-0 place-items-center rounded-lg text-[11px] font-black tabular-nums',
-            winner ? 'bg-accent-600 text-white' : accent ? 'bg-accent-100 text-accent-700' : 'bg-slate-100 text-slate-500',
+            winner ? 'bg-accent-700 text-white' : accent ? 'bg-accent-100 text-accent-700' : 'bg-slate-100 text-slate-500',
           )}>
             {winner ? <Trophy className="h-3 w-3" /> : rank}
           </span>
@@ -226,28 +221,28 @@ function OptionRow({
               {s?.title ?? 'Startap'}
             </p>
             {winner && (
-              <span className="shrink-0 rounded-md bg-accent-600 px-1.5 py-0.5 text-[9px] font-black uppercase tracking-wide text-white">G‘olib</span>
+              <span className="shrink-0 rounded-md bg-accent-700 px-1.5 py-0.5 text-[9px] font-bold uppercase tracking-wide text-white">G‘olib</span>
             )}
             {!closed && isLeader && showResults && (
-              <span className="shrink-0 rounded-md bg-accent-100 px-1.5 py-0.5 text-[9px] font-black uppercase tracking-wide text-accent-700">Yetakchi</span>
+              <span className="shrink-0 rounded-md bg-accent-100 px-1.5 py-0.5 text-[9px] font-bold uppercase tracking-wide text-accent-700">Yetakchi</span>
             )}
           </div>
           <div className="mt-0.5 flex items-center gap-2.5">
             {s?.tagline ? (
               <span className="truncate text-xs text-slate-500">{s.tagline}</span>
             ) : s?.category ? (
-              <span className="truncate text-xs text-slate-400">{s.category}</span>
+              <span className="truncate text-xs text-slate-500">{s.category}</span>
             ) : null}
             {s?.videoUrl && (
               <button type="button"
                 onClick={(e) => { e.stopPropagation(); onPlay(s.videoUrl as string); }}
-                className="inline-flex shrink-0 items-center gap-1 text-[10.5px] font-bold text-iris-600 transition-colors hover:text-iris-700">
+                className="-my-1.5 inline-flex min-h-6 shrink-0 items-center gap-1 py-1.5 text-[10.5px] font-bold text-iris-600 transition-colors hover:text-iris-700">
                 <Play className="h-2.5 w-2.5 fill-current" /> Video
               </button>
             )}
             {s && (
               <Link href={`/startups/${s.slug}`} onClick={(e) => e.stopPropagation()}
-                className="inline-flex shrink-0 items-center gap-1 text-[10.5px] font-semibold text-slate-400 transition-colors hover:text-brand-900">
+                className="-my-1.5 inline-flex min-h-6 shrink-0 items-center gap-1 py-1.5 text-[10.5px] font-semibold text-slate-500 transition-colors hover:text-brand-900">
                 <ExternalLink className="h-2.5 w-2.5" /> Batafsil
               </Link>
             )}
@@ -264,7 +259,7 @@ function OptionRow({
               )}>
                 {pct}<span className="text-sm font-bold text-slate-400">%</span>
               </span>
-              <span className="mt-1 flex items-center gap-1 text-[10.5px] tabular-nums text-slate-400">
+              <span className="mt-1 flex items-center gap-1 text-[10.5px] tabular-nums text-slate-500">
                 {voted && (
                   <span className="grid h-3.5 w-3.5 place-items-center rounded-full bg-accent-500 text-white">
                     <Check className="h-2.5 w-2.5" strokeWidth={3.5} />
@@ -286,14 +281,15 @@ function OptionRow({
       {/* progress track — clean, restrained (results only) */}
       {showResults && (
         <div className="mt-2.5 h-1.5 overflow-hidden rounded-full bg-slate-100">
-          <motion.div
-            initial={{ width: 0 }}
-            animate={{ width: `${Math.max(option.percent, hasVotes ? 3 : 0)}%` }}
-            transition={{ duration: 0.9, ease: [0.22, 1, 0.36, 1] }}
-            className={cn('h-full rounded-full', accent ? 'bg-accent-500' : 'bg-slate-300')}
+          <div
+            className={cn(
+              'h-full rounded-full transition-[width] duration-[900ms] ease-[cubic-bezier(0.22,1,0.36,1)]',
+              accent ? 'bg-accent-500' : 'bg-slate-300',
+            )}
+            style={{ width: animate ? `${Math.max(option.percent, hasVotes ? 3 : 0)}%` : 0 }}
           />
         </div>
       )}
-    </motion.div>
+    </div>
   );
 }

@@ -362,7 +362,7 @@ export function ChatWindow({ conversationId }: { conversationId: string }) {
               {conv.avatarUrl ? <Avatar src={conv.avatarUrl} name={conv.title} size={56} /> : <Hash className="h-6 w-6" />}
             </span>
             <div className="min-w-0">
-              <p className="truncate text-lg font-black text-brand-900">{conv.title}</p>
+              <p className="truncate text-lg font-bold text-brand-900">{conv.title}</p>
               {conv.username && <p className="text-sm text-iris-600">@{conv.username}</p>}
               <p className="flex items-center gap-1 text-xs text-slate-500"><Users className="h-3 w-3" /> {conv.participantCount} a&apos;zo</p>
             </div>

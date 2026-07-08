@@ -10,7 +10,7 @@ import {
 } from 'lucide-react';
 import { problemsApi, commentsApi, solutionsApi, startupsApi, getErrorMessage } from '@/lib/api';
 import { useAuthStore } from '@/store/auth.store';
-import type { Comment, Solution } from '@/types';
+import type { Problem, Comment, Solution } from '@/types';
 import { ProblemCard } from '@/components/problems/problem-card';
 import { StartupMiniCard } from '@/components/startups/startup-mini-card';
 import { Button } from '@/components/ui/button';
@@ -64,7 +64,7 @@ function CommentItem({
               {comment.author?.fullName ?? 'Foydalanuvchi'}
             </span>
           )}
-          <span className="text-[10px] text-slate-400">
+          <span className="text-[10px] text-slate-500">
             {formatDistanceToNow(new Date(comment.createdAt), { addSuffix: true })}
           </span>
         </div>
@@ -268,7 +268,7 @@ function SolutionForm({
       {attachable.length > 0 && (
         <div className="space-y-2">
           <label className="block text-sm font-medium text-brand-900">
-            Startapni biriktirish <span className="font-normal text-slate-400">(ixtiyoriy)</span>
+            Startapni biriktirish <span className="font-normal text-slate-500">(ixtiyoriy)</span>
           </label>
           <select
             value={startupId}
@@ -297,7 +297,7 @@ function SolutionForm({
 }
 
 /* ── Page ────────────────────────────────────────────────────── */
-export default function ProblemDetailPage() {
+export function ProblemDetailClient({ initialProblem }: { initialProblem: Problem | null }) {
   const { id } = useParams<{ id: string }>();
   const router = useRouter();
   const { token, user } = useAuthStore();
@@ -320,6 +320,9 @@ export default function ProblemDetailPage() {
     queryKey: ['problem', id],
     queryFn: () => problemsApi.findOne(id),
     enabled: !!id,
+    // SSR'dan kelgan boshlang'ich kontent; shaxsiy flaglar background'da yangilanadi
+    initialData: initialProblem ?? undefined,
+    initialDataUpdatedAt: 0,
   });
 
   const commentsEnabled =
@@ -369,7 +372,7 @@ export default function ProblemDetailPage() {
   const isOpen = problem.status === 'open';
 
   return (
-    <div className="max-w-4xl mx-auto space-y-6 animate-fade-in">
+    <div className="max-w-4xl mx-auto space-y-6">
       <button
         onClick={() => router.back()}
         className="flex items-center gap-2 text-sm text-slate-500 hover:text-brand-900 transition-colors group"
@@ -391,7 +394,7 @@ export default function ProblemDetailPage() {
               {problem.category}
             </span>
           )}
-          <div className="ml-auto flex items-center gap-3.5 text-xs font-medium text-slate-400">
+          <div className="ml-auto flex items-center gap-3.5 text-xs font-medium text-slate-500">
             <span className="flex items-center gap-1.5"><Eye className="h-3.5 w-3.5" /> {problem.viewCount.toLocaleString('uz')}</span>
             <span className="h-1 w-1 rounded-full bg-slate-300" />
             <span className="flex items-center gap-1.5"><Clock className="h-3.5 w-3.5" />
@@ -577,7 +580,7 @@ export default function ProblemDetailPage() {
                       ) : (
                         <p className="text-sm font-semibold text-brand-900">{s.submittedBy?.fullName ?? s.fullName}</p>
                       )}
-                      <p className="text-[10px] text-slate-400">
+                      <p className="text-[10px] text-slate-500">
                         {formatDistanceToNow(new Date(s.createdAt), { addSuffix: true })}
                       </p>
                     </div>

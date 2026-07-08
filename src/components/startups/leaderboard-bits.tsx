@@ -135,7 +135,7 @@ export function RankNumber({ rank }: { rank: number }) {
     );
   }
   return (
-    <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-slate-100 text-sm font-bold text-slate-500">
+    <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-slate-100 text-sm font-bold text-slate-600">
       {rank}
     </span>
   );

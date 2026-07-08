@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { useParams, useRouter } from 'next/navigation';
+import type { PublicProfile } from '@/types';
 import { useQuery } from '@tanstack/react-query';
 import {
   Loader2, MapPin, CalendarDays, LinkIcon, MessageCircle, Settings, UserX, Rocket,
@@ -22,7 +23,7 @@ import { cn } from '@/lib/utils';
 import { format, formatDistanceToNow } from 'date-fns';
 import toast from 'react-hot-toast';
 
-export default function ProfilePage() {
+export function ProfileClient({ initialProfile }: { initialProfile: PublicProfile | null }) {
   const params = useParams();
   const handle = String(params.handle);
   const router = useRouter();
@@ -34,6 +35,9 @@ export default function ProfilePage() {
   const { data: profile, isLoading, isError } = useQuery({
     queryKey: ['profile', handle],
     queryFn: () => usersApi.profile(handle),
+    // SSR'dan kelgan boshlang'ich kontent; follow holati background'da yangilanadi
+    initialData: initialProfile ?? undefined,
+    initialDataUpdatedAt: 0,
   });
 
   const { data: startups } = useQuery({
@@ -79,14 +83,14 @@ export default function ProfilePage() {
     Date.now() - new Date(profile.lastSeenAt).getTime() < 2 * 60 * 1000;
 
   return (
-    <div className="mx-auto max-w-4xl animate-fade-in">
+    <div className="mx-auto max-w-4xl">
       <BackButton label="Ortga" className="mb-4" fallbackHref="/discover" />
       {/* Cover + header */}
       <div className="overflow-hidden rounded-[2rem] border border-slate-200 bg-white shadow-soft">
-        <div className="relative h-40 bg-gradient-emerald-iris md:h-52">
+        <div className="relative h-40 bg-gradient-brand md:h-52">
           {profile.coverUrl && (
             // eslint-disable-next-line @next/next/no-img-element
-            <img src={profile.coverUrl} alt="" className="h-full w-full object-cover" />
+            <img src={profile.coverUrl} alt="" fetchPriority="high" decoding="async" className="h-full w-full object-cover" />
           )}
         </div>
 

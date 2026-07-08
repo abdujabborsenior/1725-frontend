@@ -38,7 +38,7 @@ export function LeaderboardRow({ entry }: { entry: LeaderboardEntry }) {
         <h3 className="truncate text-sm font-bold text-brand-900 group-hover:text-accent-700 sm:text-base">
           {entry.title}
         </h3>
-        <div className="mt-0.5 flex flex-wrap items-center gap-x-2 gap-y-0.5 text-[11px] text-slate-400">
+        <div className="mt-0.5 flex flex-wrap items-center gap-x-2 gap-y-0.5 text-[11px] text-slate-500">
           {entry.category && (
             <span className="font-medium text-slate-500">{entry.category}</span>
           )}
@@ -49,7 +49,7 @@ export function LeaderboardRow({ entry }: { entry: LeaderboardEntry }) {
             <Eye className="h-3 w-3" /> {entry.viewCount}
           </span>
           {platformTypes.length > 0 && (
-            <span className="hidden items-center gap-1 text-slate-400 sm:inline-flex">
+            <span className="hidden items-center gap-1 text-slate-500 sm:inline-flex">
               {platformTypes.slice(0, 3).map((t) => (
                 <PlatformIcon key={t} type={t} className="h-3 w-3" />
               ))}

@@ -109,7 +109,7 @@ export function StoreButton({
     >
       <PlatformIcon type={platform.type} className="h-5 w-5 shrink-0" />
       <span className="flex flex-col items-start leading-none text-left">
-        <span className="text-[9px] font-medium uppercase tracking-wide opacity-80">
+        <span className="text-[9px] font-medium uppercase tracking-wide">
           {isStore ? meta.storeKicker : 'OCHISH'}
         </span>
         <span className="text-sm font-bold mt-0.5">

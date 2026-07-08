@@ -15,7 +15,8 @@ export function StarRating({
   className?: string;
 }) {
   return (
-    <span className={cn('inline-flex items-center gap-0.5', className)} aria-label={`${value} / 5`}>
+    // role="img" — aria-label generik span'da taqiqlangan (aria-prohibited-attr)
+    <span role="img" className={cn('inline-flex items-center gap-0.5', className)} aria-label={`${value} / 5`}>
       {[0, 1, 2, 3, 4].map((i) => {
         const fill = Math.max(0, Math.min(1, value - i));
         return (

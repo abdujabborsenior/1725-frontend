@@ -88,7 +88,7 @@ export default function ProfilePage() {
   ].filter(Boolean) as { icon: typeof User; label: string; value: string }[];
 
   return (
-    <div className="max-w-3xl mx-auto space-y-6 animate-fade-in">
+    <div className="max-w-3xl mx-auto space-y-6">
       <h1 className="text-2xl font-bold text-brand-900">Profil</h1>
 
       {/* Profile card */}

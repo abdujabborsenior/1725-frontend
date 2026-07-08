@@ -58,7 +58,7 @@ export default function NotificationsPage() {
   const items = data?.data ?? [];
 
   return (
-    <div className="max-w-2xl mx-auto space-y-6 animate-fade-in">
+    <div className="max-w-2xl mx-auto space-y-6">
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-2xl font-bold text-brand-900">Bildirishnomalar</h1>
@@ -113,7 +113,7 @@ export default function NotificationsPage() {
                   <span className="flex-1 min-w-0">
                     <span className="block text-sm font-semibold text-brand-900">{n.title}</span>
                     {n.body && <span className="block text-sm text-slate-600 mt-0.5">{n.body}</span>}
-                    <span className="block text-[11px] text-slate-400 mt-1">
+                    <span className="block text-[11px] text-slate-500 mt-1">
                       {formatDistanceToNow(new Date(n.createdAt), { addSuffix: true })}
                     </span>
                   </span>

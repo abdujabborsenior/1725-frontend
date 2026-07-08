@@ -84,7 +84,7 @@ export function FounderVoteButton({
         'btn-lift inline-flex items-center gap-1.5 rounded-full border font-semibold transition-all',
         size === 'sm' ? 'h-8 px-3 text-xs' : 'h-10 px-4 text-sm',
         voted
-          ? 'border-accent-500 bg-accent-500 text-white hover:bg-accent-600'
+          ? 'border-accent-700 bg-accent-700 text-white hover:bg-accent-800'
           : 'border-slate-200 bg-white text-slate-600 hover:border-accent-300 hover:text-accent-700',
       )}
     >

@@ -66,10 +66,12 @@ export function LikeButton({
     return (
       <button
         onClick={toggle}
-        aria-label="Yoqtirish"
+        // ko'rinadigan matn (son) accessible name ichida bo'lishi shart
+        aria-label={`Yoqtirish — ${count}`}
+        // -m-1.5 p-1.5 — vizual o'lcham o'zgarmagan holda tap-maydon ≥24px
         className={cn(
-          'inline-flex items-center gap-1 text-[11px] font-medium transition-colors',
-          liked ? 'text-rose-600' : 'text-slate-400 hover:text-rose-500',
+          'inline-flex min-h-6 items-center gap-1 rounded-md text-[11px] font-medium transition-colors -m-1.5 p-1.5',
+          liked ? 'text-rose-600' : 'text-slate-500 hover:text-rose-500',
         )}
       >
         <Heart className={cn('h-3.5 w-3.5', liked && 'fill-rose-500 text-rose-500')} />

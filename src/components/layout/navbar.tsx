@@ -15,7 +15,6 @@ import { Button } from '@/components/ui/button';
 import { Avatar } from '@/components/ui/avatar';
 import { NotificationBell } from '@/components/layout/notification-bell';
 import { SearchPalette, openSearchPalette } from '@/components/layout/search-palette';
-import { disconnectSocket } from '@/lib/socket';
 import toast from 'react-hot-toast';
 
 const NAV_LINKS: { href: string; label: string; authOnly?: boolean }[] = [
@@ -49,7 +48,7 @@ function ChatLink({ mobile }: { mobile?: boolean }) {
       >
         <MessageCircle className="h-4 w-4" /> Suhbatlar
         {count > 0 && (
-          <span className="ml-auto min-w-[18px] h-[18px] px-1 flex items-center justify-center rounded-full bg-accent-500 text-white text-[10px] font-bold">
+          <span className="ml-auto min-w-[18px] h-[18px] px-1 flex items-center justify-center rounded-full bg-accent-700 text-white text-[10px] font-bold">
             {count > 9 ? '9+' : count}
           </span>
         )}
@@ -68,7 +67,7 @@ function ChatLink({ mobile }: { mobile?: boolean }) {
     >
       <MessageCircle className="h-[18px] w-[18px]" />
       {count > 0 && (
-        <span className="absolute -top-0.5 -right-0.5 min-w-[18px] h-[18px] px-1 flex items-center justify-center rounded-full bg-accent-500 text-white text-[10px] font-bold ring-2 ring-white">
+        <span className="absolute -top-0.5 -right-0.5 min-w-[18px] h-[18px] px-1 flex items-center justify-center rounded-full bg-accent-700 text-white text-[10px] font-bold ring-2 ring-white">
           {count > 9 ? '9+' : count}
         </span>
       )}
@@ -84,7 +83,9 @@ export function Navbar() {
 
   async function handleLogout() {
     try { await authApi.logout(refreshToken); } catch { /* ignore */ }
-    disconnectSocket();
+    // socket.io-client faqat shu yerda kerak — dinamik import uni har sahifa
+    // bundle'idan chiqarib, chat marshrutlarigagina yuklatadi
+    try { (await import('@/lib/socket')).disconnectSocket(); } catch { /* ignore */ }
     clearAuth();
     toast.success('Tizimdan chiqdingiz');
     router.push('/login');

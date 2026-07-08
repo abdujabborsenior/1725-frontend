@@ -1,7 +1,6 @@
 'use client';
 
 import { useState } from 'react';
-import { AnimatePresence, motion } from 'framer-motion';
 import { Plus, Lightbulb } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
@@ -39,6 +38,7 @@ export function Doubts() {
           <button
             key={d.q}
             onClick={() => setOpen(active ? null : i)}
+            aria-expanded={active}
             className="block w-full px-5 py-5 text-left transition-colors hover:bg-slate-50/70 md:px-7"
           >
             <div className="flex items-center justify-between gap-4">
@@ -54,29 +54,23 @@ export function Doubts() {
                 className={cn(
                   'flex h-8 w-8 flex-none items-center justify-center rounded-full border transition-all duration-300',
                   active
-                    ? 'rotate-45 border-accent-300 bg-gradient-emerald-iris text-white shadow-glow-accent'
+                    ? 'rotate-45 border-accent-600 bg-accent-600 text-white'
                     : 'border-slate-200 bg-white text-slate-500',
                 )}
               >
                 <Plus className="h-4 w-4" />
               </span>
             </div>
-            <AnimatePresence initial={false}>
-              {active && (
-                <motion.div
-                  initial={{ height: 0, opacity: 0 }}
-                  animate={{ height: 'auto', opacity: 1 }}
-                  exit={{ height: 0, opacity: 0 }}
-                  transition={{ duration: 0.32, ease: [0.22, 1, 0.36, 1] }}
-                  className="overflow-hidden"
-                >
-                  <p className="flex gap-2.5 pt-3 text-sm leading-relaxed text-slate-600 md:text-[15px]">
-                    <Lightbulb className="mt-0.5 h-4 w-4 flex-none text-accent-500" />
-                    <span>{d.a}</span>
-                  </p>
-                </motion.div>
-              )}
-            </AnimatePresence>
+            {/* CSS accordion (grid-rows trick) — framer height animatsiyasisiz;
+                kontent doim DOM'da (SEO uchun ham foydali) */}
+            <div className={cn('acc-panel', active && 'acc-panel-open')} aria-hidden={!active}>
+              <div>
+                <p className="flex gap-2.5 pt-3 text-sm leading-relaxed text-slate-600 md:text-[15px]">
+                  <Lightbulb className="mt-0.5 h-4 w-4 flex-none text-accent-500" />
+                  <span>{d.a}</span>
+                </p>
+              </div>
+            </div>
           </button>
         );
       })}

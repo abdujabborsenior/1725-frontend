@@ -184,7 +184,7 @@ export const PLATFORM_META: Record<PlatformType, PlatformMeta> = {
     cta: 'Saytga o\'tish',
     storeKicker: 'OPEN',
     storeName: 'Website',
-    badgeClass: 'bg-sky-600 text-white hover:bg-sky-700',
+    badgeClass: 'bg-sky-700 text-white hover:bg-sky-800',
     chipClass: 'bg-sky-50 text-sky-700 border-sky-200',
   },
   telegram_bot: {
@@ -192,7 +192,7 @@ export const PLATFORM_META: Record<PlatformType, PlatformMeta> = {
     cta: 'Telegramda ochish',
     storeKicker: 'OPEN IN',
     storeName: 'Telegram',
-    badgeClass: 'bg-[#229ED9] text-white hover:bg-[#1c8ec2]',
+    badgeClass: 'bg-[#1878a8] text-white hover:bg-[#136890]',
     chipClass: 'bg-cyan-50 text-cyan-700 border-cyan-200',
   },
   other: {

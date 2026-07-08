@@ -101,7 +101,7 @@ export default function SolutionsPage() {
 
   if (!token) {
     return (
-      <div className="py-24 text-center animate-fade-in">
+      <div className="py-24 text-center">
         <div className="h-16 w-16 rounded-2xl bg-slate-100 flex items-center justify-center mx-auto mb-4">
           <Lightbulb className="h-8 w-8 text-slate-400" />
         </div>
@@ -120,7 +120,7 @@ export default function SolutionsPage() {
   }
 
   return (
-    <div className="space-y-6 animate-fade-in">
+    <div className="space-y-6">
       <div className="flex items-center justify-between gap-3 flex-wrap">
         <div>
           <h1 className="text-2xl font-bold text-brand-900">Yechimlarim</h1>

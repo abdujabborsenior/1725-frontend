@@ -20,7 +20,7 @@ export default function CreateStartupPage() {
   if (!hasHydrated || !token) return null;
 
   return (
-    <div className="max-w-2xl mx-auto space-y-6 animate-fade-in">
+    <div className="max-w-2xl mx-auto space-y-6">
       <button
         onClick={() => router.back()}
         className="flex items-center gap-2 text-sm text-slate-500 hover:text-brand-900 transition-colors group"
@@ -31,7 +31,7 @@ export default function CreateStartupPage() {
 
       <div>
         <span className="inline-flex items-center gap-2 text-[11px] font-bold uppercase tracking-[0.2em] text-slate-400">
-          <span className="grid h-7 w-7 place-items-center rounded-lg bg-gradient-emerald-iris text-white shadow-glow-iris">
+          <span className="grid h-7 w-7 place-items-center rounded-lg bg-brand-900 text-accent-400">
             <Rocket className="h-3.5 w-3.5" strokeWidth={2.5} />
           </span>
           Yangi startap
