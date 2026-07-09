@@ -47,7 +47,11 @@ export function Avatar({
   className,
 }: AvatarProps) {
   const [failed, setFailed] = useState(false);
-  useEffect(() => setFailed(false), [src]);
+  const [loaded, setLoaded] = useState(false);
+  useEffect(() => {
+    setFailed(false);
+    setLoaded(false);
+  }, [src]);
   const seed = name || 'user';
   const gradient = GRADIENTS[hashString(seed) % GRADIENTS.length];
   const fontSize = Math.max(10, Math.round(size * 0.4));
@@ -67,25 +71,35 @@ export function Avatar({
         className={cn(
           'relative flex h-full w-full items-center justify-center overflow-hidden rounded-full',
           ring && 'ring-2 ring-white',
-          !showImg && `bg-gradient-to-br ${gradient}`,
+          `bg-gradient-to-br ${gradient}`,
         )}
       >
-        {showImg ? (
+        {/* Rasm yuklanguncha rangli fon + initsiallar turadi (Telegram uslubi) */}
+        {(!showImg || !loaded) && (
+          <span className="font-bold text-white" style={{ fontSize }}>
+            {initials(name ?? '')}
+          </span>
+        )}
+        {showImg && (
           // eslint-disable-next-line @next/next/no-img-element
           <img
             src={src as string}
             alt={name ?? ''}
             width={size}
             height={size}
-            className="h-full w-full object-cover"
+            ref={(el) => {
+              // Keshdagi rasmda onLoad hidratsiyadan oldin otilib ketishi mumkin
+              if (el?.complete && el.naturalWidth > 0) setLoaded(true);
+            }}
+            className={cn(
+              'absolute inset-0 h-full w-full object-cover transition-opacity duration-200',
+              loaded ? 'opacity-100' : 'opacity-0',
+            )}
             loading="lazy"
             decoding="async"
+            onLoad={() => setLoaded(true)}
             onError={() => setFailed(true)}
           />
-        ) : (
-          <span className="font-bold text-white" style={{ fontSize }}>
-            {initials(name ?? '')}
-          </span>
         )}
       </span>
     </span>

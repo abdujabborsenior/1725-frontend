@@ -164,7 +164,13 @@ export function ConversationList({ activeId }: { activeId?: string }) {
         {isLoading ? (
           <div className="flex justify-center py-12"><Loader2 className="h-5 w-5 animate-spin text-slate-300" /></div>
         ) : filtered.length > 0 ? (
-          filtered.map((c) => <ConversationRow key={c.id} c={c} active={c.id === activeId} />)
+          filtered.map((c, i) => (
+            <div key={c.id}>
+              {/* Telegram uslubidagi inset ajratkich — matn boshlanishiga tekislangan */}
+              {i > 0 && <div aria-hidden className="ml-[70px] mr-3 border-t border-slate-200/70" />}
+              <ConversationRow c={c} active={c.id === activeId} />
+            </div>
+          ))
         ) : (
           <EmptyState filter={filter} hasAny={(conversations?.length ?? 0) > 0} />
         )}

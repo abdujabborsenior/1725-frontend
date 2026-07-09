@@ -240,16 +240,18 @@ export default function ProfilePage() {
       )}
 
       {/* Actions */}
+      {/* flex-1 faqat sm+ (row) da: flex-col ichida flex-basis:0 tugma balandligini
+          matn balandligigacha yiqitib yuboradi (mobil "ingichka tugma" bugi) */}
       <div className="flex flex-col sm:flex-row gap-3 pt-2">
-        <Link href="/settings" className="flex-1">
-          <Button variant="outline" size="md" fullWidth>
+        <Link href="/settings" className="sm:flex-1">
+          <Button variant="outline" size="lg" fullWidth>
             <Settings className="h-4 w-4" /> Sozlamalar
           </Button>
         </Link>
-        <Button variant="outline" size="md" onClick={handleLogout} className="flex-1">
+        <Button variant="outline" size="lg" fullWidth onClick={handleLogout} className="sm:flex-1">
           <LogOut className="h-4 w-4" /> Chiqish
         </Button>
-        <Button variant="danger" size="md" onClick={() => setShowDeleteConfirm(true)} className="flex-1">
+        <Button variant="danger" size="lg" fullWidth onClick={() => setShowDeleteConfirm(true)} className="sm:flex-1">
           <Trash2 className="h-4 w-4" /> Hisobni o&apos;chirish
         </Button>
       </div>
