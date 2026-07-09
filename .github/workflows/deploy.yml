@@ -15,6 +15,7 @@ on:
         default: main
         required: false
   push:
+    branches: [main]
     tags: ['v*']
 
 # Deploy'lar navbatda — bir-birini bekor qilmaydi (yarim deploy yo'q).
@@ -134,7 +135,7 @@ jobs:
                 name: 'mymarkaz-front',
                 script: './current/server.js',
                 time: true,
-                env: { NODE_ENV: 'production', PORT: 3330, HOSTNAME: '0.0.0.0' },
+                env: { NODE_ENV: 'production', PORT: 3330, HOSTNAME: '127.0.0.1' },
               }],
             };
             EOC
