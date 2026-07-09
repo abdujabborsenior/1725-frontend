@@ -51,7 +51,7 @@ export function VideoUpload({
           {loading ? <Loader2 className="h-6 w-6 animate-spin text-accent-500" /> : (
             <>
               <Film className="h-6 w-6 text-slate-400" />
-              <span className="text-xs font-medium text-slate-500">Video yuklash (max 50MB)</span>
+              <span className="text-xs font-medium text-slate-600">Video yuklash (max 50MB)</span>
             </>
           )}
         </button>
@@ -169,7 +169,7 @@ export function ImageUpload({
               <div className="h-10 w-10 rounded-xl bg-white border border-slate-200 flex items-center justify-center">
                 <UploadCloud className="h-5 w-5 text-slate-400" />
               </div>
-              <span className="text-xs font-medium text-slate-500">
+              <span className="text-xs font-medium text-slate-600">
                 Rasm tanlang yoki sudrab tashlang
               </span>
             </>
@@ -236,7 +236,7 @@ export function GalleryUpload({
           <label className="text-xs font-semibold text-slate-700 uppercase tracking-wider">
             {label}
           </label>
-          <span className="text-[11px] text-slate-400">
+          <span className="text-[11px] text-slate-500">
             {value.length} / {max}
           </span>
         </div>
@@ -271,7 +271,7 @@ export function GalleryUpload({
             ) : (
               <>
                 <ImagePlus className="h-5 w-5 text-slate-400" />
-                <span className="text-[10px] text-slate-400">Qo&apos;shish</span>
+                <span className="text-[10px] text-slate-600">Qo&apos;shish</span>
               </>
             )}
           </button>

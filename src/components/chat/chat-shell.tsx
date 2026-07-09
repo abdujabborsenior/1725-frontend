@@ -21,7 +21,9 @@ export function ChatShell({
   }, [hasHydrated, token, router]);
 
   return (
-    <div className="flex h-[calc(100vh-9rem)] overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-soft animate-fade-in">
+    // Balandlik ota-layoutdan (h-dvh flex) keladi — sahifa scroll bo'lmaydi,
+    // faqat ichki ro'yxat/xabarlar scroll (Telegram). Mobil full-bleed, desktop karta.
+    <div className="flex min-h-0 flex-1 overflow-hidden bg-white md:rounded-3xl md:border md:border-slate-200 md:shadow-soft">
       <aside className={cn('h-full w-full shrink-0 overflow-hidden md:flex md:w-80 md:border-r md:border-slate-200', activeId ? 'hidden' : 'flex')}>
         <ConversationList activeId={activeId} />
       </aside>

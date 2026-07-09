@@ -1,4 +1,4 @@
-import type { Metadata } from 'next';
+import type { Metadata, Viewport } from 'next';
 import './globals.css';
 import { Providers } from '@/components/layout/providers';
 import { API_URL } from '@/lib/constants';
@@ -10,6 +10,14 @@ export const metadata: Metadata = {
   title: { default: 'MYMarkaz', template: '%s | MYMarkaz' },
   description:
     'G‘oyadan startapgacha — o‘quvchilar va talabalar uchun ijtimoiy platforma: muammolar, startaplar, hamjamiyat va real-vaqt chat.',
+};
+
+// interactiveWidget: mobil klaviatura ochilganda layout viewport QISQARADI —
+// chat composer klaviatura USTIDA qoladi (Telegram xulqi), sahifa sakramaydi
+export const viewport: Viewport = {
+  width: 'device-width',
+  initialScale: 1,
+  interactiveWidget: 'resizes-content',
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {

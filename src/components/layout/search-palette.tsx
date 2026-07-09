@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useQuery } from '@tanstack/react-query';
 import {
-  Search, Rocket, FileQuestion, Loader2, CornerDownLeft, ArrowRight, Users,
+  Search, Rocket, FileQuestion, Loader2, CornerDownLeft, ArrowRight, Users, X,
 } from 'lucide-react';
 import { startupsApi, problemsApi, usersApi } from '@/lib/api';
 import { Avatar } from '@/components/ui/avatar';
@@ -105,7 +105,15 @@ export function SearchPalette() {
                 className="flex-1 h-14 bg-transparent text-sm text-brand-900 placeholder:text-slate-400 focus:outline-none"
               />
               {fetching && <Loader2 className="h-4 w-4 text-slate-300 animate-spin" />}
-              <kbd className="text-[10px] font-semibold bg-slate-100 text-slate-500 rounded px-1.5 py-0.5 border border-slate-200">ESC</kbd>
+              {/* ESC — faqat desktop (klaviatura bor); mobilda yopish tugmasi */}
+              <kbd className="hidden md:inline-block text-[10px] font-semibold bg-slate-100 text-slate-500 rounded px-1.5 py-0.5 border border-slate-200">ESC</kbd>
+              <button
+                onClick={() => setOpen(false)}
+                aria-label="Yopish"
+                className="md:hidden flex h-8 w-8 items-center justify-center rounded-lg text-slate-400 hover:bg-slate-100 hover:text-brand-900"
+              >
+                <X className="h-4 w-4" />
+              </button>
             </div>
 
             <div className="max-h-[60vh] overflow-y-auto p-2">
@@ -184,7 +192,8 @@ export function SearchPalette() {
               )}
             </div>
 
-            <div className="flex items-center gap-2 px-4 py-2.5 border-t border-slate-100 text-[11px] text-slate-400">
+            {/* Klaviatura ko'rsatmasi — faqat desktop */}
+            <div className="hidden md:flex items-center gap-2 px-4 py-2.5 border-t border-slate-100 text-[11px] text-slate-400">
               <CornerDownLeft className="h-3 w-3" /> tanlash uchun bosing
             </div>
           </div>

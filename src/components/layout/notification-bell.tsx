@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
-import { Bell, CheckCheck, Loader2 } from 'lucide-react';
+import { Bell, CheckCheck } from 'lucide-react';
 import { notificationsApi } from '@/lib/api';
 import { useAuthStore } from '@/store/auth.store';
 import { cn } from '@/lib/utils';
@@ -101,8 +101,16 @@ export function NotificationBell() {
 
           <div className="max-h-96 overflow-y-auto">
             {isLoading ? (
-              <div className="py-10 flex justify-center">
-                <Loader2 className="h-5 w-5 text-slate-300 animate-spin" />
+              <div className="divide-y divide-slate-100" aria-hidden>
+                {[0, 1, 2, 3].map((i) => (
+                  <div key={i} className="flex gap-3 px-4 py-3.5">
+                    <div className="skeleton h-9 w-9 shrink-0 rounded-lg" />
+                    <div className="min-w-0 flex-1 space-y-2">
+                      <div className="skeleton h-3.5 w-1/2 rounded-md" />
+                      <div className="skeleton h-3 w-3/4 rounded-md" />
+                    </div>
+                  </div>
+                ))}
               </div>
             ) : list && list.data.length > 0 ? (
               list.data.map((n) => {
@@ -123,7 +131,7 @@ export function NotificationBell() {
                     <span className="flex-1 min-w-0">
                       <span className="block text-sm font-semibold text-brand-900 truncate">{n.title}</span>
                       {n.body && <span className="block text-xs text-slate-500 line-clamp-2">{n.body}</span>}
-                      <span className="block text-[10px] text-slate-400 mt-0.5">
+                      <span className="block text-[10px] text-slate-500 mt-0.5">
                         {formatDistanceToNow(new Date(n.createdAt), { addSuffix: true })}
                       </span>
                     </span>

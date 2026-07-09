@@ -122,7 +122,7 @@ function Attachment({ att, mine }: { att: MessageAttachment; mine: boolean }) {
         <span className={cn('block truncate text-xs font-semibold', mine ? 'text-white' : 'text-brand-900')}>
           {att.name ?? 'Fayl'}
         </span>
-        <span className={cn('text-[10px]', mine ? 'text-white/70' : 'text-slate-400')}>
+        <span className={cn('text-[10px]', mine ? 'text-white/70' : 'text-slate-500')}>
           {(att.size / 1024).toFixed(0)} KB
         </span>
       </span>
@@ -380,7 +380,7 @@ export function MessageBubble({ message, mine, showAvatar, isGroup, read, onRepl
 
           {/* Meta */}
           {!isRound && (
-            <span className={cn('mt-0.5 flex items-center justify-end gap-1 text-[10px]', mine ? 'text-white/70' : 'text-slate-400')}>
+            <span className={cn('mt-0.5 flex items-center justify-end gap-1 text-[10px]', mine ? 'text-white/70' : 'text-slate-500')}>
               {message.editedAt && !message.pending && <span className="italic">tahrirlangan</span>}
               {message.pending ? <Clock className="h-3 w-3 animate-pulse" /> : fmtTime(message.createdAt)}
               {mine && !message.pending && (read ? <CheckCheck className="h-3 w-3" /> : <Check className="h-3 w-3" />)}

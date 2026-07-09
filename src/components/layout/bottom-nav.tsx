@@ -48,7 +48,7 @@ export function BottomNav() {
               href={href}
               className={cn(
                 'relative flex flex-col items-center gap-0.5 py-2 text-[10px] font-semibold transition-colors',
-                active ? 'text-accent-600' : 'text-slate-400 hover:text-brand-900',
+                active ? 'text-accent-700' : 'text-slate-500 hover:text-brand-900',
               )}
             >
               <span className="relative">

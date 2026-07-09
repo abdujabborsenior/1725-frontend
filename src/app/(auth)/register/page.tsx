@@ -9,7 +9,7 @@ import { z } from 'zod';
 import { useMutation } from '@tanstack/react-query';
 import {
   GraduationCap, School, User, ArrowRight, Eye, EyeOff,
-  ChevronLeft, Mail, Lock, MapPin, CalendarDays,
+  ChevronLeft, Mail, Lock, MapPin,
 } from 'lucide-react';
 import { authApi, getErrorMessage } from '@/lib/api';
 import { useAuthStore } from '@/store/auth.store';
@@ -31,7 +31,6 @@ const pwd = z.string()
 
 const generalSchema = z.object({
   fullName: z.string().min(2, 'Kamida 2 ta belgi').max(150),
-  dateOfBirth: z.string().regex(/^\d{4}-\d{2}-\d{2}$/, "Sana: YYYY-MM-DD ko'rinishida"),
   email: z.string().email("Email noto'g'ri"),
   password: pwd,
   confirmPassword: z.string().min(1, 'Parolni tasdiqlang'),
@@ -39,7 +38,6 @@ const generalSchema = z.object({
 
 const schoolSchema = z.object({
   fullName: z.string().min(2, 'Kamida 2 ta belgi').max(150),
-  age: z.coerce.number({ invalid_type_error: 'Raqam kiriting' }).int().min(6, 'Min 6').max(18, 'Max 18'),
   region: z.string().min(1, 'Tanlang'),
   district: z.string().min(2, 'Kiriting'),
   school: z.string().min(2, 'Kiriting'),
@@ -51,7 +49,6 @@ const schoolSchema = z.object({
 
 const universitySchema = z.object({
   fullName: z.string().min(2, 'Kamida 2 ta belgi').max(150),
-  age: z.coerce.number({ invalid_type_error: 'Raqam kiriting' }).int().min(16, 'Min 16').max(35, 'Max 35'),
   region: z.string().min(1, 'Tanlang'),
   university: z.string().min(3, 'Kiriting'),
   course: z.coerce.number().int().min(1).max(6),
@@ -153,8 +150,6 @@ function GeneralForm() {
     <form onSubmit={handleSubmit((d) => mutate(d))} className="space-y-4">
       <Input label="To'liq ism" placeholder="Ism Familiya" icon={<User className="h-4 w-4" />}
         error={errors.fullName?.message} {...register('fullName')} />
-      <Input label="Tug'ilgan sana" type="date" icon={<CalendarDays className="h-4 w-4" />}
-        error={errors.dateOfBirth?.message} {...register('dateOfBirth')} />
       <Input label="Email" type="email" placeholder="email@example.com" icon={<Mail className="h-4 w-4" />}
         error={errors.email?.message} {...register('email')} />
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
@@ -185,11 +180,8 @@ function SchoolForm() {
 
   return (
     <form onSubmit={handleSubmit((d) => mutate(d))} className="space-y-4">
-      <div className="grid grid-cols-[1fr_96px] gap-3">
-        <Input label="To'liq ism" placeholder="Ism Familiya" icon={<User className="h-4 w-4" />}
-          error={errors.fullName?.message} {...register('fullName')} />
-        <Input label="Yosh" type="number" placeholder="14" error={errors.age?.message} {...register('age')} />
-      </div>
+      <Input label="To'liq ism" placeholder="Ism Familiya" icon={<User className="h-4 w-4" />}
+        error={errors.fullName?.message} {...register('fullName')} />
       <Select label="Viloyat" options={REGION_OPTIONS} error={errors.region?.message} {...register('region')} />
       <Input label="Tuman" placeholder="Chilonzor tumani" icon={<MapPin className="h-4 w-4" />}
         error={errors.district?.message} {...register('district')} />
@@ -228,11 +220,8 @@ function UniversityForm() {
 
   return (
     <form onSubmit={handleSubmit((d) => mutate(d))} className="space-y-4">
-      <div className="grid grid-cols-[1fr_96px] gap-3">
-        <Input label="To'liq ism" placeholder="Ism Familiya" icon={<User className="h-4 w-4" />}
-          error={errors.fullName?.message} {...register('fullName')} />
-        <Input label="Yosh" type="number" placeholder="20" error={errors.age?.message} {...register('age')} />
-      </div>
+      <Input label="To'liq ism" placeholder="Ism Familiya" icon={<User className="h-4 w-4" />}
+        error={errors.fullName?.message} {...register('fullName')} />
       <Select label="Viloyat" options={REGION_OPTIONS} error={errors.region?.message} {...register('region')} />
       <div className="grid grid-cols-[1fr_120px] gap-3">
         <Input label="Universitet" placeholder="Universitet nomi" icon={<GraduationCap className="h-4 w-4" />}

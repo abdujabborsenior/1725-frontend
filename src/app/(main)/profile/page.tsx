@@ -17,6 +17,7 @@ import { Modal } from '@/components/ui/modal';
 import { Avatar } from '@/components/ui/avatar';
 import { ProblemStatusBadge } from '@/components/ui/badge';
 import { StartupCard } from '@/components/startups/startup-card';
+import { ListRowSkeleton } from '@/components/ui/skeleton';
 import { ROLE_LABEL, ROLE_BADGE } from '@/lib/constants';
 import { FounderBadge } from '@/components/social/founder-badge';
 import { formatDistanceToNow } from 'date-fns';
@@ -169,7 +170,10 @@ export default function ProfilePage() {
           <span className="text-xs text-slate-400 font-normal">({myProblems?.meta.total ?? 0})</span>
         </h2>
 
-        {(myProblems?.data ?? []).length === 0 ? (
+        {myProblems === undefined ? (
+          // Yuklanish paytida bo'sh holat chiqib ketmasin — qator skeletonlari
+          <ListRowSkeleton rows={3} />
+        ) : (myProblems?.data ?? []).length === 0 ? (
           <div className="bg-white border border-slate-200 rounded-2xl p-10 text-center">
             <FileQuestion className="h-10 w-10 text-slate-300 mx-auto mb-3" />
             <p className="text-slate-500 text-sm">Hali muammo yubormagansiz</p>

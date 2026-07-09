@@ -1,10 +1,10 @@
 'use client';
 
 import { useQuery } from '@tanstack/react-query';
-import { Loader2, Vote } from 'lucide-react';
+import { Vote } from 'lucide-react';
 import { pollsApi } from '@/lib/api';
 import type { Poll } from '@/types';
-import { PollCard } from '@/components/polls/poll-card';
+import { PollCard, PollCardSkeleton } from '@/components/polls/poll-card';
 import { BackButton } from '@/components/ui/back-button';
 
 export function PollsClient({ initialPolls }: { initialPolls: Poll[] | null }) {
@@ -53,7 +53,9 @@ export function PollsClient({ initialPolls }: { initialPolls: Poll[] | null }) {
 
       {/* Polls */}
       {isLoading ? (
-        <div className="flex justify-center py-20"><Loader2 className="h-6 w-6 animate-spin text-slate-300" /></div>
+        <div className="space-y-5">
+          {[0, 1, 2].map((i) => <PollCardSkeleton key={i} />)}
+        </div>
       ) : hasPolls ? (
         <div className="space-y-5">
           <h2 className="sr-only">Tanlovlar ro&apos;yxati</h2>

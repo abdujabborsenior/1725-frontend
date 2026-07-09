@@ -92,7 +92,8 @@ export default function SettingsPage() {
     setSavingProfile(true);
     try {
       const payload: Record<string, unknown> = { fullName: form.fullName.trim() };
-      if (form.age) payload.age = Number(form.age);
+      // Yosh ixtiyoriy — bo'sh qoldirilsa null (tozalash ham mumkin)
+      payload.age = form.age ? Number(form.age) : null;
       if (form.region) payload.region = form.region;
       if (isSchool) {
         if (form.district) payload.district = form.district;
@@ -158,9 +159,21 @@ export default function SettingsPage() {
   }
 
   if (isLoading || !me) {
+    // Sozlamalar skeletoni — forma shakli (spinner o'rniga)
     return (
-      <div className="max-w-2xl mx-auto py-24 flex justify-center">
-        <Loader2 className="h-6 w-6 text-slate-300 animate-spin" />
+      <div className="max-w-2xl mx-auto space-y-6" aria-hidden>
+        <div className="skeleton h-7 w-40 rounded-md" />
+        {[0, 1].map((card) => (
+          <div key={card} className="rounded-2xl border border-slate-200 bg-white p-6 space-y-5">
+            <div className="skeleton h-4 w-36 rounded-md" />
+            {[0, 1, 2].map((f) => (
+              <div key={f} className="space-y-1.5">
+                <div className="skeleton h-3 w-20 rounded" />
+                <div className="skeleton h-12 w-full rounded-xl" />
+              </div>
+            ))}
+          </div>
+        ))}
       </div>
     );
   }
@@ -269,8 +282,9 @@ export default function SettingsPage() {
 
         <div className="grid grid-cols-2 gap-4">
           <Input
-            label="Yosh"
+            label="Yosh (ixtiyoriy)"
             type="number"
+            placeholder="—"
             value={form.age}
             onChange={(e) => setForm((f) => ({ ...f, age: e.target.value }))}
           />

@@ -293,3 +293,24 @@ function OptionRow({
     </div>
   );
 }
+
+/* Tanlov kartasi skeletoni — ro'yxat yuklanayotganda (spinner o'rniga shakl) */
+export function PollCardSkeleton() {
+  return (
+    <div aria-hidden className="overflow-hidden rounded-3xl border border-slate-200 bg-white p-5 shadow-card sm:p-6">
+      <div className="skeleton h-4 w-2/3 rounded-md" />
+      <div className="skeleton mt-2 h-3 w-1/3 rounded-md" />
+      <div className="mt-5 space-y-2.5">
+        {[0, 1, 2].map((i) => (
+          <div key={i} className="flex items-center gap-3 rounded-2xl border border-slate-200 px-3 py-3">
+            <div className="skeleton h-9 w-9 shrink-0 rounded-full" />
+            <div className="min-w-0 flex-1 space-y-2">
+              <div className="skeleton h-3.5 w-1/2 rounded-md" />
+              <div className="skeleton h-2.5 w-1/4 rounded-md" />
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}

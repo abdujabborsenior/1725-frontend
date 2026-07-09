@@ -5,7 +5,7 @@ import { useParams, useRouter } from 'next/navigation';
 import type { PublicProfile } from '@/types';
 import { useQuery } from '@tanstack/react-query';
 import {
-  Loader2, MapPin, CalendarDays, LinkIcon, MessageCircle, Settings, UserX, Rocket,
+  MapPin, CalendarDays, LinkIcon, MessageCircle, Settings, UserX, Rocket,
 } from 'lucide-react';
 import { usersApi, startupsApi, chatApi, getErrorMessage } from '@/lib/api';
 import { useAuthStore } from '@/store/auth.store';
@@ -60,9 +60,28 @@ export function ProfileClient({ initialProfile }: { initialProfile: PublicProfil
   }
 
   if (isLoading) {
+    // Profil skeletoni — cover + avatar + ism/meta shakli (spinner o'rniga)
     return (
-      <div className="flex justify-center py-32">
-        <Loader2 className="h-6 w-6 animate-spin text-slate-300" />
+      <div className="mx-auto max-w-4xl" aria-hidden>
+        <div className="skeleton mb-4 h-8 w-24 rounded-xl" />
+        <div className="overflow-hidden rounded-[2rem] border border-slate-200 bg-white shadow-soft">
+          <div className="skeleton h-40 md:h-52" />
+          <div className="px-5 pb-6 md:px-8">
+            <div className="-mt-12 flex items-end gap-4 md:-mt-16">
+              <div className="rounded-full bg-white p-1.5 shadow-card">
+                <div className="skeleton h-[104px] w-[104px] rounded-full" />
+              </div>
+            </div>
+            <div className="mt-4 space-y-2.5">
+              <div className="skeleton h-5 w-48 rounded-md" />
+              <div className="skeleton h-3.5 w-32 rounded-md" />
+              <div className="skeleton h-3 w-2/3 rounded-md" />
+            </div>
+            <div className="mt-5 flex gap-6">
+              {[0, 1, 2].map((i) => <div key={i} className="skeleton h-10 w-20 rounded-xl" />)}
+            </div>
+          </div>
+        </div>
       </div>
     );
   }

@@ -1,7 +1,6 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { motion } from 'framer-motion';
 import { Type, Image as ImageIcon, Video, Mic, Disc, ShieldAlert } from 'lucide-react';
 import { chatApi, getErrorMessage } from '@/lib/api';
 import { Modal } from '@/components/ui/modal';
@@ -30,10 +29,11 @@ function Toggle({ on, onClick }: { on: boolean; onClick: () => void }) {
         on ? 'bg-rose-500' : 'bg-slate-300',
       )}
     >
-      <motion.span
-        layout
-        transition={{ type: 'spring', stiffness: 600, damping: 32 }}
-        className={cn('h-5 w-5 rounded-full bg-white shadow', on ? 'ml-auto' : 'ml-0')}
+      <span
+        className={cn(
+          'h-5 w-5 rounded-full bg-white shadow transition-transform duration-200 ease-out',
+          on ? 'translate-x-5' : 'translate-x-0',
+        )}
       />
     </button>
   );

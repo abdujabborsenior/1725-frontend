@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useMutation, useQuery, useQueryClient, keepPreviousData } from '@tanstack/react-query';
-import { MessageSquare, Trash2, Loader2, Star } from 'lucide-react';
+import { MessageSquare, Trash2, Star } from 'lucide-react';
 import { startupsApi, getErrorMessage } from '@/lib/api';
 import { useAuthStore } from '@/store/auth.store';
 import { ROLE_LABEL } from '@/lib/constants';
@@ -138,10 +138,27 @@ export function Reviews({ startup }: { startup: Startup }) {
         </button>
       )}
 
-      {/* Reviews list */}
+      {/* Reviews list — yuklanishda sharh shaklidagi skeletonlar */}
       {isLoading ? (
-        <div className="py-8 flex justify-center">
-          <Loader2 className="h-5 w-5 text-slate-300 animate-spin" />
+        <div className="space-y-3" aria-hidden>
+          {[0, 1, 2].map((i) => (
+            <div key={i} className="bg-white border border-slate-200 rounded-2xl p-4">
+              <div className="flex items-center justify-between gap-3">
+                <div className="flex items-center gap-2.5">
+                  <div className="skeleton h-9 w-9 rounded-full" />
+                  <div className="space-y-1.5">
+                    <div className="skeleton h-3.5 w-28 rounded-md" />
+                    <div className="skeleton h-2.5 w-20 rounded-md" />
+                  </div>
+                </div>
+                <div className="skeleton h-3.5 w-20 rounded-md" />
+              </div>
+              <div className="mt-3 space-y-2">
+                <div className="skeleton h-3 w-full rounded-md" />
+                <div className="skeleton h-3 w-2/3 rounded-md" />
+              </div>
+            </div>
+          ))}
         </div>
       ) : items.length > 0 ? (
         <div className="space-y-3">

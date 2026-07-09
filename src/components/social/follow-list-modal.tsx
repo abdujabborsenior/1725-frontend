@@ -1,9 +1,10 @@
 'use client';
 
 import { useQuery } from '@tanstack/react-query';
-import { Loader2, Users } from 'lucide-react';
+import { Users } from 'lucide-react';
 import { usersApi } from '@/lib/api';
 import { Modal } from '@/components/ui/modal';
+import { UserRowSkeleton } from '@/components/ui/skeleton';
 import { UserListItem } from './user-list-item';
 
 interface Props {
@@ -29,9 +30,7 @@ export function FollowListModal({ open, onClose, userId, mode }: Props) {
     <Modal open={open} onClose={onClose} title={title} className="max-w-md">
       <div className="-mx-2 max-h-[60vh] overflow-y-auto chat-scroll">
         {isLoading ? (
-          <div className="flex justify-center py-12">
-            <Loader2 className="h-5 w-5 animate-spin text-slate-300" />
-          </div>
+          <UserRowSkeleton rows={5} />
         ) : data && data.data.length > 0 ? (
           data.data.map((u) => (
             <UserListItem key={u.id} user={u} onClick={onClose} />

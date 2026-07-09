@@ -4,12 +4,12 @@ import { useEffect, useMemo, useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
-import { motion } from 'framer-motion';
-import { Loader2, MessageSquarePlus, Hash, Users, UsersRound, ArrowLeft } from 'lucide-react';
+import { MessageSquarePlus, Hash, Users, UsersRound, ArrowLeft } from 'lucide-react';
 import { chatApi } from '@/lib/api';
 import { getSocket } from '@/lib/socket';
 import { useAuthStore } from '@/store/auth.store';
 import { Avatar } from '@/components/ui/avatar';
+import { ConversationListSkeleton } from './chat-skeletons';
 import { CreateGroupModal } from './create-group-modal';
 import { cn } from '@/lib/utils';
 import { formatDistanceToNowStrict } from 'date-fns';
@@ -17,6 +17,11 @@ import type { Conversation } from '@/types';
 
 type Filter = 'all' | 'direct' | 'group';
 const FILTER_KEY = 'sh_chat_filter';
+
+// Matn bo'lmagan xabar turlari uchun preview (backend PREVIEW bilan bir xil)
+const TYPE_PREVIEW: Record<string, string> = {
+  image: 'Rasm', video: 'Video', voice: 'Ovozli xabar', round_video: 'Video xabar', file: 'Fayl',
+};
 
 const TABS: { id: Filter; label: string }[] = [
   { id: 'all', label: 'Hammasi' },
@@ -67,13 +72,37 @@ export function ConversationList({ activeId }: { activeId?: string }) {
       void qc.invalidateQueries({ queryKey: ['chat-conversations'] });
       void qc.invalidateQueries({ queryKey: ['chat-unread'] });
     };
+    // Yangi xabar — ro'yxatni HTTP refetch qilmasdan keshda lokal yangilaymiz
+    // (har kelgan xabarda og'ir listConversations chaqirilmasin — 100k miqyos).
+    // Keshda yo'q suhbat (yangi conversation) kelsa — to'liq refresh.
+    const onNew = (msg: {
+      conversationId: string; type: string; content: string | null;
+      createdAt: string; sender?: { id: string } | null;
+    }) => {
+      const list = qc.getQueryData<Conversation[]>(['chat-conversations']);
+      if (!list || !list.some((c) => c.id === msg.conversationId)) { refresh(); return; }
+      const mine = msg.sender?.id === user?.id;
+      const active = msg.conversationId === activeId;
+      qc.setQueryData<Conversation[]>(['chat-conversations'], list.map((c) =>
+        c.id === msg.conversationId
+          ? {
+              ...c,
+              lastMessagePreview:
+                msg.type === 'text' ? (msg.content ?? '').slice(0, 120) : (TYPE_PREVIEW[msg.type] ?? c.lastMessagePreview),
+              lastMessageAt: msg.createdAt,
+              unreadCount: mine || active ? c.unreadCount : (c.unreadCount || 0) + 1,
+            }
+          : c,
+      ));
+      if (!mine && !active) void qc.invalidateQueries({ queryKey: ['chat-unread'] });
+    };
     socket.on('conversation:bump', refresh);
-    socket.on('message:new', refresh);
+    socket.on('message:new', onNew);
     return () => {
       socket.off('conversation:bump', refresh);
-      socket.off('message:new', refresh);
+      socket.off('message:new', onNew);
     };
-  }, [qc]);
+  }, [qc, user?.id, activeId]);
 
   // Har bir tab uchun o'qilmagan jami
   const unreadByTab = useMemo(() => {
@@ -88,7 +117,13 @@ export function ConversationList({ activeId }: { activeId?: string }) {
   }, [conversations]);
 
   const filtered = useMemo(() => {
-    const list = conversations ?? [];
+    // Lokal kesh yangilanishlaridan keyin ham tartib to'g'ri bo'lishi uchun
+    // har doim lastMessageAt bo'yicha saralaymiz (server tartibi bilan bir xil)
+    const list = [...(conversations ?? [])].sort((a, b) => {
+      const ta = a.lastMessageAt ? new Date(a.lastMessageAt).getTime() : 0;
+      const tb = b.lastMessageAt ? new Date(b.lastMessageAt).getTime() : 0;
+      return tb - ta;
+    });
     if (filter === 'all') return list;
     return list.filter((c) => c.type === filter);
   }, [conversations, filter]);
@@ -131,15 +166,11 @@ export function ConversationList({ activeId }: { activeId?: string }) {
                 onClick={() => selectFilter(t.id)}
                 className={cn(
                   'relative flex flex-1 items-center justify-center gap-1.5 rounded-xl px-2 py-1.5 text-xs font-bold transition-colors',
-                  active ? 'text-brand-900' : 'text-slate-500 hover:text-brand-800',
+                  active ? 'text-brand-900' : 'text-slate-600 hover:text-brand-800',
                 )}
               >
                 {active && (
-                  <motion.span
-                    layoutId="chat-filter-pill"
-                    className="absolute inset-0 rounded-xl bg-white shadow-soft"
-                    transition={{ type: 'spring', stiffness: 500, damping: 38 }}
-                  />
+                  <span className="absolute inset-0 rounded-xl bg-white shadow-soft" />
                 )}
                 <span className="relative z-10 whitespace-nowrap">{t.label}</span>
                 {count > 0 && (
@@ -160,9 +191,9 @@ export function ConversationList({ activeId }: { activeId?: string }) {
 
       {canCreateGroup && <CreateGroupModal open={groupModal} onClose={() => setGroupModal(false)} />}
 
-      <div className="chat-scroll flex-1 overflow-y-auto p-2">
+      <div className="chat-scroll min-h-0 flex-1 overflow-y-auto overscroll-contain p-2 pb-24 md:pb-2">
         {isLoading ? (
-          <div className="flex justify-center py-12"><Loader2 className="h-5 w-5 animate-spin text-slate-300" /></div>
+          <ConversationListSkeleton />
         ) : filtered.length > 0 ? (
           filtered.map((c, i) => (
             <div key={c.id}>
@@ -197,7 +228,7 @@ function ConversationRow({ c, active }: { c: Conversation; active: boolean }) {
         <div className="flex items-center justify-between gap-2">
           <p className="truncate text-sm font-bold text-brand-900">{c.title}</p>
           {c.lastMessageAt && (
-            <span className="shrink-0 text-[10px] text-slate-400">
+            <span className="shrink-0 text-[10px] text-slate-500">
               {formatDistanceToNowStrict(new Date(c.lastMessageAt))}
             </span>
           )}

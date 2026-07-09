@@ -10,6 +10,7 @@ import { useAuthStore } from '@/store/auth.store';
 import { Modal } from '@/components/ui/modal';
 import { Avatar } from '@/components/ui/avatar';
 import { cn } from '@/lib/utils';
+import { UserRowSkeleton } from '@/components/ui/skeleton';
 import toast from 'react-hot-toast';
 
 interface Props {
@@ -115,7 +116,7 @@ export function ProblemShareModal({ open, onClose, problemId, problemTitle }: Pr
             </div>
             <div className="max-h-56 overflow-y-auto chat-scroll -mx-1">
               {isLoading ? (
-                <div className="flex justify-center py-8"><Loader2 className="h-5 w-5 animate-spin text-slate-300" /></div>
+                <UserRowSkeleton rows={4} />
               ) : filtered.length > 0 ? (
                 filtered.map((c) => {
                   const sent = sentTo.has(c.id);

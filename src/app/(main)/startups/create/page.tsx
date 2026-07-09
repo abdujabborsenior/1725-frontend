@@ -17,7 +17,10 @@ export default function CreateStartupPage() {
     }
   }, [hasHydrated, token, router]);
 
-  if (!hasHydrated || !token) return null;
+  // Guest'ni middleware server tomonda redirect qiladi — bu faqat backstop.
+  // Hydration'ni KUTMAYMIZ: sahifa shell'i darhol chiziladi (LCP tez);
+  // faqat aniq guest holatida (hydrated + token yo'q) yashiramiz.
+  if (hasHydrated && !token) return null;
 
   return (
     <div className="max-w-2xl mx-auto space-y-6">

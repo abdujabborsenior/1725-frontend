@@ -8,6 +8,7 @@ import { usersApi, chatApi } from '@/lib/api';
 import { useDebounce } from '@/lib/use-debounce';
 import { UserListItem } from '@/components/social/user-list-item';
 import { GroupCard } from '@/components/social/group-card';
+import { CardSkeleton, UserRowSkeleton } from '@/components/ui/skeleton';
 import { cn } from '@/lib/utils';
 
 const RECENT_KEY = 'sh_recent_searches';
@@ -157,7 +158,7 @@ export function DiscoverClient({
                 ) : !isFetching ? (
                   <p className="py-8 text-center text-sm text-slate-400">Hech kim topilmadi</p>
                 ) : (
-                  <div className="flex justify-center py-8"><Loader2 className="h-5 w-5 animate-spin text-slate-300" /></div>
+                  <UserRowSkeleton rows={4} />
                 )}
               </div>
             </section>
@@ -173,7 +174,9 @@ export function DiscoverClient({
               ) : !isFetching ? (
                 <p className="rounded-2xl border border-dashed border-slate-200 bg-surface-soft py-8 text-center text-sm text-slate-400">Guruh topilmadi</p>
               ) : (
-                <div className="flex justify-center py-8"><Loader2 className="h-5 w-5 animate-spin text-slate-300" /></div>
+                <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+                  {Array.from({ length: 3 }).map((_, i) => <CardSkeleton key={i} />)}
+                </div>
               )}
             </section>
           )}
@@ -208,9 +211,13 @@ export function DiscoverClient({
               <UserPlus className="h-4 w-4 text-iris-500" /> Kuzatish uchun
             </h2>
             <div className="grid grid-cols-1 gap-2 rounded-3xl border border-slate-200 bg-white p-2 shadow-soft sm:grid-cols-2">
-              {suggestions && suggestions.length > 0
-                ? suggestions.map((u) => <UserListItem key={u.id} user={u} />)
-                : <p className="col-span-full py-10 text-center text-sm text-slate-400">Yuklanmoqda…</p>}
+              {suggestions && suggestions.length > 0 ? (
+                suggestions.map((u) => <UserListItem key={u.id} user={u} />)
+              ) : suggestions === undefined ? (
+                <><UserRowSkeleton rows={3} /><UserRowSkeleton rows={3} /></>
+              ) : (
+                <p className="col-span-full py-10 text-center text-sm text-slate-400">Hozircha tavsiyalar yo&lsquo;q</p>
+              )}
             </div>
           </section>
 
@@ -222,6 +229,10 @@ export function DiscoverClient({
             {groups && groups.length > 0 ? (
               <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
                 {groups.map((g) => <GroupCard key={g.id} group={g} />)}
+              </div>
+            ) : groups === undefined ? (
+              <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+                {Array.from({ length: 3 }).map((_, i) => <CardSkeleton key={i} />)}
               </div>
             ) : (
               <div className="rounded-2xl border border-dashed border-slate-200 bg-surface-soft py-12 text-center">

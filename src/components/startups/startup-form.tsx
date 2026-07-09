@@ -196,7 +196,7 @@ export function StartupForm({ initial }: { initial?: Startup }) {
       <section className="space-y-4">
         <div>
           <h2 className="text-base font-semibold text-brand-900">Media</h2>
-          <p className="text-xs text-slate-500 mt-0.5">
+          <p className="text-xs text-slate-600 mt-0.5">
             Ixtiyoriy — lekin logo va rasm startapingizga ishonch qo&apos;shadi
           </p>
         </div>
@@ -239,7 +239,7 @@ export function StartupForm({ initial }: { initial?: Startup }) {
       <section className="space-y-3">
         <div>
           <h2 className="text-base font-semibold text-brand-900">Havolalar</h2>
-          <p className="text-xs text-slate-500 mt-0.5">
+          <p className="text-xs text-slate-600 mt-0.5">
             Sayt, ilova yoki Telegram — foydalanuvchilar startapingizni qayerdan topadi?
           </p>
         </div>
@@ -303,7 +303,7 @@ export function StartupForm({ initial }: { initial?: Startup }) {
             <span className="block text-sm font-semibold text-brand-900">
               Qo&apos;shimcha ma&apos;lumotlar
             </span>
-            <span className="block text-xs text-slate-500 mt-0.5">
+            <span className="block text-xs text-slate-600 mt-0.5">
               Hudud, jamoa, teglar — ixtiyoriy
             </span>
           </span>

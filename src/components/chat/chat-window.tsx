@@ -4,7 +4,6 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useQueryClient } from '@tanstack/react-query';
-import { AnimatePresence, motion } from 'framer-motion';
 import {
   ArrowLeft, Loader2, Users, Hash, MoreVertical, Info, LogOut, Settings,
 } from 'lucide-react';
@@ -15,6 +14,7 @@ import { Avatar } from '@/components/ui/avatar';
 import { Modal } from '@/components/ui/modal';
 import { MessageBubble } from './message-bubble';
 import { Composer } from './composer';
+import { ChatOpeningSkeleton, MessagesSkeleton } from './chat-skeletons';
 import { GroupSettingsModal } from './group-settings-modal';
 import { profileHref } from '@/components/social/user-list-item';
 import { cn } from '@/lib/utils';
@@ -30,7 +30,14 @@ export function ChatWindow({ conversationId }: { conversationId: string }) {
   const router = useRouter();
   const qc = useQueryClient();
 
-  const [conv, setConv] = useState<Conversation | null>(null);
+  // Telegram uslubida tez ochilish: header ro'yxat keshidan DARHOL seed qilinadi,
+  // server javobi kelgach yangilanadi (foydalanuvchi skeletonni faqat xabarlarda ko'radi)
+  const [conv, setConv] = useState<Conversation | null>(
+    () =>
+      qc
+        .getQueryData<Conversation[]>(['chat-conversations'])
+        ?.find((c) => c.id === conversationId) ?? null,
+  );
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [loading, setLoading] = useState(true);
   const [cursor, setCursor] = useState<string | null>(null);
@@ -60,8 +67,12 @@ export function ChatWindow({ conversationId }: { conversationId: string }) {
   const markRead = useCallback(() => {
     chatApi.read(conversationId).catch(() => undefined);
     getSocket().emit('message:read', { conversationId });
+    // Ro'yxatni refetch qilmasdan lokal yangilaymiz — har ochilishda/har kelgan
+    // xabarda og'ir listConversations so'rovi ketmasin (100k miqyos)
+    qc.setQueryData<Conversation[]>(['chat-conversations'], (prev) =>
+      prev?.map((c) => (c.id === conversationId ? { ...c, unreadCount: 0 } : c)),
+    );
     void qc.invalidateQueries({ queryKey: ['chat-unread'] });
-    void qc.invalidateQueries({ queryKey: ['chat-conversations'] });
   }, [conversationId, qc]);
 
   // Initial load
@@ -221,11 +232,10 @@ export function ChatWindow({ conversationId }: { conversationId: string }) {
     }
   }
 
-  if (loading) {
-    return <div className="flex h-full items-center justify-center"><Loader2 className="h-6 w-6 animate-spin text-slate-300" /></div>;
-  }
   if (!conv) {
-    return <div className="flex h-full items-center justify-center text-sm text-slate-500">Suhbat topilmadi</div>;
+    // Keshda ham yo'q — to'liq skeleton (header + xabarlar + composer shakli)
+    if (loading) return <ChatOpeningSkeleton />;
+    return <div className="flex h-full w-full items-center justify-center text-sm text-slate-500">Suhbat topilmadi</div>;
   }
 
   const isGroup = conv.type === 'group';
@@ -278,16 +288,11 @@ export function ChatWindow({ conversationId }: { conversationId: string }) {
             >
               <MoreVertical className="h-5 w-5" />
             </button>
-            <AnimatePresence>
-              {menuOpen && (
+            {menuOpen && (
                 <>
                   <div className="fixed inset-0 z-40" onClick={() => setMenuOpen(false)} />
-                  <motion.div
-                    initial={{ opacity: 0, scale: 0.94, y: -4 }}
-                    animate={{ opacity: 1, scale: 1, y: 0 }}
-                    exit={{ opacity: 0, scale: 0.94, y: -4 }}
-                    transition={{ duration: 0.14 }}
-                    className="absolute right-0 top-11 z-50 w-56 max-w-[calc(100vw-1.5rem)] overflow-hidden rounded-2xl border border-slate-200 bg-white p-1.5 shadow-modal"
+                  <div
+                    className="animate-slide-down absolute right-0 top-11 z-50 w-56 max-w-[calc(100vw-1.5rem)] overflow-hidden rounded-2xl border border-slate-200 bg-white p-1.5 shadow-modal"
                   >
                     <button onClick={() => { setInfoOpen(true); setMenuOpen(false); }} className="flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium text-brand-900 hover:bg-surface-soft">
                       <Info className="h-4 w-4 text-slate-400" /> Guruh ma&apos;lumoti
@@ -302,20 +307,26 @@ export function ChatWindow({ conversationId }: { conversationId: string }) {
                         <LogOut className="h-4 w-4" /> Guruhdan chiqish
                       </button>
                     )}
-                  </motion.div>
+                  </div>
                 </>
               )}
-            </AnimatePresence>
           </div>
         )}
       </div>
 
-      {/* Messages */}
+      {/* Messages — yuklanishda Telegram uslubidagi bubble skeletonlar */}
+      {loading ? (
+        <div className="min-h-0 flex-1 overflow-hidden bg-surface-soft">
+          <MessagesSkeleton />
+        </div>
+      ) : (
       <div
         ref={scrollRef}
         onScroll={(e) => { if (e.currentTarget.scrollTop < 60) void loadMore(); }}
-        className="chat-scroll flex-1 space-y-1.5 overflow-y-auto bg-surface-soft px-3 py-4"
+        className="chat-scroll flex min-h-0 flex-1 flex-col overflow-y-auto overscroll-contain bg-surface-soft px-3 py-4"
       >
+        {/* mt-auto — kam xabarda suhbat PASTDAN boshlanadi (Telegram) */}
+        <div className="mt-auto space-y-1.5">
         {loadingMore && <div className="flex justify-center py-2"><Loader2 className="h-4 w-4 animate-spin text-slate-300" /></div>}
         {messages.map((m, i) => {
           const mine = m.sender?.id === me?.id;
@@ -340,7 +351,9 @@ export function ChatWindow({ conversationId }: { conversationId: string }) {
             <span className="typing-dot" /><span className="typing-dot" /><span className="typing-dot" />
           </div>
         )}
+        </div>
       </div>
+      )}
 
       <Composer
         onSend={handleSend}
