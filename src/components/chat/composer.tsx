@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState } from 'react';
 import {
   Paperclip, Mic, Send, X, Check, Video, Loader2, Trash2, ShieldAlert,
-  FileText, Pencil, Plus,
+  FileText, Pencil, Plus, Images, Camera,
 } from 'lucide-react';
 import { chatApi, getErrorMessage, type SendMessagePayload } from '@/lib/api';
 import { useMediaRecorder } from '@/lib/use-media-recorder';
@@ -62,7 +62,11 @@ export function Composer({
   const [staged, setStaged] = useState<Staged[]>([]);
   const [uploading, setUploading] = useState(false);
   const [savingEdit, setSavingEdit] = useState(false);
+  const [attachOpen, setAttachOpen] = useState(false);
+  const attachRef = useRef<HTMLDivElement>(null);
   const fileRef = useRef<HTMLInputElement>(null);
+  const galleryRef = useRef<HTMLInputElement>(null);
+  const cameraRef = useRef<HTMLInputElement>(null);
   const videoPreviewRef = useRef<HTMLVideoElement>(null);
   const rec = useMediaRecorder();
   const lastTyping = useRef(0);
@@ -92,6 +96,23 @@ export function Composer({
 
   // Object URL'larni tozalash (memory leak oldini olish)
   useEffect(() => () => { staged.forEach((s) => s.preview && URL.revokeObjectURL(s.preview)); }, [staged]);
+
+  // Attach-menyu — tashqi bosishda yopiladi
+  useEffect(() => {
+    if (!attachOpen) return;
+    const onDoc = (e: MouseEvent) => {
+      if (!attachRef.current?.contains(e.target as Node)) setAttachOpen(false);
+    };
+    document.addEventListener('mousedown', onDoc);
+    return () => document.removeEventListener('mousedown', onDoc);
+  }, [attachOpen]);
+
+  /** Menyudan manba tanlash: galereya / kamera / fayl (Telegram uslubi).
+   *  Galereya/kamera ruxsatini brauzer-OS'ning o'zi shu bosishda so'raydi. */
+  function pickFrom(ref: React.RefObject<HTMLInputElement>) {
+    setAttachOpen(false);
+    ref.current?.click();
+  }
 
   function emitTyping() {
     const now = Date.now();
@@ -366,14 +387,63 @@ export function Composer({
         <div className="flex items-end gap-2">
           {/* Biriktirish — edit rejimida yashiringan */}
           {!isEditing && (
-            <button
-              onClick={() => fileRef.current?.click()}
-              disabled={uploading}
-              className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full text-slate-500 hover:bg-slate-100 hover:text-brand-900"
-              aria-label="Biriktirish"
-            >
-              {uploading ? <Loader2 className="h-5 w-5 animate-spin" /> : <Paperclip className="h-5 w-5" />}
-            </button>
+            <div ref={attachRef} className="relative shrink-0">
+              <button
+                onClick={() => setAttachOpen((o) => !o)}
+                disabled={uploading}
+                aria-label="Biriktirish"
+                aria-expanded={attachOpen}
+                className={cn(
+                  'flex h-10 w-10 items-center justify-center rounded-full text-slate-500 transition-colors hover:bg-slate-100 hover:text-brand-900',
+                  attachOpen && 'bg-slate-100 text-brand-900',
+                )}
+              >
+                {uploading ? <Loader2 className="h-5 w-5 animate-spin" /> : <Paperclip className="h-5 w-5" />}
+              </button>
+
+              {/* Manba menyusi — Telegram uslubi */}
+              {attachOpen && (
+                <div className="absolute bottom-12 left-0 z-20 w-52 origin-bottom-left animate-scale-in rounded-2xl border border-slate-200 bg-white p-1.5 shadow-modal">
+                  <button
+                    onClick={() => pickFrom(galleryRef)}
+                    className="flex w-full items-center gap-3 rounded-xl px-2.5 py-2 text-left transition-colors hover:bg-slate-50"
+                  >
+                    <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-surface-soft text-slate-500">
+                      <Images className="h-[18px] w-[18px]" />
+                    </span>
+                    <span className="min-w-0">
+                      <span className="block text-sm font-medium text-brand-900">Galereya</span>
+                      <span className="block text-[11px] text-slate-500">Rasm va video</span>
+                    </span>
+                  </button>
+                  {/* Kamera — faqat sensorli qurilmalarda (desktop'da capture ishlamaydi) */}
+                  <button
+                    onClick={() => pickFrom(cameraRef)}
+                    className="hidden w-full items-center gap-3 rounded-xl px-2.5 py-2 text-left transition-colors hover:bg-slate-50 [@media(pointer:coarse)]:flex"
+                  >
+                    <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-surface-soft text-slate-500">
+                      <Camera className="h-[18px] w-[18px]" />
+                    </span>
+                    <span className="min-w-0">
+                      <span className="block text-sm font-medium text-brand-900">Kamera</span>
+                      <span className="block text-[11px] text-slate-500">Suratga olish</span>
+                    </span>
+                  </button>
+                  <button
+                    onClick={() => pickFrom(fileRef)}
+                    className="flex w-full items-center gap-3 rounded-xl px-2.5 py-2 text-left transition-colors hover:bg-slate-50"
+                  >
+                    <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-surface-soft text-slate-500">
+                      <FileText className="h-[18px] w-[18px]" />
+                    </span>
+                    <span className="min-w-0">
+                      <span className="block text-sm font-medium text-brand-900">Fayl</span>
+                      <span className="block text-[11px] text-slate-500">Hujjat, audio, arxiv</span>
+                    </span>
+                  </button>
+                </div>
+              )}
+            </div>
           )}
 
           <textarea
@@ -436,6 +506,10 @@ export function Composer({
       )}
 
       <input ref={fileRef} type="file" multiple accept="image/*,video/*,audio/*,application/pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.txt,.zip,.rar" className="hidden" onChange={onPickFiles} />
+      {/* Galereya — faqat rasm/video (mobil qurilma o'z galereya ruxsatini so'raydi) */}
+      <input ref={galleryRef} type="file" multiple accept="image/*,video/*" className="hidden" onChange={onPickFiles} />
+      {/* Kamera — capture: to'g'ridan-to'g'ri suratga olish (mobil) */}
+      <input ref={cameraRef} type="file" accept="image/*,video/*" capture="environment" className="hidden" onChange={onPickFiles} />
     </div>
   );
 }

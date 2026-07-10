@@ -12,6 +12,7 @@ import { useDebounce } from '@/lib/use-debounce';
 import { UZ_REGIONS, SCHOOL_GRADES, UNIVERSITY_COURSES } from '@/lib/constants';
 import { Input } from '@/components/ui/input';
 import { Select } from '@/components/ui/select';
+import { DevicePermissions } from '@/components/settings/device-permissions';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { ImageUpload } from '@/components/ui/image-upload';
@@ -372,6 +373,9 @@ export default function SettingsPage() {
           <KeyRound className="h-4 w-4" /> Parolni yangilash
         </Button>
       </div>
+
+      {/* Qurilma ruxsatlari — kamera/mikrofon/galereya */}
+      <DevicePermissions />
     </div>
   );
 }

@@ -14,6 +14,7 @@ import type { CategoryCount, PaginatedResponse, PlatformType, Startup, StartupSo
 import { useDebounce } from '@/lib/use-debounce';
 import { cn } from '@/lib/utils';
 import { Pagination } from '@/components/ui/pagination';
+import { Select } from '@/components/ui/select';
 import { StartupCard, StartupCardSkeleton } from '@/components/startups/startup-card';
 import { PlatformIcon } from '@/components/startups/platform';
 
@@ -117,23 +118,18 @@ export function StartupsClient({
             className="w-full h-12 pl-11 pr-4 rounded-xl bg-white border border-slate-200 hover:border-slate-300 text-sm text-brand-900 placeholder:text-slate-400 focus:outline-none input-focus transition-all"
           />
         </div>
-        <div className="relative">
-          <SlidersHorizontal className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400 pointer-events-none" />
-          <select
+        <div className="relative md:w-64">
+          <SlidersHorizontal className="pointer-events-none absolute left-3.5 top-1/2 z-10 h-4 w-4 -translate-y-1/2 text-slate-400" />
+          <Select
             aria-label="Saralash"
             value={sort}
             onChange={(e) => {
               setSort(e.target.value as StartupSort);
               setPage(1);
             }}
-            className="h-12 pl-10 pr-9 rounded-xl bg-white border border-slate-200 hover:border-slate-300 text-sm font-medium text-brand-900 appearance-none cursor-pointer focus:outline-none input-focus transition-all"
-          >
-            {STARTUP_SORT_OPTIONS.map((o) => (
-              <option key={o.value} value={o.value}>
-                {o.label}
-              </option>
-            ))}
-          </select>
+            options={STARTUP_SORT_OPTIONS}
+            className="pl-10 font-medium"
+          />
         </div>
       </div>
 

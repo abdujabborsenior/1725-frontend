@@ -15,6 +15,7 @@ import { ProblemCard } from '@/components/problems/problem-card';
 import { StartupMiniCard } from '@/components/startups/startup-mini-card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import { Select } from '@/components/ui/select';
 import { Textarea } from '@/components/ui/textarea';
 import { ProblemStatusPill } from '@/components/ui/badge';
 import { SolutionHelpfulButton } from '@/components/solutions/helpful-button';
@@ -270,16 +271,16 @@ function SolutionForm({
           <label className="block text-sm font-medium text-brand-900">
             Startapni biriktirish <span className="font-normal text-slate-500">(ixtiyoriy)</span>
           </label>
-          <select
+          <Select
+            aria-label="Startapni biriktirish"
             value={startupId}
             onChange={(e) => setStartupId(e.target.value)}
-            className="h-10 w-full rounded-lg border border-slate-200 bg-white px-3 text-sm text-brand-900 transition-all input-focus focus:outline-none hover:border-slate-300"
-          >
-            <option value="">Biriktirilmasin</option>
-            {attachable.map((s) => (
-              <option key={s.id} value={s.id}>{s.title}</option>
-            ))}
-          </select>
+            options={[
+              { value: '', label: 'Biriktirilmasin' },
+              ...attachable.map((s) => ({ value: s.id, label: s.title })),
+            ]}
+            className="h-10 rounded-lg px-3"
+          />
           {selectedStartup && (
             <StartupMiniCard startup={selectedStartup} />
           )}

@@ -41,6 +41,38 @@ function tokenIsLive(token: string | undefined): boolean {
   }
 }
 
+/**
+ * Redirect uchun TASHQI origin. `request.url` ISHLATILMAYDI: Next standalone
+ * nginx ortida uni ichki host (localhost:3330) deb ko'radi va foydalanuvchi
+ * prod'da localhost'ga otiladi (jonli serverda kuzatilgan KRITIK bug; nisbiy
+ * Location ham bo'lmaydi — Next middleware adapteri uni NextURL bilan parse
+ * qilib yiqiladi). Yechim: origin forwarded header'lardan quriladi; host
+ * baribir localhost bo'lib chiqsa — build-time PUBLIC sayt manzili (yoki API
+ * domenidan chiqarilgan front domeni) oxirgi qalqon bo'ladi.
+ */
+function externalOrigin(request: NextRequest): string {
+  const host =
+    request.headers.get('x-forwarded-host') ??
+    request.headers.get('host') ??
+    request.nextUrl.host;
+  const proto =
+    request.headers.get('x-forwarded-proto') ??
+    request.nextUrl.protocol.replace(':', '');
+  if (!/^(localhost|127\.|0\.0\.0\.0)/i.test(host)) return `${proto}://${host}`;
+
+  // Proxy Host'ni bermagan — prod'da hech qachon localhost'ga otmaymiz.
+  const site = process.env.NEXT_PUBLIC_SITE_URL;
+  if (site) return site.replace(/\/$/, '');
+  const api = process.env.NEXT_PUBLIC_API_URL; // https://backend.mymarkaz.uz/api
+  if (api && !api.includes('localhost')) {
+    try {
+      const apiHost = new URL(api).hostname; // backend.mymarkaz.uz → mymarkaz.uz
+      return `https://${apiHost.replace(/^backend\./, '')}`;
+    } catch { /* pastdagi lokal fallback */ }
+  }
+  return `${proto}://${host}`; // lokal dev — o'zi to'g'ri
+}
+
 export function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
   const token = request.cookies.get('sh_token')?.value;
@@ -52,7 +84,7 @@ export function middleware(request: NextRequest) {
   // Kirgan (tokeni HALI AMALDAGI) foydalanuvchi auth sahifalariga kirmasin.
   if (isPublic && token) {
     if (tokenIsLive(token)) {
-      return NextResponse.redirect(new URL('/', request.url));
+      return NextResponse.redirect(new URL('/', externalOrigin(request)));
     }
     // Eskirgan/buzuq cookie — tozalab, sahifaga kiritamiz (deadlock yo'q).
     const res = NextResponse.next();
@@ -65,7 +97,10 @@ export function middleware(request: NextRequest) {
   // sessiyani o'zi yangilaydi — har 15 daqiqada login'ga otib yubormaymiz.)
   if (isProtected && !token) {
     const isCreateIntent = CREATE_INTENT_PATHS.some((p) => pathname.startsWith(p));
-    const authUrl = new URL(isCreateIntent ? '/register' : '/login', request.url);
+    const authUrl = new URL(
+      isCreateIntent ? '/register' : '/login',
+      externalOrigin(request),
+    );
     authUrl.searchParams.set('next', pathname + request.nextUrl.search);
     return NextResponse.redirect(authUrl);
   }

@@ -10,6 +10,12 @@ import { cn } from '@/lib/utils';
 import type { PublicGroup } from '@/types';
 import toast from 'react-hot-toast';
 
+/**
+ * Ommaviy guruh kartasi (home + discover) — shaffof havo-rang sirt, atrofga
+ * yoyiluvchi yumshoq sky nur. Oxirgi xabar preview ATAYLAB ko'rsatilmaydi
+ * (2026-07-10 direktiva: bio bilan adashtirardi); tugma har doim kartaning
+ * pastida bir tekis turadi (mt-auto) — kontent uzunligiga bog'lanmaydi.
+ */
 export function GroupCard({ group, className }: { group: PublicGroup; className?: string }) {
   const router = useRouter();
   const { token } = useAuthStore();
@@ -18,7 +24,7 @@ export function GroupCard({ group, className }: { group: PublicGroup; className?
 
   async function handleClick() {
     if (!token) {
-      router.push('/login');
+      router.push('/register?next=%2Fdiscover');
       return;
     }
     // A'zo bo'lsa qayta qo'shilmasdan ochamiz
@@ -39,7 +45,7 @@ export function GroupCard({ group, className }: { group: PublicGroup; className?
   return (
     <div
       className={cn(
-        'group flex h-full flex-col rounded-3xl border border-slate-200/80 bg-white p-5 shadow-soft transition-all duration-200 hover:-translate-y-[3px] hover:border-iris-200 hover:shadow-card-hover',
+        'group flex h-full flex-col rounded-3xl border border-sky-200/70 bg-sky-50/60 p-5 backdrop-blur-sm shadow-glow-sky transition-all duration-200 hover:-translate-y-[3px] hover:border-sky-300/70 hover:shadow-glow-sky-lg',
         className,
       )}
     >
@@ -47,16 +53,16 @@ export function GroupCard({ group, className }: { group: PublicGroup; className?
         {group.avatarUrl ? (
           <Avatar src={group.avatarUrl} name={group.title ?? 'G'} size={48} />
         ) : (
-          <span className="flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-iris text-white transition-transform group-hover:scale-105">
+          <span className="flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br from-sky-500 to-sky-700 text-white shadow-soft transition-transform group-hover:scale-105">
             <Hash className="h-5 w-5" />
           </span>
         )}
         <div className="min-w-0 flex-1">
           <h3 className="truncate text-sm font-bold text-brand-900">{group.title}</h3>
           {group.username && (
-            <p className="truncate text-xs font-semibold text-iris-600">@{group.username}</p>
+            <p className="truncate text-xs font-semibold text-sky-700">@{group.username}</p>
           )}
-          <p className="flex items-center gap-1 text-xs text-slate-500">
+          <p className="flex items-center gap-1 text-xs text-slate-600">
             <Users className="h-3 w-3" /> {group.participantCount} a&apos;zo
           </p>
         </div>
@@ -68,32 +74,29 @@ export function GroupCard({ group, className }: { group: PublicGroup; className?
         </p>
       )}
 
-      {group.lastMessagePreview && (
-        <p className="mt-3 truncate rounded-xl bg-surface-soft px-3 py-2 text-xs text-slate-600">
-          {group.lastMessagePreview}
-        </p>
-      )}
-
-      <button
-        onClick={handleClick}
-        disabled={loading}
-        className={cn(
-          'btn-lift mt-4 inline-flex h-10 items-center justify-center gap-1.5 rounded-xl text-sm font-semibold text-white transition-colors',
-          isMember ? 'bg-iris-600 hover:bg-iris-700' : 'bg-brand-900 hover:bg-brand-800',
-        )}
-      >
-        {loading ? (
-          <Loader2 className="h-4 w-4 animate-spin" />
-        ) : isMember ? (
-          <>
-            <MessageCircle className="h-4 w-4" /> Ochish
-          </>
-        ) : (
-          <>
-            Qo&apos;shilish <ArrowRight className="h-4 w-4" />
-          </>
-        )}
-      </button>
+      {/* Tugma — doim pastda, barcha kartalarda bir chiziqda */}
+      <div className="mt-auto pt-4">
+        <button
+          onClick={handleClick}
+          disabled={loading}
+          className={cn(
+            'btn-lift inline-flex h-10 w-full items-center justify-center gap-1.5 rounded-xl text-sm font-semibold text-white transition-colors',
+            isMember ? 'bg-sky-600 hover:bg-sky-700' : 'bg-brand-900 hover:bg-brand-800',
+          )}
+        >
+          {loading ? (
+            <Loader2 className="h-4 w-4 animate-spin" />
+          ) : isMember ? (
+            <>
+              <MessageCircle className="h-4 w-4" /> Ochish
+            </>
+          ) : (
+            <>
+              Qo&apos;shilish <ArrowRight className="h-4 w-4" />
+            </>
+          )}
+        </button>
+      </div>
     </div>
   );
 }

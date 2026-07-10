@@ -12,6 +12,7 @@ import { useAuthStore } from '@/store/auth.store';
 import dynamic from 'next/dynamic';
 import { Button } from '@/components/ui/button';
 import { Reveal, RevealGroup, RevealItem } from '@/components/landing/reveal';
+import { ChatFab } from '@/components/landing/chat-fab';
 import { CountUp } from '@/components/landing/count-up';
 import { Marquee } from '@/components/landing/marquee';
 import { LazySection } from '@/components/landing/lazy-section';
@@ -519,6 +520,9 @@ export default function LandingPage() {
           Xush kelibsiz, {user.fullName}
         </p>
       )}
+
+      {/* Suzuvchi chat tugmasi — suhbatni shu yerdan boshlash */}
+      <ChatFab />
     </div>
   );
 }

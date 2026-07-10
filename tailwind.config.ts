@@ -80,6 +80,9 @@ const config: Config = {
         'glow-accent':'0 8px 28px rgba(16, 185, 129, 0.30)',
         'glow-iris':  '0 8px 28px rgba(99, 102, 241, 0.30)',
         'glow-brand': '0 8px 24px rgba(10, 25, 47, 0.18)',
+        // Hamjamiyat guruh kartalari — atrofga yoyiluvchi yumshoq havo-rang nur
+        'glow-sky':    '0 12px 36px -10px rgba(56, 189, 248, 0.35), 0 2px 8px rgba(15, 23, 42, 0.04)',
+        'glow-sky-lg': '0 20px 48px -12px rgba(56, 189, 248, 0.45), 0 4px 10px rgba(15, 23, 42, 0.05)',
         'ring-accent':'0 0 0 3px rgba(16,185,129,0.15)',
       },
       fontFamily: {
@@ -101,6 +104,8 @@ const config: Config = {
         'gradient-pan': 'gradientPan 8s ease infinite',
         'shine':      'shine 4.5s ease-in-out infinite',
         'spin-slow':  'spin 20s linear infinite',
+        // Chat FAB halosi — sekin "nafas" (radar-ping): jonli signal, shovqinsiz
+        'fab-ring':   'fabRing 3.2s cubic-bezier(0.22,1,0.36,1) infinite',
       },
       keyframes: {
         fadeIn:    { from: { opacity: '0' }, to: { opacity: '1' } },
@@ -132,6 +137,10 @@ const config: Config = {
         shimmer:   { '0%': { backgroundPosition: '-200% 0' }, '100%': { backgroundPosition: '200% 0' } },
         float:     { '0%,100%': { transform: 'translateY(0)' }, '50%': { transform: 'translateY(-10px)' } },
         msgIn:     { from: { opacity: '0', transform: 'translateY(8px) scale(0.98)' }, to: { opacity: '1', transform: 'translateY(0) scale(1)' } },
+        fabRing: {
+          '0%':        { transform: 'scale(1)', opacity: '0.45' },
+          '65%, 100%': { transform: 'scale(1.5)', opacity: '0' },
+        },
       },
     },
   },

@@ -5,8 +5,8 @@
  *  - X-Content-Type-Options nosniff — brauzer content-type'ni "taxmin" qilmasin
  *    (polyglot/soxta rasm skript sifatida bajarilmaydi).
  *  - Referrer-Policy — boshqa saytga to'liq URL (token bo'lishi mumkin) sizmasin.
- *  - Permissions-Policy — kamera/geolokatsiya o'chiq; mikrofon faqat o'zi
- *    (chat ovozli xabar uchun) ruxsat.
+ *  - Permissions-Policy — geolokatsiya o'chiq; kamera va mikrofon faqat o'zi
+ *    (chat ovozli/video xabar va rasm olish uchun) ruxsat.
  *  - HSTS — HTTPS majburiy (brauzer faqat HTTPS'da qo'llaydi; http'da e'tiborsiz).
  *  - object-src 'none' / base-uri 'self' — plagin va base-teg in'yeksiyasini to'sadi.
  */
@@ -16,7 +16,7 @@ const securityHeaders = [
   { key: 'Referrer-Policy', value: 'strict-origin-when-cross-origin' },
   {
     key: 'Permissions-Policy',
-    value: 'camera=(), geolocation=(), browsing-topics=(), microphone=(self)',
+    value: 'camera=(self), geolocation=(), browsing-topics=(), microphone=(self)',
   },
   {
     key: 'Strict-Transport-Security',
