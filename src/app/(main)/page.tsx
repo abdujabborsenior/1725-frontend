@@ -479,7 +479,8 @@ export default function LandingPage() {
       {/* ── Final CTA ────────────────────────────────────── */}
       {!token && (
         <Reveal>
-          <section className="relative -mx-4 overflow-hidden rounded-[2.5rem] bg-brand-900 px-6 py-14 text-center md:mx-0 md:px-12 md:py-20">
+          {/* Mobil: karta sahifa paddingi ichida qoladi (chetga yopishmaydi) */}
+          <section className="relative overflow-hidden rounded-3xl bg-brand-900 px-5 py-12 text-center md:rounded-[2.5rem] md:px-12 md:py-20">
             <div className="pointer-events-none absolute inset-0 grid-pattern-dark" />
             <div className="pointer-events-none absolute -left-24 -top-16 h-72 w-72 rounded-full bg-accent-500/15 blur-[110px]" />
             <div className="pointer-events-none absolute -right-24 -bottom-16 h-72 w-72 rounded-full bg-iris-500/15 blur-[110px]" />
