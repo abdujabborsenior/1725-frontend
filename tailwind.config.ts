@@ -80,9 +80,9 @@ const config: Config = {
         'glow-accent':'0 8px 28px rgba(16, 185, 129, 0.30)',
         'glow-iris':  '0 8px 28px rgba(99, 102, 241, 0.30)',
         'glow-brand': '0 8px 24px rgba(10, 25, 47, 0.18)',
-        // Hamjamiyat guruh kartalari — atrofga yoyiluvchi yumshoq havo-rang nur
-        'glow-sky':    '0 12px 36px -10px rgba(56, 189, 248, 0.35), 0 2px 8px rgba(15, 23, 42, 0.04)',
-        'glow-sky-lg': '0 20px 48px -12px rgba(56, 189, 248, 0.45), 0 4px 10px rgba(15, 23, 42, 0.05)',
+        // Hamjamiyat guruh kartalari — atrofga yoyiluvchi yorqin yashil nur
+        'glow-emerald':    '0 12px 40px -10px rgba(16, 185, 129, 0.40), 0 2px 8px rgba(15, 23, 42, 0.04)',
+        'glow-emerald-lg': '0 20px 52px -12px rgba(16, 185, 129, 0.50), 0 4px 10px rgba(15, 23, 42, 0.05)',
         'ring-accent':'0 0 0 3px rgba(16,185,129,0.15)',
       },
       fontFamily: {
