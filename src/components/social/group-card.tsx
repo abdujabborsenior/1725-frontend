@@ -11,11 +11,11 @@ import type { PublicGroup } from '@/types';
 import toast from 'react-hot-toast';
 
 /**
- * Ommaviy guruh kartasi (home + discover) — HAQIQIY shaffof sirt (past opacity
- * yashil fon + backdrop-blur) va atrofga yoyiluvchi yorqin emerald nur.
- * Oxirgi xabar preview ATAYLAB ko'rsatilmaydi (2026-07-10 direktiva: bio bilan
- * adashtirardi); tugma har doim kartaning pastida bir tekis turadi (mt-auto) —
- * kontent uzunligiga bog'lanmaydi.
+ * Ommaviy guruh kartasi (home + discover) — OQ, silliq sirt (sayt karta tizimiga
+ * mos) + o'ziga xos imzo: tepada nozik emerald gradient hairline, emerald icon,
+ * hover'da yumshoq yashil nur. Oxirgi xabar preview ATAYLAB ko'rsatilmaydi
+ * (2026-07-10 direktiva: bio bilan adashtirardi); tugma har doim kartaning
+ * pastida bir tekis turadi (mt-auto) — kontent uzunligiga bog'lanmaydi.
  */
 export function GroupCard({ group, className }: { group: PublicGroup; className?: string }) {
   const router = useRouter();
@@ -46,10 +46,15 @@ export function GroupCard({ group, className }: { group: PublicGroup; className?
   return (
     <div
       className={cn(
-        'group flex h-full flex-col rounded-3xl border border-accent-300/60 bg-accent-400/15 p-5 backdrop-blur-md shadow-glow-emerald transition-all duration-200 hover:-translate-y-[3px] hover:border-accent-400/70 hover:shadow-glow-emerald-lg',
+        'group relative flex h-full flex-col overflow-hidden rounded-3xl border border-slate-200 bg-white p-5 shadow-soft transition-all duration-200 hover:-translate-y-[3px] hover:border-accent-200 hover:shadow-glow-emerald',
         className,
       )}
     >
+      {/* Signature: tepadagi nozik emerald hairline */}
+      <span
+        aria-hidden
+        className="pointer-events-none absolute inset-x-8 top-0 h-px bg-gradient-to-r from-transparent via-accent-400/70 to-transparent"
+      />
       <div className="flex items-center gap-3">
         {group.avatarUrl ? (
           <Avatar src={group.avatarUrl} name={group.title ?? 'G'} size={48} />
@@ -63,7 +68,7 @@ export function GroupCard({ group, className }: { group: PublicGroup; className?
           {group.username && (
             <p className="truncate text-xs font-semibold text-accent-700">@{group.username}</p>
           )}
-          <p className="flex items-center gap-1 text-xs text-slate-600">
+          <p className="flex items-center gap-1 text-xs text-slate-500">
             <Users className="h-3 w-3" /> {group.participantCount} a&apos;zo
           </p>
         </div>
@@ -83,7 +88,7 @@ export function GroupCard({ group, className }: { group: PublicGroup; className?
           className={cn(
             'btn-lift inline-flex h-10 w-full items-center justify-center gap-1.5 rounded-xl text-sm font-semibold transition-colors',
             isMember
-              ? 'border border-accent-600/50 bg-white/50 text-accent-800 hover:bg-white/70'
+              ? 'border border-accent-200 bg-accent-50 text-accent-800 hover:bg-accent-100'
               : 'bg-accent-700 text-white hover:bg-accent-800',
           )}
         >
