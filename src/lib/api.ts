@@ -321,7 +321,6 @@ export interface StartupPayload {
   coverUrl?: string | null;
   logoUrl?: string | null;
   videoUrl?: string | null;
-  screenshots?: string[];
   category?: string | null;
   region?: string | null;
   district?: string | null;
@@ -449,15 +448,6 @@ export const uploadsApi = {
     form.append('file', file);
     return unwrap<UploadResult>(
       api.post('/uploads/image', form, {
-        headers: { 'Content-Type': 'multipart/form-data' },
-      }),
-    );
-  },
-  images: (files: File[]) => {
-    const form = new FormData();
-    files.forEach((f) => form.append('files', f));
-    return unwrap<{ files: UploadResult[] }>(
-      api.post('/uploads/images', form, {
         headers: { 'Content-Type': 'multipart/form-data' },
       }),
     );

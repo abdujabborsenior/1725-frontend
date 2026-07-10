@@ -235,35 +235,6 @@ export function StartupDetailClient({ initialStartup }: { initialStartup: Startu
         </section>
       )}
 
-      {/* Screenshots */}
-      {startup.screenshots.length > 0 && (
-        <section className="space-y-3">
-          <h2 className="text-lg font-bold text-brand-900">Skrinshotlar</h2>
-          <div className="flex gap-4 overflow-x-auto pb-3 -mx-1 px-1 snap-x">
-            {startup.screenshots.map((url, i) => (
-              <a
-                key={url}
-                href={url}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="shrink-0 snap-start rounded-xl overflow-hidden border border-slate-200 bg-surface-soft hover:border-accent-300 transition-all"
-              >
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img
-                  src={url}
-                  alt={`${startup.title} skrinshot ${i + 1}`}
-                  width={162}
-                  height={288}
-                  loading="lazy"
-                  decoding="async"
-                  className="h-72 w-auto object-cover"
-                />
-              </a>
-            ))}
-          </div>
-        </section>
-      )}
-
       {/* Description */}
       <section className="space-y-3">
         <h2 className="text-lg font-bold text-brand-900">Startap haqida</h2>

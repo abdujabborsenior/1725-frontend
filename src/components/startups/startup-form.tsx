@@ -59,7 +59,6 @@ export function StartupForm({ initial }: { initial?: Startup }) {
 
   const [logoUrl, setLogoUrl] = useState<string | null>(initial?.logoUrl ?? null);
   const [coverUrl, setCoverUrl] = useState<string | null>(initial?.coverUrl ?? null);
-  const [screenshots, setScreenshots] = useState<string[]>(initial?.screenshots ?? []);
   const [platforms, setPlatforms] = useState<{ type: PlatformType; url: string }[]>(
     initial?.platforms.map((p) => ({ type: p.type, url: p.url })) ?? [],
   );
@@ -101,7 +100,6 @@ export function StartupForm({ initial }: { initial?: Startup }) {
           : Number(d.foundedYear),
         logoUrl: logoUrl ?? undefined,
         coverUrl: coverUrl ?? undefined,
-        screenshots,
         platforms,
         tags,
       } as StartupPayload;
@@ -203,35 +201,6 @@ export function StartupForm({ initial }: { initial?: Startup }) {
         <div className="grid grid-cols-1 sm:grid-cols-[140px_1fr] gap-4">
           <ImageUpload label="Logo" aspect="logo" value={logoUrl} onChange={setLogoUrl} />
           <ImageUpload label="Muqova rasmi" aspect="video" value={coverUrl} onChange={setCoverUrl} />
-        </div>
-        {/* Skrinshotlar */}
-        <div className="flex flex-col gap-2">
-          <label className="text-xs font-semibold text-slate-700 uppercase tracking-wider">
-            Skrinshotlar (maks. 6)
-          </label>
-          <div className="grid grid-cols-3 sm:grid-cols-6 gap-2.5">
-            {screenshots.map((u) => (
-              <div key={u} className="relative aspect-square rounded-lg overflow-hidden border border-slate-200 bg-slate-100 group">
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img src={u} alt="" className="h-full w-full object-cover" />
-                <button
-                  type="button"
-                  onClick={() => setScreenshots((l) => l.filter((x) => x !== u))}
-                  aria-label="O'chirish"
-                  className="absolute top-1 right-1 h-5 w-5 flex items-center justify-center rounded bg-white/90 text-rose-600 opacity-0 group-hover:opacity-100 transition-opacity"
-                >
-                  <X className="h-3 w-3" />
-                </button>
-              </div>
-            ))}
-            {screenshots.length < 6 && (
-              <ImageUpload
-                aspect="square"
-                value={null}
-                onChange={(url) => url && setScreenshots((l) => (l.includes(url) ? l : [...l, url]))}
-              />
-            )}
-          </div>
         </div>
       </section>
 

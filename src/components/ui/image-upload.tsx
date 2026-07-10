@@ -2,7 +2,7 @@
 
 import { useRef, useState } from 'react';
 import Image from 'next/image';
-import { Loader2, UploadCloud, X, ImagePlus, Film } from 'lucide-react';
+import { Loader2, UploadCloud, X, Film } from 'lucide-react';
 import { uploadsApi, chatApi, getErrorMessage } from '@/lib/api';
 import { cn } from '@/lib/utils';
 import toast from 'react-hot-toast';
@@ -187,105 +187,6 @@ export function ImageUpload({
         onChange={(e) => {
           const file = e.target.files?.[0];
           if (file) void handleFile(file);
-          e.target.value = '';
-        }}
-      />
-    </div>
-  );
-}
-
-interface GalleryUploadProps {
-  value: string[];
-  onChange: (urls: string[]) => void;
-  label?: string;
-  max?: number;
-}
-
-/** Bir nechta rasm — skrinshotlar galereyasi (Play Store / App Store uslubi). */
-export function GalleryUpload({
-  value,
-  onChange,
-  label,
-  max = 8,
-}: GalleryUploadProps) {
-  const inputRef = useRef<HTMLInputElement>(null);
-  const [loading, setLoading] = useState(false);
-
-  async function handleFiles(files: FileList) {
-    const room = max - value.length;
-    if (room <= 0) {
-      toast.error(`Maksimal ${max} ta rasm`);
-      return;
-    }
-    setLoading(true);
-    try {
-      const picked = Array.from(files).slice(0, room);
-      const res = await uploadsApi.images(picked);
-      onChange([...value, ...res.files.map((f) => f.url)]);
-    } catch (err) {
-      toast.error(getErrorMessage(err, 'Yuklashda xatolik'));
-    } finally {
-      setLoading(false);
-    }
-  }
-
-  return (
-    <div className="flex flex-col gap-1.5">
-      {label && (
-        <div className="flex items-center justify-between">
-          <label className="text-xs font-semibold text-slate-700 uppercase tracking-wider">
-            {label}
-          </label>
-          <span className="text-[11px] text-slate-500">
-            {value.length} / {max}
-          </span>
-        </div>
-      )}
-      <div className="flex flex-wrap gap-3">
-        {value.map((url, i) => (
-          <div
-            key={url}
-            className="relative h-28 w-20 overflow-hidden rounded-lg border border-slate-200 bg-surface-soft group"
-          >
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src={url} alt={`screenshot ${i + 1}`} className="h-full w-full object-cover" />
-            <button
-              type="button"
-              onClick={() => onChange(value.filter((u) => u !== url))}
-              className="absolute top-1 right-1 h-6 w-6 flex items-center justify-center rounded-md bg-white/90 text-slate-600 hover:text-rose-600 opacity-0 group-hover:opacity-100 transition-opacity"
-              aria-label="O'chirish"
-            >
-              <X className="h-3.5 w-3.5" />
-            </button>
-          </div>
-        ))}
-
-        {value.length < max && (
-          <button
-            type="button"
-            onClick={() => inputRef.current?.click()}
-            className="h-28 w-20 flex flex-col items-center justify-center gap-1 rounded-lg border-2 border-dashed border-slate-200 bg-surface-soft hover:border-accent-300 hover:bg-accent-50/40 transition-all"
-          >
-            {loading ? (
-              <Loader2 className="h-5 w-5 text-accent-500 animate-spin" />
-            ) : (
-              <>
-                <ImagePlus className="h-5 w-5 text-slate-400" />
-                <span className="text-[10px] text-slate-600">Qo&apos;shish</span>
-              </>
-            )}
-          </button>
-        )}
-      </div>
-
-      <input
-        ref={inputRef}
-        type="file"
-        accept="image/*"
-        multiple
-        className="hidden"
-        onChange={(e) => {
-          if (e.target.files?.length) void handleFiles(e.target.files);
           e.target.value = '';
         }}
       />

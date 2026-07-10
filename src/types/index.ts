@@ -339,7 +339,6 @@ export interface Startup {
   coverUrl: string | null;
   logoUrl: string | null;
   videoUrl: string | null;
-  screenshots: string[];
   category: string | null;
   region: string | null;
   district: string | null;
