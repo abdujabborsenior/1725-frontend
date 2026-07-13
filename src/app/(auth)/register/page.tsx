@@ -17,11 +17,17 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Select } from '@/components/ui/select';
 import { AuthMobileLogo } from '@/components/auth/auth-shell';
+import { AuthedRedirect } from '@/components/auth/authed-redirect';
 import { UZ_REGIONS, SCHOOL_GRADES, UNIVERSITY_COURSES } from '@/lib/constants';
 import { cn } from '@/lib/utils';
 import toast from 'react-hot-toast';
 
 type UserType = 'general' | 'school' | 'university';
+
+// Maktab o'quvchisi / talaba turlari VAQTINCHA o'chirilgan (2026-07-11
+// direktivasi): hamma standart oqimda ro'yxatdan o'tadi (tur tanlash yo'q).
+// Qayta yoqish uchun `true` qilish kifoya — formalar va sxemalar saqlangan.
+const EDU_TYPES_ENABLED = false;
 
 const pwd = z.string()
   .min(8, 'Kamida 8 ta belgi')
@@ -33,8 +39,7 @@ const generalSchema = z.object({
   fullName: z.string().min(2, 'Kamida 2 ta belgi').max(150),
   email: z.string().email("Email noto'g'ri"),
   password: pwd,
-  confirmPassword: z.string().min(1, 'Parolni tasdiqlang'),
-}).refine((d) => d.password === d.confirmPassword, { message: 'Parollar mos emas', path: ['confirmPassword'] });
+});
 
 const schoolSchema = z.object({
   fullName: z.string().min(2, 'Kamida 2 ta belgi').max(150),
@@ -44,8 +49,7 @@ const schoolSchema = z.object({
   grade: z.coerce.number().int().min(1).max(11),
   email: z.string().email("Email noto'g'ri"),
   password: pwd,
-  confirmPassword: z.string().min(1, 'Parolni tasdiqlang'),
-}).refine((d) => d.password === d.confirmPassword, { message: 'Parollar mos emas', path: ['confirmPassword'] });
+});
 
 const universitySchema = z.object({
   fullName: z.string().min(2, 'Kamida 2 ta belgi').max(150),
@@ -54,8 +58,7 @@ const universitySchema = z.object({
   course: z.coerce.number().int().min(1).max(6),
   email: z.string().email("Email noto'g'ri"),
   password: pwd,
-  confirmPassword: z.string().min(1, 'Parolni tasdiqlang'),
-}).refine((d) => d.password === d.confirmPassword, { message: 'Parollar mos emas', path: ['confirmPassword'] });
+});
 
 type GeneralData = z.infer<typeof generalSchema>;
 type SchoolData = z.infer<typeof schoolSchema>;
@@ -152,12 +155,8 @@ function GeneralForm() {
         error={errors.fullName?.message} {...register('fullName')} />
       <Input label="Email" type="email" placeholder="email@example.com" icon={<Mail className="h-4 w-4" />}
         error={errors.email?.message} {...register('email')} />
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-        <PasswordInput label="Parol" placeholder="P@ssword1" hint={PWD_HINT}
-          error={errors.password?.message} {...register('password')} />
-        <PasswordInput label="Tasdiqlash" placeholder="••••••••"
-          error={errors.confirmPassword?.message} {...register('confirmPassword')} />
-      </div>
+      <PasswordInput label="Parol" placeholder="P@ssword1" hint={PWD_HINT}
+        error={errors.password?.message} {...register('password')} />
       <Button type="submit" size="lg" fullWidth loading={isPending}>
         Ro&apos;yxatdan o&apos;tish <ArrowRight className="h-4 w-4" />
       </Button>
@@ -192,12 +191,8 @@ function SchoolForm() {
       </div>
       <Input label="Email" type="email" placeholder="email@example.com" icon={<Mail className="h-4 w-4" />}
         error={errors.email?.message} {...register('email')} />
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-        <PasswordInput label="Parol" placeholder="P@ssword1" hint={PWD_HINT}
-          error={errors.password?.message} {...register('password')} />
-        <PasswordInput label="Tasdiqlash" placeholder="••••••••"
-          error={errors.confirmPassword?.message} {...register('confirmPassword')} />
-      </div>
+      <PasswordInput label="Parol" placeholder="P@ssword1" hint={PWD_HINT}
+        error={errors.password?.message} {...register('password')} />
       <Button type="submit" size="lg" fullWidth loading={isPending}>
         Ro&apos;yxatdan o&apos;tish <ArrowRight className="h-4 w-4" />
       </Button>
@@ -230,12 +225,8 @@ function UniversityForm() {
       </div>
       <Input label="Email" type="email" placeholder="email@example.com" icon={<Mail className="h-4 w-4" />}
         error={errors.email?.message} {...register('email')} />
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-        <PasswordInput label="Parol" placeholder="P@ssword1" hint={PWD_HINT}
-          error={errors.password?.message} {...register('password')} />
-        <PasswordInput label="Tasdiqlash" placeholder="••••••••"
-          error={errors.confirmPassword?.message} {...register('confirmPassword')} />
-      </div>
+      <PasswordInput label="Parol" placeholder="P@ssword1" hint={PWD_HINT}
+        error={errors.password?.message} {...register('password')} />
       <Button type="submit" size="lg" fullWidth loading={isPending}>
         Ro&apos;yxatdan o&apos;tish <ArrowRight className="h-4 w-4" />
       </Button>
@@ -246,15 +237,21 @@ function UniversityForm() {
 
 /* ── Page ────────────────────────────────────────────────────── */
 export default function RegisterPage() {
-  const [userType, setUserType] = useState<UserType | null>(null);
-  const selected = TYPES.find((t) => t.id === userType);
+  // Tur tanlash o'chirilganda hamma to'g'ridan-to'g'ri standart formaga tushadi.
+  const [userType, setUserType] = useState<UserType | null>(
+    EDU_TYPES_ENABLED ? null : 'general',
+  );
+  // Standart rejimda yorliq ko'rsatilmaydi ("Oddiy foydalanuvchi" ham emas).
+  const selected = EDU_TYPES_ENABLED ? TYPES.find((t) => t.id === userType) : undefined;
 
   return (
     <div className="w-full max-w-md">
+      {/* Allaqachon kirgan foydalanuvchi formani ko'rmaydi — maqsadiga qaytadi */}
+      <AuthedRedirect />
       <AuthMobileLogo />
       <div className="rounded-3xl border border-slate-200/80 bg-white/90 p-7 shadow-card backdrop-blur-sm sm:p-8">
           <div className="flex items-center gap-3 mb-7">
-            {userType && (
+            {EDU_TYPES_ENABLED && userType && (
               <button
                 onClick={() => setUserType(null)}
                 aria-label="Orqaga"
@@ -268,12 +265,16 @@ export default function RegisterPage() {
                 {selected ? selected.label : "Ro'yxatdan o'tish"}
               </h1>
               <p className="text-xs text-slate-500 mt-0.5">
-                {selected ? selected.desc : 'Foydalanuvchi turini tanlang'}
+                {selected
+                  ? selected.desc
+                  : EDU_TYPES_ENABLED
+                    ? 'Foydalanuvchi turini tanlang'
+                    : 'Bir daqiqada bepul hisob yarating'}
               </p>
             </div>
           </div>
 
-          {!userType && (
+          {EDU_TYPES_ENABLED && !userType && (
             <div className="space-y-2.5">
               {TYPES.map(({ id, icon: Icon, label, desc }) => (
                 <button

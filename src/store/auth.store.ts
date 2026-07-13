@@ -6,12 +6,19 @@ import { STORAGE } from '@/lib/constants';
 
 const COOKIE_MAX_AGE = 60 * 60 * 24 * 30; // 30 kun
 
+// HTTPS'da Secure bayrog'i (lib/api.ts persistTokens bilan izchil).
+function cookieSecure(): string {
+  return typeof window !== 'undefined' && window.location.protocol === 'https:'
+    ? '; Secure'
+    : '';
+}
+
 function setCookie(name: string, value: string) {
-  document.cookie = `${name}=${value}; path=/; max-age=${COOKIE_MAX_AGE}; SameSite=Lax`;
+  document.cookie = `${name}=${value}; path=/; max-age=${COOKIE_MAX_AGE}; SameSite=Lax${cookieSecure()}`;
 }
 
 function deleteCookie(name: string) {
-  document.cookie = `${name}=; path=/; max-age=0; expires=Thu, 01 Jan 1970 00:00:00 GMT; SameSite=Lax`;
+  document.cookie = `${name}=; path=/; max-age=0; expires=Thu, 01 Jan 1970 00:00:00 GMT; SameSite=Lax${cookieSecure()}`;
 }
 
 /**
@@ -34,10 +41,13 @@ export const useAuthStore = create<AuthState>((set, get) => ({
     const pendingEmail = sessionStorage.getItem(STORAGE.pendingEmail);
     let user: User | null = null;
     try { user = userRaw ? (JSON.parse(userRaw) as User) : null; } catch { /* ignore */ }
-    // Sinxronlash: sessiya yo'q (localStorage bo'sh), lekin eski cookie qolgan
-    // bo'lsa — o'chiramiz. Aks holda middleware "kirgan" deb o'ylab, guest'ni
-    // auth sahifalaridan bosh sahifaga qaytarib qulflab qo'yadi.
+    // Sinxronlash (ikkala yo'nalishda o'z-o'zini davolaydi):
+    // — sessiya yo'q (localStorage bo'sh), lekin eski cookie qolgan → o'chiramiz
+    //   (aks holda middleware guest'ni auth sahifalaridan '/'ga qulflaydi);
+    // — sessiya BOR, lekin cookie yo'qolgan/o'chirilgan → qayta o'rnatamiz
+    //   (aks holda middleware kirgan foydalanuvchini register'ga otadi).
     if (!token) deleteCookie(STORAGE.token);
+    else setCookie(STORAGE.token, token);
     set({ token, refreshToken, user, pendingEmail, hasHydrated: true });
   },
 

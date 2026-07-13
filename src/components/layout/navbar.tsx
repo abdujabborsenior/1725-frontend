@@ -229,7 +229,7 @@ export function Navbar() {
           </Link>
           <Link href="/problems/create" onClick={() => setMenuOpen(false)}
             className="block px-4 py-2.5 rounded-lg text-sm font-semibold text-slate-700 border border-slate-200 hover:bg-slate-50 transition-all">
-            + Muammo yuborish
+            + Muammo qoldirish
           </Link>
           {token ? (
             <>

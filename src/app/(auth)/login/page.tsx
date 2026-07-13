@@ -13,6 +13,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { AuthCard } from '@/components/auth/auth-shell';
 import { consumeNext } from '@/components/auth/next-capture';
+import { AuthedRedirect } from '@/components/auth/authed-redirect';
 import toast from 'react-hot-toast';
 
 const schema = z.object({
@@ -59,6 +60,8 @@ export default function LoginPage() {
       title="Xush kelibsiz!"
       subtitle="Hisobingizga kiring va g'oyalaringizni hayotga tatbiq eting"
     >
+      {/* Allaqachon kirgan foydalanuvchi formani ko'rmaydi — maqsadiga qaytadi */}
+      <AuthedRedirect />
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-5" noValidate>
             <Input
               label="Email"

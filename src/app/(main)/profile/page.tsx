@@ -178,7 +178,7 @@ export default function ProfilePage() {
             <FileQuestion className="h-10 w-10 text-slate-300 mx-auto mb-3" />
             <p className="text-slate-500 text-sm">Hali muammo yubormagansiz</p>
             <Link href="/problems/create" className="mt-4 inline-block">
-              <Button size="sm" variant="accent">Muammo yuborish</Button>
+              <Button size="sm" variant="accent">Muammo qoldirish</Button>
             </Link>
           </div>
         ) : (

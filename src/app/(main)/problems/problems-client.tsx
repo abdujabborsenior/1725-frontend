@@ -65,7 +65,7 @@ export function ProblemsClient({ initialList }: { initialList: PaginatedResponse
           {/* Guest ham ko'radi — bosganда register orqali aynan shu yerga qaytadi */}
           <Link href="/problems/create">
             <Button variant="accent" size="md">
-              <Plus className="h-4 w-4" /> Muammo yuborish
+              <Plus className="h-4 w-4" /> Muammo qoldirish
             </Button>
           </Link>
         </div>

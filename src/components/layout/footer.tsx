@@ -28,7 +28,7 @@ const COLS: { title: string; links: { label: string; href: string }[] }[] = [
       { label: 'Startap nima?', href: '/#startap-nima' },
       { label: 'Ro‘yxatdan o‘tish', href: '/register' },
       { label: 'Kirish', href: '/login' },
-      { label: 'Muammo yuborish', href: '/problems/create' },
+      { label: 'Muammo qoldirish', href: '/problems/create' },
     ],
   },
 ];

@@ -86,10 +86,12 @@ export function middleware(request: NextRequest) {
     if (tokenIsLive(token)) {
       return NextResponse.redirect(new URL('/', externalOrigin(request)));
     }
-    // Eskirgan/buzuq cookie — tozalab, sahifaga kiritamiz (deadlock yo'q).
-    const res = NextResponse.next();
-    res.cookies.delete('sh_token');
-    return res;
+    // Eskirgan token — sahifaga kiritamiz, lekin cookie'ga TEGMAYMIZ: sessiya
+    // localStorage'da (refresh token bilan) hali tirik bo'lishi mumkin — cookie
+    // o'chirilsa kirgan foydalanuvchi keyingi protected sahifada register'ga
+    // otilib qoladi (2026-07-11 bugi). Haqiqiy guest'ning qoldiq cookie'sini
+    // auth.store hydrate() o'zi tozalaydi; kirganникini esa qayta tiklaydi.
+    return NextResponse.next();
   }
 
   // Himoyalangan sahifalar uchun token majburiy — qaytib kelish uchun ?next=
