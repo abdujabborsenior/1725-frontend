@@ -128,30 +128,13 @@ export default function LoginPage() {
             <div className="flex-1 h-px bg-slate-200" />
           </div>
 
-          {/* Register links */}
-          <div className="space-y-3">
-            <p className="text-center text-xs text-slate-500 mb-3">
-              Hisobingiz yo&apos;qmi? Ro&apos;yxatdan o&apos;ting:
-            </p>
-            <div className="grid grid-cols-3 gap-2">
-              {[
-                { href: '/register',            label: 'Oddiy',  sub: 'foydalanuvchi' },
-                { href: '/register/school',     label: 'Maktab', sub: "o'quvchisi" },
-                { href: '/register/university', label: 'Talaba', sub: 'universiteti' },
-              ].map(({ href, label, sub }) => (
-                <Link
-                  key={href}
-                  href={href}
-                  className="flex flex-col items-center gap-0.5 p-3 rounded-xl border border-slate-200 hover:border-accent-500 hover:bg-accent-50 transition-all duration-150 group"
-                >
-                  <span className="text-xs font-semibold text-brand-900 group-hover:text-accent-700 transition-colors">
-                    {label}
-                  </span>
-                  <span className="text-[10px] text-slate-500">{sub}</span>
-                </Link>
-              ))}
-            </div>
-          </div>
+          {/* Register link */}
+          <p className="text-center text-sm text-slate-500">
+            Hisobingiz yo&apos;qmi?{' '}
+            <Link href="/register" className="text-accent-700 hover:text-accent-800 font-semibold transition-colors">
+              Ro&apos;yxatdan o&apos;tish
+            </Link>
+          </p>
     </AuthCard>
   );
 }
