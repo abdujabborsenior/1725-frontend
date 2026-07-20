@@ -1,9 +1,11 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { usePathname, useRouter } from 'next/navigation';
+import { useQueryClient } from '@tanstack/react-query';
 import { Lightbulb } from 'lucide-react';
 import { solutionsApi, getErrorMessage } from '@/lib/api';
+import { patchEntityInQueries } from '@/lib/entity-sync';
 import { useAuthStore } from '@/store/auth.store';
 import { cn } from '@/lib/utils';
 import toast from 'react-hot-toast';
@@ -29,9 +31,18 @@ export function SolutionHelpfulButton({
   const router = useRouter();
   const pathname = usePathname();
   const { token, user } = useAuthStore();
+  const qc = useQueryClient();
   const [helpful, setHelpful] = useState(initialHelpful);
   const [count, setCount] = useState(initialCount);
   const [busy, setBusy] = useState(false);
+  const interacted = useRef(false);
+
+  // Auth bilan refetch kelganda holatni sinxronlash (refresh'dan keyin to'g'ri)
+  useEffect(() => {
+    if (interacted.current) return;
+    setHelpful(initialHelpful);
+    setCount(initialCount);
+  }, [initialHelpful, initialCount]);
 
   const isMine = !!user && user.id === ownerId;
 
@@ -43,6 +54,7 @@ export function SolutionHelpfulButton({
       return;
     }
     if (isMine || busy) return;
+    interacted.current = true;
 
     const prev = { helpful, count };
     setHelpful(!helpful);
@@ -52,6 +64,11 @@ export function SolutionHelpfulButton({
       const res = await solutionsApi.toggleHelpful(solutionId);
       setHelpful(res.helpful);
       setCount(res.helpfulCount);
+      // Barcha sahifa keshlarida holat bir xil qolsin
+      patchEntityInQueries(qc, solutionId, {
+        helpfulByMe: res.helpful,
+        helpfulCount: res.helpfulCount,
+      });
     } catch (err) {
       setHelpful(prev.helpful);
       setCount(prev.count);

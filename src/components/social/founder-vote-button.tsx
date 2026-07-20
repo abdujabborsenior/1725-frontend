@@ -1,9 +1,11 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { usePathname, useRouter } from 'next/navigation';
+import { useQueryClient } from '@tanstack/react-query';
 import { ThumbsUp } from 'lucide-react';
 import { usersApi, getErrorMessage } from '@/lib/api';
+import { patchEntityInQueries } from '@/lib/entity-sync';
 import { useAuthStore } from '@/store/auth.store';
 import { cn } from '@/lib/utils';
 import toast from 'react-hot-toast';
@@ -28,9 +30,18 @@ export function FounderVoteButton({
   const router = useRouter();
   const pathname = usePathname();
   const { token, user } = useAuthStore();
+  const qc = useQueryClient();
   const [voted, setVoted] = useState(initialVoted);
   const [count, setCount] = useState(initialCount);
   const [busy, setBusy] = useState(false);
+  const interacted = useRef(false);
+
+  // Auth bilan refetch kelganda holatni sinxronlash (refresh'dan keyin to'g'ri)
+  useEffect(() => {
+    if (interacted.current) return;
+    setVoted(initialVoted);
+    setCount(initialCount);
+  }, [initialVoted, initialCount]);
 
   const isMe = user?.id === userId;
 
@@ -40,6 +51,7 @@ export function FounderVoteButton({
       return;
     }
     if (isMe || busy) return;
+    interacted.current = true;
 
     // Optimistik yangilash — xatoда orqaga qaytariladi
     const prev = { voted, count };
@@ -50,6 +62,12 @@ export function FounderVoteButton({
       const res = await usersApi.toggleFounderVote(userId);
       setVoted(res.voted);
       setCount(res.voteCount);
+      // Liderbord (votedByMe) va profil (founderVotedByMe) keshlari bir xil qolsin
+      patchEntityInQueries(qc, userId, {
+        votedByMe: res.voted,
+        founderVotedByMe: res.voted,
+        founderVoteCount: res.voteCount,
+      });
       onChange?.(res.voted, res.voteCount);
     } catch (err) {
       setVoted(prev.voted);

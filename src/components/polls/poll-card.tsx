@@ -4,7 +4,9 @@ import { useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { Check, ExternalLink, Play, X, Lock, Trophy, BarChart3 } from 'lucide-react';
+import { useQueryClient } from '@tanstack/react-query';
 import { pollsApi, getErrorMessage } from '@/lib/api';
+import { patchEntityInQueries } from '@/lib/entity-sync';
 import { useInViewOnce } from '@/components/landing/reveal';
 import { useAuthStore } from '@/store/auth.store';
 import { Avatar } from '@/components/ui/avatar';
@@ -49,12 +51,17 @@ function VideoModal({ url, onClose }: { url: string; onClose: () => void }) {
 export function PollCard({ poll: initial }: { poll: Poll }) {
   const router = useRouter();
   const { token } = useAuthStore();
+  const qc = useQueryClient();
   const [poll, setPoll] = useState(initial);
   const [voting, setVoting] = useState<string | null>(null);
   const [video, setVideo] = useState<string | null>(null);
   const { ref: cardRef, inView } = useInViewOnce<HTMLDivElement>('-40px');
+  const interacted = useRef(false);
 
-  useEffect(() => setPoll(initial), [initial]);
+  // Ovoz berilgach eskirgan refetch prop'i holatni qayta bosib yubormasin
+  useEffect(() => {
+    if (!interacted.current) setPoll(initial);
+  }, [initial]);
 
   const voted = poll.myVotedOptionId;
   const showResults = !!voted || poll.isClosed;
@@ -64,8 +71,14 @@ export function PollCard({ poll: initial }: { poll: Poll }) {
   async function vote(optionId: string) {
     if (!token) { router.push('/login?next=/polls'); return; }
     if (poll.isClosed || voting) return;
+    interacted.current = true;
     setVoting(optionId);
-    try { setPoll(await pollsApi.vote(poll.id, optionId)); }
+    try {
+      const res = await pollsApi.vote(poll.id, optionId);
+      setPoll(res);
+      // Barcha sahifa keshlarida (home, /polls) ovoz holati bir xil qolsin
+      patchEntityInQueries(qc, poll.id, res as unknown as Record<string, unknown>);
+    }
     catch (err) { toast.error(getErrorMessage(err)); }
     finally { setVoting(null); }
   }

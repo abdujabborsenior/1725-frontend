@@ -1,9 +1,11 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useRouter } from 'next/navigation';
+import { useQueryClient } from '@tanstack/react-query';
 import { Heart, Bookmark } from 'lucide-react';
 import { startupsApi, getErrorMessage } from '@/lib/api';
+import { patchEntityInQueries } from '@/lib/entity-sync';
 import { useAuthStore } from '@/store/auth.store';
 import { cn } from '@/lib/utils';
 import type { Startup } from '@/types';
@@ -34,14 +36,24 @@ export function LikeButton({
   onChange?: (liked: boolean, count: number) => void;
 }) {
   const guard = useAuthGuard();
+  const qc = useQueryClient();
   const [liked, setLiked] = useState(!!startup.likedByMe);
   const [count, setCount] = useState(startup.likeCount ?? 0);
   const [busy, setBusy] = useState(false);
+  const interacted = useRef(false);
+
+  // Auth bilan refetch kelganda (SSR'da flag'lar bo'lmaydi) holatni sinxronlash
+  useEffect(() => {
+    if (interacted.current) return;
+    setLiked(!!startup.likedByMe);
+    setCount(startup.likeCount ?? 0);
+  }, [startup.likedByMe, startup.likeCount]);
 
   async function toggle(e: React.MouseEvent) {
     e.preventDefault();
     e.stopPropagation();
     if (busy || !guard()) return;
+    interacted.current = true;
 
     // optimistik
     const next = !liked;
@@ -52,6 +64,11 @@ export function LikeButton({
       const res = await startupsApi.toggleLike(startup.id);
       setLiked(res.liked);
       setCount(res.likeCount);
+      // Barcha sahifa keshlarida holat bir xil qolsin
+      patchEntityInQueries(qc, startup.id, {
+        likedByMe: res.liked,
+        likeCount: res.likeCount,
+      });
       onChange?.(res.liked, res.likeCount);
     } catch (err) {
       setLiked(!next);
@@ -107,13 +124,22 @@ export function BookmarkButton({
   onChange?: (bookmarked: boolean) => void;
 }) {
   const guard = useAuthGuard();
+  const qc = useQueryClient();
   const [saved, setSaved] = useState(!!startup.bookmarkedByMe);
   const [busy, setBusy] = useState(false);
+  const interacted = useRef(false);
+
+  // Auth bilan refetch kelganda holatni sinxronlash (refresh'dan keyin to'g'ri)
+  useEffect(() => {
+    if (interacted.current) return;
+    setSaved(!!startup.bookmarkedByMe);
+  }, [startup.bookmarkedByMe]);
 
   async function toggle(e: React.MouseEvent) {
     e.preventDefault();
     e.stopPropagation();
     if (busy || !guard()) return;
+    interacted.current = true;
 
     const next = !saved;
     setSaved(next);
@@ -121,6 +147,8 @@ export function BookmarkButton({
     try {
       const res = await startupsApi.toggleBookmark(startup.id);
       setSaved(res.bookmarked);
+      // Barcha sahifa keshlarida holat bir xil qolsin
+      patchEntityInQueries(qc, startup.id, { bookmarkedByMe: res.bookmarked });
       onChange?.(res.bookmarked);
       toast.success(res.bookmarked ? 'Saqlandi' : 'Saqlanganlardan olib tashlandi');
     } catch (err) {

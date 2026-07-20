@@ -1,9 +1,11 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { usePathname, useRouter } from 'next/navigation';
+import { useQueryClient } from '@tanstack/react-query';
 import { Lightbulb } from 'lucide-react';
 import { problemsApi, getErrorMessage } from '@/lib/api';
+import { patchEntityInQueries } from '@/lib/entity-sync';
 import { useAuthStore } from '@/store/auth.store';
 import { cn } from '@/lib/utils';
 import toast from 'react-hot-toast';
@@ -23,9 +25,19 @@ export function ProblemLikeButton({
   const { token } = useAuthStore();
   const router = useRouter();
   const pathname = usePathname();
+  const qc = useQueryClient();
   const [liked, setLiked] = useState(initialLiked);
   const [count, setCount] = useState(initialCount);
   const [loading, setLoading] = useState(false);
+  const interacted = useRef(false);
+
+  // Server'dan yangilangan holat (auth bilan refetch) — foydalanuvchi hali
+  // bosmagan bo'lsa prop'ga ergashamiz (refresh'dan keyin holat to'g'ri turadi).
+  useEffect(() => {
+    if (interacted.current) return;
+    setLiked(initialLiked);
+    setCount(initialCount);
+  }, [initialLiked, initialCount]);
 
   async function toggle(e: React.MouseEvent) {
     e.preventDefault();
@@ -35,6 +47,7 @@ export function ProblemLikeButton({
       return;
     }
     if (loading) return;
+    interacted.current = true;
     const prevLiked = liked;
     const prevCount = count;
     setLiked(!prevLiked);
@@ -44,6 +57,11 @@ export function ProblemLikeButton({
       const res = await problemsApi.toggleLike(problemId);
       setLiked(res.liked);
       setCount(res.likeCount);
+      // Barcha sahifa keshlarida holat bir xil qolsin (orqaga qaytganda ham)
+      patchEntityInQueries(qc, problemId, {
+        likedByMe: res.liked,
+        likeCount: res.likeCount,
+      });
       onChange?.(res.liked, res.likeCount);
     } catch (err) {
       setLiked(prevLiked);

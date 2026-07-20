@@ -1,9 +1,11 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useRouter } from 'next/navigation';
+import { useQueryClient } from '@tanstack/react-query';
 import { UserPlus, UserCheck, Loader2 } from 'lucide-react';
 import { usersApi, getErrorMessage } from '@/lib/api';
+import { patchEntityInQueries } from '@/lib/entity-sync';
 import { useAuthStore } from '@/store/auth.store';
 import { cn } from '@/lib/utils';
 import toast from 'react-hot-toast';
@@ -28,9 +30,17 @@ export function FollowButton({
 }: FollowButtonProps) {
   const { token } = useAuthStore();
   const router = useRouter();
+  const qc = useQueryClient();
   const [following, setFollowing] = useState(initialFollowing);
   const [hover, setHover] = useState(false);
   const [loading, setLoading] = useState(false);
+  const interacted = useRef(false);
+
+  // Auth bilan refetch kelganda holatni sinxronlash (refresh'dan keyin to'g'ri)
+  useEffect(() => {
+    if (interacted.current) return;
+    setFollowing(initialFollowing);
+  }, [initialFollowing]);
 
   if (isMe) return null;
 
@@ -42,6 +52,7 @@ export function FollowButton({
       return;
     }
     if (loading) return;
+    interacted.current = true;
     const prev = following;
     setFollowing(!prev);
     setLoading(true);
@@ -50,6 +61,11 @@ export function FollowButton({
         ? await usersApi.unfollow(userId)
         : await usersApi.follow(userId);
       setFollowing(res.following);
+      // Profil/discover/obunachilar keshlarida holat bir xil qolsin
+      patchEntityInQueries(qc, userId, {
+        isFollowing: res.following,
+        followerCount: res.followerCount,
+      });
       onChange?.(res.following, res.followerCount);
     } catch (err) {
       setFollowing(prev);
