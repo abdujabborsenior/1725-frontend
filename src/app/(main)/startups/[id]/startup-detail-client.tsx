@@ -16,7 +16,9 @@ import { StoreButton } from '@/components/startups/platform';
 import { StartupCard } from '@/components/startups/startup-card';
 import { LikeButton, BookmarkButton } from '@/components/startups/engagement';
 import { Reviews } from '@/components/startups/reviews';
-import { StarRating } from '@/components/startups/rating';
+import { RatingValue } from '@/components/startups/rating';
+import { CoverMedia, isPlayableVideo } from '@/components/startups/cover-media';
+import { cn } from '@/lib/utils';
 import { ReportDialog } from '@/components/reports/report-dialog';
 import toast from 'react-hot-toast';
 
@@ -96,6 +98,8 @@ export function StartupDetailClient({ initialStartup }: { initialStartup: Startu
     (a, b) => PLATFORM_ORDER.indexOf(a.type) - PLATFORM_ORDER.indexOf(b.type),
   );
 
+  const hasCoverVideo = isPlayableVideo(startup.videoUrl);
+
   // Egasi (yoki admin) — o'z startapini tahrirlashi mumkin
   const isOwner =
     !!user &&
@@ -114,18 +118,28 @@ export function StartupDetailClient({ initialStartup }: { initialStartup: Startu
 
       {/* Hero */}
       <div className="relative overflow-hidden rounded-2xl border border-slate-200 bg-white">
-        {/* Cover banner */}
-        <div className="relative h-44 md:h-56 bg-gradient-brand">
-          {startup.coverUrl && (
-            // eslint-disable-next-line @next/next/no-img-element
-            <img src={startup.coverUrl} alt="" fetchPriority="high" decoding="async" className="h-full w-full object-cover opacity-90" />
+        {/* Cover banner — rasm yoki video (bosilganda ijro boshlanadi) */}
+        <div className="relative h-44 md:h-56">
+          <CoverMedia
+            coverUrl={startup.coverUrl}
+            videoUrl={startup.videoUrl}
+            title={startup.title}
+            priority
+            size="lg"
+          />
+          {/* Gradient faqat rasm ustida — video boshqaruvlarini to'smasin */}
+          {!hasCoverVideo && (
+            <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/40 to-transparent" />
           )}
-          <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent" />
         </div>
 
         <div className="relative z-10 px-5 md:px-8 pb-6">
           {/* Logo — faqat shu element cover ustiga chiqadi */}
-          <div className="relative z-10 -mt-12 mb-3 inline-flex h-24 w-24 shrink-0 items-center justify-center overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-card">
+          {/* Video muqovada logo ustiga chiqmaydi — player boshqaruvlarini to'sardi */}
+          <div className={cn(
+            'relative z-10 mb-3 inline-flex h-24 w-24 shrink-0 items-center justify-center overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-card',
+            hasCoverVideo ? 'mt-4' : '-mt-12',
+          )}>
             {startup.logoUrl ? (
               // eslint-disable-next-line @next/next/no-img-element
               <img src={startup.logoUrl} alt={startup.title} className="h-full w-full object-cover" />
@@ -162,11 +176,7 @@ export function StartupDetailClient({ initialStartup }: { initialStartup: Startu
               <Eye className="h-3.5 w-3.5" /> {startup.viewCount} ko&apos;rishlar
             </span>
             {startup.ratingCount > 0 && (
-              <span className="inline-flex items-center gap-1.5">
-                <StarRating value={startup.ratingAvg} size={14} />
-                <span className="font-semibold text-brand-900">{startup.ratingAvg.toFixed(1)}</span>
-                <span className="text-slate-500">({startup.ratingCount})</span>
-              </span>
+              <RatingValue value={startup.ratingAvg} count={startup.ratingCount} size="sm" />
             )}
           </div>
 
@@ -221,19 +231,6 @@ export function StartupDetailClient({ initialStartup }: { initialStartup: Startu
           )}
         </div>
       </div>
-
-      {/* Promo video */}
-      {startup.videoUrl && (
-        <section className="space-y-3">
-          <h2 className="text-lg font-bold text-brand-900">Tanishtiruv video</h2>
-          <video
-            src={startup.videoUrl}
-            controls
-            playsInline
-            className="w-full max-h-[28rem] rounded-2xl border border-slate-200 bg-black"
-          />
-        </section>
-      )}
 
       {/* Description */}
       <section className="space-y-3">

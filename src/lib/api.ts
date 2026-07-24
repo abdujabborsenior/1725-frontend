@@ -284,7 +284,8 @@ export const solutionsApi = {
   submit: (data: {
     problemId: string;
     fullName: string;
-    content: string;
+    /** Startap biriktirilganda ixtiyoriy — aks holda majburiy (≥20 belgi) */
+    content?: string;
     presentationUrl?: string;
     videoUrl?: string;
     /** O'z startapini yechim sifatida biriktirish (ixtiyoriy) */
@@ -448,6 +449,16 @@ export const uploadsApi = {
     form.append('file', file);
     return unwrap<UploadResult>(
       api.post('/uploads/image', form, {
+        headers: { 'Content-Type': 'multipart/form-data' },
+      }),
+    );
+  },
+  /** Startap muqova videosi (mp4/webm, maks 50MB) */
+  video: (file: File) => {
+    const form = new FormData();
+    form.append('file', file);
+    return unwrap<UploadResult>(
+      api.post('/uploads/video', form, {
         headers: { 'Content-Type': 'multipart/form-data' },
       }),
     );

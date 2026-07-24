@@ -1,11 +1,12 @@
 'use client';
 
 import Link from 'next/link';
-import { Eye, Star, Rocket } from 'lucide-react';
+import { Eye, Star } from 'lucide-react';
 import { PLATFORM_ORDER } from '@/lib/constants';
 import { PlatformIcon } from './platform';
-import { LikeButton, BookmarkButton } from './engagement';
-import { StarRating } from './rating';
+import { LikeCount, BookmarkButton } from './engagement';
+import { CoverMedia } from './cover-media';
+import { RatingValue } from './rating';
 import type { Startup } from '@/types';
 
 /**
@@ -21,23 +22,14 @@ export function StartupCard({ startup, priority = false }: { startup: Startup; p
   return (
     <Link href={`/startups/${startup.slug}`} className="group block h-full">
       <article className="relative h-full flex flex-col bg-white border border-slate-200 rounded-2xl overflow-hidden hover:border-accent-300 hover:shadow-card-hover transition-all duration-200">
-        {/* Cover */}
-        <div className="relative h-28 bg-gradient-brand overflow-hidden">
-          {startup.coverUrl ? (
-            // eslint-disable-next-line @next/next/no-img-element
-            <img
-              src={startup.coverUrl}
-              alt=""
-              loading={priority ? 'eager' : 'lazy'}
-              fetchPriority={priority ? 'high' : undefined}
-              decoding="async"
-              className="h-full w-full object-cover opacity-90 group-hover:scale-105 transition-transform duration-300"
-            />
-          ) : (
-            <div className="absolute inset-0 flex items-center justify-center">
-              <Rocket className="h-8 w-8 text-white/20" />
-            </div>
-          )}
+        {/* Cover — rasm yoki video (video bosilganda ijro boshlanadi) */}
+        <div className="relative h-28 overflow-hidden">
+          <CoverMedia
+            coverUrl={startup.coverUrl}
+            videoUrl={startup.videoUrl}
+            title={startup.title}
+            priority={priority}
+          />
           {startup.isFeatured && (
             <span className="absolute top-2.5 right-2.5 inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-accent-700 text-white text-[10px] font-bold shadow-sm">
               <Star className="h-3 w-3 fill-current" /> TOP
@@ -82,10 +74,8 @@ export function StartupCard({ startup, priority = false }: { startup: Startup; p
             {startup.tagline || startup.description}
           </p>
           {startup.ratingCount > 0 && (
-            <div className="mt-2 flex items-center gap-1.5">
-              <StarRating value={startup.ratingAvg} size={12} />
-              <span className="text-[11px] font-semibold text-slate-600">{startup.ratingAvg.toFixed(1)}</span>
-              <span className="text-[11px] text-slate-500">({startup.ratingCount})</span>
+            <div className="mt-2">
+              <RatingValue value={startup.ratingAvg} count={startup.ratingCount} size="xs" />
             </div>
           )}
         </div>
@@ -107,7 +97,8 @@ export function StartupCard({ startup, priority = false }: { startup: Startup; p
             )}
           </div>
           <div className="flex items-center gap-3">
-            <LikeButton startup={startup} variant="card" />
+            {/* Ro'yxatda faqat son — yoqtirish amali detal sahifada */}
+            <LikeCount count={startup.likeCount ?? 0} />
             <span className="flex items-center gap-1 text-[11px] text-slate-500">
               <Eye className="h-3 w-3" /> {startup.viewCount}
             </span>

@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { Home, Rocket, BarChart3, MessageCircle, User } from 'lucide-react';
+import { Home, Rocket, FileQuestion, MessageCircle, User } from 'lucide-react';
 import { useQuery } from '@tanstack/react-query';
 import { useAuthStore } from '@/store/auth.store';
 import { chatApi } from '@/lib/api';
@@ -12,7 +12,7 @@ import type { LucideIcon } from 'lucide-react';
 const ITEMS: { href: string; label: string; icon: LucideIcon; match: (p: string) => boolean }[] = [
   { href: '/', label: 'Asosiy', icon: Home, match: (p) => p === '/' },
   { href: '/startups', label: 'Startaplar', icon: Rocket, match: (p) => p.startsWith('/startups') },
-  { href: '/polls', label: 'Ovoz', icon: BarChart3, match: (p) => p.startsWith('/polls') },
+  { href: '/problems', label: 'Muammolar', icon: FileQuestion, match: (p) => p.startsWith('/problems') },
   { href: '/messages', label: 'Suhbat', icon: MessageCircle, match: (p) => p.startsWith('/messages') },
   { href: '/profile', label: 'Profil', icon: User, match: (p) => p.startsWith('/profile') || p.startsWith('/u/') },
 ];

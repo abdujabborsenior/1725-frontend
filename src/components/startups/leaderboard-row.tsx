@@ -3,7 +3,7 @@
 import Link from 'next/link';
 import { Eye, Users } from 'lucide-react';
 import type { LeaderboardEntry } from '@/types';
-import { StarRating } from './rating';
+import { RatingValue } from './rating';
 import { PlatformIcon } from './platform';
 import { PLATFORM_ORDER } from '@/lib/constants';
 import { RankMovement, RankNumber, ScoreBadge } from './leaderboard-bits';
@@ -56,12 +56,13 @@ export function LeaderboardRow({ entry }: { entry: LeaderboardEntry }) {
             </span>
           )}
         </div>
-        {/* Yulduzli o'rtacha (mobilда ham) */}
-        <div className="mt-1 flex items-center gap-1.5">
-          <StarRating value={entry.leaderboardRating} size={11} />
-          <span className="text-[11px] font-semibold text-slate-500">
-            {entry.leaderboardRating.toFixed(1)}
-          </span>
+        {/* O'rtacha ovoz — IMDB naqshi (X.X/10) */}
+        <div className="mt-1">
+          <RatingValue
+            value={entry.leaderboardRating}
+            count={entry.leaderboardVotes}
+            size="xs"
+          />
         </div>
       </div>
 

@@ -17,10 +17,11 @@ import { NotificationBell } from '@/components/layout/notification-bell';
 import { SearchPalette, openSearchPalette } from '@/components/layout/search-palette';
 import toast from 'react-hot-toast';
 
+// Asosiy navigatsiya. "Ovoz berish" ATAYLAB bu yerda emas — ikkilamchi
+// funksiya sifatida footer va bosh sahifaning quyi bo'limida qoladi.
 const NAV_LINKS: { href: string; label: string; authOnly?: boolean }[] = [
   { href: '/startups',    label: 'Startaplar' },
   { href: '/leaderboard', label: 'Reyting' },
-  { href: '/polls',       label: 'Ovoz berish' },
   { href: '/problems',    label: 'Muammolar' },
   // Shaxsiy sahifa — faqat kirgan foydalanuvchiga ko'rinadi
   { href: '/solutions',   label: 'Yechimlarim', authOnly: true },

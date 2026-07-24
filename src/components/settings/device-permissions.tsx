@@ -7,6 +7,7 @@ import {
   requestMediaAccess,
   type MediaPermissionState,
 } from '@/lib/media-permissions';
+import { VOICE_ENABLED } from '@/lib/chat-features';
 import { cn } from '@/lib/utils';
 import toast from 'react-hot-toast';
 
@@ -60,7 +61,7 @@ export function DevicePermissions() {
     state: MediaPermissionState;
   }[] = [
     { key: 'camera', icon: Camera, title: 'Kamera', desc: 'Video xabar va rasm olish uchun', state: cam },
-    { key: 'microphone', icon: Mic, title: 'Mikrofon', desc: 'Ovozli xabarlar uchun', state: mic },
+    { key: 'microphone', icon: Mic, title: 'Mikrofon', desc: VOICE_ENABLED ? 'Ovozli xabarlar uchun' : 'Hozircha ishlatilmaydi (vaqtincha o‘chirilgan)', state: mic },
   ];
 
   return (

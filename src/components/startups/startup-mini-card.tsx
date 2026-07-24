@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import { ArrowUpRight, Eye, Rocket } from 'lucide-react';
-import { StarRating } from './rating';
+import { RatingValue } from './rating';
 import { cn } from '@/lib/utils';
 import type { Startup } from '@/types';
 
@@ -54,10 +54,7 @@ export function StartupMiniCard({
         )}
         <span className="mt-1 flex items-center gap-3 text-[11px] text-slate-500">
           {startup.ratingCount > 0 && (
-            <span className="flex items-center gap-1">
-              <StarRating value={startup.ratingAvg} size={11} />
-              <span className="font-semibold text-slate-600">{startup.ratingAvg.toFixed(1)}</span>
-            </span>
+            <RatingValue value={startup.ratingAvg} size="xs" />
           )}
           <span className="flex items-center gap-1">
             <Eye className="h-3 w-3" /> {startup.viewCount}

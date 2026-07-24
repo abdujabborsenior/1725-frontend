@@ -7,15 +7,20 @@ import { Modal } from '@/components/ui/modal';
 import { GroupAvatarPicker } from './group-avatar-picker';
 import { cn } from '@/lib/utils';
 import type { Conversation, MessageType } from '@/types';
+import { isChatTypeDisabled } from '@/lib/chat-features';
 import toast from 'react-hot-toast';
 
-const RESTRICTABLE: { type: MessageType; label: string; icon: typeof Type }[] = [
+// Platforma darajasida vaqtincha o'chirilgan turlar bu ro'yxatda ko'rinmaydi —
+// ularni guruh sozlamasida cheklash ma'nosiz (allaqachon hech kim yubora olmaydi).
+const ALL_RESTRICTABLE: { type: MessageType; label: string; icon: typeof Type }[] = [
   { type: 'text', label: 'Matn', icon: Type },
   { type: 'image', label: 'Rasm', icon: ImageIcon },
   { type: 'video', label: 'Video', icon: Video },
   { type: 'voice', label: 'Ovozli xabar', icon: Mic },
   { type: 'round_video', label: 'Video xabar', icon: Disc },
 ];
+
+const RESTRICTABLE = ALL_RESTRICTABLE.filter((r) => !isChatTypeDisabled(r.type));
 
 function Toggle({ on, onClick }: { on: boolean; onClick: () => void }) {
   return (

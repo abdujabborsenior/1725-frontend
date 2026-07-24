@@ -7,6 +7,10 @@ import {
 } from 'lucide-react';
 import { chatApi, getErrorMessage, type SendMessagePayload } from '@/lib/api';
 import { useMediaRecorder } from '@/lib/use-media-recorder';
+import {
+  DISABLED_CHAT_REASON, ROUND_VIDEO_ENABLED, VOICE_ENABLED, VIDEO_ENABLED,
+  fileAccept, isChatTypeDisabled,
+} from '@/lib/chat-features';
 import { cn } from '@/lib/utils';
 import type { ChatMessage, MessageType } from '@/types';
 import toast from 'react-hot-toast';
@@ -40,6 +44,12 @@ interface Props {
   blockedMessageTypes?: MessageType[];
   /** Egasi/admin/superadmin — cheklovlarni chetlab o'tadi */
   canBypassRestrictions?: boolean;
+  /**
+   * Tashqaridan matn qo'yish (bo'sh suhbatdagi tayyor jumlalar).
+   * `n` — har bosishda o'zgaradigan hisoblagich: bir xil matn qayta
+   * tanlansa ham effekt ishga tushadi.
+   */
+  presetDraft?: { text: string; n: number } | null;
 }
 
 const RESTRICTION_LABEL: Record<string, string> = {
@@ -57,6 +67,7 @@ export function Composer({
   onSend, onTyping, replyTo, onCancelReply,
   editing, onEditSave, onCancelEdit,
   blockedMessageTypes = [], canBypassRestrictions = false,
+  presetDraft = null,
 }: Props) {
   const [text, setText] = useState('');
   const [staged, setStaged] = useState<Staged[]>([]);
@@ -76,8 +87,9 @@ export function Composer({
   // Cheklovlar — faqat oddiy a'zolarga ta'sir qiladi
   const blocked = canBypassRestrictions ? new Set<MessageType>() : new Set(blockedMessageTypes);
   const textBlocked = blocked.has('text');
-  const voiceBlocked = blocked.has('voice');
-  const roundBlocked = blocked.has('round_video');
+  // Guruh cheklovi YOKI platforma darajasida vaqtincha o'chirilgan tur
+  const voiceBlocked = blocked.has('voice') || !VOICE_ENABLED;
+  const roundBlocked = blocked.has('round_video') || !ROUND_VIDEO_ENABLED;
   const restrictionList = blockedMessageTypes.filter((t) => !canBypassRestrictions);
 
   // Edit rejimiga kirganda — matnni oldindan to'ldiramiz; chiqqanda tozalaymiz
@@ -85,6 +97,12 @@ export function Composer({
     if (editing) setText(editing.content ?? '');
     else setText('');
   }, [editing]);
+
+  // Bo'sh suhbatdagi tayyor jumla tanlandi — matn maydoniga qo'yiladi
+  // (YUBORILMAYDI: foydalanuvchi tahrirlab, o'zi yuboradi).
+  useEffect(() => {
+    if (presetDraft?.text) setText(presetDraft.text);
+  }, [presetDraft]);
 
   // Round video live preview
   useEffect(() => {
@@ -133,6 +151,10 @@ export function Composer({
       if (staged.length + next.length >= 10) { toast.error('Eng ko‘pi 10 ta fayl'); break; }
       if (file.size > 50 * 1024 * 1024) { toast.error(`${file.name}: maks. 50MB`); continue; }
       const type = typeFromMime(file.type);
+      if (isChatTypeDisabled(type)) {
+        toast.error(DISABLED_CHAT_REASON[type] ?? 'Bu fayl turi vaqtincha o‘chirilgan');
+        continue;
+      }
       if (blocked.has(type)) {
         toast.error(`Bu guruhda ${RESTRICTION_LABEL[type] ?? type} taqiqlangan`);
         continue;
@@ -272,7 +294,10 @@ export function Composer({
 
   const mmss = `${Math.floor(rec.seconds / 60)}:${String(rec.seconds % 60).padStart(2, '0')}`;
   const hasStaged = staged.length > 0;
-  const showSendBtn = isEditing || hasStaged || !!text.trim();
+  // Ovoz/video xabar tugmalari mavjud bo'lmasa — o'ng tomon bo'sh qolmasin:
+  // yuborish tugmasi doimo turadi (matn yo'q bo'lsa — o'chirilgan holatda).
+  const hasQuickRecord = !voiceBlocked || !roundBlocked;
+  const showSendBtn = isEditing || hasStaged || !!text.trim() || !hasQuickRecord;
 
   return (
     <div className="border-t border-slate-200 bg-white px-3 py-2.5" style={{ paddingBottom: 'max(0.625rem, env(safe-area-inset-bottom))' }}>
@@ -413,7 +438,9 @@ export function Composer({
                     </span>
                     <span className="min-w-0">
                       <span className="block text-sm font-medium text-brand-900">Galereya</span>
-                      <span className="block text-[11px] text-slate-500">Rasm va video</span>
+                      <span className="block text-[11px] text-slate-500">
+                        {VIDEO_ENABLED ? 'Rasm va video' : 'Rasm'}
+                      </span>
                     </span>
                   </button>
                   {/* Kamera — faqat sensorli qurilmalarda (desktop'da capture ishlamaydi) */}
@@ -438,7 +465,9 @@ export function Composer({
                     </span>
                     <span className="min-w-0">
                       <span className="block text-sm font-medium text-brand-900">Fayl</span>
-                      <span className="block text-[11px] text-slate-500">Hujjat, audio, arxiv</span>
+                      <span className="block text-[11px] text-slate-500">
+                        {VOICE_ENABLED ? 'Hujjat, audio, arxiv' : 'Hujjat, arxiv'}
+                      </span>
                     </span>
                   </button>
                 </div>
@@ -466,7 +495,7 @@ export function Composer({
           {showSendBtn ? (
             <button
               onClick={primaryAction}
-              disabled={uploading || savingEdit}
+              disabled={uploading || savingEdit || (!isEditing && !hasStaged && !text.trim())}
               className={cn(
                 'btn-lift flex h-10 w-10 shrink-0 items-center justify-center rounded-full text-white shadow-glow-accent disabled:opacity-60',
                 isEditing ? 'bg-iris-600 hover:bg-iris-700' : 'bg-accent-500 hover:bg-accent-600',
@@ -505,11 +534,11 @@ export function Composer({
         </div>
       )}
 
-      <input ref={fileRef} type="file" multiple accept="image/*,video/*,audio/*,application/pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.txt,.zip,.rar" className="hidden" onChange={onPickFiles} />
-      {/* Galereya — faqat rasm/video (mobil qurilma o'z galereya ruxsatini so'raydi) */}
-      <input ref={galleryRef} type="file" multiple accept="image/*,video/*" className="hidden" onChange={onPickFiles} />
+      <input ref={fileRef} type="file" multiple accept={fileAccept('all')} className="hidden" onChange={onPickFiles} />
+      {/* Galereya — rasm (video vaqtincha o'chirilgan bo'lsa chiqmaydi) */}
+      <input ref={galleryRef} type="file" multiple accept={fileAccept('media')} className="hidden" onChange={onPickFiles} />
       {/* Kamera — capture: to'g'ridan-to'g'ri suratga olish (mobil) */}
-      <input ref={cameraRef} type="file" accept="image/*,video/*" capture="environment" className="hidden" onChange={onPickFiles} />
+      <input ref={cameraRef} type="file" accept={fileAccept('media')} capture="environment" className="hidden" onChange={onPickFiles} />
     </div>
   );
 }

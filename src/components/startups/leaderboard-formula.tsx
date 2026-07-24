@@ -35,10 +35,11 @@ export function FormulaExplainer({ formula }: { formula: LeaderboardFormula }) {
       {open && (
         <div className="space-y-3 border-t border-slate-200 px-4 py-4 text-sm text-slate-600">
           <p>
-            Oddiy o&apos;rtacha adolatsiz: bitta 5&nbsp;yulduzli startap, 1000 ta
-            sharhli 4.8&nbsp;li startapdan yuqori chiqib ketardi. Shuning uchun
-            biz IMDB Top-250 kabi <b>Bayes (vaznli) reyting</b> ishlatamiz —
-            sharhlar kam bo&apos;lsa, ball umumiy o&apos;rtachaga &laquo;tortiladi&raquo;.
+            Baholar <b>10&nbsp;ballik</b> shkalada. Oddiy o&apos;rtacha adolatsiz
+            bo&apos;lardi: bitta 10&nbsp;ball olgan startap, 1000 ta ovozli
+            9.6&nbsp;li startapdan yuqori chiqib ketardi. Shuning uchun biz IMDB
+            Top-250 kabi <b>Bayes (vaznli) reyting</b> ishlatamiz — ovozlar kam
+            bo&apos;lsa, ball umumiy o&apos;rtachaga &laquo;tortiladi&raquo;.
           </p>
           <div className="overflow-x-auto rounded-xl bg-brand-900 px-4 py-3 font-mono text-[13px] text-slate-100">
             WR = (v / (v + m)) · R + (m / (v + m)) · C
@@ -46,10 +47,10 @@ export function FormulaExplainer({ formula }: { formula: LeaderboardFormula }) {
           <ul className="grid gap-1.5 sm:grid-cols-2">
             <li>
               <b className="text-brand-900">R</b> — startapning o&apos;rtacha
-              reytingi
+              reytingi (0–10)
             </li>
             <li>
-              <b className="text-brand-900">v</b> — sharhlar (ovozlar) soni
+              <b className="text-brand-900">v</b> — ovozlar (baholar) soni
             </li>
             <li>
               <b className="text-brand-900">m</b> = {formula.m} — ishonchli

@@ -16,6 +16,7 @@ import { Input } from '@/components/ui/input';
 import { Select } from '@/components/ui/select';
 import { Textarea } from '@/components/ui/textarea';
 import { ImageUpload } from '@/components/ui/image-upload';
+import { CoverVideoInput } from './cover-video-input';
 import {
   PLATFORM_META, PLATFORM_ORDER, STARTUP_CATEGORIES, UZ_REGIONS,
 } from '@/lib/constants';
@@ -59,6 +60,7 @@ export function StartupForm({ initial }: { initial?: Startup }) {
 
   const [logoUrl, setLogoUrl] = useState<string | null>(initial?.logoUrl ?? null);
   const [coverUrl, setCoverUrl] = useState<string | null>(initial?.coverUrl ?? null);
+  const [videoUrl, setVideoUrl] = useState<string | null>(initial?.videoUrl ?? null);
   const [platforms, setPlatforms] = useState<{ type: PlatformType; url: string }[]>(
     initial?.platforms.map((p) => ({ type: p.type, url: p.url })) ?? [],
   );
@@ -100,6 +102,7 @@ export function StartupForm({ initial }: { initial?: Startup }) {
           : Number(d.foundedYear),
         logoUrl: logoUrl ?? undefined,
         coverUrl: coverUrl ?? undefined,
+        videoUrl: videoUrl ?? undefined,
         platforms,
         tags,
       } as StartupPayload;
@@ -154,7 +157,7 @@ export function StartupForm({ initial }: { initial?: Startup }) {
           {...register('tagline')}
         />
         <Textarea
-          label="Tavsif"
+          label="Tavsif (nega odamlar aynan sizning loyihangizdan foydalanishi kerak?)"
           rows={7}
           placeholder="Startapingiz haqida batafsil: qanday muammoni hal qiladi, kim uchun, nimasi bilan ajralib turadi..."
           count={{ current: descLength, max: 10000 }}
@@ -195,13 +198,15 @@ export function StartupForm({ initial }: { initial?: Startup }) {
         <div>
           <h2 className="text-base font-semibold text-brand-900">Media</h2>
           <p className="text-xs text-slate-600 mt-0.5">
-            Ixtiyoriy — lekin logo va rasm startapingizga ishonch qo&apos;shadi
+            Ixtiyoriy — logo, muqova rasmi yoki video startapingizga ishonch qo&apos;shadi
           </p>
         </div>
         <div className="grid grid-cols-1 sm:grid-cols-[140px_1fr] gap-4">
           <ImageUpload label="Logo" aspect="logo" value={logoUrl} onChange={setLogoUrl} />
           <ImageUpload label="Muqova rasmi" aspect="video" value={coverUrl} onChange={setCoverUrl} />
         </div>
+        {/* Muqova videosi — rasm o'rniga video turishi mumkin (YouTube yoki yuklangan) */}
+        <CoverVideoInput value={videoUrl} onChange={setVideoUrl} posterUrl={coverUrl} />
       </section>
 
       {/* ── 3. Havolalar (ixtiyoriy) ───────────────────────── */}

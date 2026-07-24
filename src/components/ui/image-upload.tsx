@@ -1,66 +1,10 @@
 'use client';
 
 import { useRef, useState } from 'react';
-import Image from 'next/image';
-import { Loader2, UploadCloud, X, Film } from 'lucide-react';
-import { uploadsApi, chatApi, getErrorMessage } from '@/lib/api';
+import { Loader2, UploadCloud, X } from 'lucide-react';
+import { uploadsApi, getErrorMessage } from '@/lib/api';
 import { cn } from '@/lib/utils';
 import toast from 'react-hot-toast';
-
-/** Promo video yuklash — /chat/upload video qabul qiladi (50MB). */
-export function VideoUpload({
-  value, onChange, label = 'Promo video',
-}: {
-  value?: string | null;
-  onChange: (url: string | null) => void;
-  label?: string;
-}) {
-  const ref = useRef<HTMLInputElement>(null);
-  const [loading, setLoading] = useState(false);
-
-  async function handleFile(file: File) {
-    if (file.size > 50 * 1024 * 1024) {
-      toast.error('Maks. 50MB');
-      return;
-    }
-    setLoading(true);
-    try {
-      const res = await chatApi.upload(file);
-      onChange(res.url);
-    } catch (err) {
-      toast.error(getErrorMessage(err, 'Yuklashda xatolik'));
-    } finally {
-      setLoading(false);
-    }
-  }
-
-  return (
-    <div className="flex flex-col gap-1.5">
-      <label className="text-xs font-semibold uppercase tracking-wider text-slate-700">{label}</label>
-      {value ? (
-        <div className="group relative overflow-hidden rounded-xl border border-slate-200 bg-black">
-          <video src={value} controls className="max-h-48 w-full" />
-          <button type="button" onClick={() => onChange(null)}
-            className="absolute right-2 top-2 flex h-8 w-8 items-center justify-center rounded-lg bg-white/90 text-slate-600 opacity-0 shadow-card transition-opacity hover:text-rose-600 group-hover:opacity-100">
-            <X className="h-4 w-4" />
-          </button>
-        </div>
-      ) : (
-        <button type="button" onClick={() => ref.current?.click()}
-          className="flex aspect-video w-full flex-col items-center justify-center gap-2 rounded-xl border-2 border-dashed border-slate-200 bg-surface-soft transition-all hover:border-accent-300 hover:bg-slate-50">
-          {loading ? <Loader2 className="h-6 w-6 animate-spin text-accent-500" /> : (
-            <>
-              <Film className="h-6 w-6 text-slate-400" />
-              <span className="text-xs font-medium text-slate-600">Video yuklash (max 50MB)</span>
-            </>
-          )}
-        </button>
-      )}
-      <input ref={ref} type="file" accept="video/*" className="hidden"
-        onChange={(e) => { const f = e.target.files?.[0]; if (f) void handleFile(f); e.target.value = ''; }} />
-    </div>
-  );
-}
 
 type Aspect = 'square' | 'video' | 'wide' | 'logo';
 

@@ -30,9 +30,14 @@ function SolutionCard({ solution }: { solution: Solution }) {
         )}
       </div>
 
-      <p className="text-sm text-slate-700 line-clamp-3 leading-relaxed mb-4 flex-1">
-        {solution.content}
-      </p>
+      {/* Startap yechim sifatida yuborilganda matn bo'sh bo'lishi mumkin */}
+      {solution.content?.trim() ? (
+        <p className="text-sm text-slate-700 line-clamp-3 leading-relaxed mb-4 flex-1">
+          {solution.content}
+        </p>
+      ) : (
+        <div className="flex-1" />
+      )}
 
       {/* Yechim sifatida biriktirilgan startap — card */}
       {solution.startup && (

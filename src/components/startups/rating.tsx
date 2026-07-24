@@ -4,39 +4,65 @@ import { useState } from 'react';
 import { Star } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
-/** Faqat ko'rsatish uchun — qisman to'ldirishni qo'llab-quvvatlaydi */
-export function StarRating({
+/** Reyting shkalasi — IMDB uslubi (1..10 butun ovoz, o'rtacha kasrli) */
+export const RATING_MAX = 10;
+
+/**
+ * O'rtacha bahoni ko'rsatish — IMDB naqshi: BITTA to'ldirilgan yulduz +
+ * "8.4" + xira "/10". O'nta yulduz chizish shovqinli va mobilда siqiladi;
+ * bitta yulduz + raqam esa istalgan o'lchamda aniq o'qiladi.
+ */
+export function RatingValue({
   value,
-  size = 14,
+  count,
+  size = 'md',
   className,
 }: {
   value: number;
-  size?: number;
+  /** Ovozlar soni — berilsa qavs ichida ko'rsatiladi */
+  count?: number;
+  size?: 'xs' | 'sm' | 'md' | 'lg';
   className?: string;
 }) {
+  const S = {
+    xs: { star: 'h-3 w-3', num: 'text-[11px]', sub: 'text-[10px]' },
+    sm: { star: 'h-3.5 w-3.5', num: 'text-xs', sub: 'text-[11px]' },
+    md: { star: 'h-4 w-4', num: 'text-sm', sub: 'text-xs' },
+    lg: { star: 'h-6 w-6', num: 'text-2xl', sub: 'text-sm' },
+  }[size];
+
   return (
-    // role="img" — aria-label generik span'da taqiqlangan (aria-prohibited-attr)
-    <span role="img" className={cn('inline-flex items-center gap-0.5', className)} aria-label={`${value} / 5`}>
-      {[0, 1, 2, 3, 4].map((i) => {
-        const fill = Math.max(0, Math.min(1, value - i));
-        return (
-          <span key={i} className="relative inline-block" style={{ width: size, height: size }}>
-            <Star className="absolute inset-0 text-slate-200" style={{ width: size, height: size }} fill="currentColor" />
-            <span className="absolute inset-0 overflow-hidden" style={{ width: `${fill * 100}%` }}>
-              <Star className="text-amber-400" style={{ width: size, height: size }} fill="currentColor" />
-            </span>
-          </span>
-        );
-      })}
+    <span
+      className={cn('inline-flex items-baseline gap-1', className)}
+      role="img"
+      aria-label={`Reyting ${value.toFixed(1)} / ${RATING_MAX}${
+        count != null ? ` — ${count} ta ovoz` : ''
+      }`}
+    >
+      <Star
+        className={cn(S.star, 'self-center text-amber-400 fill-amber-400')}
+        aria-hidden
+      />
+      <span className={cn(S.num, 'font-bold tabular-nums text-brand-900')}>
+        {value.toFixed(1)}
+      </span>
+      <span className={cn(S.sub, 'text-slate-500')}>/{RATING_MAX}</span>
+      {count != null && (
+        <span className={cn(S.sub, 'text-slate-500')}>({count})</span>
+      )}
     </span>
   );
 }
 
-/** Interaktiv — sharh formasi uchun */
+/**
+ * Interaktiv baholash — IMDB "Rate this" naqshi: 10 ta yulduz qatori.
+ * Ustiga olib borilganda o'sha darajagacha yonadi, tanlanganda ball ko'rinadi.
+ * Klaviatura bilan ham boshqariladi (radiogroup — ←/→ bilan).
+ */
 export function RatingInput({
   value,
   onChange,
-  size = 30,
+  size = 26,
 }: {
   value: number;
   onChange: (v: number) => void;
@@ -44,27 +70,48 @@ export function RatingInput({
 }) {
   const [hover, setHover] = useState(0);
   const active = hover || value;
+
   return (
-    <div className="inline-flex items-center gap-1" onMouseLeave={() => setHover(0)}>
-      {[1, 2, 3, 4, 5].map((n) => (
-        <button
-          key={n}
-          type="button"
-          onMouseEnter={() => setHover(n)}
-          onClick={() => onChange(n)}
-          aria-label={`${n} yulduz`}
-          className="transition-transform hover:scale-110"
-        >
-          <Star
-            style={{ width: size, height: size }}
-            className={cn(
-              'transition-colors',
-              n <= active ? 'text-amber-400' : 'text-slate-200',
-            )}
-            fill="currentColor"
-          />
-        </button>
-      ))}
+    <div className="flex flex-wrap items-center gap-3">
+      <div
+        role="radiogroup"
+        aria-label={`Baho — 1 dan ${RATING_MAX} gacha`}
+        className="inline-flex items-center gap-0.5"
+        onMouseLeave={() => setHover(0)}
+      >
+        {Array.from({ length: RATING_MAX }, (_, i) => i + 1).map((n) => (
+          <button
+            key={n}
+            type="button"
+            role="radio"
+            aria-checked={value === n}
+            aria-label={`${n} ball`}
+            onMouseEnter={() => setHover(n)}
+            onFocus={() => setHover(n)}
+            onBlur={() => setHover(0)}
+            onClick={() => onChange(n)}
+            className="rounded-md p-0.5 transition-transform hover:scale-110 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-500"
+          >
+            <Star
+              style={{ width: size, height: size }}
+              className={cn(
+                'transition-colors',
+                n <= active ? 'text-amber-400' : 'text-slate-200',
+              )}
+              fill="currentColor"
+            />
+          </button>
+        ))}
+      </div>
+      <span
+        className={cn(
+          'min-w-[3.5rem] text-sm font-bold tabular-nums',
+          active ? 'text-brand-900' : 'text-slate-400',
+        )}
+        aria-live="polite"
+      >
+        {active ? `${active} / ${RATING_MAX}` : `— / ${RATING_MAX}`}
+      </span>
     </div>
   );
 }

@@ -5,7 +5,7 @@ import type { CSSProperties } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import {
   ArrowRight, FileQuestion, ChevronRight, Rocket, Vote, Users,
-  MessageCircle, Star, UserPlus, Lightbulb, Compass, Zap, Heart, Trophy, HelpCircle, Hand,
+  MessageCircle, Star, UserPlus, Lightbulb, Compass, Zap, Trophy, HelpCircle, Hand,
 } from 'lucide-react';
 import { problemsApi, startupsApi, chatApi, usersApi, pollsApi } from '@/lib/api';
 import { useAuthStore } from '@/store/auth.store';
@@ -198,9 +198,9 @@ export default function LandingPage() {
           <h1
             className="mt-6 text-[2.6rem] font-black leading-[1.04] tracking-tight text-brand-900 md:text-7xl"
           >
-            Bugun — g‘oya.
+            G‘oyadan
             <br />
-            Ertaga — <span className="gradient-text-animated">startap.</span>
+            <span className="gradient-text-animated">biznes loyihagacha.</span>
           </h1>
 
           <p
@@ -244,21 +244,6 @@ export default function LandingPage() {
                 </a>
               </>
             )}
-          </div>
-
-          <div
-            className="hero-enter mt-5 flex flex-wrap items-center justify-center gap-x-5 gap-y-2 text-xs font-medium text-slate-500"
-            style={{ '--enter-delay': '0.32s' } as CSSProperties}
-          >
-            <span className="inline-flex items-center gap-1.5">
-              <Heart className="h-3.5 w-3.5 text-accent-500" /> Butunlay bepul
-            </span>
-            <span className="inline-flex items-center gap-1.5">
-              <Zap className="h-3.5 w-3.5 text-accent-500" /> Ro‘yxatdan o‘tish 1 daqiqa
-            </span>
-            <span className="inline-flex items-center gap-1.5">
-              <Users className="h-3.5 w-3.5 text-accent-500" /> Jonli hamjamiyat
-            </span>
           </div>
         </div>
 
@@ -326,14 +311,23 @@ export default function LandingPage() {
             <Kicker icon={Zap}>Halol gaplashamiz</Kicker>
           </div>
           <h2 className="text-3xl font-bold tracking-tight text-brand-900 md:text-4xl">
-            Sizni nima to‘xtatib turibdi?
+            Nega bugun boshlamasliging kerak?
           </h2>
           <p className="mt-3 text-slate-600">
-            Har bir boshlovchining ko‘nglidan o‘tadigan shubhalar. Ustiga bosing — birga ko‘rib chiqamiz.
+            Mana — o‘zingizga aytadigan eng keng tarqalgan to‘rtta sabab.
+            Ustiga bosing va halol javob bering: qaysi biri rostdan ham to‘xtatishga arziydi?
           </p>
         </Reveal>
         <Reveal>
           <Doubts />
+        </Reveal>
+        <Reveal className="mx-auto max-w-2xl text-center">
+          <p className="text-base font-semibold text-brand-900 md:text-lg">
+            Bittasi ham emas.
+          </p>
+          <p className="mt-1.5 text-sm text-slate-600">
+            Shuning uchun eng to‘g‘ri kun — bugun.
+          </p>
         </Reveal>
       </LazySection>
 
@@ -351,22 +345,6 @@ export default function LandingPage() {
           <RevealGroup className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
             {groups.slice(0, 3).map((g) => <RevealItem key={g.id}><GroupCard group={g} /></RevealItem>)}
           </RevealGroup>
-        </LazySection>
-      )}
-
-      {/* ── Active poll ──────────────────────────────────── */}
-      {activePoll && (
-        <LazySection className="cv-auto space-y-6" minHeight={420}>
-          <Reveal>
-            <SectionHeader
-              kicker="Hamjamiyat tanlovi" icon={Star} title="Ovoz berish"
-              subtitle="Yoqqan startapingizga ovoz bering — natijani jonli ko‘ring"
-              href="/polls" hrefLabel="Barchasi"
-            />
-          </Reveal>
-          <Reveal className="mx-auto max-w-2xl">
-            <PollCard poll={activePoll} />
-          </Reveal>
         </LazySection>
       )}
 
@@ -475,6 +453,22 @@ export default function LandingPage() {
           ))}
         </RevealGroup>
       </LazySection>
+
+      {/* ── Ovoz berish (ikkilamchi — asosiy navigatsiyada emas) ── */}
+      {activePoll && (
+        <LazySection className="cv-auto space-y-6" minHeight={420}>
+          <Reveal>
+            <SectionHeader
+              kicker="Hamjamiyat tanlovi" icon={Star} title="Ovoz berish"
+              subtitle="Yoqqan startapingizga ovoz bering — natijani jonli ko‘ring"
+              href="/polls" hrefLabel="Barcha so‘rovnomalar"
+            />
+          </Reveal>
+          <Reveal className="mx-auto max-w-2xl">
+            <PollCard poll={activePoll} />
+          </Reveal>
+        </LazySection>
+      )}
 
       {/* ── Final CTA ────────────────────────────────────── */}
       {!token && (

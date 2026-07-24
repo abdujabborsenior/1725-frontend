@@ -198,7 +198,7 @@ function SolutionForm({
       solutionsApi.submit({
         problemId,
         fullName: fullName.trim(),
-        content: content.trim(),
+        content: content.trim() || undefined,
         presentationUrl: presentationUrl.trim() || undefined,
         videoUrl: videoUrl.trim() || undefined,
         startupId: startupId || undefined,
@@ -213,9 +213,13 @@ function SolutionForm({
 
   const presentationInvalid = presentationUrl.trim().length > 0 && !isValidUrl(presentationUrl.trim());
   const videoInvalid = videoUrl.trim().length > 0 && !isValidUrl(videoUrl.trim());
+  // Startap biriktirilsa — startapning o'zi yechim: matn/video/hujjat majburiy emas.
+  // Biriktirilmasa — eski qoida: yechim matni kamida 20 belgi.
+  const hasStartup = !!startupId;
+  const contentTooShort = content.trim().length > 0 && content.trim().length < 20;
   const canSubmit =
     fullName.trim().length >= 2 &&
-    content.trim().length >= 20 &&
+    (hasStartup ? !contentTooShort : content.trim().length >= 20) &&
     !presentationInvalid &&
     !videoInvalid;
 
@@ -237,13 +241,43 @@ function SolutionForm({
         placeholder="Ism Familiya"
       />
 
+      {/* O'z startapini yechim sifatida yuborish — tanlansa qolgan maydonlar ixtiyoriy */}
+      {attachable.length > 0 && (
+        <div className="space-y-2">
+          <label className="block text-sm font-medium text-brand-900">
+            Startapingizni yechim sifatida yuborish{' '}
+            <span className="font-normal text-slate-500">(ixtiyoriy)</span>
+          </label>
+          <Select
+            aria-label="Startapni biriktirish"
+            value={startupId}
+            onChange={(e) => setStartupId(e.target.value)}
+            options={[
+              { value: '', label: 'Biriktirilmasin' },
+              ...attachable.map((s) => ({ value: s.id, label: s.title })),
+            ]}
+            className="h-10 rounded-lg px-3"
+          />
+          {selectedStartup && <StartupMiniCard startup={selectedStartup} />}
+          <p className="text-xs text-slate-500">
+            {hasStartup
+              ? 'Startapingizning o’zi yechim sifatida yetarli — matn, taqdimot va video endi ixtiyoriy.'
+              : 'Startap tanlasangiz, matn/taqdimot/video majburiy bo’lmaydi.'}
+          </p>
+        </div>
+      )}
+
       <Textarea
-        label="Yechim"
+        label={hasStartup ? 'Yechim izohi (ixtiyoriy)' : 'Yechim'}
         value={content}
         onChange={(e) => setContent(e.target.value)}
-        placeholder="Yechimingizni batafsil yozing... (kamida 20 ta belgi)"
-        rows={5}
-        hint={content.trim().length > 0 && content.trim().length < 20 ? 'Kamida 20 ta belgi' : undefined}
+        placeholder={
+          hasStartup
+            ? 'Xohlasangiz startapingiz bu muammoni qanday hal qilishini qisqacha yozing...'
+            : 'Yechimingizni batafsil yozing... (kamida 20 ta belgi)'
+        }
+        rows={hasStartup ? 3 : 5}
+        hint={contentTooShort ? 'Kamida 20 ta belgi' : undefined}
       />
 
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
@@ -264,31 +298,6 @@ function SolutionForm({
           error={videoInvalid ? "Noto'g'ri havola" : undefined}
         />
       </div>
-
-      {/* O'z startapini biriktirish (ixtiyoriy) — yechim startap card bo'lib chiqadi */}
-      {attachable.length > 0 && (
-        <div className="space-y-2">
-          <label className="block text-sm font-medium text-brand-900">
-            Startapni biriktirish <span className="font-normal text-slate-500">(ixtiyoriy)</span>
-          </label>
-          <Select
-            aria-label="Startapni biriktirish"
-            value={startupId}
-            onChange={(e) => setStartupId(e.target.value)}
-            options={[
-              { value: '', label: 'Biriktirilmasin' },
-              ...attachable.map((s) => ({ value: s.id, label: s.title })),
-            ]}
-            className="h-10 rounded-lg px-3"
-          />
-          {selectedStartup && (
-            <StartupMiniCard startup={selectedStartup} />
-          )}
-          <p className="text-xs text-slate-500">
-            Yechimingiz shu startap kartochkasi bilan birga ko&apos;rsatiladi.
-          </p>
-        </div>
-      )}
 
       <Button variant="accent" loading={isPending} disabled={!canSubmit} onClick={() => submit()}>
         <Send className="h-4 w-4" /> Yechimni yuborish
@@ -587,7 +596,10 @@ export function ProblemDetailClient({ initialProblem }: { initialProblem: Proble
                     </div>
                   </div>
                 </div>
-                <p className="text-sm text-slate-700 leading-relaxed whitespace-pre-wrap break-words">{s.content}</p>
+                {/* Startap yechim sifatida yuborilganda matn bo'sh bo'lishi mumkin */}
+                {s.content?.trim() && (
+                  <p className="text-sm text-slate-700 leading-relaxed whitespace-pre-wrap break-words">{s.content}</p>
+                )}
                 {/* Yechim sifatida biriktirilgan startap — card */}
                 {s.startup && (
                   <div className="mt-3">

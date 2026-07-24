@@ -5,35 +5,25 @@ import Link from 'next/link';
 import { useQuery } from '@tanstack/react-query';
 import { Search, Plus, FileQuestion } from 'lucide-react';
 import { problemsApi } from '@/lib/api';
-import type { PaginatedResponse, Problem, ProblemStatus } from '@/types';
+import type { PaginatedResponse, Problem } from '@/types';
 import { Button } from '@/components/ui/button';
 import { Pagination } from '@/components/ui/pagination';
 import { ProblemCard, ProblemCardSkeleton } from '@/components/problems/problem-card';
-import { cn } from '@/lib/utils';
 import { useDebounce } from '@/lib/use-debounce';
-
-const STATUS_TABS: { value: ProblemStatus | ''; label: string }[] = [
-  { value: '', label: 'Barchasi' },
-  { value: 'open', label: 'Ochiq' },
-  { value: 'under_review', label: "Ko'rib chiqilmoqda" },
-  { value: 'resolved', label: 'Hal qilindi' },
-];
 
 export function ProblemsClient({ initialList }: { initialList: PaginatedResponse<Problem> | null }) {
   const [page, setPage] = useState(1);
   const [search, setSearch] = useState('');
   const debouncedSearch = useDebounce(search, 400);
-  const [status, setStatus] = useState<ProblemStatus | ''>('');
 
-  const isDefaultView = page === 1 && !debouncedSearch && !status;
+  const isDefaultView = page === 1 && !debouncedSearch;
 
   const { data, isLoading } = useQuery({
-    queryKey: ['problems', { page, search: debouncedSearch, status }],
+    queryKey: ['problems', { page, search: debouncedSearch }],
     queryFn: () =>
       problemsApi.list({
         page,
         limit: 9,
-        status: status || undefined,
         search: debouncedSearch || undefined,
       }),
     // SSR ma'lumoti — darhol ko'rsatiladi; updatedAt=0 → stale → jimgina yangilanadi
@@ -71,7 +61,7 @@ export function ProblemsClient({ initialList }: { initialList: PaginatedResponse
         </div>
       </div>
 
-      {/* ── Controls: search + filter ────────────────────── */}
+      {/* ── Controls: qidiruv (holat filtri olib tashlandi) ── */}
       <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
         <div className="relative flex-1 sm:max-w-md">
           <Search className="pointer-events-none absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
@@ -81,22 +71,6 @@ export function ProblemsClient({ initialList }: { initialList: PaginatedResponse
             placeholder="Muammo qidirish..."
             className="input-focus h-11 w-full rounded-xl border border-slate-200 bg-white pl-11 pr-4 text-sm text-brand-900 transition-all placeholder:text-slate-400 hover:border-slate-300 focus:outline-none"
           />
-        </div>
-        <div className="flex items-center gap-1 overflow-x-auto rounded-xl border border-slate-200 bg-white p-1">
-          {STATUS_TABS.map((tab) => (
-            <button
-              key={tab.value}
-              onClick={() => { setStatus(tab.value); setPage(1); }}
-              className={cn(
-                'whitespace-nowrap rounded-lg px-3.5 py-2 text-xs font-bold transition-all duration-200',
-                status === tab.value
-                  ? 'bg-brand-900 text-white shadow-sm'
-                  : 'text-slate-500 hover:bg-slate-50 hover:text-brand-900',
-              )}
-            >
-              {tab.label}
-            </button>
-          ))}
         </div>
       </div>
 
@@ -112,7 +86,7 @@ export function ProblemsClient({ initialList }: { initialList: PaginatedResponse
                   <Search className="h-9 w-9 text-slate-300" />
                 </div>
                 <p className="text-lg font-bold text-brand-900">Muammolar topilmadi</p>
-                <p className="mt-1 text-sm text-slate-500">Boshqa kalit so&apos;z yoki filtr bilan urinib ko&apos;ring</p>
+                <p className="mt-1 text-sm text-slate-500">Boshqa kalit so&apos;z bilan urinib ko&apos;ring</p>
               </div>
             )
             : items.map((p) => <ProblemCard key={p.id} problem={p} />)}

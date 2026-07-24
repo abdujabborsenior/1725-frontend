@@ -15,6 +15,7 @@ import { Modal } from '@/components/ui/modal';
 import { MessageBubble } from './message-bubble';
 import { Composer } from './composer';
 import { ChatOpeningSkeleton, MessagesSkeleton } from './chat-skeletons';
+import { ChatEmptyState } from './chat-empty';
 import { GroupSettingsModal } from './group-settings-modal';
 import { profileHref } from '@/components/social/user-list-item';
 import { cn } from '@/lib/utils';
@@ -24,6 +25,36 @@ import type { ChatMessage, Conversation } from '@/types';
 
 let cidCounter = 0;
 const newClientId = () => `c${Date.now()}_${++cidCounter}`;
+
+/**
+ * Sarlavhadagi ism/holat bloki.
+ *  • Guruh — bosilganda guruh ma'lumoti modali ochiladi.
+ *  • Shaxsiy suhbat — bosilganda SUHBATDOSH PROFILI ochiladi (2026-07-24).
+ */
+function HeaderIdentity({
+  isGroup, href, onInfo, children,
+}: {
+  isGroup: boolean;
+  href: string | null;
+  onInfo: () => void;
+  children: React.ReactNode;
+}) {
+  const cls = 'min-w-0 flex-1 rounded-lg px-1 py-0.5 text-left transition-colors hover:bg-slate-50';
+  if (isGroup) {
+    return (
+      <button onClick={onInfo} className={cn(cls, 'cursor-pointer')} aria-label="Guruh ma'lumoti">
+        {children}
+      </button>
+    );
+  }
+  // Profil havolasi mavjud bo'lmasa — oddiy blok (bosilmaydi)
+  if (!href || href === '#') return <div className="min-w-0 flex-1 px-1 py-0.5">{children}</div>;
+  return (
+    <Link href={href} className={cls} aria-label="Profilni ochish">
+      {children}
+    </Link>
+  );
+}
 
 export function ChatWindow({ conversationId }: { conversationId: string }) {
   const me = useAuthStore((s) => s.user);
@@ -47,6 +78,9 @@ export function ChatWindow({ conversationId }: { conversationId: string }) {
   const [typingUser, setTypingUser] = useState<string | null>(null);
   const [online, setOnline] = useState(false);
   const [peerRead, setPeerRead] = useState(false);
+
+  // Bo'sh suhbatdagi tayyor jumla → composer'ga (n — takroriy bosish uchun)
+  const [presetDraft, setPresetDraft] = useState<{ text: string; n: number } | null>(null);
 
   const [menuOpen, setMenuOpen] = useState(false);
   const [infoOpen, setInfoOpen] = useState(false);
@@ -265,10 +299,8 @@ export function ChatWindow({ conversationId }: { conversationId: string }) {
         ) : (
           <Link href={headerHref}><Avatar src={conv.avatarUrl} name={conv.title} size={40} online={online} /></Link>
         )}
-        <button
-          onClick={() => isGroup && setInfoOpen(true)}
-          className={cn('min-w-0 flex-1 text-left', isGroup && 'cursor-pointer')}
-        >
+        {/* Guruhda — ma'lumot modali; shaxsiy suhbatda — suhbatdosh PROFILI */}
+        <HeaderIdentity isGroup={isGroup} href={headerHref} onInfo={() => setInfoOpen(true)}>
           <p className="truncate text-sm font-bold text-brand-900">{conv.title}</p>
           <p className="truncate text-xs text-slate-500">
             {typingUser ? <span className="text-accent-600">yozmoqda…</span>
@@ -276,7 +308,7 @@ export function ChatWindow({ conversationId }: { conversationId: string }) {
               : online ? <span className="text-accent-600">onlayn</span>
               : conv.otherUser?.lastSeenAt ? `oxirgi faollik ${formatDistanceToNow(new Date(conv.otherUser.lastSeenAt), { addSuffix: true })}` : ''}
           </p>
-        </button>
+        </HeaderIdentity>
 
         {/* Group menu */}
         {isGroup && (
@@ -325,6 +357,13 @@ export function ChatWindow({ conversationId }: { conversationId: string }) {
         onScroll={(e) => { if (e.currentTarget.scrollTop < 60) void loadMore(); }}
         className="chat-scroll flex min-h-0 flex-1 flex-col overflow-y-auto overscroll-contain bg-surface-soft px-3 py-4"
       >
+        {messages.length === 0 && (
+          <ChatEmptyState
+            isGroup={isGroup}
+            title={conv.title}
+            onPick={(text) => setPresetDraft((p) => ({ text, n: (p?.n ?? 0) + 1 }))}
+          />
+        )}
         {/* mt-auto — kam xabarda suhbat PASTDAN boshlanadi (Telegram) */}
         <div className="mt-auto space-y-1.5">
         {loadingMore && <div className="flex justify-center py-2"><Loader2 className="h-4 w-4 animate-spin text-slate-300" /></div>}
@@ -365,6 +404,7 @@ export function ChatWindow({ conversationId }: { conversationId: string }) {
         onCancelEdit={() => setEditing(null)}
         blockedMessageTypes={isGroup ? (conv.blockedMessageTypes ?? []) : []}
         canBypassRestrictions={canBypassRestrictions}
+        presetDraft={presetDraft}
       />
 
       {/* Group info */}

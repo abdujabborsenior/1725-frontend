@@ -26,13 +26,26 @@ function useAuthGuard() {
   };
 }
 
+/**
+ * Faqat SON — ro'yxat/kartochkalarda ishlatiladi.
+ * Yoqtirish amali ataylab faqat startap DETAL sahifasida mavjud: ro'yxatda
+ * tasodifiy bosish va toggle bo'roni bo'lmaydi, karta esa sof navigatsiya
+ * elementi bo'lib qoladi.
+ */
+export function LikeCount({ count }: { count: number }) {
+  return (
+    <span className="inline-flex items-center gap-1 text-[11px] text-slate-500">
+      <Heart className="h-3 w-3" aria-hidden />
+      {count}
+    </span>
+  );
+}
+
 export function LikeButton({
   startup,
-  variant = 'detail',
   onChange,
 }: {
   startup: Startup;
-  variant?: Variant;
   onChange?: (liked: boolean, count: number) => void;
 }) {
   const guard = useAuthGuard();
@@ -79,28 +92,11 @@ export function LikeButton({
     }
   }
 
-  if (variant === 'card') {
-    return (
-      <button
-        onClick={toggle}
-        // ko'rinadigan matn (son) accessible name ichida bo'lishi shart
-        aria-label={`Yoqtirish — ${count}`}
-        // -m-1.5 p-1.5 — vizual o'lcham o'zgarmagan holda tap-maydon ≥24px
-        className={cn(
-          'inline-flex min-h-6 items-center gap-1 rounded-md text-[11px] font-medium transition-colors -m-1.5 p-1.5',
-          liked ? 'text-rose-600' : 'text-slate-500 hover:text-rose-500',
-        )}
-      >
-        <Heart className={cn('h-3.5 w-3.5', liked && 'fill-rose-500 text-rose-500')} />
-        {count}
-      </button>
-    );
-  }
-
   return (
     <button
       onClick={toggle}
       disabled={busy}
+      aria-label={`Yoqtirish — ${count}`}
       className={cn(
         'inline-flex items-center gap-2 h-11 px-4 rounded-xl border font-semibold transition-all btn-lift',
         liked

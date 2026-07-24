@@ -8,7 +8,7 @@ import { startupsApi, getErrorMessage } from '@/lib/api';
 import { useAuthStore } from '@/store/auth.store';
 import { ROLE_LABEL } from '@/lib/constants';
 import { cn } from '@/lib/utils';
-import { StarRating, RatingInput } from './rating';
+import { RatingValue, RatingInput, RATING_MAX } from './rating';
 import { Button } from '@/components/ui/button';
 import { Pagination } from '@/components/ui/pagination';
 import { AuthorLink } from '@/components/social/author-link';
@@ -80,20 +80,28 @@ export function Reviews({ startup }: { startup: Startup }) {
         </h2>
       </div>
 
-      {/* Rating summary */}
-      <div className="flex items-center gap-6 bg-white border border-slate-200 rounded-2xl p-5">
-        <div className="text-center">
-          <p className="text-4xl font-black text-brand-900">
-            {startup.ratingCount > 0 ? startup.ratingAvg.toFixed(1) : '—'}
+      {/* Rating summary — IMDB naqshi: yulduz + X.X/10 + ovozlar soni */}
+      <div className="flex items-center gap-5 bg-white border border-slate-200 rounded-2xl p-5 sm:gap-6">
+        <div className="shrink-0 text-center">
+          <div className="flex items-baseline justify-center gap-1">
+            <Star className="h-6 w-6 self-center text-amber-400 fill-amber-400" aria-hidden />
+            <span className="text-4xl font-black tabular-nums text-brand-900">
+              {startup.ratingCount > 0 ? startup.ratingAvg.toFixed(1) : '—'}
+            </span>
+            <span className="text-lg font-semibold text-slate-400">/{RATING_MAX}</span>
+          </div>
+          <p className="mt-1 text-xs text-slate-500">
+            {startup.ratingCount.toLocaleString('uz')} ta ovoz
           </p>
-          <StarRating value={startup.ratingAvg} size={16} className="mt-1 justify-center" />
-          <p className="text-xs text-slate-500 mt-1">{startup.ratingCount} ta baho</p>
         </div>
-        <div className="flex-1 border-l border-slate-100 pl-6">
+        <div className="flex-1 border-l border-slate-100 pl-5 sm:pl-6">
           <p className="text-sm text-slate-600">
             {startup.ratingCount > 0
-              ? 'Foydalanuvchilar bu startapni shunday baholashgan.'
+              ? `Foydalanuvchilar bu startapni ${RATING_MAX} ballik shkalada shunday baholashgan.`
               : 'Hali baho berilmagan. Birinchi bo\'lib baholang!'}
+          </p>
+          <p className="mt-1.5 text-xs text-slate-500">
+            Reyting o&apos;rinlari IMDB kabi vaznli (Bayes) formula bilan hisoblanadi.
           </p>
         </div>
       </div>
@@ -170,7 +178,7 @@ export function Reviews({ startup }: { startup: Startup }) {
                   size={36}
                   subtitle={`${r.user ? ROLE_LABEL[r.user.role] : ''} · ${formatDistanceToNow(new Date(r.createdAt), { addSuffix: true })}`}
                 />
-                <StarRating value={r.rating} size={14} />
+                <RatingValue value={r.rating} size="sm" />
               </div>
               {r.comment && (
                 <p className={cn('text-sm text-slate-700 leading-relaxed mt-3')}>{r.comment}</p>

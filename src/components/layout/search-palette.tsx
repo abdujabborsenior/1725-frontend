@@ -105,12 +105,13 @@ export function SearchPalette() {
                 className="flex-1 h-14 bg-transparent text-sm text-brand-900 placeholder:text-slate-400 focus:outline-none"
               />
               {fetching && <Loader2 className="h-4 w-4 text-slate-300 animate-spin" />}
-              {/* ESC — faqat desktop (klaviatura bor); mobilda yopish tugmasi */}
-              <kbd className="hidden md:inline-block text-[10px] font-semibold bg-slate-100 text-slate-500 rounded px-1.5 py-0.5 border border-slate-200">ESC</kbd>
+              {/* Yopish — barcha ekranlarda X tugmasi (ESC ko'rsatkichi olib tashlandi;
+                  klaviatura yorlig'i ishlashda davom etadi) */}
               <button
                 onClick={() => setOpen(false)}
                 aria-label="Yopish"
-                className="md:hidden flex h-8 w-8 items-center justify-center rounded-lg text-slate-400 hover:bg-slate-100 hover:text-brand-900"
+                title="Yopish"
+                className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg text-slate-400 transition-colors hover:bg-slate-100 hover:text-brand-900"
               >
                 <X className="h-4 w-4" />
               </button>

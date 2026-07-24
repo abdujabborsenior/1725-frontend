@@ -6,6 +6,7 @@ import {
   queryMediaPermission,
   requestMediaAccess,
 } from '@/lib/media-permissions';
+import { VOICE_ENABLED } from '@/lib/chat-features';
 
 /** Doimiy belgi — ruxsat allaqachon so'ralgan (qayta bezovta qilmaymiz) */
 const DONE_KEY = 'mm_media_perm_done';
@@ -28,11 +29,14 @@ export function MediaPermissionPrimer() {
     (async () => {
       try {
         if (localStorage.getItem(DONE_KEY) || sessionStorage.getItem(SNOOZE_KEY)) return;
+        // Ovozli xabarlar o'chirilgan bo'lsa — mikrofon so'ralmaydi (faqat kamera)
         const [cam, mic] = await Promise.all([
           queryMediaPermission('camera'),
-          queryMediaPermission('microphone'),
+          VOICE_ENABLED
+            ? queryMediaPermission('microphone')
+            : Promise.resolve('granted' as const),
         ]);
-        // Ikkalasi hal bo'lgan (berilgan yoki qat'iy rad) — boshqa so'ramaymiz
+        // Hal bo'lgan (berilgan yoki qat'iy rad) — boshqa so'ramaymiz
         if (cam !== 'prompt' && mic !== 'prompt' && cam !== 'unsupported') {
           localStorage.setItem(DONE_KEY, '1');
           return;
@@ -46,9 +50,9 @@ export function MediaPermissionPrimer() {
 
   async function allow() {
     setBusy(true);
-    const ok = await requestMediaAccess(true, true);
+    const ok = await requestMediaAccess(true, VOICE_ENABLED);
     // Kamerasiz qurilma (NotFound) bo'lsa — hech bo'lmasa mikrofonni so'raymiz
-    if (!ok) await requestMediaAccess(false, true);
+    if (!ok && VOICE_ENABLED) await requestMediaAccess(false, true);
     localStorage.setItem(DONE_KEY, '1');
     setBusy(false);
     setShow(false);
@@ -69,15 +73,21 @@ export function MediaPermissionPrimer() {
             <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-brand-900 text-accent-400 ring-2 ring-white">
               <Camera className="h-5 w-5" />
             </span>
-            <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-brand-900 text-accent-400 ring-2 ring-white">
-              <Mic className="h-5 w-5" />
-            </span>
+            {VOICE_ENABLED && (
+              <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-brand-900 text-accent-400 ring-2 ring-white">
+                <Mic className="h-5 w-5" />
+              </span>
+            )}
           </div>
           <div className="min-w-0 flex-1">
-            <h3 className="text-sm font-bold text-brand-900">Kamera va mikrofon</h3>
+            <h3 className="text-sm font-bold text-brand-900">
+              {VOICE_ENABLED ? 'Kamera va mikrofon' : 'Kameraga ruxsat'}
+            </h3>
             <p className="mt-1 text-xs leading-relaxed text-slate-600">
-              Chatdagi ovozli va video xabarlar uchun kerak bo&apos;ladi. Bir marta
-              ruxsat bersangiz — keyin qayta so&apos;ralmaydi.
+              {VOICE_ENABLED
+                ? 'Chatdagi ovozli va video xabarlar uchun kerak bo‘ladi.'
+                : 'Suhbatda to‘g‘ridan-to‘g‘ri surat olib yuborish uchun kerak bo‘ladi.'}{' '}
+              Bir marta ruxsat bersangiz — keyin qayta so&apos;ralmaydi.
             </p>
           </div>
           <button

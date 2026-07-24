@@ -49,11 +49,11 @@ export function RankMovement({
   );
 }
 
-/** Reyting baliga qarab vazmin rang darajasi */
+/** Reyting baliga qarab vazmin rang darajasi (10 ballik shkala) */
 function scoreTone(score: number): string {
-  if (score >= 4.5) return 'bg-amber-50 text-amber-700 ring-amber-200';
-  if (score >= 4) return 'bg-accent-50 text-accent-700 ring-accent-200';
-  if (score >= 3) return 'bg-sky-50 text-sky-700 ring-sky-200';
+  if (score >= 9) return 'bg-amber-50 text-amber-700 ring-amber-200';
+  if (score >= 8) return 'bg-accent-50 text-accent-700 ring-accent-200';
+  if (score >= 6) return 'bg-sky-50 text-sky-700 ring-sky-200';
   return 'bg-slate-100 text-slate-600 ring-slate-200';
 }
 
@@ -84,7 +84,7 @@ export function ScoreBadge({
       )}
     >
       <Star className={cn(star, 'fill-current')} />
-      {score.toFixed(2)}
+      {score.toFixed(1)}
     </span>
   );
 }
