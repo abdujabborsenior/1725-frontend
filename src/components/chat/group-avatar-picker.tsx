@@ -1,7 +1,7 @@
 'use client';
 
 import { useRef, useState } from 'react';
-import { Camera, Loader2, X, Hash } from 'lucide-react';
+import { Camera, Spinner, X, Hash } from '@/components/icons';
 import { chatApi, getErrorMessage } from '@/lib/api';
 import { cn } from '@/lib/utils';
 import toast from 'react-hot-toast';
@@ -47,14 +47,14 @@ export function GroupAvatarPicker({
           onClick={() => inputRef.current?.click()}
           className={cn(
             'group relative flex h-full w-full items-center justify-center overflow-hidden rounded-full ring-2 ring-white transition-shadow',
-            value ? 'shadow-card' : 'bg-gradient-iris',
+            value ? 'shadow-card' : 'bg-iris-500',
           )}
         >
           {value ? (
             // eslint-disable-next-line @next/next/no-img-element
             <img src={value} alt={name ?? 'Guruh'} className="h-full w-full object-cover" />
           ) : letter ? (
-            <span className="text-3xl font-black text-white">{letter}</span>
+            <span className="text-3xl font-semibold text-white">{letter}</span>
           ) : (
             <Hash className="h-7 w-7 text-white" />
           )}
@@ -62,7 +62,7 @@ export function GroupAvatarPicker({
           {/* hover overlay */}
           <span className="absolute inset-0 flex items-center justify-center bg-brand-900/0 transition-colors group-hover:bg-brand-900/40">
             {loading ? (
-              <Loader2 className="h-6 w-6 animate-spin text-white" />
+              <Spinner className="h-6 w-6 animate-spin text-white" />
             ) : (
               <Camera className="h-6 w-6 text-white opacity-0 transition-opacity group-hover:opacity-100" />
             )}
@@ -84,7 +84,7 @@ export function GroupAvatarPicker({
       <button
         type="button"
         onClick={() => inputRef.current?.click()}
-        className="text-xs font-semibold text-accent-700 transition-colors hover:text-accent-800"
+        className="text-footnote font-semibold text-accent-700 transition-colors hover:text-accent-800"
       >
         {value ? 'Rasmni almashtirish' : 'Avatar yuklash'}
       </button>

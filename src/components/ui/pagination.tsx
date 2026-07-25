@@ -1,6 +1,6 @@
 'use client';
 
-import { ChevronLeft, ChevronRight } from 'lucide-react';
+import { ChevronLeft, ChevronRight } from '@/components/icons';
 import { cn } from '@/lib/utils';
 
 interface PaginationProps {
@@ -9,47 +9,52 @@ interface PaginationProps {
   onChange: (page: number) => void;
 }
 
+/** iOS uslubidagi sahifalash — segment tanovi kabi yumshoq fill ustida. */
 export function Pagination({ page, totalPages, onChange }: PaginationProps) {
   if (totalPages <= 1) return null;
 
   const windowSize = Math.min(totalPages, 5);
-  const start =
-    totalPages <= 5 ? 1 : Math.min(Math.max(1, page - 2), totalPages - 4);
+  const start = totalPages <= 5 ? 1 : Math.min(Math.max(1, page - 2), totalPages - 4);
   const pages = Array.from({ length: windowSize }, (_, i) => start + i);
 
+  const arrow =
+    'flex h-9 w-9 items-center justify-center rounded-ios text-slate-600 transition-colors duration-150 ease-ios active:bg-fill disabled:opacity-30';
+
   return (
-    <div className="flex items-center justify-center gap-2 pt-2">
-      <button
-        onClick={() => onChange(Math.max(1, page - 1))}
-        disabled={page === 1}
-        aria-label="Oldingi sahifa"
-        className="h-10 w-10 flex items-center justify-center rounded-xl bg-white border border-slate-200 text-slate-500 hover:text-brand-900 hover:border-slate-300 disabled:opacity-40 disabled:cursor-not-allowed transition-all"
-      >
-        <ChevronLeft className="h-4 w-4" />
-      </button>
-      {pages.map((p) => (
+    <div className="flex justify-center pt-2">
+      <div className="inline-flex items-center gap-1 rounded-ios-md bg-fill-tertiary p-1">
         <button
-          key={p}
-          onClick={() => onChange(p)}
-          aria-current={p === page ? 'page' : undefined}
-          className={cn(
-            'h-10 w-10 flex items-center justify-center rounded-xl text-sm font-semibold transition-all',
-            p === page
-              ? 'bg-brand-900 text-white shadow-glow-brand'
-              : 'bg-white border border-slate-200 text-slate-600 hover:text-brand-900 hover:border-slate-300',
-          )}
+          onClick={() => onChange(Math.max(1, page - 1))}
+          disabled={page === 1}
+          aria-label="Oldingi sahifa"
+          className={arrow}
         >
-          {p}
+          <ChevronLeft className="h-4 w-4" />
         </button>
-      ))}
-      <button
-        onClick={() => onChange(Math.min(totalPages, page + 1))}
-        disabled={page === totalPages}
-        aria-label="Keyingi sahifa"
-        className="h-10 w-10 flex items-center justify-center rounded-xl bg-white border border-slate-200 text-slate-500 hover:text-brand-900 hover:border-slate-300 disabled:opacity-40 disabled:cursor-not-allowed transition-all"
-      >
-        <ChevronRight className="h-4 w-4" />
-      </button>
+        {pages.map((p) => (
+          <button
+            key={p}
+            onClick={() => onChange(p)}
+            aria-current={p === page ? 'page' : undefined}
+            className={cn(
+              'flex h-9 min-w-9 items-center justify-center rounded-ios px-2.5 text-subhead tabular-nums transition-all duration-150 ease-ios active:scale-95',
+              p === page
+                ? 'bg-white font-semibold text-brand-900 shadow-segment'
+                : 'font-medium text-slate-600',
+            )}
+          >
+            {p}
+          </button>
+        ))}
+        <button
+          onClick={() => onChange(Math.min(totalPages, page + 1))}
+          disabled={page === totalPages}
+          aria-label="Keyingi sahifa"
+          className={arrow}
+        >
+          <ChevronRight className="h-4 w-4" />
+        </button>
+      </div>
     </div>
   );
 }

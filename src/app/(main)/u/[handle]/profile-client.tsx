@@ -6,7 +6,7 @@ import type { PublicProfile } from '@/types';
 import { useQuery } from '@tanstack/react-query';
 import {
   MapPin, CalendarDays, LinkIcon, MessageCircle, Settings, UserX, Rocket,
-} from 'lucide-react';
+} from '@/components/icons';
 import { usersApi, startupsApi, chatApi, getErrorMessage } from '@/lib/api';
 import { useAuthStore } from '@/store/auth.store';
 import { Avatar } from '@/components/ui/avatar';
@@ -106,7 +106,7 @@ export function ProfileClient({ initialProfile }: { initialProfile: PublicProfil
       <BackButton label="Ortga" className="mb-4" fallbackHref="/discover" />
       {/* Cover + header */}
       <div className="overflow-hidden rounded-[2rem] border border-slate-200 bg-white shadow-soft">
-        <div className="relative h-40 bg-gradient-brand md:h-52">
+        <div className="relative h-40 bg-brand-900 md:h-52">
           {profile.coverUrl && (
             // eslint-disable-next-line @next/next/no-img-element
             <img src={profile.coverUrl} alt="" fetchPriority="high" decoding="async" className="h-full w-full object-cover" />
@@ -151,12 +151,12 @@ export function ProfileClient({ initialProfile }: { initialProfile: PublicProfil
           <div className="mt-4">
             <div className="flex flex-wrap items-center gap-2">
               <h1 className="text-2xl font-bold tracking-tight text-brand-900">{profile.fullName}</h1>
-              <span className={cn('rounded-md border px-2 py-0.5 text-[11px] font-semibold', ROLE_BADGE[profile.role])}>
+              <span className={cn('rounded-md border px-2 py-0.5 text-caption-1 font-semibold', ROLE_BADGE[profile.role])}>
                 {ROLE_LABEL[profile.role]}
               </span>
               {profile.isFounder && <FounderBadge />}
               {profile.isFollowedBy && !profile.isMe && (
-                <span className="rounded-md bg-slate-100 px-2 py-0.5 text-[11px] font-medium text-slate-500">
+                <span className="rounded-md bg-slate-100 px-2 py-0.5 text-caption-1 font-medium text-slate-500">
                   Sizni kuzatadi
                 </span>
               )}
@@ -190,11 +190,11 @@ export function ProfileClient({ initialProfile }: { initialProfile: PublicProfil
             {/* Counts */}
             <div className="mt-4 flex flex-wrap items-center gap-x-6 gap-y-3">
               <button onClick={() => setListMode('followers')} className="group text-left">
-                <span className="text-lg font-black text-brand-900">{followers.toLocaleString('uz')}</span>
+                <span className="text-lg font-semibold text-brand-900">{followers.toLocaleString('uz')}</span>
                 <span className="ml-1 text-sm text-slate-500 group-hover:text-brand-900">obunachi</span>
               </button>
               <button onClick={() => setListMode('following')} className="group text-left">
-                <span className="text-lg font-black text-brand-900">{profile.followingCount.toLocaleString('uz')}</span>
+                <span className="text-lg font-semibold text-brand-900">{profile.followingCount.toLocaleString('uz')}</span>
                 <span className="ml-1 text-sm text-slate-500 group-hover:text-brand-900">obuna</span>
               </button>
               {/* Asoschiga ovoz — toggle (o'z profilida faqat hisob) */}
@@ -221,7 +221,7 @@ export function ProfileClient({ initialProfile }: { initialProfile: PublicProfil
             {startups.data.map((s) => <StartupCard key={s.id} startup={s} />)}
           </div>
         ) : (
-          <div className="rounded-2xl border border-dashed border-slate-200 bg-surface-soft py-12 text-center text-sm text-slate-500">
+          <div className="rounded-2xl bg-white py-12 text-center text-sm text-slate-500">
             Hali startaplar yo‘q
           </div>
         )}

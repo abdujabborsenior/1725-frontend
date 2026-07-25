@@ -1,7 +1,7 @@
 'use client';
 
 import { cn } from '@/lib/utils';
-import { Check, ChevronDown } from 'lucide-react';
+import { Check, ChevronDown, ChevronUp } from '@/components/icons';
 import {
   forwardRef,
   useEffect,
@@ -148,11 +148,7 @@ export const Select = forwardRef<HTMLSelectElement, SelectProps>(
 
     return (
       <div ref={rootRef} className={cn('flex flex-col gap-1.5', containerClassName)}>
-        {label && (
-          <label className="text-xs font-semibold text-slate-700 uppercase tracking-wider">
-            {label}
-          </label>
-        )}
+        {label && <label className="text-subhead font-medium text-slate-500">{label}</label>}
         <div className="relative">
           {/* Form manbai — yashirin native select (RHF ref shu yerga ulanadi) */}
           <select
@@ -194,29 +190,27 @@ export const Select = forwardRef<HTMLSelectElement, SelectProps>(
               }
             }}
             className={cn(
-              'w-full h-12 rounded-xl bg-white text-sm text-brand-900 px-4 pr-10 text-left cursor-pointer',
-              'focus:outline-none input-focus transition-all duration-150',
-              'border border-slate-200 hover:border-slate-300',
-              'disabled:cursor-not-allowed disabled:opacity-60',
+              'h-12 w-full cursor-pointer rounded-ios-md bg-white px-4 pr-10 text-left text-body text-brand-900',
+              'border border-slate-200 transition-[border-color,box-shadow] duration-150 ease-ios',
+              'focus:outline-none input-focus',
+              'disabled:cursor-not-allowed disabled:opacity-40',
               error && 'border-rose-400',
               className,
             )}
           >
             <span className="block truncate">{selectedLabel}</span>
           </button>
-          <ChevronDown
-            className={cn(
-              'pointer-events-none absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400 transition-transform duration-150',
-              open && 'rotate-180',
-            )}
-          />
+          <span className="pointer-events-none absolute right-3 top-1/2 flex -translate-y-1/2 flex-col text-slate-400">
+            <ChevronUp className="h-[11px] w-[11px] -mb-[3px]" strokeWidth={3.5} />
+            <ChevronDown className="h-[11px] w-[11px]" strokeWidth={3.5} />
+          </span>
 
           {open && (
             <ul
               id={listboxId}
               role="listbox"
               aria-label={ariaLabel ?? label}
-              className="absolute inset-x-0 top-full z-30 mt-2 max-h-64 origin-top animate-scale-in overflow-y-auto rounded-2xl border border-slate-200 bg-white p-1.5 shadow-modal"
+              className="material-menu absolute inset-x-0 top-full z-30 mt-2 max-h-64 origin-top animate-scale-in overflow-y-auto rounded-ios-lg p-1 shadow-modal ring-1 ring-black/[0.06]"
             >
               {options.map((o, i) => {
                 const isSelected = String(o.value) === value;
@@ -231,20 +225,22 @@ export const Select = forwardRef<HTMLSelectElement, SelectProps>(
                     onMouseDown={(e) => e.preventDefault()}
                     onClick={() => choose(String(o.value))}
                     className={cn(
-                      'flex cursor-pointer items-center justify-between gap-2 rounded-xl px-3 py-2 text-sm transition-colors',
-                      i === active ? 'bg-slate-50 text-brand-900' : 'text-slate-600',
-                      isSelected && 'font-semibold text-brand-900',
+                      'flex min-h-[38px] cursor-pointer items-center justify-between gap-2 rounded-[9px] px-3 text-body transition-colors duration-150',
+                      i === active ? 'bg-fill-tertiary text-brand-900' : 'text-brand-900',
+                      isSelected && 'font-medium',
                     )}
                   >
                     <span className="truncate">{o.label}</span>
-                    {isSelected && <Check className="h-4 w-4 shrink-0 text-accent-600" />}
+                    {isSelected && (
+                      <Check className="h-4 w-4 shrink-0 text-accent-600" strokeWidth={3} />
+                    )}
                   </li>
                 );
               })}
             </ul>
           )}
         </div>
-        {error && <p className="text-xs text-rose-600">{error}</p>}
+        {error && <p className="text-footnote text-rose-600">{error}</p>}
       </div>
     );
   },

@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { Check, ExternalLink, Play, X, Lock, Trophy, BarChart3 } from 'lucide-react';
+import { Check, ExternalLink, Play, X, Lock, Trophy } from '@/components/icons';
 import { useQueryClient } from '@tanstack/react-query';
 import { pollsApi, getErrorMessage } from '@/lib/api';
 import { patchEntityInQueries } from '@/lib/entity-sync';
@@ -42,7 +42,7 @@ function VideoModal({ url, onClose }: { url: string; onClose: () => void }) {
       <div className="absolute inset-0 bg-brand-900/70 backdrop-blur-sm" />
       <div className="animate-scale-in relative w-full max-w-2xl" onClick={(e) => e.stopPropagation()}>
         <button onClick={onClose} aria-label="Yopish" className="absolute -top-10 right-0 text-white/80 hover:text-white"><X className="h-6 w-6" /></button>
-        <video src={url} controls autoPlay playsInline className="w-full rounded-2xl bg-black shadow-modal" />
+        <video src={url} controls autoPlay playsInline className="w-full rounded-ios-lg bg-black shadow-modal" />
       </div>
     </div>
   );
@@ -93,31 +93,23 @@ export function PollCard({ poll: initial }: { poll: Poll }) {
     <div
       ref={cardRef}
       className={cn(
-        'reveal overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-card hover:shadow-card-hover',
+        'reveal overflow-hidden rounded-ios-2xl bg-white shadow-card hover:shadow-card-hover',
         inView && 'reveal-in',
       )}
       style={{ '--reveal-y': '20px' } as React.CSSProperties}
     >
-      {/* refined top hairline — single restrained brand accent */}
-      <div className="h-[3px] w-full bg-accent-500" />
-
       {/* Header */}
       <div className="px-5 pb-5 pt-5 sm:px-7 sm:pt-6">
         <div className="flex items-center justify-between gap-3">
-          <span className="inline-flex items-center gap-2.5">
-            <span className="grid h-8 w-8 place-items-center rounded-lg bg-brand-900 text-white">
-              <BarChart3 className="h-[18px] w-[18px]" strokeWidth={2.2} />
-            </span>
-            <span className="text-[11px] font-bold uppercase tracking-[0.18em] text-slate-500">
-              Hamjamiyat ovozi
-            </span>
+          <span className="text-footnote font-semibold uppercase tracking-[0.06em] text-accent-700">
+            Hamjamiyat ovozi
           </span>
           {poll.isClosed ? (
-            <span className="inline-flex items-center gap-1.5 rounded-full bg-slate-100 px-2.5 py-1 text-[11px] font-semibold text-slate-500">
+            <span className="inline-flex items-center gap-1.5 rounded-full bg-slate-100 px-2.5 py-1 text-caption-1 font-semibold text-slate-500">
               <Lock className="h-3 w-3" /> Yakunlandi
             </span>
           ) : (
-            <span className="inline-flex items-center gap-1.5 rounded-full bg-accent-50 px-2.5 py-1 text-[11px] font-bold text-accent-700 ring-1 ring-inset ring-accent-500/15">
+            <span className="inline-flex items-center gap-1.5 rounded-full bg-accent-50 px-2.5 py-1 text-caption-1 font-medium text-accent-700">
               <span className="relative flex h-1.5 w-1.5">
                 <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-accent-400 opacity-60" />
                 <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-accent-500" />
@@ -130,7 +122,7 @@ export function PollCard({ poll: initial }: { poll: Poll }) {
         <h3 className="mt-4 text-xl font-bold leading-snug tracking-tight text-brand-900 sm:text-[1.4rem]">
           {poll.question}
         </h3>
-        {poll.description && <p className="mt-1.5 text-sm leading-relaxed text-slate-500">{poll.description}</p>}
+        {poll.description && <p className="mt-1.5 text-subhead leading-relaxed text-slate-500">{poll.description}</p>}
         <p className="mt-2 text-[12.5px] font-medium text-slate-500">{subtitle}</p>
       </div>
 
@@ -158,9 +150,9 @@ export function PollCard({ poll: initial }: { poll: Poll }) {
 
       {/* Footer */}
       <div className="flex items-center justify-between gap-2 border-t border-slate-100 px-5 py-3.5 sm:px-7">
-        <span className="flex items-baseline gap-1.5 text-sm">
-          <span className="font-black tabular-nums text-brand-900">{poll.totalVotes.toLocaleString('uz')}</span>
-          <span className="text-xs font-medium text-slate-500">ishtirokchi ovoz berdi</span>
+        <span className="flex items-baseline gap-1.5 text-subhead">
+          <span className="font-semibold tabular-nums text-brand-900">{poll.totalVotes.toLocaleString('uz')}</span>
+          <span className="text-footnote font-medium text-slate-500">ishtirokchi ovoz berdi</span>
         </span>
         <span className="text-[11.5px] font-medium text-slate-500">
           {voted ? 'Boshqasini tanlab fikringizni o‘zgartiring' : poll.isClosed ? 'Ovoz berish yopilgan' : 'Tanlash uchun bosing'}
@@ -193,7 +185,7 @@ function OptionRow({
       onKeyDown={(e) => { if (!closed && (e.key === 'Enter' || e.key === ' ')) { e.preventDefault(); onVote(); } }}
       aria-pressed={voted}
       className={cn(
-        'group/row relative rounded-2xl border px-3 py-3 transition-all duration-200 sm:px-3.5',
+        'group/row relative rounded-ios-lg border px-3 py-3 transition-all duration-200 sm:px-3.5',
         voted
           ? 'border-accent-500/50 bg-accent-50/40'
           : isLeader && showResults
@@ -206,7 +198,7 @@ function OptionRow({
         {/* rank (results only) */}
         {showResults && (
           <span className={cn(
-            'grid h-6 w-6 shrink-0 place-items-center rounded-lg text-[11px] font-black tabular-nums',
+            'grid h-6 w-6 shrink-0 place-items-center rounded-ios text-caption-1 font-semibold tabular-nums',
             winner ? 'bg-accent-700 text-white' : accent ? 'bg-accent-100 text-accent-700' : 'bg-slate-100 text-slate-500',
           )}>
             {winner ? <Trophy className="h-3 w-3" /> : rank}
@@ -215,13 +207,13 @@ function OptionRow({
 
         {/* logo */}
         <div className={cn(
-          'h-11 w-11 shrink-0 overflow-hidden rounded-xl border bg-white',
+          'h-11 w-11 shrink-0 overflow-hidden rounded-ios-md border bg-white',
           voted ? 'border-accent-300' : 'border-slate-200',
         )}>
           {s?.logoUrl ? (
-            <Avatar src={s.logoUrl} name={s.title} size={44} className="!rounded-xl" />
+            <Avatar src={s.logoUrl} name={s.title} size={44} className="!rounded-ios-md" />
           ) : (
-            <span className="flex h-full w-full items-center justify-center bg-slate-50 text-lg font-black text-brand-900">
+            <span className="flex h-full w-full items-center justify-center bg-slate-50 text-title-3 font-semibold text-brand-900">
               {s?.title?.[0]?.toUpperCase() ?? '?'}
             </span>
           )}
@@ -234,17 +226,17 @@ function OptionRow({
               {s?.title ?? 'Startap'}
             </p>
             {winner && (
-              <span className="shrink-0 rounded-md bg-accent-700 px-1.5 py-0.5 text-[9px] font-bold uppercase tracking-wide text-white">G‘olib</span>
+              <span className="shrink-0 rounded-full bg-accent-600 px-2 py-0.5 text-caption-2 font-semibold text-white">G‘olib</span>
             )}
             {!closed && isLeader && showResults && (
-              <span className="shrink-0 rounded-md bg-accent-100 px-1.5 py-0.5 text-[9px] font-bold uppercase tracking-wide text-accent-700">Yetakchi</span>
+              <span className="shrink-0 rounded-full bg-accent-50 px-2 py-0.5 text-caption-2 font-semibold text-accent-700">Yetakchi</span>
             )}
           </div>
           <div className="mt-0.5 flex items-center gap-2.5">
             {s?.tagline ? (
-              <span className="truncate text-xs text-slate-500">{s.tagline}</span>
+              <span className="truncate text-footnote text-slate-500">{s.tagline}</span>
             ) : s?.category ? (
-              <span className="truncate text-xs text-slate-500">{s.category}</span>
+              <span className="truncate text-footnote text-slate-500">{s.category}</span>
             ) : null}
             {s?.videoUrl && (
               <button type="button"
@@ -267,10 +259,10 @@ function OptionRow({
           {showResults ? (
             <div className="flex flex-col items-end leading-none">
               <span className={cn(
-                'text-[1.7rem] font-black tabular-nums',
+                'text-[1.7rem] font-semibold tabular-nums',
                 accent ? 'text-brand-900' : 'text-slate-400',
               )}>
-                {pct}<span className="text-sm font-bold text-slate-400">%</span>
+                {pct}<span className="text-subhead font-bold text-slate-400">%</span>
               </span>
               <span className="mt-1 flex items-center gap-1 text-[10.5px] tabular-nums text-slate-500">
                 {voted && (
@@ -310,12 +302,12 @@ function OptionRow({
 /* Tanlov kartasi skeletoni — ro'yxat yuklanayotganda (spinner o'rniga shakl) */
 export function PollCardSkeleton() {
   return (
-    <div aria-hidden className="overflow-hidden rounded-3xl border border-slate-200 bg-white p-5 shadow-card sm:p-6">
+    <div aria-hidden className="overflow-hidden rounded-ios-2xl bg-white p-5 shadow-card sm:p-6">
       <div className="skeleton h-4 w-2/3 rounded-md" />
       <div className="skeleton mt-2 h-3 w-1/3 rounded-md" />
       <div className="mt-5 space-y-2.5">
         {[0, 1, 2].map((i) => (
-          <div key={i} className="flex items-center gap-3 rounded-2xl border border-slate-200 px-3 py-3">
+          <div key={i} className="flex items-center gap-3 rounded-ios-lg border border-slate-200 px-3 py-3">
             <div className="skeleton h-9 w-9 shrink-0 rounded-full" />
             <div className="min-w-0 flex-1 space-y-2">
               <div className="skeleton h-3.5 w-1/2 rounded-md" />

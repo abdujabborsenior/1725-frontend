@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { usePathname, useRouter } from 'next/navigation';
 import { useQueryClient } from '@tanstack/react-query';
-import { ThumbsUp } from 'lucide-react';
+import { ThumbsUp } from '@/components/icons';
 import { usersApi, getErrorMessage } from '@/lib/api';
 import { patchEntityInQueries } from '@/lib/entity-sync';
 import { useAuthStore } from '@/store/auth.store';
@@ -84,7 +84,7 @@ export function FounderVoteButton({
       <span
         className={cn(
           'inline-flex items-center gap-1.5 rounded-full border border-slate-200 bg-surface-soft font-semibold text-slate-600',
-          size === 'sm' ? 'h-8 px-3 text-xs' : 'h-10 px-4 text-sm',
+          size === 'sm' ? 'h-8 px-3 text-footnote' : 'h-10 px-4 text-subhead',
         )}
       >
         <ThumbsUp className={size === 'sm' ? 'h-3.5 w-3.5' : 'h-4 w-4'} />
@@ -100,10 +100,10 @@ export function FounderVoteButton({
       aria-pressed={voted}
       className={cn(
         'btn-lift inline-flex items-center gap-1.5 rounded-full border font-semibold transition-all',
-        size === 'sm' ? 'h-8 px-3 text-xs' : 'h-10 px-4 text-sm',
+        size === 'sm' ? 'h-8 px-3 text-footnote' : 'h-10 px-4 text-subhead',
         voted
           ? 'border-accent-700 bg-accent-700 text-white hover:bg-accent-800'
-          : 'border-slate-200 bg-white text-slate-600 hover:border-accent-300 hover:text-accent-700',
+          : 'border-slate-200 bg-white text-slate-600 hover:text-accent-700',
       )}
     >
       <ThumbsUp

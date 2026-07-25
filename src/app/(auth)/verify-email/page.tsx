@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { Mail, RefreshCw, CheckCircle2 } from 'lucide-react';
+import { Mail, RefreshCw, CheckCircle2 } from '@/components/icons';
 import { authApi } from '@/lib/api';
 import { useAuthStore } from '@/store/auth.store';
 import { Button } from '@/components/ui/button';
@@ -82,7 +82,7 @@ export default function VerifyEmailPage() {
         <div className="h-24 w-24 rounded-full bg-accent-50 border border-accent-200 flex items-center justify-center mx-auto mb-6">
           <CheckCircle2 className="h-12 w-12 text-accent-600" />
         </div>
-        <h1 className="text-2xl font-bold text-brand-900 mb-2">Tasdiqlandi!</h1>
+        <h1 className="mb-2 text-title-1 font-bold tracking-tight text-brand-900">Tasdiqlandi!</h1>
         <p className="text-slate-500">Yo&apos;naltirilmoqda...</p>
       </div>
     );
@@ -96,7 +96,7 @@ export default function VerifyEmailPage() {
             <Mail className="h-10 w-10 text-accent-600" />
           </div>
 
-          <h1 className="text-2xl font-bold text-brand-900 mb-2">Emailni tasdiqlang</h1>
+          <h1 className="mb-2 text-title-1 font-bold tracking-tight text-brand-900">Emailni tasdiqlang</h1>
           <p className="text-slate-500 text-sm mb-1">
             6 xonali kod quyidagi emailga yuborildi:
           </p>

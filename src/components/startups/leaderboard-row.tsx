@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import { Eye, Users } from 'lucide-react';
+import { Eye, Users } from '@/components/icons';
 import type { LeaderboardEntry } from '@/types';
 import { RatingValue } from './rating';
 import { PlatformIcon } from './platform';
@@ -17,7 +17,7 @@ export function LeaderboardRow({ entry }: { entry: LeaderboardEntry }) {
   return (
     <Link
       href={`/startups/${entry.slug}`}
-      className="group flex items-center gap-3 rounded-2xl border border-slate-200 bg-white p-3 transition-all duration-200 hover:border-accent-300 hover:shadow-card sm:gap-4 sm:p-4"
+      className="group flex items-center gap-3 rounded-ios-2xl bg-white p-3 transition-all duration-200 hover:shadow-card sm:gap-4 sm:p-4"
     >
       {/* O'rin + harakat */}
       <div className="flex w-9 flex-col items-center gap-1 shrink-0">
@@ -35,10 +35,10 @@ export function LeaderboardRow({ entry }: { entry: LeaderboardEntry }) {
 
       {/* Nom + meta */}
       <div className="min-w-0 flex-1">
-        <h3 className="truncate text-sm font-bold text-brand-900 group-hover:text-accent-700 sm:text-base">
+        <h3 className="truncate text-subhead font-bold text-brand-900 group-hover:text-accent-700 sm:text-callout">
           {entry.title}
         </h3>
-        <div className="mt-0.5 flex flex-wrap items-center gap-x-2 gap-y-0.5 text-[11px] text-slate-500">
+        <div className="mt-0.5 flex flex-wrap items-center gap-x-2 gap-y-0.5 text-caption-1 text-slate-500">
           {entry.category && (
             <span className="font-medium text-slate-500">{entry.category}</span>
           )}
@@ -76,14 +76,14 @@ export function LeaderboardRow({ entry }: { entry: LeaderboardEntry }) {
 
 export function LeaderboardRowSkeleton() {
   return (
-    <div className="flex animate-pulse items-center gap-4 rounded-2xl border border-slate-200 bg-white p-4">
-      <div className="h-9 w-9 rounded-xl bg-slate-100" />
-      <div className="h-14 w-14 rounded-xl bg-slate-100" />
+    <div className="flex animate-pulse items-center gap-4 rounded-ios-2xl bg-white p-4">
+      <div className="h-9 w-9 rounded-ios-md bg-slate-100" />
+      <div className="h-14 w-14 rounded-ios-md bg-slate-100" />
       <div className="flex-1 space-y-2">
         <div className="h-4 w-1/3 rounded bg-slate-100" />
         <div className="h-3 w-1/2 rounded bg-slate-100" />
       </div>
-      <div className="h-8 w-16 rounded-lg bg-slate-100" />
+      <div className="h-8 w-16 rounded-ios bg-slate-100" />
     </div>
   );
 }

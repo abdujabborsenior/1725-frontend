@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { Type, Image as ImageIcon, Video, Mic, Disc, ShieldAlert } from 'lucide-react';
+import { Type, Image as ImageIcon, Video, Mic, Disc, ShieldAlert } from '@/components/icons';
 import { chatApi, getErrorMessage } from '@/lib/api';
 import { Modal } from '@/components/ui/modal';
 import { GroupAvatarPicker } from './group-avatar-picker';
@@ -96,9 +96,9 @@ export function GroupSettingsModal({
           <GroupAvatarPicker value={avatarUrl} name={conversation.title} onChange={setAvatarUrl} />
         </div>
 
-        <div className="flex items-start gap-3 rounded-2xl bg-amber-50 p-3 text-amber-800">
+        <div className="flex items-start gap-3 rounded-ios-lg bg-amber-50 p-3 text-amber-800">
           <ShieldAlert className="mt-0.5 h-5 w-5 shrink-0" />
-          <p className="text-xs leading-relaxed">
+          <p className="text-footnote leading-relaxed">
             Yoqilgan turlar oddiy a&apos;zolar uchun <b>taqiqlanadi</b>. Egasi va adminlar har doim
             yubora oladi.
           </p>
@@ -111,16 +111,16 @@ export function GroupSettingsModal({
               <div
                 key={type}
                 className={cn(
-                  'flex items-center justify-between rounded-2xl border p-3 transition-colors',
+                  'flex items-center justify-between rounded-ios-lg border p-3 transition-colors',
                   on ? 'border-rose-200 bg-rose-50/60' : 'border-slate-200',
                 )}
               >
-                <span className="flex items-center gap-3 text-sm font-semibold text-brand-900">
-                  <span className={cn('flex h-9 w-9 items-center justify-center rounded-xl', on ? 'bg-rose-100 text-rose-600' : 'bg-surface-soft text-slate-500')}>
+                <span className="flex items-center gap-3 text-subhead font-semibold text-brand-900">
+                  <span className={cn('flex h-9 w-9 items-center justify-center rounded-ios-md', on ? 'bg-rose-100 text-rose-600' : 'bg-surface-soft text-slate-500')}>
                     <Icon className="h-[18px] w-[18px]" />
                   </span>
                   {label}
-                  {on && <span className="rounded-full bg-rose-100 px-2 py-0.5 text-[10px] font-bold text-rose-600">Taqiqlangan</span>}
+                  {on && <span className="rounded-full bg-rose-100 px-2 py-0.5 text-caption-2 font-bold text-rose-600">Taqiqlangan</span>}
                 </span>
                 <Toggle on={on} onClick={() => toggle(type)} />
               </div>
@@ -131,7 +131,7 @@ export function GroupSettingsModal({
         <button
           onClick={save}
           disabled={saving}
-          className="btn-lift flex h-11 w-full items-center justify-center gap-2 rounded-xl bg-accent-500 text-sm font-semibold text-white shadow-glow-accent transition-colors hover:bg-accent-600 disabled:opacity-60"
+          className="btn-lift flex h-11 w-full items-center justify-center gap-2 rounded-ios-md bg-accent-500 text-subhead font-semibold text-white transition-colors hover:bg-accent-600 disabled:opacity-60"
         >
           {saving ? 'Saqlanmoqda…' : 'Saqlash'}
         </button>

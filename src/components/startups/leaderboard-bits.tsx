@@ -1,6 +1,6 @@
 'use client';
 
-import { ChevronUp, ChevronDown, Minus, Star, Trophy, Medal } from 'lucide-react';
+import { ChevronUp, ChevronDown, Minus, Star, Trophy, Medal } from '@/components/icons';
 import { cn } from '@/lib/utils';
 
 /**
@@ -18,7 +18,7 @@ export function RankMovement({
     return (
       <span
         className={cn(
-          'inline-flex items-center rounded-md bg-iris-50 px-1.5 py-0.5 text-[10px] font-bold uppercase tracking-wide text-iris-600',
+          'inline-flex items-center rounded-md bg-iris-50 px-1.5 py-0.5 text-caption-2 font-bold uppercase tracking-wide text-iris-600',
           className,
         )}
       >
@@ -37,7 +37,7 @@ export function RankMovement({
   return (
     <span
       className={cn(
-        'inline-flex items-center gap-0.5 text-[11px] font-bold tabular-nums',
+        'inline-flex items-center gap-0.5 text-caption-1 font-bold tabular-nums',
         up ? 'text-emerald-600' : 'text-rose-500',
         className,
       )}
@@ -71,7 +71,7 @@ export function ScoreBadge({
     size === 'lg'
       ? 'px-3 py-1.5 text-base gap-1.5'
       : size === 'sm'
-        ? 'px-1.5 py-0.5 text-[11px] gap-0.5'
+        ? 'px-1.5 py-0.5 text-caption-1 gap-0.5'
         : 'px-2 py-1 text-sm gap-1';
   const star = size === 'lg' ? 'h-4 w-4' : size === 'sm' ? 'h-3 w-3' : 'h-3.5 w-3.5';
   return (
@@ -124,7 +124,7 @@ export function RankNumber({ rank }: { rank: number }) {
     return (
       <span
         className={cn(
-          'flex h-9 w-9 items-center justify-center rounded-xl text-sm font-black ring-1 ring-inset shadow-sm',
+          'flex h-9 w-9 items-center justify-center rounded-xl text-sm font-semibold ring-1 ring-inset shadow-sm',
           medal.bg,
           medal.ring,
           medal.text,

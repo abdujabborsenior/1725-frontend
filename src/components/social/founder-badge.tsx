@@ -1,4 +1,4 @@
-import { Rocket } from 'lucide-react';
+import { RocketFill } from '@/components/icons';
 import { cn } from '@/lib/utils';
 
 /**
@@ -17,12 +17,12 @@ export function FounderBadge({
     <span
       title="Asoschi — startap joylagan foydalanuvchi"
       className={cn(
-        'inline-flex items-center gap-1 rounded-md border border-accent-200 bg-accent-50 font-semibold text-accent-700',
-        size === 'xs' ? 'px-1.5 py-px text-[10px]' : 'px-2 py-0.5 text-[11px]',
+        'inline-flex items-center gap-1 rounded-full bg-accent-50 font-medium text-accent-700',
+        size === 'xs' ? 'px-2 py-0.5 text-caption-2' : 'px-2.5 py-0.5 text-caption-1',
         className,
       )}
     >
-      <Rocket className={size === 'xs' ? 'h-2.5 w-2.5' : 'h-3 w-3'} />
+      <RocketFill className={size === 'xs' ? 'h-2.5 w-2.5' : 'h-3 w-3'} />
       Asoschi
     </span>
   );

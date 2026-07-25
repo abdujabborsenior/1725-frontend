@@ -3,7 +3,7 @@
 import { useEffect } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import { useQueryClient } from '@tanstack/react-query';
-import { Loader2 } from 'lucide-react';
+import { Spinner } from '@/components/icons';
 import { notificationsApi } from '@/lib/api';
 import { notificationTarget } from '@/lib/notification-meta';
 
@@ -38,7 +38,7 @@ export default function NotificationByIdPage() {
 
   return (
     <div className="flex justify-center py-32">
-      <Loader2 className="h-6 w-6 animate-spin text-slate-300" />
+      <Spinner className="h-6 w-6 animate-spin text-slate-300" />
     </div>
   );
 }

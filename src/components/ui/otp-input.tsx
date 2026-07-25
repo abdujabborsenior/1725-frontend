@@ -54,11 +54,12 @@ export function OtpInput({ value, onChange, length = 6, error }: OtpInputProps) 
           onPaste={handlePaste}
           onFocus={(e) => e.target.select()}
           className={cn(
-            'w-12 h-14 text-center text-xl font-bold rounded-xl bg-white border',
-            'focus:outline-none transition-all duration-150',
+            // iOS kod maydoni — kvadratga yaqin, yumaloq, yirik raqam
+            'h-14 w-12 rounded-ios-md border bg-white text-center text-title-2 font-semibold tabular-nums',
+            'transition-[border-color,box-shadow,background-color] duration-150 ease-ios focus:outline-none',
             error
-              ? 'border-rose-400 text-rose-600 focus:border-rose-500 focus:shadow-[0_0_0_3px_rgba(244,63,94,0.15)]'
-              : 'border-slate-200 text-brand-900 focus:border-accent-500 focus:shadow-[0_0_0_3px_rgba(16,185,129,0.15)]',
+              ? 'border-rose-400 text-rose-600 focus:border-rose-500 focus:shadow-[0_0_0_4px_rgba(255,59,48,0.16)]'
+              : 'border-slate-200 text-brand-900 focus:border-accent-500 focus:shadow-[0_0_0_4px_rgba(0,122,255,0.18)]',
             d && !error && 'border-accent-500 bg-accent-50 text-accent-700',
           )}
         />

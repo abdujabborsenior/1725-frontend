@@ -62,15 +62,48 @@
   size-adjust: 107.40%;
 }
 
+/* ═══════════════════════════════════════════════════════════════════════
+   MYMarkaz — iOS Design System
+   Apple qurilmalarida HAQIQIY SF Pro ishlatiladi (-apple-system), boshqa
+   platformalarda metrik-mos Inter. Shu sababli iOS/macOS'da interfeys
+   tizim shriftining o'zi bilan chiziladi — aynan native ilovadagidek.
+   ═══════════════════════════════════════════════════════════════════════ */
+
 :root {
   color-scheme: light;
-  /* Tailwind `sans` stack'i shu o'zgaruvchiga tayanadi. Inter (self-host)
-     yuklanmaguncha metrik-mos fallback, keyin tizim shriftlari. */
-  --font-inter: 'Inter', 'Inter Fallback', 'SF Pro Text', -apple-system,
-    BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial;
+
+  --font-ios: -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'SF Pro Display',
+    'Inter', 'Inter Fallback', 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  --font-ios-rounded: ui-rounded, 'SF Pro Rounded', -apple-system,
+    BlinkMacSystemFont, 'Inter', 'Inter Fallback', sans-serif;
+  /* Eski nom — hali ishlatilayotgan joylar uchun taqsim */
+  --font-inter: var(--font-ios);
+
+  /* iOS system ranglari (CSS qatlamida kerak bo'lganda) */
+  --ios-blue: #007aff;
+  --ios-green: #34c759;
+  --ios-indigo: #5856d6;
+  --ios-orange: #ff9500;
+  --ios-red: #ff3b30;
+  --ios-gray: #8e8e93;
+  --ios-gray3: #c7c7cc;
+  --ios-gray5: #e5e5ea;
+  --ios-gray6: #f2f2f7;
+  --ios-label: #1d1d1f;
+  --ios-label-secondary: #6e6e73;
+  --ios-separator: rgba(60, 60, 67, 0.29);
+  --ios-fill-tertiary: rgba(118, 118, 128, 0.12);
+
+  /* iOS interfeys egri chizig'i va davomiyliklari */
+  --ease-ios: cubic-bezier(0.32, 0.72, 0, 1);
+  --dur-micro: 150ms;
+  --dur-base: 250ms;
+  --dur-sheet: 420ms;
 }
 
-* { box-sizing: border-box; }
+* {
+  box-sizing: border-box;
+}
 
 html {
   scroll-behavior: smooth;
@@ -79,138 +112,465 @@ html {
 
 body {
   background: #ffffff;
-  color: #334155; /* slate-700 — yumshoq matn */
+  color: var(--ios-label);
   min-height: 100vh;
+  font-family: var(--font-ios);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-rendering: optimizeLegibility;
-  /* Inter OpenType: to'g'ri tirnoqlar, bir xil raqamlar (cv), stilistik to'plam */
-  font-feature-settings: 'cv02', 'cv03', 'cv04', 'cv11', 'ss01';
-  letter-spacing: -0.006em; /* nozik premium tightlash (Inter body uchun) */
+  letter-spacing: -0.011em;
+  /* iOS: tegishda kulrang porlash yo'q — bosish javobi komponent ichida */
+  -webkit-tap-highlight-color: transparent;
 }
 
-/* ── Global tipografiya tizimi (barcha yozuvlarga izchil sayqal) ─────────
-   Sarlavhalar tekis sinadi (balance) + premium tracking; paragraflarда
-   yolg'iz so'z (orphan) qolmaydi. Inline `tracking-*`/`leading-*` utilitalari
-   kerak joyda buni bemalol bekor qiladi. */
+/* ── Tipografiya bazasi (iOS HIG shkalasi) ─────────────────────────────── */
 @layer base {
-  h1, h2, h3, h4 {
+  h1,
+  h2,
+  h3,
+  h4 {
     text-wrap: balance;
-    letter-spacing: -0.021em;
-    color: #0a192f; /* brand-900 — sarlavha default rangi */
+    letter-spacing: -0.022em;
+    color: var(--ios-label);
+    font-weight: 700;
   }
-  h5, h6 { text-wrap: balance; letter-spacing: -0.014em; }
-  p, li { text-wrap: pretty; }
+  h5,
+  h6 {
+    text-wrap: balance;
+    letter-spacing: -0.016em;
+    color: var(--ios-label);
+  }
+  p,
+  li {
+    text-wrap: pretty;
+  }
+  /* iOS'da havola = tint rang, tagchiziqsiz */
+  a {
+    -webkit-tap-highlight-color: transparent;
+  }
+  b,
+  strong {
+    font-weight: 600;
+  }
 }
 
-/* Native select option — oq fon */
 option {
   background-color: #ffffff;
-  color: #0f172a;
+  color: var(--ios-label);
 }
 
-/* Autofill — oq fonni saqlash */
 input:-webkit-autofill,
 input:-webkit-autofill:hover,
 input:-webkit-autofill:focus,
 textarea:-webkit-autofill,
 select:-webkit-autofill {
-  -webkit-text-fill-color: #0f172a;
+  -webkit-text-fill-color: var(--ios-label);
   -webkit-box-shadow: 0 0 0 1000px #ffffff inset;
-  caret-color: #0f172a;
+  caret-color: var(--ios-blue);
   transition: background-color 5000s ease-in-out 0s;
 }
 
 ::selection {
-  background: rgba(16, 185, 129, 0.25);
-  color: #0a192f;
+  background: rgba(0, 122, 255, 0.22);
+  color: var(--ios-label);
 }
 
-/* Scrollbar — och */
-::-webkit-scrollbar { width: 8px; height: 8px; }
-::-webkit-scrollbar-track { background: transparent; }
+/* iOS uslubidagi ingichka scrollbar */
+::-webkit-scrollbar {
+  width: 7px;
+  height: 7px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
 ::-webkit-scrollbar-thumb {
-  background: #cbd5e1;
-  border-radius: 4px;
+  background: rgba(60, 60, 67, 0.26);
+  border-radius: 999px;
 }
-::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(60, 60, 67, 0.42);
+}
 
-/* Solid surface card */
+/* ═══ MATERIALLAR (iOS translucency) ═══════════════════════════════════
+   Apple'ning materiallari — orqa fonni blur + saturate bilan "shishaday"
+   ko'rsatadi. Nav bar / tab bar / menyu shu bilan chiziladi. */
+.material-bar,
+.glass {
+  background: rgba(255, 255, 255, 0.72);
+  -webkit-backdrop-filter: saturate(180%) blur(20px);
+  backdrop-filter: saturate(180%) blur(20px);
+}
+.material-thick {
+  background: rgba(255, 255, 255, 0.86);
+  -webkit-backdrop-filter: saturate(180%) blur(30px);
+  backdrop-filter: saturate(180%) blur(30px);
+}
+.material-thin {
+  background: rgba(255, 255, 255, 0.55);
+  -webkit-backdrop-filter: saturate(180%) blur(14px);
+  backdrop-filter: saturate(180%) blur(14px);
+}
+/* Kontekst menyu / popover materiali */
+.material-menu {
+  background: rgba(249, 249, 249, 0.82);
+  -webkit-backdrop-filter: saturate(180%) blur(24px);
+  backdrop-filter: saturate(180%) blur(24px);
+}
+/* To'q material — chat header, media ustidagi panel */
+.material-dark {
+  background: rgba(29, 29, 31, 0.72);
+  -webkit-backdrop-filter: saturate(180%) blur(20px);
+  backdrop-filter: saturate(180%) blur(20px);
+}
+
+/* ═══ HAIRLINE (0.5px iOS ajratkichi) ══════════════════════════════════
+   Retina'da haqiqiy yarim piksel: 1px chiziq scaleY(0.5) bilan siqiladi. */
+.hairline-b,
+.hairline-t {
+  position: relative;
+}
+.hairline-b::after,
+.hairline-t::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: var(--ios-separator);
+  transform: scaleY(0.5);
+  pointer-events: none;
+}
+.hairline-b::after {
+  bottom: 0;
+  transform-origin: bottom;
+}
+.hairline-t::after {
+  top: 0;
+  transform-origin: top;
+}
+
+/* ═══ INSET GROUPED LIST (iOS Settings uslubi) ═════════════════════════ */
+.ios-list {
+  background: #ffffff;
+  border-radius: 0.875rem; /* 14px — iOS inset grouped */
+  overflow: hidden;
+}
+/* Qatorlar orasidagi ajratkich — matn boshlanadigan joydan (inset) */
+.ios-list > * + * {
+  position: relative;
+}
+.ios-list > * + *::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: var(--row-inset, 1rem);
+  right: 0;
+  height: 1px;
+  background: var(--ios-separator);
+  transform: scaleY(0.5);
+  transform-origin: top;
+  pointer-events: none;
+}
+.ios-row {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  min-height: 44px; /* iOS minimal tegish maydoni */
+  padding: 0.6875rem 1rem;
+  background: #ffffff;
+  transition: background-color var(--dur-micro) var(--ease-ios);
+}
+.ios-row:active {
+  background: var(--ios-gray6);
+}
+@media (hover: hover) {
+  .ios-row:hover {
+    background: #fafafa;
+  }
+}
+/* Bo'lim sarlavhasi — iOS'da KATTA HARF, kichik, ikkilamchi */
+.ios-section-header {
+  padding: 0 1rem 0.4375rem;
+  font-size: 0.8125rem;
+  line-height: 1.125rem;
+  font-weight: 400;
+  color: var(--ios-label-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+
+/* ═══ BOSISH JAVOBI (iOS press feedback) ═══════════════════════════════
+   iOS'da tugma "ko'tarilmaydi" — u xiralashadi/bir oz kichrayadi. */
+.tappable {
+  transition:
+    opacity var(--dur-micro) var(--ease-ios),
+    transform var(--dur-micro) var(--ease-ios),
+    background-color var(--dur-micro) var(--ease-ios);
+  -webkit-tap-highlight-color: transparent;
+}
+.tappable:active {
+  opacity: 0.55;
+}
+.tappable-scale:active {
+  transform: scale(0.96);
+}
+/* Eski nom — endi iOS bosish javobi (ko'tarilish YO'Q) */
+.btn-lift {
+  transition:
+    opacity var(--dur-micro) var(--ease-ios),
+    transform var(--dur-micro) var(--ease-ios),
+    background-color var(--dur-micro) var(--ease-ios);
+}
+.btn-lift:active {
+  transform: scale(0.97);
+  opacity: 0.9;
+}
+
+/* ═══ FOKUS (klaviatura) ═══════════════════════════════════════════════ */
+.input-focus:focus,
+.input-focus:focus-visible {
+  border-color: var(--ios-blue);
+  box-shadow: 0 0 0 4px rgba(0, 122, 255, 0.18);
+}
+:focus-visible {
+  outline: none;
+}
+
+/* ═══ SIRTLAR ══════════════════════════════════════════════════════════ */
 .card {
   background: #ffffff;
-  border: 1px solid #e2e8f0;
-  border-radius: 1rem;
+  border: 1px solid #e5e5ea;
+  border-radius: 0.875rem;
 }
-
 .card-soft {
-  background: #f8f9fa;
-  border: 1px solid #e2e8f0;
-  border-radius: 1rem;
+  background: var(--ios-gray6);
+  border: 1px solid transparent;
+  border-radius: 0.875rem;
 }
 
-/* Gradient text — brand */
-.gradient-text {
-  background: linear-gradient(135deg, #0a192f 0%, #10b981 100%);
+/* ═══ SEGMENTED CONTROL (iOS) ══════════════════════════════════════════ */
+.segmented {
+  display: inline-flex;
+  padding: 2px;
+  background: rgba(118, 118, 128, 0.12);
+  border-radius: 0.5625rem;
+}
+.segment {
+  position: relative;
+  flex: 1 1 0;
+  min-height: 32px;
+  padding: 0 0.75rem;
+  border-radius: 0.4375rem;
+  font-size: 0.8125rem;
+  font-weight: 500;
+  letter-spacing: -0.01em;
+  color: var(--ios-label);
+  white-space: nowrap;
+  transition:
+    background-color var(--dur-micro) var(--ease-ios),
+    box-shadow var(--dur-micro) var(--ease-ios),
+    transform var(--dur-micro) var(--ease-ios);
+}
+.segment:active {
+  transform: scale(0.96);
+}
+.segment-active {
+  background: #ffffff;
+  font-weight: 600;
+  box-shadow:
+    0 3px 8px rgba(0, 0, 0, 0.12),
+    0 3px 1px rgba(0, 0, 0, 0.04);
+}
+
+/* ═══ QIDIRUV MAYDONI (iOS search field) ═══════════════════════════════ */
+.ios-search {
+  background: rgba(118, 118, 128, 0.12);
+  border-radius: 0.625rem;
+  border: none;
+  transition: background-color var(--dur-micro) var(--ease-ios);
+}
+.ios-search:focus-within {
+  background: rgba(118, 118, 128, 0.08);
+  box-shadow: 0 0 0 4px rgba(0, 122, 255, 0.16);
+}
+
+/* ═══ SHEET (pastdan chiquvchi modal) ══════════════════════════════════ */
+.sheet-grabber {
+  width: 36px;
+  height: 5px;
+  border-radius: 999px;
+  background: rgba(60, 60, 67, 0.3);
+  margin: 0.4375rem auto;
+}
+
+/* ═══ SKELETON ═════════════════════════════════════════════════════════ */
+.skeleton {
+  background: linear-gradient(90deg, #ececf0 25%, #f5f5f8 37%, #ececf0 63%);
+  background-size: 200% 100%;
+  animation: shimmer 1.4s linear infinite;
+}
+@keyframes shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+/* ═══ AVATAR ONLINE NUQTASI (systemGreen) ══════════════════════════════ */
+.ring-online::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  height: 28%;
+  width: 28%;
+  min-height: 10px;
+  min-width: 10px;
+  border-radius: 9999px;
+  background: var(--ios-green);
+  box-shadow: 0 0 0 2px #fff;
+}
+
+/* ═══ CHAT — iMessage ══════════════════════════════════════════════════ */
+.chat-scroll {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(60, 60, 67, 0.26) transparent;
+  overscroll-behavior-y: contain;
+}
+/* Chiquvchi — iOS ko'k pufak */
+.bubble-out {
+  background: #007aff;
+  color: #ffffff;
+}
+/* Kiruvchi — iOS kulrang pufak */
+.bubble-in {
+  background: #e9e9eb;
+  color: var(--ios-label);
+  border: none;
+}
+/* Pufak dumchasi (iMessage) — burchakdagi kichik uchburchak */
+.bubble-tail-out::after,
+.bubble-tail-in::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  width: 12px;
+  height: 16px;
+  pointer-events: none;
+}
+.bubble-tail-out::after {
+  right: -6px;
+  background: #007aff;
+  -webkit-mask-image: radial-gradient(circle at 0 0, transparent 12px, #000 12.5px);
+  mask-image: radial-gradient(circle at 0 0, transparent 12px, #000 12.5px);
+  border-bottom-left-radius: 14px;
+}
+.bubble-tail-in::after {
+  left: -6px;
+  background: #e9e9eb;
+  -webkit-mask-image: radial-gradient(circle at 100% 0, transparent 12px, #000 12.5px);
+  mask-image: radial-gradient(circle at 100% 0, transparent 12px, #000 12.5px);
+  border-bottom-right-radius: 14px;
+}
+
+/* Yozmoqda — iOS uch nuqta */
+.typing-dot {
+  height: 8px;
+  width: 8px;
+  border-radius: 9999px;
+  background: #8e8e93;
+  display: inline-block;
+  animation: typingBounce 1.3s infinite ease-in-out;
+}
+.typing-dot:nth-child(2) {
+  animation-delay: 0.16s;
+}
+.typing-dot:nth-child(3) {
+  animation-delay: 0.32s;
+}
+@keyframes typingBounce {
+  0%,
+  60%,
+  100% {
+    transform: translateY(0) scale(0.85);
+    opacity: 0.45;
+  }
+  30% {
+    transform: translateY(-4px) scale(1);
+    opacity: 1;
+  }
+}
+
+/* Ovoz yozish pulsi (systemRed) */
+.rec-pulse {
+  position: relative;
+}
+.rec-pulse::before {
+  content: '';
+  position: absolute;
+  inset: -6px;
+  border-radius: 9999px;
+  background: rgba(255, 59, 48, 0.22);
+  animation: recPulse 1.5s ease-out infinite;
+}
+@keyframes recPulse {
+  0% {
+    transform: scale(0.85);
+    opacity: 0.8;
+  }
+  100% {
+    transform: scale(1.55);
+    opacity: 0;
+  }
+}
+
+/* ═══ MATN GRADIENTLARI (Apple — juda sokin) ═══════════════════════════ */
+.gradient-text,
+.gradient-text-brand {
+  background: linear-gradient(180deg, #3a3a3c 0%, #1d1d1f 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
 }
-
-/* Gradient text — emerald → iris (signature) */
-.gradient-text-emerald-iris {
-  background: linear-gradient(120deg, #059669 0%, #6366f1 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-}
-
-/* Hero sarlavha gradienti — STATIK (signature emerald→iris).
-   Doimiy `gradientPan` animatsiyasi katta matn maydonini uzluksiz qayta
-   chizib Speed Index'ни (va batareyani) yomonlashtirardi — olib tashlandi. */
+.gradient-text-emerald-iris,
 .gradient-text-animated {
-  background: linear-gradient(120deg, #059669 0%, #10b981 30%, #6366f1 100%);
+  background: linear-gradient(135deg, #007aff 0%, #5856d6 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
 }
 
-/* Nozik to'r naqshi — premium bloklar foni */
+/* ═══ FON NAQSHLARI ════════════════════════════════════════════════════ */
 .grid-pattern {
   background-image:
-    linear-gradient(to right, rgba(15,23,42,0.045) 1px, transparent 1px),
-    linear-gradient(to bottom, rgba(15,23,42,0.045) 1px, transparent 1px);
-  background-size: 40px 40px;
-  -webkit-mask-image: radial-gradient(ellipse 70% 60% at 50% 40%, #000 35%, transparent 100%);
-          mask-image: radial-gradient(ellipse 70% 60% at 50% 40%, #000 35%, transparent 100%);
+    linear-gradient(to right, rgba(60, 60, 67, 0.05) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(60, 60, 67, 0.05) 1px, transparent 1px);
+  background-size: 44px 44px;
+  -webkit-mask-image: radial-gradient(ellipse 70% 60% at 50% 40%, #000 30%, transparent 100%);
+  mask-image: radial-gradient(ellipse 70% 60% at 50% 40%, #000 30%, transparent 100%);
 }
-
-/* Dim to'r — to'q fonli bloklar (CTA, footer) */
 .grid-pattern-dark {
   background-image:
-    linear-gradient(to right, rgba(255,255,255,0.06) 1px, transparent 1px),
-    linear-gradient(to bottom, rgba(255,255,255,0.06) 1px, transparent 1px);
+    linear-gradient(to right, rgba(255, 255, 255, 0.06) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255, 255, 255, 0.06) 1px, transparent 1px);
   background-size: 44px 44px;
   -webkit-mask-image: radial-gradient(ellipse 80% 70% at 50% 0%, #000 30%, transparent 100%);
-          mask-image: radial-gradient(ellipse 80% 70% at 50% 0%, #000 30%, transparent 100%);
+  mask-image: radial-gradient(ellipse 80% 70% at 50% 0%, #000 30%, transparent 100%);
 }
-
-/* Marquee qatori — chetlarni yumshatish */
 .marquee-mask {
   -webkit-mask-image: linear-gradient(to right, transparent, #000 8%, #000 92%, transparent);
-          mask-image: linear-gradient(to right, transparent, #000 8%, #000 92%, transparent);
+  mask-image: linear-gradient(to right, transparent, #000 8%, #000 92%, transparent);
 }
 
-/* ── Reveal tizimi (framer-motion o'rniga — CSS + IntersectionObserver) ──
-   Skroll bilan sahnaga chiqish: JS faqat `.reveal-in` klassini qo'shadi,
-   harakat butunlay kompozitor-do'st CSS transition'da. Hydration'gacha
-   yashirin qolib LCP'ни kechiktirmasligi uchun FAQAT fold ostidagi
-   bloklarda ishlatiladi (hero — `.hero-enter`, pastda). */
+/* ═══ SAHNAGA CHIQISH (scroll reveal) ══════════════════════════════════ */
 .reveal {
   opacity: 0;
-  transform: translateY(var(--reveal-y, 24px));
+  transform: translateY(var(--reveal-y, 20px));
   transition:
-    opacity 0.55s cubic-bezier(0.22, 1, 0.36, 1),
-    transform 0.55s cubic-bezier(0.22, 1, 0.36, 1);
+    opacity 0.5s var(--ease-ios),
+    transform 0.5s var(--ease-ios);
   transition-delay: var(--reveal-delay, 0s);
 }
 .reveal-in {
@@ -218,42 +578,47 @@ select:-webkit-autofill {
   transform: none;
 }
 
-/* Hero kirish animatsiyasi — JS'siz, birinchi paint bilanoq boshlanadi
-   (framer-motion hydration'ни kutib LCP'ни 2+ s kechiktirardi). */
 .hero-enter {
-  animation: heroRise 0.6s cubic-bezier(0.22, 1, 0.36, 1) both;
+  animation: heroRise 0.55s var(--ease-ios) both;
   animation-delay: var(--enter-delay, 0s);
 }
 @keyframes heroRise {
-  from { opacity: 0; transform: translateY(16px); }
-  to   { opacity: 1; transform: none; }
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
 }
-/* LCP elementlar (hero H1/paragraf) uchun — FAQAT transform, opacity YO'Q:
-   opacity:0 dan boshlangan kompozitor animatsiyasi Chrome'da elementni LCP
-   nomzodligidan chiqarib yuboradi (LCP navbar'ga tushib 2.9s bo'lgan edi). */
+/* LCP elementlar — opacity YO'Q (faqat transform) */
 .hero-enter-x {
-  animation: heroRiseX 0.6s cubic-bezier(0.22, 1, 0.36, 1) both;
+  animation: heroRiseX 0.55s var(--ease-ios) both;
   animation-delay: var(--enter-delay, 0s);
 }
 @keyframes heroRiseX {
-  from { transform: translateY(16px); }
-  to   { transform: none; }
+  from {
+    transform: translateY(14px);
+  }
+  to {
+    transform: none;
+  }
 }
 
-/* Below-fold bo'limlar — brauzer ekrandan tashqarida layout/paint qilmaydi */
 .cv-auto {
   content-visibility: auto;
   contain-intrinsic-size: auto 560px;
 }
 
-/* Accordion (Doubts) — framer height animatsiyasi o'rniga grid-rows trick */
+/* Akkordeon — grid-rows usuli (balandlik animatsiyasi JS'siz) */
 .acc-panel {
   display: grid;
   grid-template-rows: 0fr;
   opacity: 0;
   transition:
-    grid-template-rows 0.32s cubic-bezier(0.22, 1, 0.36, 1),
-    opacity 0.32s cubic-bezier(0.22, 1, 0.36, 1);
+    grid-template-rows 0.34s var(--ease-ios),
+    opacity 0.34s var(--ease-ios);
 }
 .acc-panel-open {
   grid-template-rows: 1fr;
@@ -264,144 +629,127 @@ select:-webkit-autofill {
   min-height: 0;
 }
 
-/* Reduced motion — bezovta animatsiyalarni to'xtatish */
-@media (prefers-reduced-motion: reduce) {
-  .gradient-text-animated,
-  .animate-aurora, .animate-blob, .animate-marquee,
-  .animate-float, .animate-float-slow, .animate-spin-slow,
-  .animate-shine, .animate-gradient-pan {
-    animation: none !important;
-  }
-  .reveal, .acc-panel { transition: none !important; }
-  .reveal { opacity: 1; transform: none; }
-  .hero-enter, .hero-enter-x { animation: none !important; opacity: 1; }
+/* ═══ YORDAMCHILAR ═════════════════════════════════════════════════════ */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
 }
 
-/* Glassmorphism — navbar, floating panels */
-.glass {
-  background: rgba(255, 255, 255, 0.72);
-  backdrop-filter: saturate(180%) blur(16px);
-  -webkit-backdrop-filter: saturate(180%) blur(16px);
+.safe-bottom {
+  padding-bottom: env(safe-area-inset-bottom);
 }
-
-/* Shimmer skeleton */
-.skeleton {
-  background: linear-gradient(90deg, #eef2f7 25%, #f6f8fb 37%, #eef2f7 63%);
-  background-size: 200% 100%;
-  animation: shimmer 1.6s linear infinite;
+.safe-top {
+  padding-top: env(safe-area-inset-top);
 }
-@keyframes shimmer { 0% { background-position: -200% 0; } 100% { background-position: 200% 0; } }
-
-/* Avatar online ring */
-.ring-online::after {
-  content: '';
-  position: absolute;
-  bottom: 0; right: 0;
-  height: 28%; width: 28%;
-  min-height: 9px; min-width: 9px;
-  border-radius: 9999px;
-  background: #10b981;
-  box-shadow: 0 0 0 2px #fff;
-}
-
-/* ── Chat ──────────────────────────────────────────────────── */
-.chat-scroll {
-  scrollbar-width: thin;
-  scrollbar-color: #cbd5e1 transparent;
-}
-.bubble-out {
-  background: linear-gradient(135deg, #10b981 0%, #059669 100%);
-  color: #fff;
-}
-.bubble-in {
-  background: #ffffff;
-  color: #0f172a;
-  border: 1px solid #e8edf3;
-}
-
-/* Typing indicator dots */
-.typing-dot {
-  height: 6px; width: 6px; border-radius: 9999px;
-  background: #94a3b8; display: inline-block;
-  animation: typingBounce 1.2s infinite ease-in-out;
-}
-.typing-dot:nth-child(2) { animation-delay: 0.15s; }
-.typing-dot:nth-child(3) { animation-delay: 0.3s; }
-@keyframes typingBounce {
-  0%, 60%, 100% { transform: translateY(0); opacity: 0.5; }
-  30% { transform: translateY(-5px); opacity: 1; }
-}
-
-/* Voice recording pulse */
-.rec-pulse { position: relative; }
-.rec-pulse::before {
-  content: ''; position: absolute; inset: -6px;
-  border-radius: 9999px; background: rgba(244, 63, 94, 0.25);
-  animation: recPulse 1.4s ease-out infinite;
-}
-@keyframes recPulse {
-  0% { transform: scale(0.8); opacity: 0.8; }
-  100% { transform: scale(1.6); opacity: 0; }
-}
-
-/* Hide scrollbar but keep scroll (chips rows) */
-.no-scrollbar::-webkit-scrollbar { display: none; }
-.no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
-
-.gradient-text-brand {
-  background: linear-gradient(135deg, #0a192f 0%, #334155 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-}
-
-/* Input focus ring — accent (yashil) */
-.input-focus:focus {
-  border-color: #10b981;
-  box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.15);
-}
-
-/* Button hover lift */
-.btn-lift {
-  transition: transform 0.15s ease, box-shadow 0.15s ease, background-color 0.15s ease;
-}
-.btn-lift:hover { transform: translateY(-1px); }
-.btn-lift:active { transform: translateY(0); }
-
-/* Animations */
-.animate-fade-in { animation: fadeIn 0.4s ease-out; }
-.animate-slide-up { animation: slideUp 0.4s ease-out; }
-.animate-slide-down { animation: slideDown 0.3s ease-out; }
-
-@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-@keyframes slideUp { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: translateY(0); } }
-@keyframes slideDown { from { opacity: 0; transform: translateY(-8px); } to { opacity: 1; transform: translateY(0); } }
-
-/* ── Safe-area (mobil — iOS notch/home indicator) ───────────── */
-.safe-bottom { padding-bottom: env(safe-area-inset-bottom); }
-.safe-top { padding-top: env(safe-area-inset-top); }
 .safe-x {
   padding-left: env(safe-area-inset-left);
   padding-right: env(safe-area-inset-right);
 }
 
-/* Winner crown — tantanali mikro-animatsiya */
+.animate-fade-in {
+  animation: fadeIn 0.25s var(--ease-ios);
+}
+.animate-slide-up {
+  animation: slideUp 0.35s var(--ease-ios);
+}
+.animate-slide-down {
+  animation: slideDown 0.28s var(--ease-ios);
+}
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Liderbord tantanasi — sokin, iOS spring */
 @keyframes crownPop {
-  0% { transform: translateY(4px) scale(0.4) rotate(-12deg); opacity: 0; }
-  55% { transform: translateY(-2px) scale(1.18) rotate(6deg); opacity: 1; }
-  100% { transform: translateY(0) scale(1) rotate(0deg); opacity: 1; }
+  0% {
+    transform: translateY(3px) scale(0.6);
+    opacity: 0;
+  }
+  60% {
+    transform: translateY(-1px) scale(1.1);
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(0) scale(1);
+    opacity: 1;
+  }
 }
-.animate-crown { animation: crownPop 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) both; }
-
-/* Konfetti / uchqun nuqtalari */
+.animate-crown {
+  animation: crownPop 0.5s cubic-bezier(0.34, 1.3, 0.64, 1) both;
+}
 @keyframes sparkFloat {
-  0% { transform: translateY(0) scale(0.6); opacity: 0; }
-  30% { opacity: 1; }
-  100% { transform: translateY(-22px) scale(1); opacity: 0; }
+  0% {
+    transform: translateY(0) scale(0.6);
+    opacity: 0;
+  }
+  30% {
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(-18px) scale(1);
+    opacity: 0;
+  }
 }
-.animate-spark { animation: sparkFloat 0.9s ease-out both; }
+.animate-spark {
+  animation: sparkFloat 0.85s var(--ease-ios) both;
+}
 
-/* Pill bosish geptikasi */
-@media (hover: none) {
-  .btn-lift:hover { transform: none; }
+/* ═══ HARAKATNI KAMAYTIRISH ════════════════════════════════════════════ */
+@media (prefers-reduced-motion: reduce) {
+  .animate-aurora,
+  .animate-blob,
+  .animate-marquee,
+  .animate-float,
+  .animate-float-slow,
+  .animate-spin-slow,
+  .animate-shine,
+  .animate-pulse-dot,
+  .typing-dot,
+  .rec-pulse::before {
+    animation: none !important;
+  }
+  .reveal,
+  .acc-panel {
+    transition: none !important;
+  }
+  .reveal {
+    opacity: 1;
+    transform: none;
+  }
+  .hero-enter,
+  .hero-enter-x {
+    animation: none !important;
+    opacity: 1;
+  }
+  html {
+    scroll-behavior: auto;
+  }
 }

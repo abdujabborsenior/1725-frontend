@@ -1,168 +1,141 @@
-# CLAUDE.md — MYMarkaz Frontend · Design Charter
+# CLAUDE.md — MYMarkaz Frontend · iOS Design Charter
 
 Bu fayl `mymarkaz-frontend` (Next.js 14 app router) uchun **UI/UX & dizayn
 manbai**. Backend `../1725/CLAUDE.md` §8 dagi mandatning operatsion davomi.
-Maqsad: butun mahsulotni **Apple / Linear / Google darajasidagi premium, silliq**
-holatga keltirish — **restraint** (kamroq, lekin mukammal), izchillik va sayqal
-bilan. Har o'zgarish faqat **vizual**: funksionallik, proplar, ma'lumot oqimi buzilmaydi.
 
-> **Oltin qoida:** Premium = restraint. Har element o'z o'rnini oqlashi kerak.
-> Shubha bo'lsa — **olib tashla**, qo'shma. Signature elementlar kam, lekin maxsus.
+> **2026-07-25 — TO'LIQ iOS REDIZAYN.** Foydalanuvchi talabi bilan butun mahsulot
+> **Apple iOS dizayn tili**ga o'tkazildi (100% qamrov). Bu fayl o'sha tizimning
+> yagona haqiqat manbai. Oldingi emerald/"premium web" charter BEKOR qilingan.
 
 ---
 
 ## 1. Stack
-Next.js 14 (app router) · TypeScript · Tailwind · framer-motion · lucide-react ·
-React Query · zustand · react-hot-toast. Ranglar/token: `tailwind.config.ts`,
-global uslub: `src/app/globals.css`.
+Next.js 14 (app router) · TypeScript · Tailwind · React Query · zustand ·
+react-hot-toast. framer-motion faqat chatda (swipe-reply). Token manbai:
+`tailwind.config.ts`; global uslub: `src/app/globals.css`.
 
-## 2. Dizayn tili (qarorlar — MAJBURIY)
+## 2. iOS dizayn tili (MAJBURIY qoidalar)
 
-### 2.1 Rang intizomi
-- **Emerald (`accent`)** — YAGONA asosiy harakat/brend rangi (CTA, faol holat, live).
-- **Iris (indigo)** — KAMDAN-KAM ikkilamchi urg'u: faqat chat va bitta signature
-  gradient. Hamma joyga sepilmaydi.
-- **Neytrallar (`slate`/`brand`)** — interfeysning 90%i: fon, matn, chegara, sirt.
-- **Semantik**: amber=ogohlantirish/kutish, rose=xato/danger, sky/violet=status.
-  Bular faqat **status** uchun — dekor sifatida emas.
-- **Signature gradient** `gradient-emerald-iris` — faqat 3 joyda ruxsat: (a) logo
-  belgisi, (b) hero'dagi bitta kalit so'z, (c) asosiy CTA hover shine. Boshqa hamma
-  joyda (section underline, FAQ tugma, card glow, bottom-nav indikator) — olib
-  tashlanadi yoki solid `accent`ga almashtiriladi.
+### 2.1 Ranglar — Apple system palitrasi
+- `tailwind.config.ts` da BARCHA rang oilalari Apple system ranglariga
+  qayta yozilgan: `slate/gray/...` = Apple neytrallari (systemGray shkala,
+  matn `#1D1D1F`), `accent/blue` = **systemBlue #007AFF** (yagona tint),
+  `emerald/green` = systemGreen, `rose/red` = systemRed, `amber/orange` =
+  systemOrange, `iris/indigo` = systemIndigo, `sky/cyan` = systemCyan,
+  `violet/purple` = systemPurple. `ios.*` nomlari ham bor (`bg-ios-blue`).
+- **Tint = systemBlue.** CTA, faol tab, havola, "batafsil" — hammasi accent.
+  Semantik ranglar FAQAT ma'no uchun (xato=red, muvaffaqiyat=green,
+  ogohlantirish=orange). Dekorativ gradient TAQIQLANADI (avatar/logo
+  fallback'lari — TEKIS system rang, gradient emas).
+- Kontrast: oq matn uchun `accent-600`+ (600 = #0071E3, AA), oq fondagi
+  ikkilamchi matn `slate-500`+ (#6E6E73, AA).
 
-### 2.2 Tipografiya
-- Shrift: Inter. Tracking sarlavhalarда `tracking-tight`.
-- **`font-black` faqat**: hero H1 va yirik raqamlar (stat/CountUp). Boshqa hamma
-  sarlavhalar `font-bold`/`font-semibold`. "Shouty" black ko'plikdan qochiladi.
-- Type scale (barqaror): H1 `text-4xl→7xl`, H2 `text-2xl→3xl`, H3 `text-lg→xl`,
-  body `text-[15px]/text-base`, meta `text-xs/text-[11px]`. Matn rangi `text-slate-600`
-  (body), `text-brand-900` (sarlavha), `text-slate-500/400` (meta).
+### 2.2 Tipografiya — SF shkalasi
+- Font stack (`--font-ios`): **-apple-system / SF Pro** birinchi — Apple
+  qurilmalarida HAQIQIY system shrift; boshqalarda self-host Inter (§7.1).
+- Tailwind'da iOS HIG o'lchamlari bor va ISHLATILISHI SHART:
+  `text-large-title` (34) · `title-1` (28) · `title-2` (22) · `title-3` (20) ·
+  `headline`/`body` (17) · `callout` (16) · `subhead` (15) · `footnote` (13) ·
+  `caption-1` (12) · `caption-2` (11). `text-sm/xs/[11px]` yangi kodda YO'Q.
+- Vazn: sarlavha `font-semibold`/`bold`; `font-black` TAQIQ. Sahifa H1 =
+  `PageHeader` (large-title bold). Input/textarea matni 17px (`text-body`) —
+  iPhone Safari fokus-zoom bo'lmasligi ham shundan.
 
-### 2.3 Spacing & layout ritmi
-- Sahifa bo'limlari orasi: `space-y-16 md:space-y-24` (landing), ichki `space-y-6`.
-- Card padding: kichik `p-4`, standart `p-5`, katta `p-6/p-7`. Ixtiyoriy emas —
-  shu shkaladan tanlanadi.
-- Radius: interaktiv `rounded-xl`, card `rounded-2xl`, katta blok `rounded-3xl`,
-  hero/CTA `rounded-[2rem]`. Pill `rounded-full`.
-- Konteyner: `max-w-6xl` (asosiy), matn bloki `max-w-2xl/3xl`.
+### 2.3 Sirtlar, radius, soya
+- Fon: `surface-soft` (#F2F2F7, systemGroupedBackground); karta = **oq,
+  CHEGARASIZ** (`bg-white` + `rounded-ios-*`). `border border-slate-200`
+  kartalarda ishlatilmaydi.
+- Radius shkalasi: `rounded-ios` (10) · `-md` (12) · `-lg` (14) · `-xl` (16)
+  · `-2xl` (20) · `-3xl` (26, sheet). Ilova-ikonka kvadratlari: 29px→7px,
+  füll o'lchamda `[13px]`.
+- Soyalar minimal: rest'da deyarli yo'q, hover `shadow-card-hover`, modal
+  `shadow-modal`, segmented tugmasi `shadow-segment`. Glow YO'Q.
+- Ajratkich: `hairline-b/t` (0.5px, scaleY) yoki `.ios-list` ichki inset
+  ajratkichi — `divide-y`/`border-t` o'rniga.
 
-### 2.4 Chegara, sirt, soya
-- Chegara: `border-slate-200` (default), hover `border-slate-300` yoki `accent-300`.
-- Soya: `shadow-card` (rest) → `shadow-card-hover` (hover). Glow (`glow-accent`)
-  faqat CTA/logo. Ortiqcha soya yo'q — tekis, tinch.
-- Sirt: oq card ustunlik qiladi; `surface-soft` fon uchun.
+### 2.4 Materiallar (translucency)
+`.material-bar` (nav/tab bar) · `.material-thick` (yopishqoq panellar) ·
+`.material-menu` (popover/kontekst menyu) · `.material-dark` (media ustida).
+Barchasi blur+saturate. Faqat chrome/overlay uchun — kontent kartasiga emas.
 
-### 2.5 Motion (birlashtirilgan)
-- **Yagona easing**: `cubic-bezier(0.22, 1, 0.36, 1)` (kirish/chiqish uchun).
-- Davomiylik: micro `150ms`, kirish `200–320ms`. Undan uzun yo'q.
-- **Cheksiz fon animatsiyalari kamaytiriladi**: sahifada ko'pi bilan 1–2 nozik
-  harakat. Aurora blob soni kamaytiriladi, `animate-float` gimmick chiplar olib
-  tashlanadi. `prefers-reduced-motion` hurmat qilinadi.
-- Reveal (scroll-in) — nozik `opacity+translateY(12px)`, stagger `60ms`.
+### 2.5 Naqshlar (komponent lug'ati)
+- **PageHeader** (`ui/page-header.tsx`) — har ichki sahifa boshi (large title
+  + subtitle + o'ngda kapsula amal). `FilterChip`, `EmptyState` ham shu yerda.
+- **Inset grouped list** — `.ios-list` + `.ios-row` (yoki `ui/list.tsx`
+  `ListGroup/ListRow`): sozlamalar, havolalar, natijalar, bildirishnomalar.
+  `--row-inset` bilan ajratkich chap chekkasi belgilanadi.
+- **Segmented control** — `ui/segmented.tsx` yoki `.segmented/.segment` —
+  tab almashtirish shu bilan (pill-tab emas).
+- **Switch** — `ui/switch.tsx` (UISwitch, systemGreen).
+- **SearchField** — `ui/search-field.tsx` (kulrang fill, ichida lupa, × tozalash).
+- **Modal** — `ui/modal.tsx`: mobil = pastdan **sheet** (grabber + sudrab
+  yopish), desktop = markaziy dialog. Sahifadagi popover = `.material-menu`.
+- **Tugmalar**: `ui/button.tsx` (filled/gray/bordered/plain/destructive).
+  Inline amallar — kapsula: `bg-accent-600 text-white` yoki `bg-fill-tertiary`.
+  Orqaga = chevron + "Orqaga" tint matn (`ui/back-button.tsx`).
+- **Bosish javobi**: `.tappable` (opacity) / `.tappable-scale`. Hover-lift
+  (`hover:-translate-y`) TAQIQ — iOS'da element ko'tarilmaydi.
+- **Tab bar** (mobil): faol band TO'LDIRILGAN (`*Fill`) ikonka + tint.
 
-### 2.6 Iconografiya
-- `lucide-react` — yagona icon manbai (emoji YO'Q, allaqachon yo'q — shunday qoladi).
-- Icon o'lchami kontekstga izchil: inline meta `h-3.5`, tugma `h-4`, feature `h-5→7`.
-- Stroke izchil (lucide default). Rang: neytral yoki bitta accent — rang-barang emas.
-- Brand belgisi (logo) — Rocket hozircha; kelajakda loyihaga xos maxsus SVG mark.
+### 2.6 Ikonografiya — Ionicons (iOS to'plami)
+- Manba: **Ionicons 8** (MIT, iOS uchun chizilgan) → `npm run icons:gen`
+  (`scripts/gen-icons.js`) → `src/components/icons/*.tsx` (inline SVG,
+  tree-shaking: next.config `modularizeImports`). lucide-react O'CHIRILGAN.
+- Nomlar lucide-mos (Bell, Trash2, ...) + `*Fill` variantlar (faol holat).
+  `Spinner` = iOS activity indicator (12 tayoqcha). Yangi ikonka kerak bo'lsa —
+  generator MAP'iga qo'shib qayta generatsiya qilinadi; qo'lda SVG yozilmaydi.
+- Emoji va o'zboshimcha belgi UI'da TAQIQ.
 
-### 2.7 Taqiqlar (de-gimmick — QILMA)
-- ❌ Hero'da suzuvchi "sticker" chiplar (`FloatingChip`).
-- ❌ Har bo'limда boshqa-boshqa rangli pill kicker (candy salad).
-- ❌ 3+ aurora blob bitta ekranда; hamma joyda kamalak gradient.
-- ❌ `font-black` ni tarqatib ishlatish.
-- ❌ Maqsadsiz cheksiz animatsiya (spin/float/shine) dekor uchun.
+### 2.7 Motion
+- Easing: `ease-ios` = cubic-bezier(0.32,0.72,0,1); micro 150ms, kirish
+  250–350ms, sheet 420ms. Animatsiyalar: `animate-sheet-up/alert-in/scale-in/
+  msg-in`. Cheksiz dekor animatsiya TAQIQ; `prefers-reduced-motion` hurmatda.
 
-## 3. Komponent primitivlari (izchil bo'lishi shart)
-`src/components/ui/`: `button`, `input`, `textarea`, `select`, `badge`, `avatar`,
-`modal`, `pagination`, `otp-input`, `back-button`, `image-upload`.
-- Barcha interaktiv element bir xil focus-ring (`ring-accent-500/40`), radius,
-  disabled holati, transition (`150ms`).
-- Yangi vizual naqsh kerak bo'lsa — avval primitivдa hal qilinadi, keyin sahifada.
+### 2.8 Chat = iMessage
+Pufaklar: chiquvchi `bubble-out` (#007AFF) + `bubble-tail-out`, kiruvchi
+`bubble-in` (#E9E9EB) + `bubble-tail-in`, radius 18px. Yuborish = doira ichida
+yuqoriga strelka (`ArrowUp`, h-8 w-8). Composer kapsulasi oq, header/footer
+`.material-bar`. Kontekst menyu `.material-menu`.
 
-## 4. Ijro tartibi (bosqichlar) — har biri: build/lint toza, funksiya buzilmaydi
-1. **Foundation** — `tailwind.config.ts` + `globals.css`: motion tokenlarini
-   birlashtirish, mesh/aurona intensivligini kamaytirish, signature gradient qamrovini
-   toraytirish. Mavjud class nomlari saqlanadi (hech narsa sinmasin).
-2. **Global chrome** — `layout` (main/auth), `navbar`, `footer`, `bottom-nav`. Har
-   sahifada ko'rinadi → eng katta "feel" ta'siri.
-3. **Homepage** (`(main)/page.tsx` + `landing/*`) — gimmick olib tashlash, hero
-   sokinlashtirish, bo'lim ritmini tenglashtirish. (Foydalanuvchi aynan shu sahifani
-   muammoli deb belgiladi.)
-4. **Core primitivlar** — `ui/*` sayqal (button/input/badge/modal/...).
-5. **Sahifama-sahifa** — startups (list/detail/create), problems, solutions,
-   leaderboard, polls, discover, profil & `u/[username]`, messages/chat, notifications,
-   settings, auth (login/register/forgot/reset/verify), not-found, bo'sh/xato holatlar.
-6. **Admin panel** (`../admin-panel-front`) — xuddi shu til bilan.
+## 3. Taqiqlar (qisqa ro'yxat)
+❌ Gradient fon/matn/avatar (brend logosidan tashqari) · ❌ glow soyalar ·
+❌ hover-lift · ❌ `font-black` · ❌ KATTA HARFLI eyebrow-pill'lar (faqat
+`.ios-section-header` yoki kichik tint eyebrow) · ❌ `border` bilan karta ·
+❌ px-based `text-[..px]` · ❌ emoji-ikonka · ❌ lucide-react.
 
-## 5. Buyruqlar
+## 4. Buyruqlar
 ```bash
-npm run dev      # localhost:3330
-npm run build    # har o'zgarishdan keyin TOZA bo'lsin
-npm run lint     # eslint
+npm run dev        # localhost:3330
+npm run build      # har o'zgarishdan keyin TOZA bo'lsin
+npm run lint
+npm run icons:gen  # Ionicons'dan iOS ikonka to'plamini qayta generatsiya
 ```
 
-## 6. Progress jurnali (har bosqichdан keyin belgilanadi)
-- [x] 1. Foundation — `(main)/layout` mesh opacity 70→40 (tinch fon); hero motion easing
-      `[0.22,1,0.36,1]` ga birlashtirildi. (tailwind/globals tokenlariga tegilmadi —
-      allaqachon yaxshi; faqat qamrov/usage kamaytirildi.)
-- [x] 2. Global chrome — navbar faol underline & bottom-nav indikator `gradient-emerald-iris`
-      → solid `accent-500` (restraint). Logo mark signature gradient qoldi.
-- [x] 3. Homepage + landing — **stikerlar** (`FloatingChip` suzuvchi chiplar) OLIB TASHLANDI;
-      hero aurora 3→2 va animatsiyasiz sokin glow; barcha kicker'lar yagona `<Kicker>` ga
-      birlashtirildi (candy-rang yo'q); feature/step icon chip → `bg-brand-900 text-accent-400`
-      (unifikatsiya); H2 `font-black`→`font-bold`; "Startapper" gradient→solid accent;
-      CTA blob animatsiyasiz. Hero H1 (animated gradient keyword) signature sifatida qoldi.
-- [x] 4. Core UI primitivlar — TEKSHIRILDI, o'zgarish shart emas: button/input/select/textarea/
-      modal/pagination allaqachon izchil (bir xil radius/focus-ring/border/transition). Churn yo'q.
-- [x] 4b. **GLOBAL TIPOGRAFIYA TIZIMI** (`globals.css`) — butun loyihadagi HAR bir yozuvga
-      izchil sayqal: `@layer base` da `h1–h4` → `text-wrap: balance` + premium tracking
-      (-0.021em) + default brand-900 rang; `h5,h6` balance; `p,li` → `text-wrap: pretty`
-      (orphan yo'q). Body: nozik `letter-spacing: -0.006em` + kengaytirilgan Inter OpenType
-      (`cv02–cv04,cv11,ss01`). **Font stack sayqali**: `--font-inter` = Inter → SF Pro Text →
-      -apple-system → Segoe UI → Roboto (Inter yuklanmasa ham har platformada premium fallback).
-      Mobile+desktop responsiv (mavjud `md:` shkalasi saqlandi).
-- [x] 5. Type intizomi — prose sahifa H1'lari `font-black`→`font-bold`+`tracking-tight`
-      (problems, problems/create, problems/[id], leaderboard, startups, startups/[id],
-      discover, polls, u/[handle], auth-shell). `font-black` faqat landing hero, 404, logo,
-      raqamlarда. **VIZUAL ITERATSIYA**: Chrome headless (`/usr/bin/google-chrome`) + `next dev`
-      bilan homepage/login/register/startups/leaderboard desktop+mobil ko'rildi va tasdiqlandi —
-      navbar "Ovoz berish" 2-qatorga sinishi TUZATILDI (`whitespace-nowrap`); tipografiya
-      premium ko'rinadi. ⏭ QOLGAN: data-bog'liq sahifalar (chat/profil/settings/notif) real
-      ma'lumot bilan chuqur sayqal — backend ishga tushganда iteratsiya.
-- [ ] 6. Admin panel
+## 5. Verifikatsiya usuli
+`npm run dev` (bg) + puppeteer-core skript (scratchpad `shoot.js` naqshi):
+barcha marshrutlar desktop 1440 + mobil 390 (auth token bilan), gorizontal
+overflow tekshiruvi. Har katta o'zgarishdan keyin build + lint + vizual.
 
-> Har bosqichdан keyin `npm run build` TOZA (tasdiqlandi: 2026-07-01 — kompilyatsiya + lint +
-> typecheck, 24 marshrut).
-> **Vizual verifikatsiya usuli:** `npm run dev` (bg) + `google-chrome --headless=new --no-sandbox
-> --screenshot=... --window-size=W,H URL` (desktop 1440, mobil 390) → screenshotни o'qib iteratsiya.
+## 6. Progress
+- [x] 2026-07-25 — To'liq iOS redizayn: foundation (token/CSS), 186 ikonka
+  (Ionicons), primitivlar (button/input/select/modal-sheet/segmented/switch/
+  list/search), chrome (navbar/tab-bar/footer/spotlight/bell/toast), barcha
+  sahifalar (home, startups CRUD + LinkFields, problems, solutions, polls,
+  leaderboard, discover, profile, settings, notifications, auth, chat=iMessage,
+  404). Build + lint toza; 18 marshrut × 2 viewport vizual tekshirildi.
+- [ ] Admin panel (`../admin-panel-front`) — hali eski tilda (alohida vazifa).
 
-> Eslatma: dizayn qarorlari yoki foydalanuvchi yangi direktivasi kelsa — backend
-> `../1725/CLAUDE.md` §8.3 jurnaliga va bu faylga (kerakli bo'limga) yoziladi.
+## 7. Performance tizimi (2026-07-07 — REGRESS QILMA)
 
-## 7. Performance tizimi (2026-07-07 — Lighthouse optimizatsiyasi, REGRESS QILMA)
-
-Butun front Lighthouse bo'yicha optimallashtirilgan: **desktop 4×100, mobil perf 92–98 +
-a11y/bp/seo 100**. Buzmaslik uchun MAJBURIY qoidalar:
-
-1. **Font**: Inter self-host — lotin subset `globals.css` ichida base64 (so'rov yo'q),
-   metrik-mos `Inter Fallback` (size-adjust) + `font-display: optional` → swap reflow yo'q.
-   Google Fonts linki QAYTARILMAYDI; yangi og'irlik/subset kerak bo'lsa shu tizimga qo'shiladi.
-2. **LCP qoidasi**: sahifa root konteyneriga `animate-fade-in` QO'YILMAYDI; LCP bo'la
-   oladigan element (hero H1/P, ro'yxat kartasi, cover) opacity-0 dan BOSHLANMAYDI.
-   Kirish harakati faqat mayda elementlarda (`.hero-enter`) yoki below-fold (`.reveal`).
-3. **Reveal tizimi**: framer-motion landing/list yo'lida ISHLATILMAYDI — `landing/reveal.tsx`
-   (CSS + IO; Reveal/RevealGroup/RevealItem API) ishlatiladi. framer faqat chat'da qoldi.
-4. **SSR initial data**: public ro'yxat/detail sahifalar server component `page.tsx` →
-   `fetchInitial` (`lib/server-api.ts`, revalidate 30s, fail-open) → `<X>Client` ga
-   `initialData` (+`initialDataUpdatedAt: 0`). Yangi sahifa shu naqshda quriladi.
-   LCP rasm bor bo'lsa — server sahifada `preload(url, { as: 'image', fetchPriority: 'high' })`.
-5. **Rasmlar**: `<img>` (CDN'dan to'g'ridan) — list'da faqat birinchi 1–2 karta
-   `priority` (eager+fetchpriority=high), qolgani `loading="lazy" decoding="async"`;
-   imkon qadar width/height.
-6. **Kontrast (WCAG AA)**: oq matn + accent fon = kamida `accent-700`; meta matn oq
-   fonda `slate-500+`, `surface-soft` fonda `slate-600+`; `opacity-*` bilan matn
-   xiralashtirish taqiqlanadi.
-7. **Home**: below-fold bo'limlar `LazySection` + `next/dynamic` kartalar + `cv-auto` —
-   yangi bo'lim qo'shilsa shu naqsh takrorlanadi.
-8. Doimiy (infinite) animatsiya above-fold'da taqiqlanadi (SI buzadi) — hero gradient statik.
+1. **Font**: Inter self-host — lotin subset `globals.css` ichida base64,
+   metrik-mos `Inter Fallback` + `font-display: optional`. Google Fonts YO'Q.
+   (iOS qurilmalar -apple-system ishlatadi — Inter faqat boshqa platformalar.)
+2. **LCP**: sahifa root'iga fade YO'Q; LCP element opacity-0 dan boshlanmaydi
+   (`.hero-enter-x` faqat transform).
+3. **Reveal**: `landing/reveal.tsx` (CSS+IO). framer faqat chatda.
+4. **SSR initial data**: public sahifalar `fetchInitial` → `initialData`
+   (+`initialDataUpdatedAt: 0`); LCP rasmga `preload(fetchPriority: high)`.
+5. **Rasmlar**: list'da birinchi 1–2 karta `priority`, qolgani lazy.
+6. **Kontrast AA**: §2.1 qiymatlari; `opacity-*` bilan matn xiralashtirish taqiq.
+7. **Home**: below-fold `LazySection` + `next/dynamic` + `cv-auto`.
+8. Above-fold'da cheksiz animatsiya taqiq.

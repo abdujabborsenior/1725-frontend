@@ -30,7 +30,7 @@ export function UserRowSkeleton({ rows = 5 }: { rows?: number }) {
 /* Oddiy karta shakli — grid ro'yxatlar uchun (discover kartalari va h.k.) */
 export function CardSkeleton({ className }: { className?: string }) {
   return (
-    <div aria-hidden className={cn('rounded-2xl border border-slate-200 bg-white p-5', className)}>
+    <div aria-hidden className={cn('rounded-ios-2xl bg-white p-5', className)}>
       <div className="flex items-center gap-3">
         <div className="skeleton h-12 w-12 shrink-0 rounded-full" />
         <div className="min-w-0 flex-1 space-y-2">
@@ -52,7 +52,7 @@ export function ListRowSkeleton({ rows = 3 }: { rows?: number }) {
   return (
     <div aria-hidden className="space-y-3">
       {Array.from({ length: rows }).map((_, i) => (
-        <div key={i} className="rounded-xl border border-slate-200 bg-white p-4">
+        <div key={i} className="rounded-ios-lg bg-white p-4">
           <div className="flex items-start justify-between gap-3">
             <div className="min-w-0 flex-1 space-y-2">
               <div className="skeleton h-3.5 w-2/3 rounded-md" />

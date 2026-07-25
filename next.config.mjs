@@ -38,6 +38,15 @@ const nextConfig = {
   async headers() {
     return [{ source: '/:path*', headers: securityHeaders }];
   },
+  // iOS ikonka to'plami — barrel importni to'g'ridan-to'g'ri faylga aylantiradi
+  // (`import { Bell } from '@/components/icons'` → `.../icons/bell`), shunda
+  // bundle'ga faqat ishlatilgan ikonkalar tushadi.
+  modularizeImports: {
+    '@/components/icons': {
+      transform: '@/components/icons/{{ member }}',
+      skipDefaultConversion: true,
+    },
+  },
   // Production'da console.* (error/warn'dan tashqari) olib tashlanadi.
   compiler: {
     removeConsole:

@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useQueryClient } from '@tanstack/react-query';
-import { UserPlus, UserCheck, Loader2 } from 'lucide-react';
+import { UserPlus, UserCheck, Spinner } from '@/components/icons';
 import { usersApi, getErrorMessage } from '@/lib/api';
 import { patchEntityInQueries } from '@/lib/entity-sync';
 import { useAuthStore } from '@/store/auth.store';
@@ -75,7 +75,7 @@ export function FollowButton({
     }
   }
 
-  const sizeCls = size === 'sm' ? 'h-8 px-3 text-xs gap-1' : 'h-10 px-5 text-sm gap-1.5';
+  const sizeCls = size === 'sm' ? 'h-8 gap-1 px-3.5 text-footnote' : 'h-10 gap-1.5 px-5 text-subhead';
 
   return (
     <button
@@ -84,19 +84,19 @@ export function FollowButton({
       onMouseLeave={() => setHover(false)}
       disabled={loading}
       className={cn(
-        'inline-flex items-center justify-center font-semibold rounded-full transition-all duration-150 btn-lift',
-        'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-500/40',
+        'tappable inline-flex items-center justify-center rounded-full font-semibold',
+        'focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-accent-500/25',
         following
           ? hover
-            ? 'bg-rose-50 text-rose-600 border border-rose-200'
-            : 'bg-white text-brand-900 border border-slate-200'
-          : 'bg-accent-700 text-white border border-transparent hover:bg-accent-800',
+            ? 'bg-rose-50 text-rose-600'
+            : 'bg-fill-tertiary text-brand-900'
+          : 'bg-accent-500 text-white active:bg-accent-600',
         sizeCls,
         className,
       )}
     >
       {loading ? (
-        <Loader2 className="h-3.5 w-3.5 animate-spin" />
+        <Spinner className="h-3.5 w-3.5 animate-spin" />
       ) : following ? (
         <UserCheck className="h-3.5 w-3.5" />
       ) : (

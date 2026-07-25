@@ -33,7 +33,7 @@ export function AuthorLink({
       <Avatar src={author?.avatarUrl} name={name} size={size} />
       <span className="min-w-0">
         <span className="block truncate text-sm font-semibold text-brand-900">{name}</span>
-        {subtitle && <span className="block truncate text-[11px] text-slate-500">{subtitle}</span>}
+        {subtitle && <span className="block truncate text-caption-1 text-slate-500">{subtitle}</span>}
       </span>
     </span>
   );

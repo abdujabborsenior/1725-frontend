@@ -3,27 +3,28 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import { useQuery } from '@tanstack/react-query';
-import { Clock, Lightbulb, FileText, Video } from 'lucide-react';
+import { Clock, Lightbulb, FileText, Video } from '@/components/icons';
 import { solutionsApi } from '@/lib/api';
 import { useAuthStore } from '@/store/auth.store';
 import type { Solution } from '@/types';
 import { Pagination } from '@/components/ui/pagination';
+import { EmptyState, PageHeader } from '@/components/ui/page-header';
 import { StartupMiniCard } from '@/components/startups/startup-mini-card';
 import { formatDistanceToNow } from 'date-fns';
 
 function SolutionCard({ solution }: { solution: Solution }) {
   return (
-    <article className="bg-white border border-slate-200 rounded-xl p-5 hover:border-accent-300 hover:shadow-card-hover transition-all duration-200 flex flex-col h-full">
+    <article className="flex h-full flex-col rounded-ios-2xl bg-white p-5 transition-shadow duration-200 ease-ios hover:shadow-card-hover">
       <div className="flex items-start justify-between gap-3 mb-3">
         {/* "Foydali" hisobi — yechim qadri (moderatsiya o'rniga hamjamiyat bahosi) */}
-        <span className="inline-flex items-center gap-1.5 rounded-lg border border-accent-200 bg-accent-50 px-2 py-1 text-[11px] font-semibold text-accent-700">
+        <span className="inline-flex items-center gap-1.5 rounded-full bg-accent-50 px-2.5 py-1 text-caption-1 font-medium text-accent-700">
           <Lightbulb className="h-3 w-3" />
           {(solution.helpfulCount ?? 0).toLocaleString('uz')} foydali
         </span>
         {solution.problem && (
           <Link
             href={`/problems/${solution.problem.id}`}
-            className="text-[11px] text-slate-500 hover:text-accent-700 truncate transition-colors max-w-[160px]"
+            className="max-w-[160px] truncate text-caption-1 text-slate-500 transition-colors hover:text-accent-700"
           >
             {solution.problem.title}
           </Link>
@@ -32,7 +33,7 @@ function SolutionCard({ solution }: { solution: Solution }) {
 
       {/* Startap yechim sifatida yuborilganda matn bo'sh bo'lishi mumkin */}
       {solution.content?.trim() ? (
-        <p className="text-sm text-slate-700 line-clamp-3 leading-relaxed mb-4 flex-1">
+        <p className="mb-4 line-clamp-3 flex-1 text-subhead leading-relaxed text-slate-600">
           {solution.content}
         </p>
       ) : (
@@ -50,21 +51,21 @@ function SolutionCard({ solution }: { solution: Solution }) {
         <div className="flex gap-2 mb-4">
           {solution.presentationUrl && (
             <a href={solution.presentationUrl} target="_blank" rel="noopener noreferrer"
-              className="flex items-center gap-1 text-[11px] px-2.5 py-1 rounded-md bg-accent-50 text-accent-700 border border-accent-200 hover:bg-accent-100 transition-colors">
+              className="tappable flex items-center gap-1 rounded-full bg-accent-50 px-2.5 py-1 text-caption-1 font-medium text-accent-700">
               <FileText className="h-3 w-3" /> Taqdimot
             </a>
           )}
           {solution.videoUrl && (
             <a href={solution.videoUrl} target="_blank" rel="noopener noreferrer"
-              className="flex items-center gap-1 text-[11px] px-2.5 py-1 rounded-md bg-violet-50 text-violet-700 border border-violet-200 hover:bg-violet-100 transition-colors">
+              className="tappable flex items-center gap-1 rounded-full bg-violet-50 px-2.5 py-1 text-caption-1 font-medium text-violet-700">
               <Video className="h-3 w-3" /> Video
             </a>
           )}
         </div>
       )}
 
-      <div className="flex items-center justify-between text-xs text-slate-500 mt-auto">
-        <span className="font-medium text-slate-700 truncate max-w-[140px]">
+      <div className="mt-auto flex items-center justify-between text-footnote text-slate-500">
+        <span className="max-w-[140px] truncate text-slate-600">
           {solution.submittedBy?.fullName ?? solution.fullName}
         </span>
         <span className="flex items-center gap-1 flex-shrink-0">
@@ -78,15 +79,15 @@ function SolutionCard({ solution }: { solution: Solution }) {
 
 function SkeletonCard() {
   return (
-    <div className="bg-white border border-slate-200 rounded-xl p-5 space-y-3 animate-pulse">
+    <div className="space-y-3 rounded-ios-2xl bg-white p-5">
       <div className="flex gap-2">
-        <div className="h-5 w-28 rounded bg-slate-100" />
-        <div className="h-5 w-20 rounded bg-slate-100 ml-auto" />
+        <div className="skeleton h-5 w-28 rounded-full" />
+        <div className="skeleton ml-auto h-5 w-20 rounded-full" />
       </div>
       <div className="space-y-2">
-        <div className="h-4 w-full rounded bg-slate-100" />
-        <div className="h-4 w-5/6 rounded bg-slate-100" />
-        <div className="h-4 w-4/6 rounded bg-slate-100" />
+        <div className="skeleton h-4 w-full rounded-md" />
+        <div className="skeleton h-4 w-5/6 rounded-md" />
+        <div className="skeleton h-4 w-4/6 rounded-md" />
       </div>
     </div>
   );
@@ -106,56 +107,40 @@ export default function SolutionsPage() {
 
   if (!token) {
     return (
-      <div className="py-24 text-center">
-        <div className="h-16 w-16 rounded-2xl bg-slate-100 flex items-center justify-center mx-auto mb-4">
-          <Lightbulb className="h-8 w-8 text-slate-400" />
-        </div>
-        <p className="text-brand-900 font-semibold">Yechimlaringizni kuzating</p>
-        <p className="text-sm text-slate-500 mt-1 mb-5">
-          Yuborgan yechimlaringizni ko&apos;rish uchun tizimga kiring
-        </p>
-        <Link
-          href="/login?next=%2Fsolutions"
-          className="inline-flex items-center gap-2 rounded-xl bg-brand-900 px-5 py-2.5 text-sm font-semibold text-white hover:bg-brand-800 transition-colors"
-        >
-          Tizimga kirish
-        </Link>
-      </div>
+      <EmptyState
+        icon={<Lightbulb />}
+        title="Yechimlaringizni kuzating"
+        description="Yuborgan yechimlaringizni ko'rish uchun tizimga kiring"
+        action={
+          <Link
+            href="/login?next=%2Fsolutions"
+            className="tappable flex h-11 items-center rounded-full bg-accent-600 px-6 text-body font-medium text-white active:bg-accent-700"
+          >
+            Tizimga kirish
+          </Link>
+        }
+      />
     );
   }
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-between gap-3 flex-wrap">
-        <div>
-          <h1 className="text-2xl font-bold text-brand-900">Yechimlarim</h1>
-          <p className="text-sm text-slate-500 mt-0.5">
-            Siz yuborgan {data?.meta.total ?? '—'} ta yechim — barchasi joylangan
-            zahoti hammaga ko&apos;rinadi
-          </p>
-        </div>
-        <div className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-white border border-slate-200">
-          <Lightbulb className="h-4 w-4 text-accent-600" />
-          <span className="text-xs text-slate-600 font-medium">
-            Shaxsiy yechimlar
-          </span>
-        </div>
-      </div>
+      <PageHeader
+        title="Yechimlarim"
+        subtitle={`Siz yuborgan ${data?.meta.total ?? '—'} ta yechim — barchasi joylangan zahoti hammaga ko'rinadi`}
+      />
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         {isLoading
           ? Array.from({ length: 9 }).map((_, i) => <SkeletonCard key={i} />)
           : items.length === 0
             ? (
-              <div className="col-span-full py-24 text-center">
-                <div className="h-16 w-16 rounded-2xl bg-slate-100 flex items-center justify-center mx-auto mb-4">
-                  <Lightbulb className="h-8 w-8 text-slate-400" />
-                </div>
-                <p className="text-brand-900 font-semibold">Yechim topilmadi</p>
-                <p className="text-sm text-slate-500 mt-1">
-                  Siz hali yechim yubormagansiz
-                </p>
-              </div>
+              <EmptyState
+                className="col-span-full"
+                icon={<Lightbulb />}
+                title="Yechim topilmadi"
+                description="Siz hali yechim yubormagansiz"
+              />
             )
             : items.map((s) => <SolutionCard key={s.id} solution={s} />)}
       </div>

@@ -4,7 +4,7 @@ import { useEffect, useMemo, useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
-import { MessageSquarePlus, Hash, Users, UsersRound, ArrowLeft } from 'lucide-react';
+import { MessageSquarePlus, Hash, Users, UsersRound, ChevronLeft } from '@/components/icons';
 import { chatApi } from '@/lib/api';
 import { getSocket } from '@/lib/socket';
 import { useAuthStore } from '@/store/auth.store';
@@ -130,33 +130,33 @@ export function ConversationList({ activeId }: { activeId?: string }) {
 
   return (
     <div className="flex h-full w-full flex-col overflow-hidden">
-      <div className="flex items-center justify-between border-b border-slate-200 px-3 py-3 sm:px-4">
+      <div className="hairline-b flex items-center justify-between px-3 py-3 sm:px-4">
         <div className="flex items-center gap-2">
           <button
             onClick={() => router.push('/')}
             aria-label="Ortga"
             title="Ortga"
-            className="flex h-9 w-9 items-center justify-center rounded-lg text-slate-500 transition-colors hover:bg-slate-100 hover:text-brand-900 active:scale-95"
+            className="tappable flex h-9 w-9 items-center justify-center rounded-full text-accent-700"
           >
-            <ArrowLeft className="h-5 w-5" />
+            <ChevronLeft className="h-[22px] w-[22px]" strokeWidth={3} />
           </button>
-          <h2 className="text-lg font-bold text-brand-900">Suhbatlar</h2>
+          <h2 className="text-title-2 font-bold tracking-tight text-brand-900">Suhbatlar</h2>
         </div>
         <div className="flex items-center gap-1">
           {canCreateGroup && (
-            <button onClick={() => setGroupModal(true)} aria-label="Guruh yaratish" className="flex h-9 w-9 items-center justify-center rounded-lg text-slate-500 hover:bg-slate-100 hover:text-iris-600 active:scale-95">
+            <button onClick={() => setGroupModal(true)} aria-label="Guruh yaratish" className="tappable flex h-9 w-9 items-center justify-center rounded-full text-accent-700">
               <UsersRound className="h-5 w-5" />
             </button>
           )}
-          <Link href="/discover" aria-label="Yangi suhbat" className="flex h-9 w-9 items-center justify-center rounded-lg text-slate-500 hover:bg-slate-100 hover:text-brand-900 active:scale-95">
+          <Link href="/discover" aria-label="Yangi suhbat" className="tappable flex h-9 w-9 items-center justify-center rounded-full text-accent-700">
             <MessageSquarePlus className="h-5 w-5" />
           </Link>
         </div>
       </div>
 
       {/* Segmented filter — Telegram uslubi */}
-      <div className="border-b border-slate-200 px-2 py-2">
-        <div className="flex items-center gap-1 rounded-2xl bg-surface-soft p-1">
+      <div className="hairline-b px-3 py-2">
+        <div className="segmented w-full">
           {TABS.map((t) => {
             const active = filter === t.id;
             const count = unreadByTab[t.id];
@@ -170,13 +170,13 @@ export function ConversationList({ activeId }: { activeId?: string }) {
                 )}
               >
                 {active && (
-                  <span className="absolute inset-0 rounded-xl bg-white shadow-soft" />
+                  <span className="absolute inset-0 rounded-[7px] bg-white shadow-segment" />
                 )}
                 <span className="relative z-10 whitespace-nowrap">{t.label}</span>
                 {count > 0 && (
                   <span
                     className={cn(
-                      'relative z-10 flex h-4 min-w-[16px] items-center justify-center rounded-full px-1 text-[10px] font-bold',
+                      'relative z-10 flex h-4 min-w-[16px] items-center justify-center rounded-full px-1 text-caption-2 font-bold',
                       active ? 'bg-accent-700 text-white' : 'bg-slate-300/70 text-slate-600',
                     )}
                   >
@@ -198,7 +198,9 @@ export function ConversationList({ activeId }: { activeId?: string }) {
           filtered.map((c, i) => (
             <div key={c.id}>
               {/* Telegram uslubidagi inset ajratkich — matn boshlanishiga tekislangan */}
-              {i > 0 && <div aria-hidden className="ml-[70px] mr-3 border-t border-slate-200/70" />}
+              {i > 0 && (
+                <div aria-hidden className="ml-[70px] mr-3 h-px origin-top scale-y-50 bg-[rgba(60,60,67,0.29)]" />
+              )}
               <ConversationRow c={c} active={c.id === activeId} />
             </div>
           ))
@@ -220,26 +222,28 @@ function ConversationRow({ c, active }: { c: Conversation; active: boolean }) {
       )}
     >
       {c.type === 'group' && !c.avatarUrl ? (
-        <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-gradient-iris text-white"><Hash className="h-5 w-5" /></span>
+        <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-iris-500 text-white">
+          <Hash className="h-5 w-5" />
+        </span>
       ) : (
         <Avatar src={c.avatarUrl} name={c.title} size={48} />
       )}
       <div className="min-w-0 flex-1">
         <div className="flex items-center justify-between gap-2">
-          <p className="truncate text-sm font-bold text-brand-900">{c.title}</p>
+          <p className="truncate text-body font-semibold text-brand-900">{c.title}</p>
           {c.lastMessageAt && (
-            <span className="shrink-0 text-[10px] text-slate-500">
+            <span className="shrink-0 text-footnote text-slate-400">
               {formatDistanceToNowStrict(new Date(c.lastMessageAt))}
             </span>
           )}
         </div>
         <div className="flex items-center justify-between gap-2">
-          <p className="truncate text-xs text-slate-500">
+          <p className="truncate text-subhead text-slate-500">
             {c.type === 'group' && <Users className="mr-1 inline h-3 w-3" />}
             {c.lastMessagePreview ?? 'Suhbat boshlang'}
           </p>
           {c.unreadCount > 0 && (
-            <span className="flex h-5 min-w-[20px] shrink-0 items-center justify-center rounded-full bg-accent-700 px-1.5 text-[10px] font-bold text-white">
+            <span className="flex h-[20px] min-w-[20px] shrink-0 items-center justify-center rounded-full bg-accent-600 px-1.5 text-caption-2 font-semibold text-white">
               {c.unreadCount > 99 ? '99+' : c.unreadCount}
             </span>
           )}
@@ -253,20 +257,26 @@ function EmptyState({ filter, hasAny }: { filter: Filter; hasAny: boolean }) {
   if (filter === 'direct') {
     return (
       <div className="px-4 py-16 text-center">
-        <MessageSquarePlus className="mx-auto mb-2 h-8 w-8 text-slate-300" />
-        <p className="text-sm font-semibold text-brand-900">Shaxsiy suhbatlar yo&apos;q</p>
-        <p className="mt-1 text-xs text-slate-500">Hamjamiyatdan odam toping va suhbat boshlang.</p>
-        <Link href="/discover" className="mt-3 inline-block text-xs font-semibold text-accent-700 hover:underline">Odamlarni topish →</Link>
+        <MessageSquarePlus className="mx-auto mb-2 h-9 w-9 text-slate-300" />
+        <p className="text-callout font-semibold text-brand-900">Shaxsiy suhbatlar yo&apos;q</p>
+        <p className="mt-1 text-subhead text-slate-500">
+          Hamjamiyatdan odam toping va suhbat boshlang.
+        </p>
+        <Link href="/discover" className="tappable mt-3 inline-block text-subhead font-medium text-accent-700">
+          Odamlarni topish
+        </Link>
       </div>
     );
   }
   if (filter === 'group') {
     return (
       <div className="px-4 py-16 text-center">
-        <UsersRound className="mx-auto mb-2 h-8 w-8 text-slate-300" />
-        <p className="text-sm font-semibold text-brand-900">Guruhlar yo&apos;q</p>
-        <p className="mt-1 text-xs text-slate-500">Hamjamiyat guruhlariga qo&apos;shiling.</p>
-        <Link href="/discover" className="mt-3 inline-block text-xs font-semibold text-iris-700 hover:underline">Guruhlarni topish →</Link>
+        <UsersRound className="mx-auto mb-2 h-9 w-9 text-slate-300" />
+        <p className="text-callout font-semibold text-brand-900">Guruhlar yo&apos;q</p>
+        <p className="mt-1 text-subhead text-slate-500">Hamjamiyat guruhlariga qo&apos;shiling.</p>
+        <Link href="/discover" className="tappable mt-3 inline-block text-subhead font-medium text-accent-700">
+          Guruhlarni topish
+        </Link>
       </div>
     );
   }

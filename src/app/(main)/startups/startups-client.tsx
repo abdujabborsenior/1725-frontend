@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import { useQuery, keepPreviousData } from '@tanstack/react-query';
-import { Search, Rocket, SlidersHorizontal, X, Plus } from 'lucide-react';
+import { Rocket, Plus } from '@/components/icons';
 import { startupsApi } from '@/lib/api';
 import {
   PLATFORM_META,
@@ -15,6 +15,8 @@ import { useDebounce } from '@/lib/use-debounce';
 import { cn } from '@/lib/utils';
 import { Pagination } from '@/components/ui/pagination';
 import { Select } from '@/components/ui/select';
+import { SearchField } from '@/components/ui/search-field';
+import { EmptyState, FilterChip, PageHeader } from '@/components/ui/page-header';
 import { StartupCard, StartupCardSkeleton } from '@/components/startups/startup-card';
 import { PlatformIcon } from '@/components/startups/platform';
 
@@ -77,49 +79,32 @@ export function StartupsClient({
 
   return (
     <div className="space-y-6">
-      {/* Header */}
-      <div className="relative overflow-hidden rounded-2xl bg-gradient-brand p-6 md:p-8">
-        <div className="absolute -top-10 -right-10 h-40 w-40 rounded-full bg-accent-500/20 blur-3xl" />
-        <div className="relative z-10 flex flex-col md:flex-row md:items-end md:justify-between gap-5">
-          <div>
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/10 border border-white/15 mb-3">
-              <Rocket className="h-3.5 w-3.5 text-accent-400" />
-              <span className="text-xs font-semibold text-white/90">Startaplar katalogi</span>
-            </div>
-            <h1 className="text-2xl md:text-3xl font-bold tracking-tight text-white">
-              Yaratilgan mahsulotlar
-            </h1>
-            <p className="mt-1.5 text-sm text-slate-300 max-w-lg">
-              Hamjamiyat tomonidan ishlab chiqilgan startaplar — ilovalar, saytlar
-              va Telegram botlar bir joyda.
-            </p>
-          </div>
-          {/* Joylash CTA — guest bosganда register orqali aynan shu yerga qaytadi */}
+      <PageHeader
+        title="Startaplar"
+        subtitle="Hamjamiyat ishlab chiqqan ilovalar, saytlar va Telegram botlar — bir joyda."
+        action={
+          /* Joylash CTA — guest bosganda register orqali aynan shu yerga qaytadi */
           <Link
             href="/startups/create"
-            className="inline-flex items-center justify-center gap-2 h-11 px-5 rounded-xl bg-accent-700 text-sm font-semibold text-white shadow-glow-accent hover:bg-accent-800 transition-all btn-lift shrink-0 self-start md:self-auto"
+            className="tappable flex h-10 items-center gap-1 rounded-full bg-accent-600 pl-3.5 pr-4 text-subhead font-semibold text-white active:bg-accent-700"
           >
-            <Plus className="h-4 w-4" /> Startap joylash
+            <Plus className="h-4 w-4" strokeWidth={2.6} /> Joylash
           </Link>
-        </div>
-      </div>
+        }
+      />
 
-      {/* Search + sort */}
-      <div className="flex flex-col md:flex-row gap-3">
-        <div className="relative flex-1">
-          <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400 pointer-events-none" />
-          <input
-            value={search}
-            onChange={(e) => {
-              setSearch(e.target.value);
-              setPage(1);
-            }}
-            placeholder="Startap nomi yoki tavsifi bo'yicha qidirish..."
-            className="w-full h-12 pl-11 pr-4 rounded-xl bg-white border border-slate-200 hover:border-slate-300 text-sm text-brand-900 placeholder:text-slate-400 focus:outline-none input-focus transition-all"
-          />
-        </div>
-        <div className="relative md:w-64">
-          <SlidersHorizontal className="pointer-events-none absolute left-3.5 top-1/2 z-10 h-4 w-4 -translate-y-1/2 text-slate-400" />
+      {/* Qidiruv + saralash */}
+      <div className="flex flex-col gap-3 md:flex-row md:items-center">
+        <SearchField
+          value={search}
+          onValueChange={(v) => {
+            setSearch(v);
+            setPage(1);
+          }}
+          placeholder="Startap nomi yoki tavsifi"
+          containerClassName="flex-1"
+        />
+        <div className="md:w-56">
           <Select
             aria-label="Saralash"
             value={sort}
@@ -128,84 +113,70 @@ export function StartupsClient({
               setPage(1);
             }}
             options={STARTUP_SORT_OPTIONS}
-            className="pl-10 font-medium"
+            className="h-10 text-subhead"
           />
         </div>
       </div>
 
-      {/* Platform filter */}
-      <div className="flex flex-wrap items-center gap-2">
-        <button
+      {/* Platforma filtri — iOS chiplari (mobilda suriladi) */}
+      <div className="no-scrollbar -mx-4 flex gap-2 overflow-x-auto px-4">
+        <FilterChip
+          active={platform === ''}
           onClick={() => {
             setPlatform('');
             setPage(1);
           }}
-          className={cn(
-            'px-3.5 py-1.5 rounded-lg text-xs font-semibold border transition-all',
-            platform === ''
-              ? 'bg-brand-900 text-white border-brand-900'
-              : 'bg-white text-slate-600 border-slate-200 hover:border-slate-300',
-          )}
         >
-          Barcha platformalar
-        </button>
+          Barchasi
+        </FilterChip>
         {PLATFORM_ORDER.map((t) => (
-          <button
+          <FilterChip
             key={t}
+            active={platform === t}
             onClick={() => {
               setPlatform(platform === t ? '' : t);
               setPage(1);
             }}
-            className={cn(
-              'inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg text-xs font-semibold border transition-all',
-              platform === t
-                ? 'bg-brand-900 text-white border-brand-900'
-                : 'bg-white text-slate-600 border-slate-200 hover:border-slate-300',
-            )}
           >
             <PlatformIcon type={t} className="h-3.5 w-3.5" />
             {PLATFORM_META[t].label}
-          </button>
+          </FilterChip>
         ))}
       </div>
 
-      {/* Category chips */}
+      {/* Kategoriya chiplari */}
       {categories && categories.length > 0 && (
         <div className="flex flex-wrap items-center gap-2">
           {categories.map((c) => (
-            <button
+            <FilterChip
               key={c.category}
+              active={category === c.category}
               onClick={() => {
                 setCategory(category === c.category ? '' : c.category);
                 setPage(1);
               }}
-              className={cn(
-                'px-3 py-1 rounded-full text-xs font-medium border transition-all',
-                category === c.category
-                  ? 'bg-accent-700 text-white border-accent-700'
-                  : 'bg-surface-soft text-slate-600 border-slate-200 hover:border-accent-300',
-              )}
+              className="text-footnote"
             >
               {c.category}
-              <span className={cn('ml-1.5', category === c.category ? 'text-white/90' : 'text-slate-600')}>{c.count}</span>
-            </button>
+              <span className={cn('tabular-nums', category === c.category ? 'text-white/80' : 'text-slate-400')}>
+                {c.count}
+              </span>
+            </FilterChip>
           ))}
           {hasFilters && (
             <button
               onClick={resetFilters}
-              className="inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-medium text-rose-600 hover:bg-rose-50 transition-all"
+              className="tappable px-2 text-footnote font-medium text-accent-700"
             >
-              <X className="h-3 w-3" /> Tozalash
+              Tozalash
             </button>
           )}
         </div>
       )}
 
-      {/* Count */}
-      <p className="text-sm text-slate-500">
-        Jami{' '}
-        <span className="font-semibold text-brand-900">{data?.meta.total ?? '—'}</span> ta
-        startap
+      {/* Soni */}
+      <p className="text-footnote text-slate-500">
+        Jami <span className="font-medium text-brand-900">{data?.meta.total ?? '—'}</span> ta startap
       </p>
 
       {/* Grid */}
@@ -214,17 +185,16 @@ export function StartupsClient({
         {isLoading ? (
           Array.from({ length: 8 }).map((_, i) => <StartupCardSkeleton key={i} />)
         ) : items.length === 0 ? (
-          <div className="col-span-full py-24 text-center">
-            <div className="h-16 w-16 rounded-2xl bg-slate-100 flex items-center justify-center mx-auto mb-4">
-              <Rocket className="h-8 w-8 text-slate-400" />
-            </div>
-            <p className="text-brand-900 font-semibold">Startaplar topilmadi</p>
-            <p className="text-sm text-slate-500 mt-1">
-              {hasFilters
-                ? 'Filtrlarni o\'zgartirib ko\'ring'
-                : 'Hozircha e\'lon qilingan startaplar yo\'q'}
-            </p>
-          </div>
+          <EmptyState
+            className="col-span-full"
+            icon={<Rocket />}
+            title="Startaplar topilmadi"
+            description={
+              hasFilters
+                ? "Filtrlarni o'zgartirib ko'ring"
+                : "Hozircha e'lon qilingan startaplar yo'q"
+            }
+          />
         ) : (
           items.map((s, i) => <StartupCard key={s.id} startup={s} priority={i < 2} />)
         )}

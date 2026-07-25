@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { Lock, Eye, EyeOff, ShieldCheck, RefreshCw, ArrowLeft } from 'lucide-react';
+import { Lock, Eye, EyeOff, ShieldCheck, RefreshCw, ArrowLeft } from '@/components/icons';
 import { authApi, getErrorMessage } from '@/lib/api';
 import { useAuthStore } from '@/store/auth.store';
 import { Button } from '@/components/ui/button';
@@ -106,7 +106,7 @@ export default function ResetPasswordPage() {
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   placeholder="••••••••"
-                  className="w-full h-12 pl-11 pr-12 rounded-xl bg-white border border-slate-200 hover:border-slate-300 text-sm text-brand-900 placeholder:text-slate-400 focus:outline-none input-focus transition-all duration-150"
+                  className="h-12 w-full rounded-ios-md border border-slate-200 bg-white pl-11 pr-12 text-body text-brand-900 placeholder:text-slate-400 transition-[border-color,box-shadow] duration-150 ease-ios focus:outline-none input-focus"
                 />
                 <button
                   type="button"
@@ -122,7 +122,7 @@ export default function ResetPasswordPage() {
                   {pwdRules.map((r) => (
                     <span
                       key={r.label}
-                      className={`text-[10px] px-2 py-0.5 rounded-md border ${
+                      className={`text-caption-2 px-2 py-0.5 rounded-md border ${
                         r.test(password)
                           ? 'text-accent-700 border-accent-200 bg-accent-50'
                           : 'text-slate-500 border-slate-200 bg-slate-50'

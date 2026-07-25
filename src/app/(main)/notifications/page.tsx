@@ -3,13 +3,14 @@
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useQuery, useQueryClient, keepPreviousData } from '@tanstack/react-query';
-import { Bell, CheckCheck } from 'lucide-react';
+import { Bell, CheckCheck } from '@/components/icons';
 import { notificationsApi } from '@/lib/api';
 import { useAuthStore } from '@/store/auth.store';
 import { cn } from '@/lib/utils';
 import { notificationMeta, notificationTarget } from '@/lib/notification-meta';
 import type { AppNotification } from '@/types';
 import { Pagination } from '@/components/ui/pagination';
+import { EmptyState, PageHeader } from '@/components/ui/page-header';
 import { formatDistanceToNow } from 'date-fns';
 
 export default function NotificationsPage() {
@@ -59,42 +60,39 @@ export default function NotificationsPage() {
 
   return (
     <div className="max-w-2xl mx-auto space-y-6">
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-2xl font-bold text-brand-900">Bildirishnomalar</h1>
-          <p className="text-sm text-slate-500 mt-0.5">Jami {data?.meta.total ?? '—'} ta</p>
-        </div>
-        <button
-          onClick={markAll}
-          className="inline-flex items-center gap-1.5 px-3 py-2 rounded-lg border border-slate-200 text-sm font-semibold text-slate-600 hover:text-brand-900 hover:border-slate-300 transition-all"
-        >
-          <CheckCheck className="h-4 w-4" /> Barchasini o&apos;qildim
-        </button>
-      </div>
+      <PageHeader
+        title="Bildirishnomalar"
+        subtitle={`Jami ${data?.meta.total ?? '—'} ta`}
+        action={
+          <button
+            onClick={markAll}
+            className="tappable inline-flex h-9 items-center gap-1.5 rounded-full bg-fill-tertiary px-3.5 text-subhead font-medium text-slate-600"
+          >
+            <CheckCheck className="h-4 w-4" /> O&apos;qildim
+          </button>
+        }
+      />
 
-      <div className="bg-white border border-slate-200 rounded-2xl overflow-hidden">
-        {isLoading ? (
-          <div className="divide-y divide-slate-100">
-            {Array.from({ length: 6 }).map((_, i) => (
-              <div key={i} className="flex gap-3 px-5 py-4 animate-pulse">
-                <div className="h-9 w-9 rounded-lg bg-slate-100" />
-                <div className="flex-1 space-y-2">
-                  <div className="h-4 w-1/2 bg-slate-100 rounded" />
-                  <div className="h-3 w-3/4 bg-slate-100 rounded" />
-                </div>
+      {isLoading ? (
+        <div className="ios-list" style={{ ['--row-inset' as string]: '3.75rem' }}>
+          {Array.from({ length: 6 }).map((_, i) => (
+            <div key={i} className="flex gap-3 px-4 py-3.5">
+              <div className="skeleton h-[29px] w-[29px] shrink-0 rounded-[7px]" />
+              <div className="flex-1 space-y-2">
+                <div className="skeleton h-4 w-1/2 rounded-md" />
+                <div className="skeleton h-3 w-3/4 rounded-md" />
               </div>
-            ))}
-          </div>
-        ) : items.length === 0 ? (
-          <div className="py-20 text-center">
-            <Bell className="h-9 w-9 text-slate-300 mx-auto mb-3" />
-            <p className="text-brand-900 font-semibold">Bildirishnomalar yo&apos;q</p>
-            <p className="text-sm text-slate-500 mt-1">
-              Yangiliklar shu yerda paydo bo&apos;ladi
-            </p>
-          </div>
-        ) : (
-          <div className="divide-y divide-slate-100">
+            </div>
+          ))}
+        </div>
+      ) : items.length === 0 ? (
+        <EmptyState
+          icon={<Bell />}
+          title="Bildirishnomalar yo'q"
+          description="Yangiliklar shu yerda paydo bo'ladi"
+        />
+      ) : (
+        <div className="ios-list" style={{ ['--row-inset' as string]: '3.75rem' }}>
             {items.map((n) => {
               const meta = notificationMeta(n.type);
               const Icon = meta.icon;
@@ -102,28 +100,33 @@ export default function NotificationsPage() {
                 <button
                   key={n.id}
                   onClick={() => open(n)}
-                  className={cn(
-                    'w-full flex items-start gap-3 px-5 py-4 text-left hover:bg-slate-50 transition-colors',
-                    !n.isRead && 'bg-accent-50/40',
-                  )}
+                  className={cn('ios-row w-full items-start text-left', !n.isRead && 'bg-accent-50/50')}
                 >
-                  <span className={cn('h-9 w-9 rounded-lg flex items-center justify-center shrink-0', meta.color)}>
-                    <Icon className="h-[18px] w-[18px]" />
+                  <span
+                    className={cn(
+                      'mt-0.5 flex h-[29px] w-[29px] shrink-0 items-center justify-center rounded-[7px]',
+                      meta.color,
+                    )}
+                  >
+                    <Icon className="h-[17px] w-[17px]" />
                   </span>
-                  <span className="flex-1 min-w-0">
-                    <span className="block text-sm font-semibold text-brand-900">{n.title}</span>
-                    {n.body && <span className="block text-sm text-slate-600 mt-0.5">{n.body}</span>}
-                    <span className="block text-[11px] text-slate-500 mt-1">
+                  <span className="min-w-0 flex-1">
+                    <span className="block text-body text-brand-900">{n.title}</span>
+                    {n.body && (
+                      <span className="mt-0.5 block text-subhead text-slate-500">{n.body}</span>
+                    )}
+                    <span className="mt-1 block text-caption-1 text-slate-400">
                       {formatDistanceToNow(new Date(n.createdAt), { addSuffix: true })}
                     </span>
                   </span>
-                  {!n.isRead && <span className="h-2 w-2 rounded-full bg-accent-500 mt-1.5 shrink-0" />}
+                  {!n.isRead && (
+                    <span className="mt-2 h-2 w-2 shrink-0 rounded-full bg-accent-500" />
+                  )}
                 </button>
               );
             })}
-          </div>
-        )}
-      </div>
+        </div>
+      )}
 
       {!isLoading && items.length > 0 && (
         <Pagination page={page} totalPages={data?.meta.totalPages ?? 1} onChange={setPage} />

@@ -1,6 +1,6 @@
 'use client';
 
-import { Globe, Link2, type LucideProps } from 'lucide-react';
+import { Globe, Link2, type LucideProps } from '@/components/icons';
 import { cn } from '@/lib/utils';
 import { PLATFORM_META } from '@/lib/constants';
 import type { PlatformType, StartupPlatform } from '@/types';
@@ -68,7 +68,7 @@ export function PlatformChip({
   return (
     <span
       className={cn(
-        'inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md text-[11px] font-semibold border',
+        'inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-caption-1 font-medium',
         meta.chipClass,
         className,
       )}
@@ -102,17 +102,17 @@ export function StoreButton({
       rel="noopener noreferrer"
       onClick={onClickCapture}
       className={cn(
-        'group inline-flex items-center gap-2.5 rounded-xl px-4 py-2.5 font-semibold transition-all btn-lift',
+        'tappable inline-flex items-center gap-2.5 rounded-ios-md px-4 py-2.5 font-semibold',
         meta.badgeClass,
         className,
       )}
     >
       <PlatformIcon type={platform.type} className="h-5 w-5 shrink-0" />
       <span className="flex flex-col items-start leading-none text-left">
-        <span className="text-[9px] font-medium uppercase tracking-wide">
+        <span className="text-caption-2 font-medium uppercase tracking-wide opacity-80">
           {isStore ? meta.storeKicker : 'OCHISH'}
         </span>
-        <span className="text-sm font-bold mt-0.5">
+        <span className="mt-0.5 text-subhead font-semibold">
           {platform.label || meta.storeName}
         </span>
       </span>

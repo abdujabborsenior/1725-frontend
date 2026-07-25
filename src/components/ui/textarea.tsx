@@ -8,20 +8,17 @@ interface TextareaProps extends TextareaHTMLAttributes<HTMLTextAreaElement> {
   count?: { current: number; max: number };
 }
 
+/** iOS ko'p qatorli matn maydoni — Input bilan bir xil sirt va tipografiya. */
 export const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(
   ({ label, error, hint, count, className, ...props }, ref) => (
     <div className="flex flex-col gap-1.5">
       {(label || count) && (
-        <div className="flex items-center justify-between">
-          {label && (
-            <label className="text-xs font-semibold text-slate-700 uppercase tracking-wider">
-              {label}
-            </label>
-          )}
+        <div className="flex items-end justify-between gap-3">
+          {label && <label className="text-subhead font-medium text-slate-500">{label}</label>}
           {count && (
             <span
               className={cn(
-                'text-[11px]',
+                'shrink-0 text-caption-1 tabular-nums',
                 count.current > count.max * 0.96 ? 'text-rose-600' : 'text-slate-400',
               )}
             >
@@ -33,15 +30,16 @@ export const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(
       <textarea
         ref={ref}
         className={cn(
-          'w-full rounded-xl bg-white border border-slate-200 hover:border-slate-300 px-4 py-3 text-sm text-brand-900',
-          'placeholder:text-slate-400 focus:outline-none input-focus transition-all duration-150 resize-none',
-          error && 'border-rose-400',
+          'w-full resize-none rounded-ios-md border border-slate-200 bg-white px-4 py-3 text-body text-brand-900',
+          'placeholder:text-slate-400 transition-[border-color,box-shadow] duration-150 ease-ios',
+          'focus:outline-none input-focus',
+          error && 'border-rose-400 focus:border-rose-500',
           className,
         )}
         {...props}
       />
-      {error && <p className="text-xs text-rose-600">{error}</p>}
-      {hint && !error && <p className="text-xs text-slate-500">{hint}</p>}
+      {error && <p className="text-footnote text-rose-600">{error}</p>}
+      {hint && !error && <p className="text-footnote text-slate-500">{hint}</p>}
     </div>
   ),
 );

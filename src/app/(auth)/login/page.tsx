@@ -6,7 +6,7 @@ import { useRouter } from 'next/navigation';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
-import { Mail, Lock, Eye, EyeOff, ArrowRight } from 'lucide-react';
+import { Mail, Lock, Eye, EyeOff, ArrowRight } from '@/components/icons';
 import { authApi, getErrorMessage } from '@/lib/api';
 import { useAuthStore } from '@/store/auth.store';
 import { Button } from '@/components/ui/button';
@@ -84,7 +84,7 @@ export default function LoginPage() {
                   placeholder="••••••••"
                   autoComplete="current-password"
                   {...register('password')}
-                  className="w-full h-12 pl-11 pr-12 rounded-xl bg-white border border-slate-200 hover:border-slate-300 text-sm text-brand-900 placeholder:text-slate-400 focus:outline-none input-focus transition-all duration-150"
+                  className="h-12 w-full rounded-ios-md border border-slate-200 bg-white pl-11 pr-12 text-body text-brand-900 placeholder:text-slate-400 transition-[border-color,box-shadow] duration-150 ease-ios focus:outline-none input-focus"
                 />
                 <button
                   type="button"
@@ -129,7 +129,7 @@ export default function LoginPage() {
           </div>
 
           {/* Register link */}
-          <p className="text-center text-sm text-slate-500">
+          <p className="text-center text-subhead text-slate-500">
             Hisobingiz yo&apos;qmi?{' '}
             <Link href="/register" className="text-accent-700 hover:text-accent-800 font-semibold transition-colors">
               Ro&apos;yxatdan o&apos;tish

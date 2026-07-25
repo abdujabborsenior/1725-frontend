@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { Star } from 'lucide-react';
+import { StarFill } from '@/components/icons';
 import { cn } from '@/lib/utils';
 
 /** Reyting shkalasi — IMDB uslubi (1..10 butun ovoz, o'rtacha kasrli) */
@@ -25,10 +25,10 @@ export function RatingValue({
   className?: string;
 }) {
   const S = {
-    xs: { star: 'h-3 w-3', num: 'text-[11px]', sub: 'text-[10px]' },
-    sm: { star: 'h-3.5 w-3.5', num: 'text-xs', sub: 'text-[11px]' },
-    md: { star: 'h-4 w-4', num: 'text-sm', sub: 'text-xs' },
-    lg: { star: 'h-6 w-6', num: 'text-2xl', sub: 'text-sm' },
+    xs: { star: 'h-3 w-3', num: 'text-caption-1', sub: 'text-caption-2' },
+    sm: { star: 'h-3.5 w-3.5', num: 'text-footnote', sub: 'text-caption-1' },
+    md: { star: 'h-4 w-4', num: 'text-subhead', sub: 'text-footnote' },
+    lg: { star: 'h-6 w-6', num: 'text-title-1', sub: 'text-subhead' },
   }[size];
 
   return (
@@ -39,11 +39,8 @@ export function RatingValue({
         count != null ? ` — ${count} ta ovoz` : ''
       }`}
     >
-      <Star
-        className={cn(S.star, 'self-center text-amber-400 fill-amber-400')}
-        aria-hidden
-      />
-      <span className={cn(S.num, 'font-bold tabular-nums text-brand-900')}>
+      <StarFill className={cn(S.star, 'self-center text-amber-500')} aria-hidden />
+      <span className={cn(S.num, 'font-semibold tabular-nums text-brand-900')}>
         {value.toFixed(1)}
       </span>
       <span className={cn(S.sub, 'text-slate-500')}>/{RATING_MAX}</span>
@@ -90,22 +87,18 @@ export function RatingInput({
             onFocus={() => setHover(n)}
             onBlur={() => setHover(0)}
             onClick={() => onChange(n)}
-            className="rounded-md p-0.5 transition-transform hover:scale-110 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-500"
+            className="rounded-md p-0.5 transition-transform duration-150 ease-ios hover:scale-110 active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-500"
           >
-            <Star
+            <StarFill
               style={{ width: size, height: size }}
-              className={cn(
-                'transition-colors',
-                n <= active ? 'text-amber-400' : 'text-slate-200',
-              )}
-              fill="currentColor"
+              className={cn('transition-colors duration-150', n <= active ? 'text-amber-500' : 'text-slate-200')}
             />
           </button>
         ))}
       </div>
       <span
         className={cn(
-          'min-w-[3.5rem] text-sm font-bold tabular-nums',
+          'min-w-[3.5rem] text-subhead font-semibold tabular-nums',
           active ? 'text-brand-900' : 'text-slate-400',
         )}
         aria-live="polite"

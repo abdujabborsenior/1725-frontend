@@ -1,7 +1,7 @@
 'use client';
 
 import { useQuery } from '@tanstack/react-query';
-import { Users } from 'lucide-react';
+import { Users } from '@/components/icons';
 import { usersApi } from '@/lib/api';
 import { Modal } from '@/components/ui/modal';
 import { UserRowSkeleton } from '@/components/ui/skeleton';
@@ -38,7 +38,7 @@ export function FollowListModal({ open, onClose, userId, mode }: Props) {
         ) : (
           <div className="py-12 text-center">
             <Users className="mx-auto mb-2 h-7 w-7 text-slate-300" />
-            <p className="text-sm text-slate-500">
+            <p className="text-subhead text-slate-500">
               {mode === 'followers' ? 'Hali obunachilar yo‘q' : 'Hali hech kimga obuna bo‘lmagan'}
             </p>
           </div>

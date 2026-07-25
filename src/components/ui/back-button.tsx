@@ -1,7 +1,7 @@
 'use client';
 
 import { useRouter } from 'next/navigation';
-import { ArrowLeft } from 'lucide-react';
+import { ChevronLeft } from '@/components/icons';
 import { cn } from '@/lib/utils';
 
 interface BackButtonProps {
@@ -27,17 +27,15 @@ export function BackButton({ fallbackHref = '/', label, className }: BackButtonP
     }
   }
 
+  /* iOS "Back": chevron + tint yorliq — pill/karta emas */
   if (label) {
     return (
       <button
         type="button"
         onClick={goBack}
-        className={cn(
-          'group inline-flex items-center gap-2 rounded-full border border-slate-200 bg-white/80 py-2 pl-3 pr-4 text-sm font-semibold text-slate-600 shadow-soft backdrop-blur transition-all hover:border-slate-300 hover:text-brand-900 active:scale-[0.97]',
-          className,
-        )}
+        className={cn('tappable -ml-1 flex items-center gap-0.5 text-body text-accent-700', className)}
       >
-        <ArrowLeft className="h-4 w-4 transition-transform group-hover:-translate-x-0.5" />
+        <ChevronLeft className="h-[19px] w-[19px]" strokeWidth={3} />
         {label}
       </button>
     );
@@ -50,11 +48,11 @@ export function BackButton({ fallbackHref = '/', label, className }: BackButtonP
       aria-label="Ortga"
       title="Ortga"
       className={cn(
-        'group flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-slate-200 bg-white/80 text-slate-600 shadow-soft backdrop-blur transition-all hover:border-slate-300 hover:text-brand-900 active:scale-95',
+        'tappable flex h-10 w-10 shrink-0 items-center justify-center rounded-full text-accent-700',
         className,
       )}
     >
-      <ArrowLeft className="h-5 w-5 transition-transform group-hover:-translate-x-0.5" />
+      <ChevronLeft className="h-[22px] w-[22px]" strokeWidth={3} />
     </button>
   );
 }

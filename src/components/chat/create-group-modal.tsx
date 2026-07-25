@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useQueryClient } from '@tanstack/react-query';
-import { Users, AtSign } from 'lucide-react';
+import { Users, AtSign } from '@/components/icons';
 import { chatApi, getErrorMessage } from '@/lib/api';
 import { Modal } from '@/components/ui/modal';
 import { Input } from '@/components/ui/input';
@@ -68,9 +68,9 @@ export function CreateGroupModal({ open, onClose }: { open: boolean; onClose: ()
         />
 
         <Textarea label="Tavsif" rows={2} value={description} onChange={(e) => setDescription(e.target.value)} placeholder="Guruh nima haqida?" />
-        <label className="flex cursor-pointer items-center gap-3 rounded-xl border border-slate-200 p-3">
+        <label className="flex cursor-pointer items-center gap-3 rounded-ios-md border border-slate-200 p-3">
           <input type="checkbox" checked={isPublic} onChange={(e) => setIsPublic(e.target.checked)} className="h-4 w-4 accent-accent-500" />
-          <span className="flex items-center gap-2 text-sm text-brand-900"><Users className="h-4 w-4 text-slate-400" /> Ommaviy — bosh sahifada ko‘rinadi, hamma qo‘shila oladi</span>
+          <span className="flex items-center gap-2 text-subhead text-brand-900"><Users className="h-4 w-4 text-slate-400" /> Ommaviy — bosh sahifada ko‘rinadi, hamma qo‘shila oladi</span>
         </label>
         <Button variant="accent" fullWidth loading={saving} onClick={create}>Guruh yaratish</Button>
       </div>

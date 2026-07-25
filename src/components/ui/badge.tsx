@@ -20,7 +20,7 @@ export function ProblemStatusBadge({
   return (
     <span
       className={cn(
-        'inline-flex items-center px-2.5 py-0.5 rounded-md text-[11px] font-semibold border whitespace-nowrap',
+        'inline-flex items-center whitespace-nowrap rounded-full px-2.5 py-1 text-caption-1 font-medium',
         PROBLEM_STATUS_BADGE[status],
         className,
       )}
@@ -46,7 +46,7 @@ export function ProblemStatusPill({
   return (
     <span
       className={cn(
-        'inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-[11px] font-bold ring-1 ring-inset whitespace-nowrap',
+        'inline-flex items-center gap-1.5 whitespace-nowrap rounded-full px-2.5 py-1 text-caption-1 font-medium',
         m.chip,
         className,
       )}
@@ -70,7 +70,7 @@ export function SolutionStatusBadge({
   return (
     <span
       className={cn(
-        'inline-flex items-center px-2.5 py-0.5 rounded-md text-[11px] font-semibold border whitespace-nowrap',
+        'inline-flex items-center whitespace-nowrap rounded-full px-2.5 py-1 text-caption-1 font-medium',
         SOLUTION_STATUS_BADGE[status],
         className,
       )}
@@ -90,7 +90,7 @@ export function StartupStatusBadge({
   return (
     <span
       className={cn(
-        'inline-flex items-center px-2.5 py-0.5 rounded-md text-[11px] font-semibold border whitespace-nowrap',
+        'inline-flex items-center whitespace-nowrap rounded-full px-2.5 py-1 text-caption-1 font-medium',
         STARTUP_STATUS_BADGE[status],
         className,
       )}

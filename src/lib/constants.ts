@@ -31,11 +31,11 @@ export const PROBLEM_STATUS_LABEL: Record<ProblemStatus, string> = {
 };
 
 export const PROBLEM_STATUS_BADGE: Record<ProblemStatus, string> = {
-  pending:      'bg-amber-50 text-amber-700 border-amber-200',
-  open:         'bg-accent-50 text-accent-700 border-accent-200',
-  under_review: 'bg-sky-50 text-sky-700 border-sky-200',
-  resolved:     'bg-violet-50 text-violet-700 border-violet-200',
-  rejected:     'bg-rose-50 text-rose-700 border-rose-200',
+  pending:      'bg-amber-50 text-amber-700',
+  open:         'bg-accent-50 text-accent-700',
+  under_review: 'bg-sky-50 text-sky-700',
+  resolved:     'bg-violet-50 text-violet-700',
+  rejected:     'bg-rose-50 text-rose-700',
 };
 
 /**
@@ -49,23 +49,23 @@ export const PROBLEM_STATUS_META: Record<
 > = {
   pending: {
     label: 'Kutilmoqda', dot: 'bg-amber-500', text: 'text-amber-700',
-    chip: 'bg-amber-50 text-amber-700 ring-amber-500/20', bar: 'bg-amber-400', border: 'hover:border-amber-300',
+    chip: 'bg-amber-50 text-amber-700', bar: 'bg-amber-400', border: 'hover:border-amber-300',
   },
   open: {
     label: 'Ochiq', dot: 'bg-accent-500', text: 'text-accent-700',
-    chip: 'bg-accent-50 text-accent-700 ring-accent-500/20', bar: 'bg-accent-500', border: 'hover:border-accent-300',
+    chip: 'bg-accent-50 text-accent-700', bar: 'bg-accent-500', border: 'hover:border-accent-300',
   },
   under_review: {
     label: "Ko'rib chiqilmoqda", dot: 'bg-sky-500', text: 'text-sky-700',
-    chip: 'bg-sky-50 text-sky-700 ring-sky-500/20', bar: 'bg-sky-500', border: 'hover:border-sky-300',
+    chip: 'bg-sky-50 text-sky-700', bar: 'bg-sky-500', border: 'hover:border-sky-300',
   },
   resolved: {
     label: 'Hal qilindi', dot: 'bg-violet-500', text: 'text-violet-700',
-    chip: 'bg-violet-50 text-violet-700 ring-violet-500/20', bar: 'bg-violet-500', border: 'hover:border-violet-300',
+    chip: 'bg-violet-50 text-violet-700', bar: 'bg-violet-500', border: 'hover:border-violet-300',
   },
   rejected: {
     label: 'Rad etildi', dot: 'bg-rose-500', text: 'text-rose-700',
-    chip: 'bg-rose-50 text-rose-700 ring-rose-500/20', bar: 'bg-rose-500', border: 'hover:border-rose-300',
+    chip: 'bg-rose-50 text-rose-700', bar: 'bg-rose-500', border: 'hover:border-rose-300',
   },
 };
 
@@ -77,9 +77,9 @@ export const SOLUTION_STATUS_LABEL: Record<SolutionStatus, string> = {
 };
 
 export const SOLUTION_STATUS_BADGE: Record<SolutionStatus, string> = {
-  pending:  'bg-amber-50 text-amber-700 border-amber-200',
-  accepted: 'bg-accent-50 text-accent-700 border-accent-200',
-  rejected: 'bg-rose-50 text-rose-700 border-rose-200',
+  pending:  'bg-amber-50 text-amber-700',
+  accepted: 'bg-accent-50 text-accent-700',
+  rejected: 'bg-rose-50 text-rose-700',
 };
 
 /* ── Roles ────────────────────────────────────────────────────── */
@@ -92,11 +92,11 @@ export const ROLE_LABEL: Record<UserRole, string> = {
 };
 
 export const ROLE_BADGE: Record<UserRole, string> = {
-  superadmin:         'bg-violet-50 text-violet-700 border-violet-200',
-  analyzer:           'bg-cyan-50 text-cyan-700 border-cyan-200',
-  school_student:     'bg-accent-50 text-accent-700 border-accent-200',
-  university_student: 'bg-sky-50 text-sky-700 border-sky-200',
-  user:               'bg-slate-50 text-slate-700 border-slate-200',
+  superadmin:         'bg-violet-50 text-violet-700',
+  analyzer:           'bg-cyan-50 text-cyan-700',
+  school_student:     'bg-accent-50 text-accent-700',
+  university_student: 'bg-sky-50 text-sky-700',
+  user:               'bg-slate-100 text-slate-600',
 };
 
 /* ── Domain data ──────────────────────────────────────────────── */
@@ -139,9 +139,9 @@ export const STARTUP_STATUS_LABEL: Record<StartupStatus, string> = {
 };
 
 export const STARTUP_STATUS_BADGE: Record<StartupStatus, string> = {
-  draft:     'bg-amber-50 text-amber-700 border-amber-200',
-  published: 'bg-accent-50 text-accent-700 border-accent-200',
-  archived:  'bg-slate-100 text-slate-600 border-slate-200',
+  draft:     'bg-amber-50 text-amber-700',
+  published: 'bg-accent-50 text-accent-700',
+  archived:  'bg-slate-100 text-slate-600',
 };
 
 /**
@@ -168,40 +168,40 @@ export const PLATFORM_META: Record<PlatformType, PlatformMeta> = {
     cta: 'Google Play',
     storeKicker: 'GET IT ON',
     storeName: 'Google Play',
-    badgeClass: 'bg-brand-900 text-white hover:bg-brand-800',
-    chipClass: 'bg-accent-50 text-accent-700 border-accent-200',
+    badgeClass: 'bg-brand-900 text-white active:bg-brand-800',
+    chipClass: 'bg-emerald-50 text-emerald-600',
   },
   ios: {
     label: 'iOS',
     cta: 'App Store',
     storeKicker: 'Download on the',
     storeName: 'App Store',
-    badgeClass: 'bg-brand-900 text-white hover:bg-brand-800',
-    chipClass: 'bg-slate-100 text-slate-700 border-slate-200',
+    badgeClass: 'bg-brand-900 text-white active:bg-brand-800',
+    chipClass: 'bg-slate-100 text-slate-600',
   },
   website: {
     label: 'Veb-sayt',
     cta: 'Saytga o\'tish',
     storeKicker: 'OPEN',
     storeName: 'Website',
-    badgeClass: 'bg-sky-700 text-white hover:bg-sky-800',
-    chipClass: 'bg-sky-50 text-sky-700 border-sky-200',
+    badgeClass: 'bg-accent-600 text-white active:bg-accent-700',
+    chipClass: 'bg-accent-50 text-accent-700',
   },
   telegram_bot: {
     label: 'Telegram',
     cta: 'Telegramda ochish',
     storeKicker: 'OPEN IN',
     storeName: 'Telegram',
-    badgeClass: 'bg-[#1878a8] text-white hover:bg-[#136890]',
-    chipClass: 'bg-cyan-50 text-cyan-700 border-cyan-200',
+    badgeClass: 'bg-[#229ED9] text-white active:bg-[#1B8AC0]',
+    chipClass: 'bg-cyan-50 text-cyan-700',
   },
   other: {
     label: 'Havola',
     cta: 'Havolani ochish',
     storeKicker: 'OPEN',
     storeName: 'Link',
-    badgeClass: 'bg-violet-600 text-white hover:bg-violet-700',
-    chipClass: 'bg-violet-50 text-violet-700 border-violet-200',
+    badgeClass: 'bg-iris-500 text-white active:bg-iris-600',
+    chipClass: 'bg-violet-50 text-violet-700',
   },
 };
 

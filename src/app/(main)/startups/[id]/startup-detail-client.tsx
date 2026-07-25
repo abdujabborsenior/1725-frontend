@@ -6,9 +6,9 @@ import { useParams, useRouter } from 'next/navigation';
 import type { Startup } from '@/types';
 import { useQuery } from '@tanstack/react-query';
 import {
-  ArrowLeft, Eye, Calendar, Users, Rocket, Tag, ExternalLink, Share2, Check, Flag,
+  ChevronLeft, ChevronRight, Eye, Calendar, Users, Rocket, Tag, Share2, Check, Flag,
   PencilLine,
-} from 'lucide-react';
+} from '@/components/icons';
 import { startupsApi } from '@/lib/api';
 import { useAuthStore } from '@/store/auth.store';
 import { PLATFORM_ORDER } from '@/lib/constants';
@@ -20,6 +20,7 @@ import { RatingValue } from '@/components/startups/rating';
 import { CoverMedia, isPlayableVideo } from '@/components/startups/cover-media';
 import { cn } from '@/lib/utils';
 import { ReportDialog } from '@/components/reports/report-dialog';
+import { EmptyState } from '@/components/ui/page-header';
 import toast from 'react-hot-toast';
 
 export function StartupDetailClient({ initialStartup }: { initialStartup: Startup | null }) {
@@ -69,27 +70,29 @@ export function StartupDetailClient({ initialStartup }: { initialStartup: Startu
 
   if (isLoading) {
     return (
-      <div className="max-w-4xl mx-auto space-y-6 animate-pulse">
-        <div className="h-48 rounded-2xl bg-slate-100" />
-        <div className="h-8 w-1/2 rounded bg-slate-100" />
-        <div className="h-24 rounded bg-slate-100" />
+      <div className="mx-auto max-w-4xl space-y-6">
+        <div className="skeleton h-48 rounded-ios-2xl" />
+        <div className="skeleton h-8 w-1/2 rounded-md" />
+        <div className="skeleton h-24 rounded-ios-lg" />
       </div>
     );
   }
 
   if (isError || !startup) {
     return (
-      <div className="max-w-4xl mx-auto py-24 text-center">
-        <div className="h-16 w-16 rounded-2xl bg-slate-100 flex items-center justify-center mx-auto mb-4">
-          <Rocket className="h-8 w-8 text-slate-400" />
-        </div>
-        <p className="text-brand-900 font-semibold">Startap topilmadi</p>
-        <button
-          onClick={() => router.push('/startups')}
-          className="mt-4 text-sm font-semibold text-accent-700 hover:underline"
-        >
-          Startaplarga qaytish
-        </button>
+      <div className="mx-auto max-w-4xl">
+        <EmptyState
+          icon={<Rocket />}
+          title="Startap topilmadi"
+          action={
+            <button
+              onClick={() => router.push('/startups')}
+              className="tappable text-body font-medium text-accent-700"
+            >
+              Startaplarga qaytish
+            </button>
+          }
+        />
       </div>
     );
   }
@@ -110,14 +113,14 @@ export function StartupDetailClient({ initialStartup }: { initialStartup: Startu
     <div className="max-w-4xl mx-auto space-y-8">
       <button
         onClick={() => router.back()}
-        className="flex items-center gap-2 text-sm text-slate-500 hover:text-brand-900 transition-colors group"
+        className="tappable -ml-1 flex items-center gap-0.5 text-body text-accent-700"
       >
-        <ArrowLeft className="h-4 w-4 group-hover:-translate-x-0.5 transition-transform" />
+        <ChevronLeft className="h-[19px] w-[19px]" strokeWidth={3} />
         Orqaga
       </button>
 
       {/* Hero */}
-      <div className="relative overflow-hidden rounded-2xl border border-slate-200 bg-white">
+      <div className="overflow-hidden rounded-ios-2xl bg-white">
         {/* Cover banner — rasm yoki video (bosilganda ijro boshlanadi) */}
         <div className="relative h-44 md:h-56">
           <CoverMedia
@@ -137,28 +140,28 @@ export function StartupDetailClient({ initialStartup }: { initialStartup: Startu
           {/* Logo — faqat shu element cover ustiga chiqadi */}
           {/* Video muqovada logo ustiga chiqmaydi — player boshqaruvlarini to'sardi */}
           <div className={cn(
-            'relative z-10 mb-3 inline-flex h-24 w-24 shrink-0 items-center justify-center overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-card',
+            'relative z-10 mb-3 inline-flex h-24 w-24 shrink-0 items-center justify-center overflow-hidden rounded-[22px] bg-white shadow-card ring-1 ring-black/[0.06]',
             hasCoverVideo ? 'mt-4' : '-mt-12',
           )}>
             {startup.logoUrl ? (
               // eslint-disable-next-line @next/next/no-img-element
               <img src={startup.logoUrl} alt={startup.title} className="h-full w-full object-cover" />
             ) : (
-              <span className="text-3xl font-black text-brand-900">
+              <span className="text-large-title font-semibold text-brand-900">
                 {startup.title.charAt(0).toUpperCase()}
               </span>
             )}
           </div>
           {/* Sarlavha + shior — oq maydonda, to'liq ko'rinadi */}
-          <h1 className="text-2xl md:text-3xl font-bold tracking-tight text-brand-900">{startup.title}</h1>
-          {startup.tagline && (
-            <p className="mt-1 text-sm text-slate-600">{startup.tagline}</p>
-          )}
+          <h1 className="text-title-1 font-bold tracking-tight text-brand-900 md:text-large-title">
+            {startup.title}
+          </h1>
+          {startup.tagline && <p className="mt-1 text-callout text-slate-500">{startup.tagline}</p>}
 
           {/* Meta row */}
-          <div className="mt-5 flex flex-wrap items-center gap-4 text-xs text-slate-500">
+          <div className="mt-4 flex flex-wrap items-center gap-x-4 gap-y-2 text-footnote text-slate-500">
             {startup.category && (
-              <span className="inline-flex items-center gap-1.5 font-medium text-slate-700">
+              <span className="inline-flex items-center gap-1.5 text-slate-600">
                 <Tag className="h-3.5 w-3.5 text-accent-600" /> {startup.category}
               </span>
             )}
@@ -181,28 +184,32 @@ export function StartupDetailClient({ initialStartup }: { initialStartup: Startu
           </div>
 
           {/* Actions: like / bookmark / share */}
-          <div className="mt-5 flex flex-wrap items-center gap-2.5">
+          <div className="mt-5 flex flex-wrap items-center gap-2">
             <LikeButton startup={startup} />
             <BookmarkButton startup={startup} />
             <button
               onClick={handleShare}
-              className="inline-flex items-center gap-2 h-11 px-4 rounded-xl border border-slate-200 bg-white text-slate-600 font-semibold hover:text-brand-900 hover:border-slate-300 transition-all btn-lift"
+              className="tappable inline-flex h-9 items-center gap-1.5 rounded-full bg-fill-tertiary px-3.5 text-subhead font-medium text-slate-600"
             >
-              {copied ? <Check className="h-4 w-4 text-accent-600" /> : <Share2 className="h-4 w-4" />}
+              {copied ? (
+                <Check className="h-[17px] w-[17px] text-accent-600" strokeWidth={2.6} />
+              ) : (
+                <Share2 className="h-[17px] w-[17px]" />
+              )}
               {copied ? 'Nusxalandi' : 'Ulashish'}
             </button>
             <button
               onClick={() => setReportOpen(true)}
-              className="inline-flex items-center gap-2 h-11 px-4 rounded-xl border border-slate-200 bg-white text-slate-500 font-semibold hover:text-rose-600 hover:border-rose-200 transition-all btn-lift"
+              className="tappable inline-flex h-9 items-center gap-1.5 rounded-full bg-fill-tertiary px-3.5 text-subhead font-medium text-slate-600"
             >
-              <Flag className="h-4 w-4" /> Shikoyat
+              <Flag className="h-[17px] w-[17px]" /> Shikoyat
             </button>
             {isOwner && (
               <Link
                 href={`/startups/${startup.id}/edit`}
-                className="inline-flex items-center gap-2 h-11 px-4 rounded-xl border border-slate-200 bg-white text-slate-600 font-semibold hover:text-brand-900 hover:border-slate-300 transition-all btn-lift"
+                className="tappable inline-flex h-9 items-center gap-1.5 rounded-full bg-fill-tertiary px-3.5 text-subhead font-medium text-slate-600"
               >
-                <PencilLine className="h-4 w-4" /> Tahrirlash
+                <PencilLine className="h-[17px] w-[17px]" /> Tahrirlash
               </Link>
             )}
           </div>
@@ -225,8 +232,9 @@ export function StartupDetailClient({ initialStartup }: { initialStartup: Startu
               ))}
             </div>
           ) : (
-            <div className="mt-6 inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-amber-50 border border-amber-200 text-sm text-amber-700">
-              <Rocket className="h-4 w-4" /> Bu startap hozircha g&apos;oya/ishlanma bosqichida
+            <div className="mt-6 inline-flex items-center gap-2 rounded-ios-md bg-amber-50 px-4 py-2.5 text-subhead text-amber-700">
+              <Rocket className="h-[17px] w-[17px]" /> Bu startap hozircha g&apos;oya/ishlanma
+              bosqichida
             </div>
           )}
         </div>
@@ -234,9 +242,9 @@ export function StartupDetailClient({ initialStartup }: { initialStartup: Startu
 
       {/* Description */}
       <section className="space-y-3">
-        <h2 className="text-lg font-bold text-brand-900">Startap haqida</h2>
-        <div className="bg-white border border-slate-200 rounded-2xl p-5 md:p-6">
-          <p className="text-sm text-slate-700 leading-relaxed whitespace-pre-line">
+        <h2 className="text-title-2 font-semibold text-brand-900">Startap haqida</h2>
+        <div className="rounded-ios-2xl bg-white p-5 md:p-6">
+          <p className="whitespace-pre-line text-body leading-relaxed text-slate-600">
             {startup.description}
           </p>
         </div>
@@ -251,7 +259,7 @@ export function StartupDetailClient({ initialStartup }: { initialStartup: Startu
           {startup.tags.map((t) => (
             <span
               key={t}
-              className="px-3 py-1 rounded-full text-xs font-medium bg-slate-50 text-slate-600 border border-slate-200"
+              className="rounded-full bg-fill-tertiary px-3 py-1 text-footnote font-medium text-slate-600"
             >
               #{t}
             </span>
@@ -262,8 +270,8 @@ export function StartupDetailClient({ initialStartup }: { initialStartup: Startu
       {/* All links list (compact) */}
       {orderedPlatforms.length > 0 && (
         <section className="space-y-3">
-          <h2 className="text-lg font-bold text-brand-900">Barcha havolalar</h2>
-          <div className="divide-y divide-slate-100 bg-white border border-slate-200 rounded-2xl overflow-hidden">
+          <h2 className="text-title-2 font-semibold text-brand-900">Barcha havolalar</h2>
+          <div className="ios-list" style={{ ['--row-inset' as string]: '3.75rem' }}>
             {orderedPlatforms.map((p, i) => (
               <a
                 key={`link-${i}`}
@@ -271,23 +279,23 @@ export function StartupDetailClient({ initialStartup }: { initialStartup: Startu
                 target="_blank"
                 rel="noopener noreferrer"
                 onClick={handlePlatformClick}
-                className="flex items-center gap-3 px-4 py-3 hover:bg-slate-50 transition-colors group"
+                className="ios-row"
               >
                 {p.iconUrl ? (
                   // eslint-disable-next-line @next/next/no-img-element
-                  <img src={p.iconUrl} alt="" className="h-8 w-8 rounded-lg object-cover border border-slate-200" />
+                  <img src={p.iconUrl} alt="" className="h-8 w-8 rounded-[8px] object-cover" />
                 ) : (
-                  <span className="h-8 w-8 rounded-lg bg-slate-100 flex items-center justify-center text-slate-500 text-xs font-bold">
+                  <span className="flex h-8 w-8 items-center justify-center rounded-[8px] bg-fill-tertiary text-footnote font-semibold text-slate-500">
                     {(p.label || p.url).charAt(0).toUpperCase()}
                   </span>
                 )}
-                <span className="flex-1 min-w-0">
-                  <span className="block text-sm font-medium text-brand-900 truncate">
+                <span className="min-w-0 flex-1">
+                  <span className="block truncate text-body text-brand-900">
                     {p.label || p.url}
                   </span>
-                  <span className="block text-xs text-slate-500 truncate">{p.url}</span>
+                  <span className="block truncate text-footnote text-slate-500">{p.url}</span>
                 </span>
-                <ExternalLink className="h-4 w-4 text-slate-400 group-hover:text-accent-600 transition-colors" />
+                <ChevronRight className="h-[15px] w-[15px] shrink-0 text-slate-300" strokeWidth={3} />
               </a>
             ))}
           </div>
@@ -297,7 +305,7 @@ export function StartupDetailClient({ initialStartup }: { initialStartup: Startu
       {/* Related */}
       {related && related.length > 0 && (
         <section className="space-y-3">
-          <h2 className="text-lg font-bold text-brand-900">O&apos;xshash startaplar</h2>
+          <h2 className="text-title-2 font-semibold text-brand-900">O&apos;xshash startaplar</h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
             {related.slice(0, 4).map((s) => (
               <StartupCard key={s.id} startup={s} />

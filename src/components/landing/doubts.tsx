@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { Plus, Lightbulb } from 'lucide-react';
+import { Plus } from '@/components/icons';
 import { cn } from '@/lib/utils';
 
 /**
@@ -31,7 +31,7 @@ export function Doubts() {
   const [open, setOpen] = useState<number | null>(0);
 
   return (
-    <div className="mx-auto max-w-3xl divide-y divide-slate-200/80 overflow-hidden rounded-3xl border border-slate-200 bg-white/80 shadow-soft backdrop-blur">
+    <div className="ios-list mx-auto max-w-3xl" style={{ '--row-inset': '1.5rem' } as React.CSSProperties}>
       {DOUBTS.map((d, i) => {
         const active = open === i;
         return (
@@ -39,36 +39,26 @@ export function Doubts() {
             key={d.q}
             onClick={() => setOpen(active ? null : i)}
             aria-expanded={active}
-            className="block w-full px-5 py-5 text-left transition-colors hover:bg-slate-50/70 md:px-7"
+            className="block w-full bg-white px-5 py-4 text-left transition-colors duration-150 active:bg-fill-tertiary md:px-6"
           >
             <div className="flex items-center justify-between gap-4">
-              <span
-                className={cn(
-                  'text-base font-bold transition-colors md:text-lg',
-                  active ? 'text-brand-900' : 'text-slate-700',
-                )}
-              >
+              <span className="text-callout font-semibold text-brand-900 md:text-title-3">
                 {d.q}
               </span>
               <span
                 className={cn(
-                  'flex h-8 w-8 flex-none items-center justify-center rounded-full border transition-all duration-300',
-                  active
-                    ? 'rotate-45 border-accent-600 bg-accent-600 text-white'
-                    : 'border-slate-200 bg-white text-slate-500',
+                  'flex h-[26px] w-[26px] flex-none items-center justify-center rounded-full transition-all duration-250 ease-ios',
+                  active ? 'rotate-45 bg-accent-600 text-white' : 'bg-fill-tertiary text-slate-500',
                 )}
               >
-                <Plus className="h-4 w-4" />
+                <Plus className="h-4 w-4" strokeWidth={2.5} />
               </span>
             </div>
             {/* CSS accordion (grid-rows trick) — framer height animatsiyasisiz;
                 kontent doim DOM'da (SEO uchun ham foydali) */}
             <div className={cn('acc-panel', active && 'acc-panel-open')} aria-hidden={!active}>
               <div>
-                <p className="flex gap-2.5 pt-3 text-sm leading-relaxed text-slate-600 md:text-[15px]">
-                  <Lightbulb className="mt-0.5 h-4 w-4 flex-none text-accent-500" />
-                  <span>{d.a}</span>
-                </p>
+                <p className="pt-2.5 text-subhead leading-relaxed text-slate-500">{d.a}</p>
               </div>
             </div>
           </button>

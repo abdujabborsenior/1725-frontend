@@ -3,16 +3,16 @@
 import { useEffect, useState } from 'react';
 import { cn } from '@/lib/utils';
 
-/** Logo bo'lmaganda — ism asosidagi barqaror gradient (hech qachon bo'sh ko'rinmaydi). */
-const GRADIENTS = [
-  'from-emerald-400 to-teal-500',
-  'from-indigo-400 to-violet-500',
-  'from-sky-400 to-blue-500',
-  'from-amber-400 to-orange-500',
-  'from-rose-400 to-pink-500',
-  'from-fuchsia-400 to-purple-500',
-  'from-cyan-400 to-emerald-500',
-  'from-violet-400 to-indigo-500',
+/** Logo bo'lmaganda — ism asosidagi barqaror iOS system rangi (tekis). */
+const TINTS = [
+  'bg-[#007AFF]',
+  'bg-[#5856D6]',
+  'bg-[#34C759]',
+  'bg-[#FF9500]',
+  'bg-[#FF2D55]',
+  'bg-[#AF52DE]',
+  'bg-[#30B0C7]',
+  'bg-[#A2845E]',
 ];
 
 function hashString(s: string): number {
@@ -23,7 +23,7 @@ function hashString(s: string): number {
 
 /**
  * Startap logosi — mahsulot uslubidagi yumaloq-kvadrat (squircle).
- * Rasm bo'lsa ko'rsatadi; rasm yuklanmasa yoki yo'q bo'lsa — gradient + bosh harf.
+ * Rasm bo'lsa ko'rsatadi; rasm yuklanmasa yoki yo'q bo'lsa — tekis rang + bosh harf.
  * (onError zaxira: buzilgan/yetib bo'lmas URL'da ham bo'sh ko'rinmaydi.)
  */
 export function StartupLogo({
@@ -39,7 +39,7 @@ export function StartupLogo({
 }) {
   const [failed, setFailed] = useState(false);
   useEffect(() => setFailed(false), [src]);
-  const gradient = GRADIENTS[hashString(title || 'startup') % GRADIENTS.length];
+  const tint = TINTS[hashString(title || 'startup') % TINTS.length];
   const fontSize = Math.max(13, Math.round(size * 0.42));
   const showImg = !!src && !failed;
 
@@ -47,7 +47,7 @@ export function StartupLogo({
     <span
       className={cn(
         'relative inline-flex shrink-0 items-center justify-center overflow-hidden rounded-2xl',
-        !showImg && `bg-gradient-to-br ${gradient}`,
+        !showImg && tint,
         className,
       )}
       style={{ height: size, width: size }}
@@ -62,7 +62,7 @@ export function StartupLogo({
           onError={() => setFailed(true)}
         />
       ) : (
-        <span className="font-black leading-none text-white" style={{ fontSize }}>
+        <span className="font-semibold leading-none text-white" style={{ fontSize }}>
           {title?.trim()?.[0]?.toUpperCase() ?? '?'}
         </span>
       )}

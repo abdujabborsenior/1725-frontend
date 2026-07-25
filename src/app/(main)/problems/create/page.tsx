@@ -6,9 +6,10 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import {
-  ArrowLeft, Plus, X, Link2, Image as ImageIcon, Video, Send,
-  UploadCloud, Loader2,
-} from 'lucide-react';
+  ChevronLeft, Plus, X, Link2, Image as ImageIcon, Video,
+  UploadCloud, Spinner,
+} from '@/components/icons';
+import { PageHeader } from '@/components/ui/page-header';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { problemsApi, chatApi, getErrorMessage } from '@/lib/api';
 import { useAuthStore } from '@/store/auth.store';
@@ -106,24 +107,18 @@ export default function CreateProblemPage() {
 
   return (
     <div className="max-w-2xl mx-auto space-y-6">
-      <button onClick={() => router.back()}
-        className="flex items-center gap-2 text-sm text-slate-500 hover:text-brand-900 transition-colors group">
-        <ArrowLeft className="h-4 w-4 group-hover:-translate-x-0.5 transition-transform" />
+      <button
+        onClick={() => router.back()}
+        className="tappable -ml-1 flex items-center gap-0.5 text-body text-accent-700"
+      >
+        <ChevronLeft className="h-[19px] w-[19px]" strokeWidth={3} />
         Orqaga
       </button>
 
-      <div>
-        <span className="inline-flex items-center gap-2 text-[11px] font-bold uppercase tracking-[0.2em] text-slate-400">
-          <span className="grid h-7 w-7 place-items-center rounded-lg bg-brand-900 text-accent-400">
-            <Send className="h-3.5 w-3.5" strokeWidth={2.5} />
-          </span>
-          Yangi muammo
-        </span>
-        <h1 className="mt-3 text-[1.75rem] font-bold tracking-tight text-brand-900">Muammo qoldirish</h1>
-        <p className="mt-1 text-sm text-slate-500">
-          Muammoni batafsil tasvirlab bering — hamjamiyat yechim taklif qiladi
-        </p>
-      </div>
+      <PageHeader
+        title="Muammo qoldirish"
+        subtitle="Muammoni batafsil tasvirlab bering — hamjamiyat yechim taklif qiladi."
+      />
 
       <form onSubmit={handleSubmit((d) => create(d))} className="space-y-5">
         <Input
@@ -172,8 +167,8 @@ export default function CreateProblemPage() {
           </label>
           <div className="flex gap-2">
             <button type="button" onClick={() => imgFileRef.current?.click()} disabled={uploadingImg || imageUrls.length >= 5}
-              className="h-11 px-4 flex items-center gap-2 rounded-lg border-2 border-dashed border-slate-200 text-sm font-medium text-slate-500 hover:border-accent-300 hover:text-accent-700 disabled:opacity-50 transition-all shrink-0">
-              {uploadingImg ? <Loader2 className="h-4 w-4 animate-spin" /> : <UploadCloud className="h-4 w-4" />} Rasm yuklash
+              className="h-11 px-4 flex items-center gap-2 rounded-lg border-2 border-dashed border-slate-300 text-sm font-medium text-slate-500 hover:text-accent-700 disabled:opacity-50 transition-all shrink-0">
+              {uploadingImg ? <Spinner className="h-4 w-4 animate-spin" /> : <UploadCloud className="h-4 w-4" />} Rasm yuklash
             </button>
             <div className="relative flex-1">
               <Link2 className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400 pointer-events-none" />
@@ -212,8 +207,8 @@ export default function CreateProblemPage() {
           </label>
           <div className="flex gap-2">
             <button type="button" onClick={() => vidFileRef.current?.click()} disabled={uploadingVid || videoUrls.length >= 3}
-              className="h-11 px-4 flex items-center gap-2 rounded-lg border-2 border-dashed border-slate-200 text-sm font-medium text-slate-500 hover:border-accent-300 hover:text-accent-700 disabled:opacity-50 transition-all shrink-0">
-              {uploadingVid ? <Loader2 className="h-4 w-4 animate-spin" /> : <UploadCloud className="h-4 w-4" />} Video yuklash
+              className="h-11 px-4 flex items-center gap-2 rounded-lg border-2 border-dashed border-slate-300 text-sm font-medium text-slate-500 hover:text-accent-700 disabled:opacity-50 transition-all shrink-0">
+              {uploadingVid ? <Spinner className="h-4 w-4 animate-spin" /> : <UploadCloud className="h-4 w-4" />} Video yuklash
             </button>
             <div className="relative flex-1">
               <Link2 className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400 pointer-events-none" />
@@ -255,7 +250,7 @@ export default function CreateProblemPage() {
             Bekor qilish
           </Button>
           <Button type="submit" variant="accent" size="lg" loading={isPending} className="flex-1">
-            <Send className="h-4 w-4" /> Yuborish
+            Yuborish
           </Button>
         </div>
       </form>

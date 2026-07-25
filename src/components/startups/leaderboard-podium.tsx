@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import { Eye, Users } from 'lucide-react';
+import { Eye, Users } from '@/components/icons';
 import type { LeaderboardEntry } from '@/types';
 import { cn } from '@/lib/utils';
 import { MEDAL, RankMovement, ScoreBadge } from './leaderboard-bits';
@@ -30,7 +30,7 @@ function PodiumCard({
       {/* Medal — o'rin + tartib belgisi */}
       <span
         className={cn(
-          'absolute -top-4 left-1/2 inline-flex h-9 -translate-x-1/2 items-center gap-1 rounded-full px-3 text-xs font-black ring-1 ring-inset shadow-sm',
+          'absolute -top-4 left-1/2 inline-flex h-9 -translate-x-1/2 items-center gap-1 rounded-full px-3 text-footnote font-semibold ring-1 ring-inset shadow-sm',
           medal?.bg,
           medal?.ring,
           medal?.text,
@@ -51,13 +51,13 @@ function PodiumCard({
       <h3
         className={cn(
           'mt-3 line-clamp-1 font-bold text-brand-900 group-hover:text-accent-700',
-          elevated ? 'text-base' : 'text-sm',
+          elevated ? 'text-callout' : 'text-subhead',
         )}
       >
         {entry.title}
       </h3>
       {entry.category && (
-        <span className="mt-0.5 line-clamp-1 text-[11px] font-medium text-slate-500">
+        <span className="mt-0.5 line-clamp-1 text-caption-1 font-medium text-slate-500">
           {entry.category}
         </span>
       )}
@@ -66,7 +66,7 @@ function PodiumCard({
         <ScoreBadge score={entry.score} size={elevated ? 'lg' : 'md'} />
       </div>
 
-      <div className="mt-3 flex items-center gap-3 text-[11px] text-slate-500">
+      <div className="mt-3 flex items-center gap-3 text-caption-1 text-slate-500">
         <span className="inline-flex items-center gap-1">
           <Users className="h-3 w-3" /> {entry.leaderboardVotes}
         </span>

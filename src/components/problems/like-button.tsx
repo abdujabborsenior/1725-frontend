@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { usePathname, useRouter } from 'next/navigation';
 import { useQueryClient } from '@tanstack/react-query';
-import { Lightbulb } from 'lucide-react';
+import { Lightbulb, LightbulbFill } from '@/components/icons';
 import { problemsApi, getErrorMessage } from '@/lib/api';
 import { patchEntityInQueries } from '@/lib/entity-sync';
 import { useAuthStore } from '@/store/auth.store';
@@ -81,18 +81,20 @@ export function ProblemLikeButton({
       aria-pressed={liked}
       title="Foydali deb belgilash"
       className={cn(
-        'group inline-flex items-center font-semibold rounded-full transition-all btn-lift',
-        sm ? 'h-8 gap-1.5 px-3 text-xs' : 'h-10 gap-2 px-4 text-sm',
-        liked
-          ? 'bg-accent-700 text-white hover:bg-accent-800'
-          : 'border border-slate-200 bg-white text-slate-600 hover:border-accent-300 hover:text-accent-700',
+        'tappable inline-flex items-center rounded-full font-medium',
+        sm ? 'h-8 gap-1.5 px-3.5 text-footnote' : 'h-10 gap-2 px-4 text-subhead',
+        liked ? 'bg-accent-600 text-white' : 'bg-fill-tertiary text-slate-600',
         className,
       )}
     >
-      <Lightbulb className={cn(sm ? 'h-3.5 w-3.5' : 'h-4 w-4', liked && 'fill-white', 'transition-transform group-active:scale-110')} />
+      {liked ? (
+        <LightbulbFill className={sm ? 'h-3.5 w-3.5' : 'h-4 w-4'} />
+      ) : (
+        <Lightbulb className={sm ? 'h-3.5 w-3.5' : 'h-4 w-4'} />
+      )}
       <span>Foydali</span>
       {count > 0 && (
-        <span className={cn('tabular-nums', liked ? 'text-white/90' : 'text-slate-500')}>
+        <span className={cn('tabular-nums', liked ? 'text-white/80' : 'text-slate-400')}>
           · {count.toLocaleString('uz')}
         </span>
       )}

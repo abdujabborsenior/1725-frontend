@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { usePathname, useRouter } from 'next/navigation';
 import { useQueryClient } from '@tanstack/react-query';
-import { Lightbulb } from 'lucide-react';
+import { Lightbulb } from '@/components/icons';
 import { solutionsApi, getErrorMessage } from '@/lib/api';
 import { patchEntityInQueries } from '@/lib/entity-sync';
 import { useAuthStore } from '@/store/auth.store';
@@ -84,7 +84,7 @@ export function SolutionHelpfulButton({
     return (
       <span
         className={cn(
-          'inline-flex h-8 items-center gap-1.5 rounded-lg border border-slate-200 bg-surface-soft px-2.5 text-xs font-semibold text-slate-600',
+          'inline-flex h-8 items-center gap-1.5 rounded-ios border border-slate-200 bg-surface-soft px-2.5 text-footnote font-semibold text-slate-600',
           className,
         )}
       >
@@ -101,10 +101,10 @@ export function SolutionHelpfulButton({
       aria-pressed={helpful}
       title={helpful ? 'Belgini olib tashlash' : 'Yechimni foydali deb belgilash'}
       className={cn(
-        'inline-flex h-8 items-center gap-1.5 rounded-lg border px-2.5 text-xs font-semibold transition-all',
+        'inline-flex h-8 items-center gap-1.5 rounded-ios border px-2.5 text-footnote font-semibold transition-all',
         helpful
           ? 'border-accent-400 bg-accent-50 text-accent-700 hover:bg-accent-100'
-          : 'border-slate-200 bg-white text-slate-500 hover:border-accent-300 hover:text-accent-700',
+          : 'border-slate-200 bg-white text-slate-500 hover:text-accent-700',
         className,
       )}
     >

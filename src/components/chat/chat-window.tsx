@@ -5,8 +5,8 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useQueryClient } from '@tanstack/react-query';
 import {
-  ArrowLeft, Loader2, Users, Hash, MoreVertical, Info, LogOut, Settings,
-} from 'lucide-react';
+  ChevronLeft, Spinner, Users, Hash, MoreHorizontal, Info, LogOut, Settings,
+} from '@/components/icons';
 import { chatApi, getErrorMessage, type SendMessagePayload } from '@/lib/api';
 import { getSocket } from '@/lib/socket';
 import { useAuthStore } from '@/store/auth.store';
@@ -269,7 +269,11 @@ export function ChatWindow({ conversationId }: { conversationId: string }) {
   if (!conv) {
     // Keshda ham yo'q — to'liq skeleton (header + xabarlar + composer shakli)
     if (loading) return <ChatOpeningSkeleton />;
-    return <div className="flex h-full w-full items-center justify-center text-sm text-slate-500">Suhbat topilmadi</div>;
+    return (
+      <div className="flex h-full w-full items-center justify-center text-subhead text-slate-500">
+        Suhbat topilmadi
+      </div>
+    );
   }
 
   const isGroup = conv.type === 'group';
@@ -283,17 +287,17 @@ export function ChatWindow({ conversationId }: { conversationId: string }) {
   return (
     <div className="flex h-full w-full flex-col overflow-hidden">
       {/* Header — z-30 so the group menu paints above message bubbles (z-10) */}
-      <div className="relative z-30 flex items-center gap-3 border-b border-slate-200 bg-white/90 px-3 py-2.5 backdrop-blur">
+      <div className="material-bar hairline-b relative z-30 flex items-center gap-3 px-3 py-2.5">
         <button
           onClick={() => router.push('/messages')}
           aria-label="Ortga"
           title="Ortga"
-          className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg text-slate-500 transition-colors hover:bg-slate-100 hover:text-brand-900"
+          className="tappable flex h-9 w-9 shrink-0 items-center justify-center rounded-full text-accent-700"
         >
-          <ArrowLeft className="h-5 w-5" />
+          <ChevronLeft className="h-[22px] w-[22px]" strokeWidth={3} />
         </button>
         {isGroup ? (
-          <button onClick={() => setInfoOpen(true)} className="flex h-10 w-10 items-center justify-center rounded-full bg-gradient-iris text-white">
+          <button onClick={() => setInfoOpen(true)} className="flex h-10 w-10 items-center justify-center rounded-full bg-iris-500 text-white">
             {conv.avatarUrl ? <Avatar src={conv.avatarUrl} name={conv.title} size={40} /> : <Hash className="h-5 w-5" />}
           </button>
         ) : (
@@ -301,8 +305,8 @@ export function ChatWindow({ conversationId }: { conversationId: string }) {
         )}
         {/* Guruhda — ma'lumot modali; shaxsiy suhbatda — suhbatdosh PROFILI */}
         <HeaderIdentity isGroup={isGroup} href={headerHref} onInfo={() => setInfoOpen(true)}>
-          <p className="truncate text-sm font-bold text-brand-900">{conv.title}</p>
-          <p className="truncate text-xs text-slate-500">
+          <p className="truncate text-callout font-semibold text-brand-900">{conv.title}</p>
+          <p className="truncate text-footnote text-slate-500">
             {typingUser ? <span className="text-accent-600">yozmoqda…</span>
               : isGroup ? <span className="flex items-center gap-1"><Users className="h-3 w-3" /> {conv.participantCount} a&apos;zo{conv.username ? <span className="text-iris-500"> · @{conv.username}</span> : null}</span>
               : online ? <span className="text-accent-600">onlayn</span>
@@ -316,26 +320,26 @@ export function ChatWindow({ conversationId }: { conversationId: string }) {
             <button
               onClick={() => setMenuOpen((v) => !v)}
               aria-label="Menyu"
-              className="flex h-9 w-9 items-center justify-center rounded-lg text-slate-500 transition-colors hover:bg-slate-100 hover:text-brand-900"
+              className="tappable flex h-9 w-9 items-center justify-center rounded-full text-accent-700"
             >
-              <MoreVertical className="h-5 w-5" />
+              <MoreHorizontal className="h-[22px] w-[22px]" />
             </button>
             {menuOpen && (
                 <>
                   <div className="fixed inset-0 z-40" onClick={() => setMenuOpen(false)} />
                   <div
-                    className="animate-slide-down absolute right-0 top-11 z-50 w-56 max-w-[calc(100vw-1.5rem)] overflow-hidden rounded-2xl border border-slate-200 bg-white p-1.5 shadow-modal"
+                    className="material-menu absolute right-0 top-11 z-50 w-60 max-w-[calc(100vw-1.5rem)] origin-top-right animate-scale-in overflow-hidden rounded-ios-lg p-1 shadow-modal ring-1 ring-black/[0.06]"
                   >
-                    <button onClick={() => { setInfoOpen(true); setMenuOpen(false); }} className="flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium text-brand-900 hover:bg-surface-soft">
+                    <button onClick={() => { setInfoOpen(true); setMenuOpen(false); }} className="flex w-full items-center gap-3 rounded-[9px] px-3 py-2.5 text-body text-brand-900 transition-colors duration-150 active:bg-fill-tertiary">
                       <Info className="h-4 w-4 text-slate-400" /> Guruh ma&apos;lumoti
                     </button>
                     {canManageGroup && (
-                      <button onClick={() => { setSettingsOpen(true); setMenuOpen(false); }} className="flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium text-brand-900 hover:bg-surface-soft">
+                      <button onClick={() => { setSettingsOpen(true); setMenuOpen(false); }} className="flex w-full items-center gap-3 rounded-[9px] px-3 py-2.5 text-body text-brand-900 transition-colors duration-150 active:bg-fill-tertiary">
                         <Settings className="h-4 w-4 text-slate-400" /> Guruh sozlamalari
                       </button>
                     )}
                     {!isOwner && (
-                      <button onClick={() => { setLeaveOpen(true); setMenuOpen(false); }} className="flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium text-rose-600 hover:bg-rose-50">
+                      <button onClick={() => { setLeaveOpen(true); setMenuOpen(false); }} className="flex w-full items-center gap-3 rounded-[9px] px-3 py-2.5 text-body text-rose-600 transition-colors duration-150 active:bg-rose-50">
                         <LogOut className="h-4 w-4" /> Guruhdan chiqish
                       </button>
                     )}
@@ -348,14 +352,14 @@ export function ChatWindow({ conversationId }: { conversationId: string }) {
 
       {/* Messages — yuklanishda Telegram uslubidagi bubble skeletonlar */}
       {loading ? (
-        <div className="min-h-0 flex-1 overflow-hidden bg-surface-soft">
+        <div className="min-h-0 flex-1 overflow-hidden bg-white">
           <MessagesSkeleton />
         </div>
       ) : (
       <div
         ref={scrollRef}
         onScroll={(e) => { if (e.currentTarget.scrollTop < 60) void loadMore(); }}
-        className="chat-scroll flex min-h-0 flex-1 flex-col overflow-y-auto overscroll-contain bg-surface-soft px-3 py-4"
+        className="chat-scroll flex min-h-0 flex-1 flex-col overflow-y-auto overscroll-contain bg-white px-3 py-4"
       >
         {messages.length === 0 && (
           <ChatEmptyState
@@ -366,7 +370,7 @@ export function ChatWindow({ conversationId }: { conversationId: string }) {
         )}
         {/* mt-auto — kam xabarda suhbat PASTDAN boshlanadi (Telegram) */}
         <div className="mt-auto space-y-1.5">
-        {loadingMore && <div className="flex justify-center py-2"><Loader2 className="h-4 w-4 animate-spin text-slate-300" /></div>}
+        {loadingMore && <div className="flex justify-center py-2"><Spinner className="h-4 w-4 animate-spin text-slate-300" /></div>}
         {messages.map((m, i) => {
           const mine = m.sender?.id === me?.id;
           const prev = messages[i - 1];
@@ -411,7 +415,7 @@ export function ChatWindow({ conversationId }: { conversationId: string }) {
       <Modal open={infoOpen} onClose={() => setInfoOpen(false)} title="Guruh ma'lumoti">
         <div className="space-y-4">
           <div className="flex items-center gap-3">
-            <span className="flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-iris text-white">
+            <span className="flex h-14 w-14 items-center justify-center rounded-2xl bg-iris-500 text-white">
               {conv.avatarUrl ? <Avatar src={conv.avatarUrl} name={conv.title} size={56} /> : <Hash className="h-6 w-6" />}
             </span>
             <div className="min-w-0">
@@ -448,7 +452,7 @@ export function ChatWindow({ conversationId }: { conversationId: string }) {
           <div className="flex justify-end gap-3">
             <button onClick={() => setLeaveOpen(false)} disabled={leaving} className="rounded-xl px-4 py-2 text-sm font-semibold text-slate-600 hover:bg-surface-soft">Bekor</button>
             <button onClick={handleLeave} disabled={leaving} className="btn-lift flex items-center gap-2 rounded-xl bg-rose-500 px-4 py-2 text-sm font-semibold text-white hover:bg-rose-600 disabled:opacity-60">
-              {leaving ? <Loader2 className="h-4 w-4 animate-spin" /> : <LogOut className="h-4 w-4" />} Chiqish
+              {leaving ? <Spinner className="h-4 w-4 animate-spin" /> : <LogOut className="h-4 w-4" />} Chiqish
             </button>
           </div>
         </div>

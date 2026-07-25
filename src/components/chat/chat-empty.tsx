@@ -1,6 +1,6 @@
 'use client';
 
-import { MessagesSquare, Sparkles } from 'lucide-react';
+import { MessagesSquareFill } from '@/components/icons';
 
 /**
  * Bo'sh suhbat holati — Telegram naqshi ("No messages here yet"), lekin
@@ -35,13 +35,13 @@ export function ChatEmptyState({
 
   return (
     <div className="flex flex-1 items-center justify-center px-4 py-10">
-      <div className="w-full max-w-sm rounded-3xl border border-slate-200 bg-white/85 p-6 text-center shadow-card backdrop-blur">
-        <span className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-2xl bg-brand-900 text-accent-400">
-          <MessagesSquare className="h-6 w-6" strokeWidth={2} />
+      <div className="w-full max-w-sm rounded-ios-2xl bg-white p-6 text-center shadow-card">
+        <span className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-[13px] bg-emerald-400 text-white">
+          <MessagesSquareFill className="h-7 w-7" />
         </span>
 
-        <h2 className="text-base font-bold text-brand-900">Bu yerda hali xabar yo&apos;q</h2>
-        <p className="mt-1.5 text-sm leading-relaxed text-slate-600">
+        <h2 className="text-title-3 font-semibold text-brand-900">Bu yerda hali xabar yo&apos;q</h2>
+        <p className="mt-1.5 text-subhead leading-relaxed text-slate-500">
           {isGroup ? (
             <>
               <span className="font-semibold text-brand-900">{title ?? 'Bu guruh'}</span> guruhida
@@ -57,15 +57,13 @@ export function ChatEmptyState({
         </p>
 
         <div className="mt-5 space-y-2 text-left">
-          <p className="flex items-center gap-1.5 text-[11px] font-bold uppercase tracking-wider text-slate-500">
-            <Sparkles className="h-3 w-3 text-accent-600" /> Shunday boshlash mumkin
-          </p>
+          <p className="ios-section-header px-0">Shunday boshlash mumkin</p>
           {starters.map((s) => (
             <button
               key={s}
               type="button"
               onClick={() => onPick(s)}
-              className="w-full rounded-xl border border-slate-200 bg-surface-soft px-3.5 py-2.5 text-left text-sm text-slate-700 transition-all hover:border-accent-300 hover:bg-white hover:text-brand-900"
+              className="tappable w-full rounded-ios-md bg-fill-tertiary px-3.5 py-2.5 text-left text-subhead text-brand-900"
             >
               {s}
             </button>

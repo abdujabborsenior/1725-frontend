@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useMutation, useQuery, useQueryClient, keepPreviousData } from '@tanstack/react-query';
-import { MessageSquare, Trash2, Star } from 'lucide-react';
+import { MessageSquare, Trash2, Star } from '@/components/icons';
 import { startupsApi, getErrorMessage } from '@/lib/api';
 import { useAuthStore } from '@/store/auth.store';
 import { ROLE_LABEL } from '@/lib/constants';
@@ -75,32 +75,32 @@ export function Reviews({ startup }: { startup: Startup }) {
   return (
     <section className="space-y-5">
       <div className="flex items-center justify-between">
-        <h2 className="text-lg font-bold text-brand-900 flex items-center gap-2">
+        <h2 className="text-title-3 font-bold text-brand-900 flex items-center gap-2">
           <MessageSquare className="h-5 w-5 text-accent-600" /> Sharhlar va baholar
         </h2>
       </div>
 
       {/* Rating summary — IMDB naqshi: yulduz + X.X/10 + ovozlar soni */}
-      <div className="flex items-center gap-5 bg-white border border-slate-200 rounded-2xl p-5 sm:gap-6">
+      <div className="flex items-center gap-5 rounded-ios-2xl bg-white p-5 sm:gap-6">
         <div className="shrink-0 text-center">
           <div className="flex items-baseline justify-center gap-1">
             <Star className="h-6 w-6 self-center text-amber-400 fill-amber-400" aria-hidden />
-            <span className="text-4xl font-black tabular-nums text-brand-900">
+            <span className="text-4xl font-semibold tabular-nums text-brand-900">
               {startup.ratingCount > 0 ? startup.ratingAvg.toFixed(1) : '—'}
             </span>
-            <span className="text-lg font-semibold text-slate-400">/{RATING_MAX}</span>
+            <span className="text-title-3 font-semibold text-slate-400">/{RATING_MAX}</span>
           </div>
-          <p className="mt-1 text-xs text-slate-500">
+          <p className="mt-1 text-footnote text-slate-500">
             {startup.ratingCount.toLocaleString('uz')} ta ovoz
           </p>
         </div>
         <div className="flex-1 border-l border-slate-100 pl-5 sm:pl-6">
-          <p className="text-sm text-slate-600">
+          <p className="text-subhead text-slate-600">
             {startup.ratingCount > 0
               ? `Foydalanuvchilar bu startapni ${RATING_MAX} ballik shkalada shunday baholashgan.`
               : 'Hali baho berilmagan. Birinchi bo\'lib baholang!'}
           </p>
-          <p className="mt-1.5 text-xs text-slate-500">
+          <p className="mt-1.5 text-footnote text-slate-500">
             Reyting o&apos;rinlari IMDB kabi vaznli (Bayes) formula bilan hisoblanadi.
           </p>
         </div>
@@ -108,8 +108,8 @@ export function Reviews({ startup }: { startup: Startup }) {
 
       {/* Review form */}
       {token ? (
-        <div className="bg-white border border-slate-200 rounded-2xl p-5 space-y-3">
-          <p className="text-sm font-semibold text-brand-900">
+        <div className="rounded-ios-2xl bg-white p-5 space-y-3">
+          <p className="text-subhead font-semibold text-brand-900">
             {mine?.data ? 'Sharhingizni yangilang' : 'Baho bering'}
           </p>
           <RatingInput value={rating} onChange={setRating} />
@@ -119,7 +119,7 @@ export function Reviews({ startup }: { startup: Startup }) {
             rows={3}
             maxLength={2000}
             placeholder="Fikringizni yozing (ixtiyoriy)..."
-            className="w-full rounded-xl bg-white border border-slate-200 hover:border-slate-300 px-4 py-3 text-sm text-brand-900 placeholder:text-slate-400 focus:outline-none input-focus transition-all resize-none"
+            className="w-full rounded-ios-md bg-white border border-slate-200 hover:border-slate-300 px-4 py-3 text-subhead text-brand-900 placeholder:text-slate-400 focus:outline-none input-focus transition-all resize-none"
           />
           <div className="flex gap-2">
             <Button
@@ -140,7 +140,7 @@ export function Reviews({ startup }: { startup: Startup }) {
       ) : (
         <button
           onClick={() => router.push('/login')}
-          className="w-full rounded-2xl border border-dashed border-slate-200 bg-surface-soft py-5 text-sm text-slate-600 hover:border-accent-300 transition-all"
+          className="w-full rounded-ios-lg bg-white py-5 text-subhead text-slate-600 transition-all"
         >
           Baho berish uchun <span className="font-semibold text-accent-700">tizimga kiring</span>
         </button>
@@ -150,7 +150,7 @@ export function Reviews({ startup }: { startup: Startup }) {
       {isLoading ? (
         <div className="space-y-3" aria-hidden>
           {[0, 1, 2].map((i) => (
-            <div key={i} className="bg-white border border-slate-200 rounded-2xl p-4">
+            <div key={i} className="rounded-ios-2xl bg-white p-4">
               <div className="flex items-center justify-between gap-3">
                 <div className="flex items-center gap-2.5">
                   <div className="skeleton h-9 w-9 rounded-full" />
@@ -171,7 +171,7 @@ export function Reviews({ startup }: { startup: Startup }) {
       ) : items.length > 0 ? (
         <div className="space-y-3">
           {items.map((r) => (
-            <div key={r.id} className="bg-white border border-slate-200 rounded-2xl p-4">
+            <div key={r.id} className="rounded-ios-2xl bg-white p-4">
               <div className="flex items-center justify-between gap-3">
                 <AuthorLink
                   author={r.user}
@@ -181,13 +181,13 @@ export function Reviews({ startup }: { startup: Startup }) {
                 <RatingValue value={r.rating} size="sm" />
               </div>
               {r.comment && (
-                <p className={cn('text-sm text-slate-700 leading-relaxed mt-3')}>{r.comment}</p>
+                <p className={cn('text-subhead text-slate-700 leading-relaxed mt-3')}>{r.comment}</p>
               )}
             </div>
           ))}
         </div>
       ) : (
-        <p className="text-sm text-slate-400 text-center py-6">Hali sharhlar yo&apos;q</p>
+        <p className="text-subhead text-slate-400 text-center py-6">Hali sharhlar yo&apos;q</p>
       )}
 
       {!isLoading && items.length > 0 && (

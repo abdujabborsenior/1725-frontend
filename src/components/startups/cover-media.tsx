@@ -1,7 +1,7 @@
 'use client';
 
 import { useRef, useState } from 'react';
-import { Play, Rocket } from 'lucide-react';
+import { Play, Rocket } from '@/components/icons';
 import { cn } from '@/lib/utils';
 
 /**
@@ -120,7 +120,7 @@ export function CoverMedia({
 
   /* ── Muqova (poster) rejimi ────────────────────────────────── */
   return (
-    <div className={cn('relative h-full w-full overflow-hidden bg-gradient-brand', className)}>
+    <div className={cn('relative h-full w-full overflow-hidden bg-slate-100', className)}>
       {poster ? (
         // eslint-disable-next-line @next/next/no-img-element
         <img
@@ -129,10 +129,7 @@ export function CoverMedia({
           loading={priority ? 'eager' : 'lazy'}
           fetchPriority={priority ? 'high' : undefined}
           decoding="async"
-          className={cn(
-            'h-full w-full object-cover opacity-90 transition-transform duration-300',
-            !hasVideo && 'group-hover:scale-105',
-          )}
+          className="h-full w-full object-cover"
         />
       ) : isFileVideo ? (
         // Rasm muqova yo'q — videoning BIRINCHI KADRI muqova bo'lib turadi
@@ -146,7 +143,7 @@ export function CoverMedia({
         />
       ) : (
         <div className="absolute inset-0 flex items-center justify-center">
-          <Rocket className={cn(size === 'lg' ? 'h-12 w-12' : 'h-8 w-8', 'text-white/20')} />
+          <Rocket className={cn(size === 'lg' ? 'h-12 w-12' : 'h-8 w-8', 'text-slate-300')} />
         </div>
       )}
 
@@ -155,11 +152,11 @@ export function CoverMedia({
           type="button"
           onClick={start}
           aria-label={title ? `${title} videosini ijro etish` : 'Videoni ijro etish'}
-          className="group/play absolute inset-0 flex items-center justify-center bg-black/25 transition-colors hover:bg-black/35 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-white/80"
+          className="group/play absolute inset-0 flex items-center justify-center bg-black/15 transition-colors duration-150 hover:bg-black/25 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-white/80"
         >
           <span
             className={cn(
-              'flex items-center justify-center rounded-full bg-white/95 text-brand-900 shadow-lg ring-1 ring-black/5 transition-transform duration-200 group-hover/play:scale-110',
+              'material-thick flex items-center justify-center rounded-full text-brand-900 shadow-card transition-transform duration-150 ease-ios group-hover/play:scale-105',
               size === 'lg' ? 'h-16 w-16' : 'h-10 w-10',
             )}
           >

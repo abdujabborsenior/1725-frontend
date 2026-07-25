@@ -27,19 +27,19 @@ export function UserListItem({ user, onClick, className, showFollow = true }: Pr
   return (
     <div
       className={cn(
-        'flex items-center gap-3 rounded-2xl p-2.5 hover:bg-surface-soft transition-colors',
+        'ios-row',
         className,
       )}
     >
       <Link href={href} onClick={onClick} className="shrink-0">
-        <Avatar src={user.avatarUrl} name={user.fullName} size={46} />
+        <Avatar src={user.avatarUrl} name={user.fullName} size={44} />
       </Link>
       <Link href={href} onClick={onClick} className="min-w-0 flex-1">
-        <p className="flex items-center gap-1.5 text-sm font-bold text-brand-900">
+        <p className="flex items-center gap-1.5 text-body text-brand-900">
           <span className="truncate">{user.fullName}</span>
           {user.isFounder && <FounderBadge size="xs" className="shrink-0" />}
         </p>
-        <p className="truncate text-xs text-slate-500">
+        <p className="truncate text-footnote text-slate-500">
           {user.username ? `@${user.username}` : null}
           {user.username && user.headline ? ' · ' : ''}
           {user.headline ?? ''}

@@ -11,7 +11,6 @@ import { BottomNav } from '@/components/layout/bottom-nav';
 export default function ChatLayout({ children }: { children: React.ReactNode }) {
   return (
     <div className="relative flex h-dvh flex-col overflow-hidden bg-surface-soft">
-      <div className="pointer-events-none fixed inset-0 bg-mesh opacity-40" aria-hidden />
       <div className="relative z-10 flex min-h-0 flex-1 flex-col">
         <div className="hidden md:block">
           <Navbar />

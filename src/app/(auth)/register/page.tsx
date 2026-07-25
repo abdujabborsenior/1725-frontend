@@ -10,7 +10,7 @@ import { useMutation } from '@tanstack/react-query';
 import {
   GraduationCap, School, User, ArrowRight, Eye, EyeOff,
   ChevronLeft, Mail, Lock, MapPin,
-} from 'lucide-react';
+} from '@/components/icons';
 import { authApi, getErrorMessage } from '@/lib/api';
 import { useAuthStore } from '@/store/auth.store';
 import { Button } from '@/components/ui/button';
@@ -289,7 +289,7 @@ export default function RegisterPage() {
                     <span className="block text-sm font-semibold text-brand-900">{label}</span>
                     <span className="block text-xs text-slate-500 mt-0.5">{desc}</span>
                   </span>
-                  <ArrowRight className="h-4 w-4 text-slate-400 group-hover:text-accent-700 group-hover:translate-x-0.5 transition-all" />
+                  <ArrowRight className="h-4 w-4 text-slate-400 group-hover:text-accent-700 transition-all" />
                 </button>
               ))}
               <Footer />

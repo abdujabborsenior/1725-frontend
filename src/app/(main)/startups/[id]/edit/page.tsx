@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import { useQuery, useMutation } from '@tanstack/react-query';
-import { ArrowLeft, PencilLine, Trash2 } from 'lucide-react';
+import { ArrowLeft, PencilLine, Trash2 } from '@/components/icons';
 import { startupsApi, getErrorMessage } from '@/lib/api';
 import { useAuthStore } from '@/store/auth.store';
 import { StartupForm } from '@/components/startups/startup-form';
@@ -73,25 +73,22 @@ export default function EditStartupPage() {
         onClick={() => router.back()}
         className="flex items-center gap-2 text-sm text-slate-500 hover:text-brand-900 transition-colors group"
       >
-        <ArrowLeft className="h-4 w-4 group-hover:-translate-x-0.5 transition-transform" />
+        <ArrowLeft className="h-4 w-4 transition-transform" />
         Orqaga
       </button>
 
       <div className="flex items-start justify-between gap-4">
         <div>
-          <span className="inline-flex items-center gap-2 text-[11px] font-bold uppercase tracking-[0.2em] text-slate-400">
-            <span className="grid h-7 w-7 place-items-center rounded-lg bg-brand-900 text-accent-400">
-              <PencilLine className="h-3.5 w-3.5" strokeWidth={2.5} />
-            </span>
+          <p className="text-footnote font-semibold uppercase tracking-[0.06em] text-accent-700">
             Tahrirlash
-          </span>
-          <h1 className="mt-3 text-[1.75rem] font-bold tracking-tight text-brand-900 line-clamp-2">
+          </p>
+          <h1 className="mt-1 line-clamp-2 text-large-title font-bold tracking-tight text-brand-900">
             {startup.title}
           </h1>
         </div>
         <button
           onClick={() => setConfirmOpen(true)}
-          className="flex items-center gap-1.5 h-9 px-3 rounded-lg border border-rose-200 bg-white text-xs font-semibold text-rose-600 hover:bg-rose-50 transition-all shrink-0"
+          className="tappable flex h-9 shrink-0 items-center gap-1.5 rounded-full bg-rose-50 px-3.5 text-footnote font-medium text-rose-600"
         >
           <Trash2 className="h-3.5 w-3.5" /> O&apos;chirish
         </button>

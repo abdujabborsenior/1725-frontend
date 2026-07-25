@@ -1,7 +1,7 @@
 'use client';
 
 import { cn } from '@/lib/utils';
-import { Loader2 } from 'lucide-react';
+import { Spinner } from '@/components/icons';
 import type { ButtonHTMLAttributes } from 'react';
 
 interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
@@ -11,41 +11,49 @@ interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   fullWidth?: boolean;
 }
 
+/* iOS tugma uslublari (UIButton.Configuration):
+   filled · gray · bordered · plain · destructive.
+   iOS'da tugma bosilganda KO'TARILMAYDI — foni to'qlashadi va bir oz kichrayadi. */
 const variants = {
-  // Brand navy — asosiy harakat (login, registratsiya, jiddiy bloklar)
-  primary:   'bg-brand-900 text-white hover:bg-brand-800 shadow-glow-brand',
-  // Emerald CTA — eng muhim harakatlar (Muammo yuborish, Yechim taklif qilish).
-  // accent-700: oq matn bilan WCAG AA kontrast (4.98:1) — accent-500 2.5:1 edi.
-  accent:    'bg-accent-700 text-white hover:bg-accent-800 shadow-glow-accent',
-  // Secondary — kulrang fon
-  secondary: 'bg-slate-100 text-brand-900 hover:bg-slate-200',
-  // Outline — chegaralangan
-  outline:   'border border-slate-300 text-brand-900 bg-white hover:bg-slate-50 hover:border-slate-400',
-  // Ghost — fonsiz
-  ghost:     'text-slate-600 hover:text-brand-900 hover:bg-slate-100',
-  // Danger
-  danger:    'bg-rose-50 text-rose-700 border border-rose-200 hover:bg-rose-100',
+  // Filled — asosiy harakat (tinted fill, oq yorliq)
+  primary: 'bg-accent-600 text-white active:bg-accent-700',
+  accent: 'bg-accent-600 text-white active:bg-accent-700',
+  // Gray — ikkilamchi (system fill)
+  secondary: 'bg-fill-tertiary text-brand-900 active:bg-fill',
+  // Bordered — oq sirt + hairline
+  outline: 'bg-white text-brand-900 border border-slate-200 active:bg-slate-100',
+  // Plain — fonsiz, neytral yorliq
+  ghost: 'text-slate-600 active:bg-fill-tertiary active:text-brand-900',
+  // Destructive — iOS qizil, yumshoq fon
+  danger: 'bg-rose-50 text-rose-600 active:bg-rose-100',
 };
 
+/* Balandliklar iOS tegish maydonlariga bog'langan: 34 / 44 / 50 / 54pt. */
 const sizes = {
-  sm: 'h-9 px-4 text-sm gap-1.5',
-  md: 'h-11 px-5 text-sm gap-2',
-  lg: 'h-12 px-7 text-base gap-2',
-  xl: 'h-14 px-8 text-base gap-2',
+  sm: 'h-9 px-3.5 text-subhead gap-1.5 rounded-ios',
+  md: 'h-11 px-5 text-callout gap-2 rounded-ios-md',
+  lg: 'h-[50px] px-6 text-body gap-2 rounded-ios-lg',
+  xl: 'h-[54px] px-7 text-body gap-2 rounded-ios-lg',
 };
 
 export function Button({
-  variant = 'primary', size = 'md', loading, disabled, fullWidth,
-  className, children, ...props
+  variant = 'primary',
+  size = 'md',
+  loading,
+  disabled,
+  fullWidth,
+  className,
+  children,
+  ...props
 }: ButtonProps) {
   return (
     <button
       disabled={disabled ?? loading}
       className={cn(
-        'inline-flex items-center justify-center font-semibold rounded-xl',
-        'transition-all duration-150 btn-lift',
-        'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-500/40 focus-visible:ring-offset-2 focus-visible:ring-offset-white',
-        'disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none',
+        'inline-flex items-center justify-center font-semibold',
+        'transition-[background-color,transform,opacity] duration-150 ease-ios active:scale-[0.98]',
+        'focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-accent-500/25',
+        'disabled:opacity-40 disabled:cursor-not-allowed disabled:active:scale-100',
         variants[variant],
         sizes[size],
         fullWidth && 'w-full',
@@ -53,7 +61,7 @@ export function Button({
       )}
       {...props}
     >
-      {loading && <Loader2 className="h-4 w-4 animate-spin" />}
+      {loading && <Spinner className="h-[1.15em] w-[1.15em] animate-spin" />}
       {children}
     </button>
   );

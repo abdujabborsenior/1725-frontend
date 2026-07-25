@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useQueryClient } from '@tanstack/react-query';
-import { Heart, Bookmark } from 'lucide-react';
+import { Heart, HeartFill, Bookmark, BookmarkFill } from '@/components/icons';
 import { startupsApi, getErrorMessage } from '@/lib/api';
 import { patchEntityInQueries } from '@/lib/entity-sync';
 import { useAuthStore } from '@/store/auth.store';
@@ -34,8 +34,8 @@ function useAuthGuard() {
  */
 export function LikeCount({ count }: { count: number }) {
   return (
-    <span className="inline-flex items-center gap-1 text-[11px] text-slate-500">
-      <Heart className="h-3 w-3" aria-hidden />
+    <span className="inline-flex items-center gap-1 text-caption-1 tabular-nums text-slate-500">
+      <Heart className="h-3.5 w-3.5" aria-hidden />
       {count}
     </span>
   );
@@ -98,13 +98,11 @@ export function LikeButton({
       disabled={busy}
       aria-label={`Yoqtirish — ${count}`}
       className={cn(
-        'inline-flex items-center gap-2 h-11 px-4 rounded-xl border font-semibold transition-all btn-lift',
-        liked
-          ? 'bg-rose-50 border-rose-200 text-rose-600'
-          : 'bg-white border-slate-200 text-slate-600 hover:border-rose-200 hover:text-rose-600',
+        'tappable inline-flex h-9 items-center gap-1.5 rounded-full px-3.5 text-subhead font-medium tabular-nums transition-colors duration-150 ease-ios',
+        liked ? 'bg-rose-50 text-rose-600' : 'bg-fill-tertiary text-slate-600',
       )}
     >
-      <Heart className={cn('h-4 w-4', liked && 'fill-rose-500 text-rose-500')} />
+      {liked ? <HeartFill className="h-[17px] w-[17px]" /> : <Heart className="h-[17px] w-[17px]" />}
       {count}
     </button>
   );
@@ -161,11 +159,15 @@ export function BookmarkButton({
         onClick={toggle}
         aria-label="Saqlash"
         className={cn(
-          'h-8 w-8 flex items-center justify-center rounded-lg bg-white/90 backdrop-blur border border-slate-200 transition-colors',
-          saved ? 'text-accent-600' : 'text-slate-400 hover:text-accent-600',
+          'material-thick flex h-8 w-8 items-center justify-center rounded-full transition-colors duration-150',
+          saved ? 'text-accent-600' : 'text-slate-500',
         )}
       >
-        <Bookmark className={cn('h-4 w-4', saved && 'fill-accent-500 text-accent-500')} />
+        {saved ? (
+          <BookmarkFill className="h-[15px] w-[15px]" />
+        ) : (
+          <Bookmark className="h-[15px] w-[15px]" />
+        )}
       </button>
     );
   }
@@ -176,13 +178,15 @@ export function BookmarkButton({
       disabled={busy}
       aria-label="Saqlash"
       className={cn(
-        'inline-flex items-center justify-center h-11 w-11 rounded-xl border transition-all btn-lift',
-        saved
-          ? 'bg-accent-50 border-accent-200 text-accent-600'
-          : 'bg-white border-slate-200 text-slate-600 hover:border-accent-200 hover:text-accent-600',
+        'tappable inline-flex h-9 w-9 items-center justify-center rounded-full transition-colors duration-150 ease-ios',
+        saved ? 'bg-accent-50 text-accent-600' : 'bg-fill-tertiary text-slate-600',
       )}
     >
-      <Bookmark className={cn('h-4 w-4', saved && 'fill-accent-500 text-accent-500')} />
+      {saved ? (
+        <BookmarkFill className="h-[17px] w-[17px]" />
+      ) : (
+        <Bookmark className="h-[17px] w-[17px]" />
+      )}
     </button>
   );
 }

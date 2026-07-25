@@ -1,7 +1,7 @@
 'use client';
 
 import { useRef, useState } from 'react';
-import { Loader2, UploadCloud, X } from 'lucide-react';
+import { Spinner, UploadCloud, X } from '@/components/icons';
 import { uploadsApi, getErrorMessage } from '@/lib/api';
 import { cn } from '@/lib/utils';
 import toast from 'react-hot-toast';
@@ -58,7 +58,7 @@ export function ImageUpload({
   return (
     <div className={cn('flex flex-col gap-1.5', className)}>
       {label && (
-        <label className="text-xs font-semibold text-slate-700 uppercase tracking-wider">
+        <label className="text-subhead font-medium text-slate-500">
           {label}
         </label>
       )}
@@ -66,7 +66,7 @@ export function ImageUpload({
       {value ? (
         <div
           className={cn(
-            'relative w-full overflow-hidden rounded-xl border border-slate-200 bg-surface-soft group',
+            'relative w-full overflow-hidden rounded-ios-md border border-slate-200 bg-surface-soft group',
             ASPECT[aspect],
             rounded && 'rounded-full',
           )}
@@ -76,7 +76,7 @@ export function ImageUpload({
           <button
             type="button"
             onClick={() => onChange(null)}
-            className="absolute top-2 right-2 h-8 w-8 flex items-center justify-center rounded-lg bg-white/90 backdrop-blur text-slate-600 hover:text-rose-600 shadow-card opacity-0 group-hover:opacity-100 transition-opacity"
+            className="absolute top-2 right-2 h-8 w-8 flex items-center justify-center rounded-ios bg-white/90 backdrop-blur text-slate-600 hover:text-rose-600 shadow-card opacity-0 group-hover:opacity-100 transition-opacity"
             aria-label="O'chirish"
           >
             <X className="h-4 w-4" />
@@ -98,22 +98,22 @@ export function ImageUpload({
             if (file) void handleFile(file);
           }}
           className={cn(
-            'w-full flex flex-col items-center justify-center gap-2 rounded-xl border-2 border-dashed transition-all',
+            'w-full flex flex-col items-center justify-center gap-2 rounded-ios-md border-2 border-dashed transition-all',
             ASPECT[aspect],
             rounded && 'rounded-full',
             dragOver
               ? 'border-accent-400 bg-accent-50'
-              : 'border-slate-200 bg-surface-soft hover:border-slate-300 hover:bg-slate-50',
+              : 'border-slate-200 bg-surface-soft hover:border-slate-300 active:bg-fill-tertiary',
           )}
         >
           {loading ? (
-            <Loader2 className="h-6 w-6 text-accent-500 animate-spin" />
+            <Spinner className="h-6 w-6 text-accent-500 animate-spin" />
           ) : (
             <>
-              <div className="h-10 w-10 rounded-xl bg-white border border-slate-200 flex items-center justify-center">
+              <div className="h-10 w-10 rounded-ios-md bg-white border border-slate-200 flex items-center justify-center">
                 <UploadCloud className="h-5 w-5 text-slate-400" />
               </div>
-              <span className="text-xs font-medium text-slate-600">
+              <span className="text-footnote font-medium text-slate-600">
                 Rasm tanlang yoki sudrab tashlang
               </span>
             </>
@@ -121,7 +121,7 @@ export function ImageUpload({
         </button>
       )}
 
-      {hint && <p className="text-xs text-slate-500">{hint}</p>}
+      {hint && <p className="text-footnote text-slate-500">{hint}</p>}
 
       <input
         ref={inputRef}

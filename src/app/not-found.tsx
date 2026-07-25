@@ -1,35 +1,34 @@
 import Link from 'next/link';
-import { Zap, Home, Rocket } from 'lucide-react';
+import { ChevronRight } from '@/components/icons';
+import { LogoMark } from '@/components/brand/logo-mark';
 
 export default function NotFound() {
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-hero px-4">
-      <div className="text-center max-w-md">
-        <div className="relative inline-flex mb-8">
-          <div className="absolute inset-0 rounded-3xl bg-accent-200/50 blur-2xl" />
-          <div className="relative h-20 w-20 rounded-3xl bg-brand-900 flex items-center justify-center mx-auto">
-            <Zap className="h-9 w-9 text-accent-400" fill="currentColor" />
-          </div>
-        </div>
+    <div className="flex min-h-screen items-center justify-center bg-white px-4">
+      <div className="max-w-md text-center">
+        <LogoMark className="mx-auto mb-8 h-14 w-14" />
 
-        <p className="text-7xl font-black gradient-text leading-none">404</p>
-        <h1 className="mt-4 text-xl font-bold text-brand-900">Sahifa topilmadi</h1>
-        <p className="mt-2 text-sm text-slate-500 leading-relaxed">
+        <p className="text-[4rem] font-semibold leading-none tracking-[-0.03em] text-brand-900">
+          404
+        </p>
+        <h1 className="mt-3 text-title-2 font-semibold text-brand-900">Sahifa topilmadi</h1>
+        <p className="mt-2 text-callout leading-relaxed text-slate-500">
           Qidirayotgan sahifangiz mavjud emas yoki ko&apos;chirilgan bo&apos;lishi mumkin.
         </p>
 
-        <div className="mt-8 flex flex-col sm:flex-row items-center justify-center gap-3">
+        <div className="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row sm:gap-4">
           <Link
             href="/"
-            className="inline-flex items-center gap-2 h-12 px-6 rounded-xl bg-brand-900 text-white font-semibold hover:bg-brand-800 transition-all btn-lift shadow-glow-brand"
+            className="tappable flex h-[50px] min-w-[180px] items-center justify-center rounded-full bg-accent-600 px-7 text-body font-medium text-white active:bg-accent-700"
           >
-            <Home className="h-4 w-4" /> Bosh sahifa
+            Bosh sahifa
           </Link>
           <Link
             href="/startups"
-            className="inline-flex items-center gap-2 h-12 px-6 rounded-xl border border-slate-300 bg-white text-brand-900 font-semibold hover:bg-slate-50 transition-all btn-lift"
+            className="tappable inline-flex items-center gap-0.5 text-body font-medium text-accent-700"
           >
-            <Rocket className="h-4 w-4" /> Startaplar
+            Startaplar
+            <ChevronRight className="h-[15px] w-[15px]" strokeWidth={3} />
           </Link>
         </div>
       </div>

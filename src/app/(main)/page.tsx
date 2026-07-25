@@ -4,19 +4,24 @@ import Link from 'next/link';
 import type { CSSProperties } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import {
-  ArrowRight, FileQuestion, ChevronRight, Rocket, Vote, Users,
-  MessageCircle, Star, UserPlus, Lightbulb, Compass, Zap, Trophy, HelpCircle, Hand,
-} from 'lucide-react';
+  ChevronRight,
+  Compass,
+  FileText,
+  Lightbulb,
+  MessageCircle,
+  Rocket,
+  Users,
+  Vote,
+  Zap,
+} from '@/components/icons';
 import { problemsApi, startupsApi, chatApi, usersApi, pollsApi } from '@/lib/api';
 import { useAuthStore } from '@/store/auth.store';
 import dynamic from 'next/dynamic';
-import { Button } from '@/components/ui/button';
 import { Reveal, RevealGroup, RevealItem } from '@/components/landing/reveal';
 import { ChatFab } from '@/components/landing/chat-fab';
 import { CountUp } from '@/components/landing/count-up';
 import { Marquee } from '@/components/landing/marquee';
 import { LazySection } from '@/components/landing/lazy-section';
-import { cn } from '@/lib/utils';
 
 /* Below-fold kartalar — alohida chunk'larda (next/dynamic): boshlang'ich JS
    kichik qoladi, kod LazySection viewport'ga yaqinlashganda yuklanadi. */
@@ -32,24 +37,20 @@ const LeaderboardMini = dynamic(() =>
 const GroupCard = dynamic(() =>
   import('@/components/social/group-card').then((m) => m.GroupCard),
 );
-const PollCard = dynamic(() =>
-  import('@/components/polls/poll-card').then((m) => m.PollCard),
-);
+const PollCard = dynamic(() => import('@/components/polls/poll-card').then((m) => m.PollCard));
 const UserListItem = dynamic(() =>
   import('@/components/social/user-list-item').then((m) => m.UserListItem),
 );
-const Doubts = dynamic(() =>
-  import('@/components/landing/doubts').then((m) => m.Doubts),
-);
+const Doubts = dynamic(() => import('@/components/landing/doubts').then((m) => m.Doubts));
 
 /* Yengil lokal skelet — StartupCardSkeleton'ni statik import qilmaslik uchun */
 function CardSkeleton() {
   return (
-    <div className="animate-pulse overflow-hidden rounded-2xl border border-slate-200 bg-white">
-      <div className="h-28 bg-slate-100" />
-      <div className="p-4">
-        <div className="mb-2 h-4 w-2/3 rounded bg-slate-100" />
-        <div className="h-3 w-full rounded bg-slate-100" />
+    <div className="overflow-hidden rounded-ios-xl bg-white">
+      <div className="skeleton h-28" />
+      <div className="space-y-2 p-4">
+        <div className="skeleton h-4 w-2/3 rounded-md" />
+        <div className="skeleton h-3 w-full rounded-md" />
       </div>
     </div>
   );
@@ -57,17 +58,17 @@ function CardSkeleton() {
 
 const HOW_IT_WORKS = [
   {
-    step: '01',
+    step: '1',
     title: 'Muammoni yozing',
     desc: 'Sizni yoki atrofingizdagilarni qiynayotgan biror muammoni baham ko‘ring. Eng yaxshi g‘oyalar shu yerdan boshlanadi.',
   },
   {
-    step: '02',
+    step: '2',
     title: 'Jamoa va fikr to‘plang',
     desc: 'Hamjamiyatdan jonli fikr oling, fikrdosh toping va real vaqtda suhbatlashib yechim ustida ishlang.',
   },
   {
-    step: '03',
+    step: '3',
     title: 'Startapga aylantiring',
     desc: 'G‘oyangizni vitrinaga qo‘ying, ovoz yig‘ing va uni odamlar foydalanadigan real mahsulotga o‘stiring.',
   },
@@ -76,53 +77,69 @@ const HOW_IT_WORKS = [
 const WHAT_IS = [
   {
     icon: Lightbulb,
+    tint: 'bg-amber-500',
     title: 'Startap nima?',
     body: 'Startap — shunchaki biznes emas. Bu real muammoni yangicha, tez va arzon hal qiladigan g‘oya. U kichik boshlanadi — daftardagi chizma yoki telefondagi eslatmadan. Muhimi: u kimningdir hayotini biror joyda osonlashtiradi.',
   },
   {
     icon: Compass,
+    tint: 'bg-accent-500',
     title: 'Startapper kim?',
     body: 'Startapper — diplom yoki katta sarmoya kutib o‘tirmaydigan odam. U atrofdagi muammoni ko‘radi-da, «buni men hal qilaman» deydi. Maktab o‘quvchisimisiz, talabami yoki endigina izlanayotgan yoshmisiz — farqi yo‘q. Yagona shart — boshlash jur’ati.',
   },
   {
     icon: Zap,
+    tint: 'bg-iris-500',
     title: 'Nega aynan hozir?',
     body: 'Chunki tajriba kitobdan emas, harakatdan keladi. Bu yerda g‘oyani sinab ko‘rish, jonli fikr olish va jamoa topish — hammasi bir joyda va bepul. Eng yaxshi payt har doim — hozir.',
   },
 ];
 
-/** Bo'lim ustidagi yagona, izchil kicker — rang-baranglik yo'q (restraint). */
-function Kicker({ icon: Icon, children }: { icon: React.ElementType; children: React.ReactNode }) {
+/** Apple uslubidagi "eyebrow" — pill emas, faqat kichik rangli matn (restraint). */
+function Eyebrow({ children }: { children: React.ReactNode }) {
   return (
-    <div className="inline-flex items-center gap-2 rounded-full border border-slate-200 bg-white px-3 py-1 shadow-soft">
-      <Icon className="h-3.5 w-3.5 text-accent-600" />
-      <span className="text-xs font-semibold text-slate-600">{children}</span>
-    </div>
+    <p className="text-footnote font-semibold uppercase tracking-[0.06em] text-accent-700">
+      {children}
+    </p>
+  );
+}
+
+/** Apple'ning signature havolasi: ko'k matn + chevron. */
+function MoreLink({ href, children }: { href: string; children: React.ReactNode }) {
+  return (
+    <Link
+      href={href}
+      className="tappable inline-flex shrink-0 items-center gap-0.5 text-callout font-medium text-accent-700"
+    >
+      {children}
+      <ChevronRight className="h-[13px] w-[13px]" strokeWidth={3} />
+    </Link>
   );
 }
 
 function SectionHeader({
-  kicker, icon: Icon, title, subtitle, href, hrefLabel,
+  eyebrow,
+  title,
+  subtitle,
+  href,
+  hrefLabel,
 }: {
-  kicker: string; icon: React.ElementType; title: string; subtitle?: string;
-  href?: string; hrefLabel?: string;
+  eyebrow: string;
+  title: string;
+  subtitle?: string;
+  href?: string;
+  hrefLabel?: string;
 }) {
   return (
-    <div className="flex items-end justify-between gap-3">
-      <div>
-        <div className="mb-2.5">
-          <Kicker icon={Icon}>{kicker}</Kicker>
-        </div>
-        <h2 className="text-2xl font-bold tracking-tight text-brand-900 md:text-3xl">{title}</h2>
-        {subtitle && <p className="mt-1 text-sm text-slate-500">{subtitle}</p>}
+    <div className="flex items-end justify-between gap-4">
+      <div className="min-w-0">
+        <Eyebrow>{eyebrow}</Eyebrow>
+        <h2 className="mt-1.5 text-title-1 font-semibold tracking-tight text-brand-900 md:text-[2.125rem]">
+          {title}
+        </h2>
+        {subtitle && <p className="mt-1 text-subhead text-slate-500">{subtitle}</p>}
       </div>
-      {href && (
-        <Link href={href} className="flex-none">
-          <Button variant="outline" size="sm">
-            {hrefLabel ?? 'Barchasi'} <ChevronRight className="h-4 w-4" />
-          </Button>
-        </Link>
-      )}
+      {href && <MoreLink href={href}>{hrefLabel ?? 'Barchasi'}</MoreLink>}
     </div>
   );
 }
@@ -164,71 +181,63 @@ export default function LandingPage() {
 
   const stats = [
     { icon: Rocket, label: 'Startaplar', value: featuredStartups?.meta.total },
-    { icon: FileQuestion, label: 'Muammolar', value: recentProblems?.meta.total },
+    { icon: FileText, label: 'Muammolar', value: recentProblems?.meta.total },
     { icon: Vote, label: 'Ovoz berishlar', value: polls?.length },
     { icon: Users, label: 'Guruhlar', value: groups?.length },
   ];
 
   return (
     <div className="space-y-16 md:space-y-24">
-      {/* ── Hero ─────────────────────────────────────────── */}
-      <section className="relative -mx-4 overflow-hidden rounded-b-[2.5rem] border-b border-slate-200/70 px-4 pb-16 pt-10 md:mx-0 md:rounded-[2.5rem] md:border md:px-6 md:pb-24 md:pt-20">
-        {/* Sokin gradient fon + nozik to'r */}
-        <div className="pointer-events-none absolute inset-0 -z-10 bg-gradient-hero" />
-        <div className="pointer-events-none absolute inset-0 -z-10 grid-pattern" />
-        {/* Ikki nozik atmosfera nuri (aurora emas — tinch) */}
-        <div className="pointer-events-none absolute -left-32 -top-32 -z-10 h-[30rem] w-[30rem] rounded-full bg-accent-300/20 blur-[120px]" />
-        <div className="pointer-events-none absolute -right-32 top-0 -z-10 h-[26rem] w-[26rem] rounded-full bg-iris-300/15 blur-[120px]" />
-
-        {/* Hero kirish harakati — sof CSS (`.hero-enter`): birinchi paint bilanoq
-            boshlanadi, framer hydration'ини kutmaydi (LCP 2+ s tezlashdi) */}
-        <div className="relative z-10 mx-auto max-w-3xl text-center">
-          <h1
-            className="text-[2.6rem] font-black leading-[1.04] tracking-tight text-brand-900 md:text-7xl"
-          >
+      {/* ── Hero ─────────────────────────────────────────────────────────
+          Apple mahsulot sahifasi ritmi: tinch oq sirt, yirik va zich
+          sarlavha, bitta asosiy amal + bitta oddiy havola. Dekor yo'q. */}
+      <section className="-mx-4 bg-white px-4 pb-14 pt-12 text-center md:mx-0 md:rounded-ios-3xl md:px-6 md:pb-20 md:pt-20">
+        <div className="mx-auto max-w-3xl">
+          <h1 className="text-[2.5rem] font-semibold leading-[1.05] tracking-[-0.03em] text-brand-900 md:text-[4.5rem]">
             G‘oyadan
             <br />
-            <span className="gradient-text-animated">biznes loyihagacha.</span>
+            biznes loyihagacha.
           </h1>
 
-          <p
-            className="mx-auto mt-6 max-w-xl text-base leading-relaxed text-slate-600 md:text-lg"
-          >
-            MYMarkaz — o‘quvchilar, talabalar va kreativ yoshlar yig‘iladigan maydon.
-            Sizni qiynayotgan muammoni yozing, yechimini hamjamiyat bilan quring, jamoa toping
-            va g‘oyangizni real mahsulotga aylantiring. Bu yo‘lda yolg‘iz emassiz.
+          <p className="mx-auto mt-5 max-w-xl text-title-3 font-normal leading-snug text-slate-500 md:mt-6">
+            MYMarkaz — o‘quvchilar, talabalar va kreativ yoshlar yig‘iladigan maydon. Muammoni
+            yozing, yechimini hamjamiyat bilan quring, jamoa toping va g‘oyangizni real mahsulotga
+            aylantiring.
           </p>
 
           <div
-            className="hero-enter mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row"
-            style={{ '--enter-delay': '0.22s' } as CSSProperties}
+            className="hero-enter mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row sm:gap-4"
+            style={{ '--enter-delay': '0.18s' } as CSSProperties}
           >
             {token ? (
               <>
-                <Link href="/startups">
-                  <Button size="xl" variant="accent" className="group min-w-[210px]">
-                    Vitrinani ko‘rish
-                    <ArrowRight className="h-5 w-5 transition-transform group-hover:translate-x-0.5" />
-                  </Button>
+                <Link
+                  href="/startups"
+                  className="tappable flex h-[50px] min-w-[200px] items-center justify-center rounded-full bg-accent-600 px-7 text-body font-medium text-white active:bg-accent-700"
+                >
+                  Vitrinani ko‘rish
                 </Link>
-                <Link href="/messages">
-                  <Button size="xl" variant="outline" className="min-w-[210px]">
-                    <MessageCircle className="h-5 w-5" /> Suhbatlar
-                  </Button>
+                <Link
+                  href="/messages"
+                  className="tappable flex h-[50px] min-w-[200px] items-center justify-center gap-2 rounded-full bg-fill-tertiary px-7 text-body font-medium text-brand-900 active:bg-fill"
+                >
+                  <MessageCircle className="h-[19px] w-[19px]" /> Suhbatlar
                 </Link>
               </>
             ) : (
               <>
-                <Link href="/register">
-                  <Button size="xl" variant="accent" className="group min-w-[210px]">
-                    Bepul boshlash
-                    <ArrowRight className="h-5 w-5 transition-transform group-hover:translate-x-0.5" />
-                  </Button>
+                <Link
+                  href="/register"
+                  className="tappable flex h-[50px] min-w-[200px] items-center justify-center rounded-full bg-accent-600 px-7 text-body font-medium text-white active:bg-accent-700"
+                >
+                  Bepul boshlash
                 </Link>
-                <a href="#startap-nima">
-                  <Button size="xl" variant="outline" className="min-w-[210px]">
-                    <Lightbulb className="h-5 w-5" /> Startap nima?
-                  </Button>
+                <a
+                  href="#startap-nima"
+                  className="tappable inline-flex items-center gap-0.5 text-body font-medium text-accent-700"
+                >
+                  Startap nima?
+                  <ChevronRight className="h-[15px] w-[15px]" strokeWidth={3} />
                 </a>
               </>
             )}
@@ -237,132 +246,150 @@ export default function LandingPage() {
 
         {/* Nimalar quriladi — marquee */}
         <div
-          className="hero-enter relative z-10 mx-auto mt-14 max-w-4xl"
-          style={{ '--enter-delay': '0.42s' } as CSSProperties}
+          className="hero-enter mx-auto mt-14 max-w-4xl"
+          style={{ '--enter-delay': '0.34s' } as CSSProperties}
         >
-          <p className="mb-3 text-center text-[11px] font-semibold uppercase tracking-wider text-slate-500">
-            Hamjamiyat shu yerda nimalar quryapti
-          </p>
+          <p className="mb-3 text-footnote text-slate-400">Hamjamiyat shu yerda nimalar quryapti</p>
           <Marquee />
         </div>
       </section>
 
-      {/* ── Stats ────────────────────────────────────────── */}
-      <RevealGroup className="grid grid-cols-2 gap-3 md:grid-cols-4 md:gap-4">
-        {stats.map(({ icon: Icon, label, value }) => (
-          <RevealItem key={label}>
-            <div className="group rounded-2xl border border-slate-200 bg-white p-5 text-center transition-all duration-200 hover:-translate-y-0.5 hover:border-accent-200 hover:shadow-card-hover">
-              <Icon className="mx-auto mb-3 h-6 w-6 text-slate-400 transition-colors group-hover:text-accent-600" />
-              <p className="text-3xl font-black text-brand-900">
+      {/* ── Stats — iOS grouped karta, ustunlar orasida hairline ────────── */}
+      <Reveal>
+        {/* Ustunlar orasida iOS ajratkichi — mobilda 2×2, desktopda 1×4 */}
+        <div
+          className={[
+            'grid grid-cols-2 overflow-hidden rounded-ios-xl bg-white md:grid-cols-4',
+            '[&>*]:border-slate-200',
+            '[&>*:nth-child(even)]:border-l [&>*:nth-child(n+3)]:border-t',
+            'md:[&>*:nth-child(n+2)]:border-l md:[&>*:nth-child(n+3)]:border-t-0',
+          ].join(' ')}
+        >
+          {stats.map(({ icon: Icon, label, value }) => (
+            <div key={label} className="px-5 py-6 text-center">
+              <Icon className="mx-auto mb-2.5 h-[22px] w-[22px] text-slate-400" />
+              <p className="text-title-1 font-semibold tabular-nums text-brand-900">
                 <CountUp value={value} />
                 {value !== undefined && '+'}
               </p>
-              <p className="mt-1 text-xs text-slate-500">{label}</p>
+              <p className="mt-0.5 text-footnote text-slate-500">{label}</p>
             </div>
-          </RevealItem>
-        ))}
-      </RevealGroup>
+          ))}
+        </div>
+      </Reveal>
 
-      {/* ── Startap nima? Startapper kim? ────────────────── */}
-      <LazySection id="startap-nima" className="cv-auto scroll-mt-24 space-y-10" minHeight={520}>
+      {/* ── Startap nima? Startapper kim? ───────────────────────────────── */}
+      <LazySection id="startap-nima" className="cv-auto scroll-mt-24 space-y-8" minHeight={520}>
         <Reveal className="mx-auto max-w-2xl text-center">
-          <div className="mb-3 flex justify-center">
-            <Kicker icon={HelpCircle}>Bu savollar sizni o‘ylantiryaptimi?</Kicker>
-          </div>
-          <h2 className="text-3xl font-bold tracking-tight text-brand-900 md:text-4xl">
-            Startap nima? <span className="text-accent-600">Startapper</span> kim?
+          <Eyebrow>Bu savollar sizni o‘ylantiryaptimi?</Eyebrow>
+          <h2 className="mt-2 text-title-1 font-semibold tracking-tight text-brand-900 md:text-[2.5rem]">
+            Startap nima? Startapper kim?
           </h2>
-          <p className="mt-3 text-slate-600">
+          <p className="mt-3 text-callout text-slate-500">
             Keling, soddagina qilib tushuntiramiz — ortiqcha atamalarsiz, hayotiy tilda.
           </p>
         </Reveal>
 
-        <RevealGroup className="grid grid-cols-1 gap-5 md:grid-cols-3">
-          {WHAT_IS.map(({ icon: Icon, title, body }) => (
+        <RevealGroup className="grid grid-cols-1 gap-4 md:grid-cols-3">
+          {WHAT_IS.map(({ icon: Icon, tint, title, body }) => (
             <RevealItem key={title}>
-              <div className="group relative h-full overflow-hidden rounded-3xl border border-slate-200 bg-white p-7 transition-all duration-200 hover:-translate-y-0.5 hover:border-accent-200 hover:shadow-card-hover">
-                <div className="mb-5 inline-flex h-14 w-14 items-center justify-center rounded-2xl bg-brand-900 text-accent-400 ring-1 ring-brand-900/5">
+              <div className="h-full rounded-ios-2xl bg-white p-6">
+                {/* iOS ilova ikonkasi uslubidagi rangli kvadrat */}
+                <div
+                  className={`mb-4 inline-flex h-11 w-11 items-center justify-center rounded-[11px] text-white ${tint}`}
+                >
                   <Icon className="h-6 w-6" />
                 </div>
-                <h3 className="mb-2 text-xl font-bold text-brand-900">{title}</h3>
-                <p className="text-[15px] leading-relaxed text-slate-600">{body}</p>
+                <h3 className="mb-1.5 text-title-3 font-semibold text-brand-900">{title}</h3>
+                <p className="text-subhead leading-relaxed text-slate-500">{body}</p>
               </div>
             </RevealItem>
           ))}
         </RevealGroup>
       </LazySection>
 
-      {/* ── Sizni nima to'xtatib turibdi? (e'tirozlar) ───── */}
-      <LazySection className="cv-auto space-y-10" minHeight={520}>
+      {/* ── Sizni nima to'xtatib turibdi? (e'tirozlar) ──────────────────── */}
+      <LazySection className="cv-auto space-y-8" minHeight={520}>
         <Reveal className="mx-auto max-w-2xl text-center">
-          <div className="mb-3 flex justify-center">
-            <Kicker icon={Zap}>Halol gaplashamiz</Kicker>
-          </div>
-          <h2 className="text-3xl font-bold tracking-tight text-brand-900 md:text-4xl">
+          <Eyebrow>Halol gaplashamiz</Eyebrow>
+          <h2 className="mt-2 text-title-1 font-semibold tracking-tight text-brand-900 md:text-[2.5rem]">
             Nega bugun boshlamasliging kerak?
           </h2>
-          <p className="mt-3 text-slate-600">
-            Mana — o‘zingizga aytadigan eng keng tarqalgan to‘rtta sabab.
-            Ustiga bosing va halol javob bering: qaysi biri rostdan ham to‘xtatishga arziydi?
+          <p className="mt-3 text-callout text-slate-500">
+            Mana — o‘zingizga aytadigan eng keng tarqalgan to‘rtta sabab. Ustiga bosing va halol
+            javob bering: qaysi biri rostdan ham to‘xtatishga arziydi?
           </p>
         </Reveal>
         <Reveal>
           <Doubts />
         </Reveal>
         <Reveal className="mx-auto max-w-2xl text-center">
-          <p className="text-base font-semibold text-brand-900 md:text-lg">
-            Bittasi ham emas.
-          </p>
-          <p className="mt-1.5 text-sm text-slate-600">
-            Shuning uchun eng to‘g‘ri kun — bugun.
-          </p>
+          <p className="text-title-3 font-semibold text-brand-900">Bittasi ham emas.</p>
+          <p className="mt-1 text-subhead text-slate-500">Shuning uchun eng to‘g‘ri kun — bugun.</p>
         </Reveal>
       </LazySection>
 
-      {/* ── Community groups ─────────────────────────────── */}
+      {/* ── Hamjamiyat guruhlari ────────────────────────────────────────── */}
       {groups && groups.length > 0 && (
         <LazySection className="cv-auto space-y-6" minHeight={420}>
           <Reveal>
             <SectionHeader
-              kicker="Jonli hamjamiyat" icon={MessageCircle}
+              eyebrow="Jonli hamjamiyat"
               title="Hamjamiyat guruhlari"
               subtitle="Real vaqtda suhbatlashing — qo‘shiling va fikr almashing"
-              href="/discover" hrefLabel="Barchasi"
+              href="/discover"
             />
           </Reveal>
           <RevealGroup className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-            {groups.slice(0, 3).map((g) => <RevealItem key={g.id}><GroupCard group={g} /></RevealItem>)}
+            {groups.slice(0, 3).map((g) => (
+              <RevealItem key={g.id}>
+                <GroupCard group={g} />
+              </RevealItem>
+            ))}
           </RevealGroup>
         </LazySection>
       )}
 
-      {/* ── Featured startups ────────────────────────────── */}
+      {/* ── Tavsiya etilgan startaplar ──────────────────────────────────── */}
       <LazySection className="cv-auto space-y-6" minHeight={520}>
         <Reveal>
           <SectionHeader
-            kicker="Vitrina" icon={Rocket} title="Tavsiya etilgan startaplar"
+            eyebrow="Vitrina"
+            title="Tavsiya etilgan startaplar"
             subtitle="Hamjamiyat ishlab chiqqan ilovalar, saytlar va botlar"
-            href="/startups" hrefLabel="Barchasi"
+            href="/startups"
           />
         </Reveal>
         {startupsLoading ? (
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
-            {Array.from({ length: 4 }).map((_, i) => <CardSkeleton key={i} />)}
+            {Array.from({ length: 4 }).map((_, i) => (
+              <CardSkeleton key={i} />
+            ))}
           </div>
         ) : featuredStartups && featuredStartups.data.length > 0 ? (
           <RevealGroup className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
-            {featuredStartups.data.map((s) => <RevealItem key={s.id}><StartupCard startup={s} /></RevealItem>)}
+            {featuredStartups.data.map((s) => (
+              <RevealItem key={s.id}>
+                <StartupCard startup={s} />
+              </RevealItem>
+            ))}
           </RevealGroup>
         ) : (
           <EmptyBox icon={Rocket} title="Tez orada birinchi startaplar" />
         )}
       </LazySection>
 
-      {/* ── Top rated + Who to follow ────────────────────── */}
+      {/* ── Top reyting + kuzatish tavsiyalari ──────────────────────────── */}
       <LazySection className="cv-auto grid grid-cols-1 gap-8 lg:grid-cols-3" minHeight={520}>
         <div className="space-y-6 lg:col-span-2">
           <Reveal>
-            <SectionHeader kicker="Reyting taxtasi" icon={Trophy} title="Top startaplar" subtitle="IMDB uslubidagi vaznli reyting bo‘yicha yetakchilar" href="/leaderboard" hrefLabel="To‘liq reyting" />
+            <SectionHeader
+              eyebrow="Reyting taxtasi"
+              title="Top startaplar"
+              subtitle="IMDB uslubidagi vaznli reyting bo‘yicha yetakchilar"
+              href="/leaderboard"
+              hrefLabel="To‘liq reyting"
+            />
           </Reveal>
           <Reveal delay={0.06}>
             {topRated?.data?.length ? (
@@ -377,79 +404,93 @@ export default function LandingPage() {
           </Reveal>
         </div>
 
-        <div className="space-y-4">
+        <div className="space-y-3">
           <Reveal>
-            <Kicker icon={UserPlus}>Kuzatish uchun</Kicker>
+            <h2 className="ios-section-header">Kuzatish uchun</h2>
           </Reveal>
           <Reveal delay={0.08}>
-            <div className="rounded-3xl border border-slate-200 bg-white p-2 shadow-soft">
+            <div className="ios-list" style={{ '--row-inset': '3.75rem' } as CSSProperties}>
               {suggestions && suggestions.length > 0 ? (
                 suggestions.map((u) => <UserListItem key={u.id} user={u} />)
               ) : (
-                <p className="px-3 py-8 text-center text-sm text-slate-500">Tavsiyalar yuklanmoqda…</p>
+                <p className="px-4 py-8 text-center text-subhead text-slate-500">
+                  Tavsiyalar yuklanmoqda…
+                </p>
               )}
-              <Link href="/discover" className="flex items-center justify-center gap-1 px-3 py-3 text-center text-xs font-semibold text-accent-700 hover:underline">
-                Ko‘proq odamlarni topish <ArrowRight className="h-3.5 w-3.5" />
+              <Link
+                href="/discover"
+                className="ios-row justify-center text-callout font-medium text-accent-700"
+              >
+                Ko‘proq odamlarni topish
               </Link>
             </div>
           </Reveal>
         </div>
       </LazySection>
 
-      {/* ── Recent problems ──────────────────────────────── */}
+      {/* ── So'nggi muammolar ───────────────────────────────────────────── */}
       <LazySection className="cv-auto space-y-6" minHeight={520}>
         <Reveal>
-          <SectionHeader kicker="Jamoaviy aql" icon={FileQuestion} title="So‘nggi muammolar" subtitle="Ochiq va yechim kutayotgan muammolar" href="/problems" hrefLabel="Barchasi" />
+          <SectionHeader
+            eyebrow="Jamoaviy aql"
+            title="So‘nggi muammolar"
+            subtitle="Ochiq va yechim kutayotgan muammolar"
+            href="/problems"
+          />
         </Reveal>
         <RevealGroup className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
           {recentProblems?.data
             ? recentProblems.data.map((p) => (
-                <RevealItem key={p.id}><ProblemCard problem={p} compact /></RevealItem>
+                <RevealItem key={p.id}>
+                  <ProblemCard problem={p} compact />
+                </RevealItem>
               ))
             : Array.from({ length: 6 }).map((_, i) => (
-                <div key={i} className="h-36 animate-pulse rounded-xl border border-slate-200 bg-white p-5">
-                  <div className="mb-3 h-4 w-16 rounded bg-slate-100" />
-                  <div className="mb-2 h-5 w-3/4 rounded bg-slate-100" />
-                  <div className="h-4 w-full rounded bg-slate-100" />
+                <div key={i} className="space-y-2 rounded-ios-xl bg-white p-5">
+                  <div className="skeleton h-4 w-16 rounded-md" />
+                  <div className="skeleton h-5 w-3/4 rounded-md" />
+                  <div className="skeleton h-4 w-full rounded-md" />
                 </div>
               ))}
         </RevealGroup>
       </LazySection>
 
-      {/* ── How it works ─────────────────────────────────── */}
-      <LazySection className="cv-auto space-y-10" minHeight={520}>
+      {/* ── Qanday ishlaydi ─────────────────────────────────────────────── */}
+      <LazySection className="cv-auto space-y-8" minHeight={520}>
         <Reveal className="text-center">
-          <div className="mb-3 flex justify-center">
-            <Kicker icon={Compass}>Yo‘l xaritasi</Kicker>
-          </div>
-          <h2 className="text-3xl font-bold tracking-tight text-brand-900 md:text-4xl">Qanday ishlaydi?</h2>
-          <p className="mt-3 text-slate-600">G‘oyadan startapgacha — uch oddiy qadam.</p>
+          <Eyebrow>Yo‘l xaritasi</Eyebrow>
+          <h2 className="mt-2 text-title-1 font-semibold tracking-tight text-brand-900 md:text-[2.5rem]">
+            Qanday ishlaydi?
+          </h2>
+          <p className="mt-3 text-callout text-slate-500">
+            G‘oyadan startapgacha — uch oddiy qadam.
+          </p>
         </Reveal>
-        <RevealGroup className="relative grid grid-cols-1 gap-5 md:grid-cols-3">
-          {/* Bog'lovchi chiziq (desktop) */}
-          <div className="pointer-events-none absolute left-[16%] right-[16%] top-[2.75rem] hidden h-px bg-slate-200 md:block" />
+        <RevealGroup className="grid grid-cols-1 gap-4 md:grid-cols-3">
           {HOW_IT_WORKS.map(({ step, title, desc }) => (
             <RevealItem key={step}>
-              <div className="group relative h-full rounded-3xl border border-slate-200 bg-white p-7 transition-all duration-200 hover:-translate-y-0.5 hover:border-accent-200 hover:shadow-card-hover">
-                <div className="relative z-10 mb-5 flex h-14 w-14 items-center justify-center rounded-2xl bg-brand-900 text-accent-400 ring-4 ring-white">
-                  <span className="text-lg font-black">{step}</span>
+              <div className="h-full rounded-ios-2xl bg-white p-6">
+                <div className="mb-4 flex h-9 w-9 items-center justify-center rounded-full bg-accent-600 text-callout font-semibold text-white">
+                  {step}
                 </div>
-                <h3 className="mb-2 text-lg font-bold text-brand-900">{title}</h3>
-                <p className="text-sm leading-relaxed text-slate-600">{desc}</p>
+                <h3 className="mb-1.5 text-title-3 font-semibold text-brand-900">{title}</h3>
+                <p className="text-subhead leading-relaxed text-slate-500">{desc}</p>
               </div>
             </RevealItem>
           ))}
         </RevealGroup>
       </LazySection>
 
-      {/* ── Ovoz berish (ikkilamchi — asosiy navigatsiyada emas) ── */}
+      {/* ── Ovoz berish (ikkilamchi — asosiy navigatsiyada emas) ────────── */}
       {activePoll && (
         <LazySection className="cv-auto space-y-6" minHeight={420}>
           <Reveal>
             <SectionHeader
-              kicker="Hamjamiyat tanlovi" icon={Star} title="Ovoz berish"
+              eyebrow="Hamjamiyat tanlovi"
+              title="Ovoz berish"
               subtitle="Yoqqan startapingizga ovoz bering — natijani jonli ko‘ring"
-              href="/polls" hrefLabel="Barcha so‘rovnomalar"
+              href="/polls"
+              hrefLabel="Barcha so‘rovnomalar"
             />
           </Reveal>
           <Reveal className="mx-auto max-w-2xl">
@@ -458,38 +499,31 @@ export default function LandingPage() {
         </LazySection>
       )}
 
-      {/* ── Final CTA ────────────────────────────────────── */}
+      {/* ── Yakuniy CTA ─────────────────────────────────────────────────── */}
       {!token && (
         <Reveal>
-          {/* Mobil: karta sahifa paddingi ichida qoladi (chetga yopishmaydi) */}
-          <section className="relative overflow-hidden rounded-3xl bg-brand-900 px-5 py-12 text-center md:rounded-[2.5rem] md:px-12 md:py-20">
-            <div className="pointer-events-none absolute inset-0 grid-pattern-dark" />
-            <div className="pointer-events-none absolute -left-24 -top-16 h-72 w-72 rounded-full bg-accent-500/15 blur-[110px]" />
-            <div className="pointer-events-none absolute -right-24 -bottom-16 h-72 w-72 rounded-full bg-iris-500/15 blur-[110px]" />
-            <div className="relative z-10 mx-auto max-w-2xl space-y-6">
-              <div className="flex justify-center">
-                <div className="flex h-16 w-16 items-center justify-center rounded-2xl border border-white/10 bg-white/5 backdrop-blur">
-                  <Rocket className="h-8 w-8 text-accent-400" />
-                </div>
-              </div>
-              <h2 className="text-3xl font-bold tracking-tight text-white md:text-4xl">
+          <section className="rounded-ios-3xl bg-brand-900 px-6 py-14 text-center md:px-12 md:py-20">
+            <div className="mx-auto max-w-2xl">
+              <h2 className="text-title-1 font-semibold tracking-tight text-white md:text-[2.5rem]">
                 G‘oyangiz boshlanishini kutyapti
               </h2>
-              <p className="mx-auto max-w-md text-slate-300">
+              <p className="mx-auto mt-3 max-w-md text-callout leading-relaxed text-slate-300">
                 Bugun ro‘yxatdan o‘ting, birinchi muammongizni yozing va o‘zingizga o‘xshagan
                 yoshlar bilan birga ishni boshlang. Bir qadam — hammasining boshlanishi.
               </p>
-              <div className="flex flex-col items-center justify-center gap-3 pt-1 sm:flex-row">
-                <Link href="/register">
-                  <Button size="xl" variant="accent" className="group min-w-[210px]">
-                    Bepul boshlash
-                    <ArrowRight className="h-5 w-5 transition-transform group-hover:translate-x-0.5" />
-                  </Button>
+              <div className="mt-7 flex flex-col items-center justify-center gap-3 sm:flex-row sm:gap-4">
+                <Link
+                  href="/register"
+                  className="tappable flex h-[50px] min-w-[200px] items-center justify-center rounded-full bg-white px-7 text-body font-medium text-brand-900"
+                >
+                  Bepul boshlash
                 </Link>
-                <Link href="/login">
-                  <Button size="xl" variant="outline" className="min-w-[160px] border-white/20 bg-white/5 text-white hover:bg-white/10 hover:border-white/30">
-                    Kirish
-                  </Button>
+                <Link
+                  href="/login"
+                  className="tappable inline-flex items-center gap-0.5 text-body font-medium text-accent-400"
+                >
+                  Kirish
+                  <ChevronRight className="h-[15px] w-[15px]" strokeWidth={3} />
                 </Link>
               </div>
             </div>
@@ -498,8 +532,7 @@ export default function LandingPage() {
       )}
 
       {user && (
-        <p className="flex items-center justify-center gap-1.5 text-xs text-slate-400">
-          <Hand className="h-3.5 w-3.5 text-accent-500" />
+        <p className="text-center text-footnote text-slate-400">
           Xush kelibsiz, {user.fullName}
         </p>
       )}
@@ -512,11 +545,9 @@ export default function LandingPage() {
 
 function EmptyBox({ icon: Icon, title }: { icon: React.ElementType; title: string }) {
   return (
-    <div className="rounded-2xl border border-dashed border-slate-200 bg-surface-soft py-14 text-center">
-      <div className="mx-auto mb-3 flex h-14 w-14 items-center justify-center rounded-2xl border border-slate-200 bg-white">
-        <Icon className="h-7 w-7 text-slate-400" />
-      </div>
-      <p className="font-semibold text-brand-900">{title}</p>
+    <div className="rounded-ios-xl bg-white py-16 text-center">
+      <Icon className="mx-auto mb-3 h-10 w-10 text-slate-300" />
+      <p className="text-callout font-medium text-brand-900">{title}</p>
     </div>
   );
 }

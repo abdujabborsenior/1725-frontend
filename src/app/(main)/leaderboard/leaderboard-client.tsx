@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { useQuery, keepPreviousData } from '@tanstack/react-query';
-import { Trophy, Flame, Rocket, UserRound } from 'lucide-react';
+import { Trophy, Flame } from '@/components/icons';
 import { startupsApi } from '@/lib/api';
 import { LEADERBOARD_PERIOD_OPTIONS } from '@/lib/constants';
 import type { CategoryCount, LeaderboardPeriod, LeaderboardResponse } from '@/types';
@@ -15,6 +15,8 @@ import {
 } from '@/components/startups/leaderboard-row';
 import { FormulaExplainer } from '@/components/startups/leaderboard-formula';
 import { FoundersBoard } from '@/components/social/founders-board';
+import { Segmented } from '@/components/ui/segmented';
+import { EmptyState, FilterChip, PageHeader } from '@/components/ui/page-header';
 
 const LIMIT = 20;
 
@@ -76,65 +78,35 @@ export function LeaderboardClient({
 
   return (
     <div className="space-y-6">
-      {/* Hero */}
-      <div className="relative overflow-hidden rounded-3xl border border-white/5 bg-gradient-brand p-6 md:p-8">
-        {/* nozik mesh + bitta vazmin yorug'lik */}
-        <div className="pointer-events-none absolute inset-0 opacity-[0.07] [background-image:linear-gradient(white_1px,transparent_1px),linear-gradient(90deg,white_1px,transparent_1px)] [background-size:28px_28px]" />
-        <div className="pointer-events-none absolute -right-16 -top-20 h-56 w-56 rounded-full bg-accent-500/20 blur-3xl" />
-        <div className="relative z-10 flex items-start justify-between gap-4">
-          <div>
-            <div className="mb-3 inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/10 px-3 py-1 backdrop-blur">
-              <Trophy className="h-3.5 w-3.5 text-amber-300" />
-              <span className="text-xs font-semibold tracking-wide text-white/90">
-                {tab === 'startups' ? 'Startaplar reytingi' : 'Asoschilar reytingi'}
-              </span>
-            </div>
-            <h1 className="text-2xl font-bold tracking-tight text-white md:text-[2rem]">
-              {tab === 'startups' ? 'Top Startaplar' : 'Top Asoschilar'}
-            </h1>
-            <p className="mt-1.5 max-w-xl text-sm leading-relaxed text-slate-300">
-              {tab === 'startups'
-                ? 'Foydalanuvchilar baholari asosida, IMDB uslubidagi vaznli (Bayes) reyting bilan tartiblangan eng yaxshi startaplar.'
-                : "Hamjamiyat ovozlari asosida tartiblangan startap asoschilari — o'z asoschingizga ovoz bering."}
-            </p>
-            {tab === 'startups' && total > 0 && (
-              <p className="mt-3 inline-flex items-center gap-1.5 text-xs font-medium text-amber-200/90">
-                <Flame className="h-3.5 w-3.5" />
-                {total} ta baholangan startap raqobatda
-              </p>
-            )}
-          </div>
-          {/* katta vazmin kubok belgisi (faqat desktop) */}
-          <div className="hidden shrink-0 sm:block">
-            <span className="grid h-16 w-16 place-items-center rounded-2xl border border-white/10 bg-white/5 backdrop-blur">
-              <Trophy className="h-8 w-8 text-amber-300/90" />
-            </span>
-          </div>
-        </div>
-      </div>
+      <PageHeader
+        eyebrow={tab === 'startups' ? 'Startaplar reytingi' : 'Asoschilar reytingi'}
+        title={tab === 'startups' ? 'Top startaplar' : 'Top asoschilar'}
+        subtitle={
+          tab === 'startups'
+            ? 'Foydalanuvchilar baholari asosida, IMDB uslubidagi vaznli (Bayes) reyting bilan tartiblangan eng yaxshi startaplar.'
+            : "Hamjamiyat ovozlari asosida tartiblangan startap asoschilari — o'z asoschingizga ovoz bering."
+        }
+      />
 
-      {/* Reyting turi: Startaplar / Asoschilar */}
-      <div className="flex w-fit gap-1 rounded-xl border border-slate-200 bg-white p-1">
-        {(
-          [
-            { key: 'startups' as const, label: 'Startaplar', icon: Rocket },
-            { key: 'founders' as const, label: 'Asoschilar', icon: UserRound },
-          ]
-        ).map(({ key, label, icon: Icon }) => (
-          <button
-            key={key}
-            onClick={() => setTab(key)}
-            className={cn(
-              'flex items-center gap-2 rounded-lg px-4 py-2 text-sm font-semibold transition-all duration-150',
-              tab === key
-                ? 'bg-brand-900 text-white'
-                : 'text-slate-600 hover:bg-slate-50 hover:text-brand-900',
-            )}
-          >
-            <Icon className="h-4 w-4" /> {label}
-          </button>
-        ))}
-      </div>
+      {tab === 'startups' && total > 0 && (
+        <p className="inline-flex items-center gap-1.5 text-footnote text-slate-500">
+          <Flame className="h-3.5 w-3.5 text-amber-500" />
+          {total} ta baholangan startap raqobatda
+        </p>
+      )}
+
+      {/* Reyting turi — iOS segmented control */}
+      <Segmented
+        aria-label="Reyting turi"
+        fullWidth={false}
+        value={tab}
+        onChange={(v) => setTab(v)}
+        options={[
+          { value: 'startups', label: 'Startaplar' },
+          { value: 'founders', label: 'Asoschilar' },
+        ]}
+        className="w-full sm:w-72"
+      />
 
       {tab === 'founders' ? (
         <FoundersBoard />
@@ -143,18 +115,9 @@ export function LeaderboardClient({
       {/* Davr filtri */}
       <div className="flex flex-wrap items-center gap-2">
         {LEADERBOARD_PERIOD_OPTIONS.map((o) => (
-          <button
-            key={o.value}
-            onClick={() => selectPeriod(o.value)}
-            className={cn(
-              'rounded-lg border px-3.5 py-1.5 text-xs font-semibold transition-all',
-              period === o.value
-                ? 'border-brand-900 bg-brand-900 text-white'
-                : 'border-slate-200 bg-white text-slate-600 hover:border-slate-300',
-            )}
-          >
+          <FilterChip key={o.value} active={period === o.value} onClick={() => selectPeriod(o.value)}>
             {o.label}
-          </button>
+          </FilterChip>
         ))}
         {isFetching && (
           <span className="text-xs text-slate-500">yangilanmoqda…</span>
@@ -164,31 +127,21 @@ export function LeaderboardClient({
       {/* Kategoriya chiplari */}
       {categories && categories.length > 0 && (
         <div className="flex flex-wrap items-center gap-2">
-          <button
-            onClick={() => selectCategory('')}
-            className={cn(
-              'rounded-full border px-3 py-1 text-xs font-medium transition-all',
-              category === ''
-                ? 'border-accent-700 bg-accent-700 text-white'
-                : 'border-slate-200 bg-surface-soft text-slate-600 hover:border-accent-300',
-            )}
-          >
+          <FilterChip active={category === ''} onClick={() => selectCategory('')} className="text-footnote">
             Hammasi
-          </button>
+          </FilterChip>
           {categories.map((c) => (
-            <button
+            <FilterChip
               key={c.category}
+              active={category === c.category}
               onClick={() => selectCategory(c.category)}
-              className={cn(
-                'rounded-full border px-3 py-1 text-xs font-medium transition-all',
-                category === c.category
-                  ? 'border-accent-700 bg-accent-700 text-white'
-                  : 'border-slate-200 bg-surface-soft text-slate-600 hover:border-accent-300',
-              )}
+              className="text-footnote"
             >
               {c.category}
-              <span className={cn('ml-1.5', category === c.category ? 'text-white/90' : 'text-slate-600')}>{c.count}</span>
-            </button>
+              <span className={cn('tabular-nums', category === c.category ? 'text-white/80' : 'text-slate-400')}>
+                {c.count}
+              </span>
+            </FilterChip>
           ))}
         </div>
       )}
@@ -206,15 +159,11 @@ export function LeaderboardClient({
           ))}
         </div>
       ) : entries.length === 0 ? (
-        <div className="rounded-2xl border border-slate-200 bg-white py-20 text-center">
-          <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-2xl bg-slate-100">
-            <Trophy className="h-8 w-8 text-slate-400" />
-          </div>
-          <p className="font-semibold text-brand-900">Hozircha baho yo&apos;q</p>
-          <p className="mt-1 text-sm text-slate-500">
-            Bu davr/kategoriya bo&apos;yicha baholangan startaplar topilmadi.
-          </p>
-        </div>
+        <EmptyState
+          icon={<Trophy />}
+          title="Hozircha baho yo'q"
+          description="Bu davr/kategoriya bo'yicha baholangan startaplar topilmadi."
+        />
       ) : (
         <div className="space-y-5">
           {podium.length === 3 && <LeaderboardPodium top={podium} />}

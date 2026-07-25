@@ -3,7 +3,7 @@
 import {
   Smartphone, Globe, Bot, Layers, ShoppingBag, GraduationCap,
   Gamepad2, HeartPulse, Sprout, Camera, Music, Wallet,
-} from 'lucide-react';
+} from '@/components/icons';
 
 /** Hamjamiyat shu yerda nimalar quryapti — cheksiz aylanuvchi qator. */
 const ITEMS: { icon: React.ElementType; label: string }[] = [
@@ -29,10 +29,12 @@ export function Marquee() {
         {row.map(({ icon: Icon, label }, i) => (
           <div
             key={i}
-            className="flex flex-none items-center gap-2.5 rounded-full border border-slate-200 bg-white/80 px-4 py-2.5 shadow-soft backdrop-blur"
+            className="flex flex-none items-center gap-2 rounded-full bg-fill-tertiary px-3.5 py-2"
           >
-            <Icon className="h-4 w-4 text-accent-600" />
-            <span className="whitespace-nowrap text-sm font-semibold text-brand-800">{label}</span>
+            <Icon className="h-[17px] w-[17px] text-slate-500" />
+            <span className="whitespace-nowrap text-subhead font-medium text-brand-900">
+              {label}
+            </span>
           </div>
         ))}
       </div>

@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
 import { createPortal } from 'react-dom';
 import { motion, AnimatePresence, useMotionValue, useTransform, animate } from 'framer-motion';
-import { Play, Pause, FileText, Reply, Check, CheckCheck, Download, Copy, Flag, Clock, Paperclip, Pencil } from 'lucide-react';
+import { Play, Pause, FileText, Reply, Check, CheckCheck, Download, Copy, Flag, Clock, Paperclip, Pencil } from '@/components/icons';
 import { Avatar } from '@/components/ui/avatar';
 import { ReportDialog } from '@/components/reports/report-dialog';
 import { profileHref } from '@/components/social/user-list-item';
@@ -60,7 +60,7 @@ function VoiceMessage({ att, mine }: { att: MessageAttachment; mine: boolean }) 
           );
         })}
       </div>
-      <span className={cn('text-[11px] tabular-nums', mine ? 'text-white/80' : 'text-slate-500')}>
+      <span className={cn('text-caption-1 tabular-nums', mine ? 'text-white/80' : 'text-slate-500')}>
         {fmtDuration(att.durationSec)}
       </span>
       <audio
@@ -93,14 +93,14 @@ function Attachment({ att, mine }: { att: MessageAttachment; mine: boolean }) {
   }
   if (att.type === 'video') {
     return (
-      <video src={att.url} controls playsInline className="max-h-80 w-full rounded-xl object-cover" />
+      <video src={att.url} controls playsInline className="max-h-80 w-full rounded-[14px] object-cover" />
     );
   }
   if (att.type === 'image') {
     return (
       <a href={att.url} target="_blank" rel="noreferrer">
         {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img src={att.url} alt={att.name ?? ''} className="max-h-80 rounded-xl object-cover" />
+        <img src={att.url} alt={att.name ?? ''} className="max-h-80 rounded-[14px] object-cover" />
       </a>
     );
   }
@@ -115,14 +115,14 @@ function Attachment({ att, mine }: { att: MessageAttachment; mine: boolean }) {
         mine ? 'bg-white/15' : 'bg-surface-soft',
       )}
     >
-      <span className={cn('flex h-9 w-9 items-center justify-center rounded-lg', mine ? 'bg-white/20' : 'bg-white')}>
+      <span className={cn('flex h-9 w-9 items-center justify-center rounded-[9px]', mine ? 'bg-white/20' : 'bg-white')}>
         <FileText className={cn('h-4 w-4', mine ? 'text-white' : 'text-slate-500')} />
       </span>
       <span className="min-w-0">
-        <span className={cn('block truncate text-xs font-semibold', mine ? 'text-white' : 'text-brand-900')}>
+        <span className={cn('block truncate text-footnote font-medium', mine ? 'text-white' : 'text-brand-900')}>
           {att.name ?? 'Fayl'}
         </span>
-        <span className={cn('text-[10px]', mine ? 'text-white/70' : 'text-slate-500')}>
+        <span className={cn('text-caption-2', mine ? 'text-white/70' : 'text-slate-500')}>
           {(att.size / 1024).toFixed(0)} KB
         </span>
       </span>
@@ -162,38 +162,38 @@ function ContextMenu({
       onContextMenu={(e) => { e.preventDefault(); onClose(); }}
     >
       <div
-        className="animate-pop-in absolute min-w-[168px] overflow-hidden rounded-2xl border border-slate-200 bg-white p-1 shadow-modal"
+        className="material-menu animate-pop-in absolute min-w-[184px] overflow-hidden rounded-ios-lg p-1 shadow-modal ring-1 ring-black/[0.06]"
         style={{ left, top, transformOrigin: 'top left' }}
         onPointerDown={(e) => e.stopPropagation()}
       >
         <button
           onClick={() => { onReply(); onClose(); }}
-          className="flex w-full items-center gap-2.5 rounded-xl px-3 py-2 text-sm font-medium text-brand-900 transition-colors hover:bg-surface-soft"
+          className="flex w-full items-center gap-2.5 rounded-[9px] px-3 py-2 text-body text-brand-900 transition-colors duration-150 active:bg-fill-tertiary"
         >
-          <Reply className="h-4 w-4 text-accent-600" /> Javob berish
+          <Reply className="h-[18px] w-[18px] text-slate-500" /> Javob berish
         </button>
         {canEdit && (
           <button
             onClick={() => { onEdit(); onClose(); }}
-            className="flex w-full items-center gap-2.5 rounded-xl px-3 py-2 text-sm font-medium text-brand-900 transition-colors hover:bg-surface-soft"
+            className="flex w-full items-center gap-2.5 rounded-[9px] px-3 py-2 text-body text-brand-900 transition-colors duration-150 active:bg-fill-tertiary"
           >
-            <Pencil className="h-4 w-4 text-iris-600" /> Tahrirlash
+            <Pencil className="h-[18px] w-[18px] text-slate-500" /> Tahrirlash
           </button>
         )}
         {hasText && (
           <button
             onClick={() => { onCopy(); onClose(); }}
-            className="flex w-full items-center gap-2.5 rounded-xl px-3 py-2 text-sm font-medium text-brand-900 transition-colors hover:bg-surface-soft"
+            className="flex w-full items-center gap-2.5 rounded-[9px] px-3 py-2 text-body text-brand-900 transition-colors duration-150 active:bg-fill-tertiary"
           >
-            <Copy className="h-4 w-4 text-iris-600" /> Nusxa olish
+            <Copy className="h-[18px] w-[18px] text-slate-500" /> Nusxa olish
           </button>
         )}
         {canReport && (
           <button
             onClick={() => { onReport(); onClose(); }}
-            className="flex w-full items-center gap-2.5 rounded-xl px-3 py-2 text-sm font-medium text-rose-600 transition-colors hover:bg-rose-50"
+            className="flex w-full items-center gap-2.5 rounded-[9px] px-3 py-2 text-body text-rose-600 transition-colors duration-150 active:bg-rose-50"
           >
-            <Flag className="h-4 w-4" /> Shikoyat qilish
+            <Flag className="h-[18px] w-[18px]" /> Shikoyat qilish
           </button>
         )}
       </div>
@@ -229,7 +229,7 @@ export function MessageBubble({ message, mine, showAvatar, isGroup, read, onRepl
   if (message.type === 'system') {
     return (
       <div className="my-2 flex justify-center">
-        <span className="rounded-full bg-slate-200/70 px-3 py-1 text-[11px] text-slate-500">
+        <span className="rounded-full bg-fill-tertiary px-3 py-1 text-caption-1 font-medium text-slate-500">
           {message.content}
         </span>
       </div>
@@ -299,7 +299,7 @@ export function MessageBubble({ message, mine, showAvatar, isGroup, read, onRepl
       {/* Surish (swipe) reply ikonkasi — bubble ortida */}
       <motion.span
         style={{ scale: iconScale, opacity: iconOpacity }}
-        className="pointer-events-none absolute left-8 top-1/2 z-0 flex h-9 w-9 -translate-y-1/2 items-center justify-center rounded-full bg-accent-500 text-white shadow-glow-accent"
+        className="pointer-events-none absolute left-8 top-1/2 z-0 flex h-9 w-9 -translate-y-1/2 items-center justify-center rounded-full bg-accent-600 text-white"
       >
         <Reply className="h-4 w-4" />
       </motion.span>
@@ -309,7 +309,7 @@ export function MessageBubble({ message, mine, showAvatar, isGroup, read, onRepl
         <button
           onClick={triggerReply}
           className={cn(
-            'mb-1 hidden items-center gap-1 text-[11px] text-slate-400 transition-colors hover:text-accent-600 group-hover:flex',
+            'mb-1 hidden items-center gap-1 text-caption-1 text-slate-400 transition-colors hover:text-accent-600 group-hover:flex',
             mine ? 'flex-row-reverse' : '',
           )}
         >
@@ -337,8 +337,12 @@ export function MessageBubble({ message, mine, showAvatar, isGroup, read, onRepl
           onPointerCancel={cancelLongPress}
           onPointerMove={(e) => { if (e.pointerType === 'touch') cancelLongPress(); }}
           className={cn(
-            'relative cursor-pointer touch-pan-y select-none rounded-2xl px-3 py-2 shadow-soft',
-            isRound ? 'bg-transparent p-0 shadow-none' : mine ? 'bubble-out rounded-br-md' : 'bubble-in rounded-bl-md',
+            'relative cursor-pointer touch-pan-y select-none rounded-[18px] px-3.5 py-2',
+            isRound
+              ? 'bg-transparent p-0'
+              : mine
+                ? 'bubble-out bubble-tail-out'
+                : 'bubble-in bubble-tail-in',
             onlyMedia && !isRound && 'overflow-hidden p-1',
           )}
         >
@@ -348,7 +352,7 @@ export function MessageBubble({ message, mine, showAvatar, isGroup, read, onRepl
               href={profileHref(message.sender)}
               onClick={(e) => e.stopPropagation()}
               draggable={false}
-              className="mb-0.5 block text-xs font-bold text-iris-600 hover:underline"
+              className="mb-0.5 block text-footnote font-semibold text-iris-600"
             >
               {message.sender.fullName}
             </Link>
@@ -356,7 +360,7 @@ export function MessageBubble({ message, mine, showAvatar, isGroup, read, onRepl
 
           {/* Reply preview */}
           {message.replyTo && (
-            <div className={cn('mb-1.5 rounded-lg border-l-2 px-2 py-1 text-xs', mine ? 'border-white/60 bg-white/15' : 'border-accent-400 bg-surface-soft')}>
+            <div className={cn('mb-1.5 rounded-[10px] border-l-[3px] px-2.5 py-1.5 text-footnote', mine ? 'border-white/70 bg-white/15' : 'border-accent-500 bg-black/[0.04]')}>
               <p className={cn('font-semibold', mine ? 'text-white/90' : 'text-accent-700')}>{message.replyTo.senderName ?? 'Xabar'}</p>
               <p className={cn('flex items-center gap-1 truncate', mine ? 'text-white/75' : 'text-slate-500')}>
                 {message.replyTo.content ?? (<><Paperclip className="h-3 w-3 shrink-0" /> Biriktirma</>)}
@@ -373,14 +377,14 @@ export function MessageBubble({ message, mine, showAvatar, isGroup, read, onRepl
 
           {/* Text */}
           {message.content && (
-            <p className={cn('whitespace-pre-wrap break-words text-sm leading-snug', onlyMedia && 'px-2 pb-1')}>
+            <p className={cn('whitespace-pre-wrap break-words text-body leading-snug', onlyMedia && 'px-2 pb-1')}>
               {message.content}
             </p>
           )}
 
           {/* Meta */}
           {!isRound && (
-            <span className={cn('mt-0.5 flex items-center justify-end gap-1 text-[10px]', mine ? 'text-white/70' : 'text-slate-500')}>
+            <span className={cn('mt-0.5 flex items-center justify-end gap-1 text-caption-2', mine ? 'text-white/75' : 'text-slate-400')}>
               {message.editedAt && !message.pending && <span className="italic">tahrirlangan</span>}
               {message.pending ? <Clock className="h-3 w-3 animate-pulse" /> : fmtTime(message.createdAt)}
               {mine && !message.pending && (read ? <CheckCheck className="h-3 w-3" /> : <Check className="h-3 w-3" />)}

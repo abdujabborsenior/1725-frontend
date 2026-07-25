@@ -30,17 +30,21 @@ export function Providers({ children }: { children: React.ReactNode }) {
       <Toaster
         position="top-center"
         toastOptions={{
+          // iOS banner: och material sirt, to'q matn, chuqur yumshoq soya
           style: {
-            background: 'rgba(26, 23, 64, 0.95)',
-            color: '#f1f5f9',
-            border: '1px solid rgba(255,255,255,0.1)',
+            background: 'rgba(255, 255, 255, 0.86)',
+            color: '#1D1D1F',
             borderRadius: '16px',
-            fontSize: '14px',
-            backdropFilter: 'blur(20px)',
+            fontSize: '15px',
+            fontWeight: 500,
+            letterSpacing: '-0.015em',
+            backdropFilter: 'saturate(180%) blur(24px)',
+            WebkitBackdropFilter: 'saturate(180%) blur(24px)',
+            boxShadow: '0 12px 40px -8px rgba(0,0,0,0.22)',
             padding: '12px 16px',
           },
-          success: { iconTheme: { primary: '#00f5a0', secondary: '#0f0c29' } },
-          error:   { iconTheme: { primary: '#f87171', secondary: '#0f0c29' } },
+          success: { iconTheme: { primary: '#34C759', secondary: '#FFFFFF' } },
+          error: { iconTheme: { primary: '#FF3B30', secondary: '#FFFFFF' } },
           duration: 3000,
         }}
       />

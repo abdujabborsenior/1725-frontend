@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { Flag, ShieldAlert } from 'lucide-react';
+import { Flag, ShieldAlert } from '@/components/icons';
 import toast from 'react-hot-toast';
 import { Modal } from '@/components/ui/modal';
 import { Button } from '@/components/ui/button';
@@ -64,9 +64,9 @@ export function ReportDialog({ open, onClose, targetType, targetId }: ReportDial
       title={`${REPORT_TARGET_LABELS[targetType]} ustidan shikoyat`}
     >
       <div className="space-y-4">
-        <div className="flex items-start gap-2.5 rounded-xl bg-amber-50 border border-amber-200 px-3.5 py-2.5">
+        <div className="flex items-start gap-2.5 rounded-ios-md bg-amber-50 border border-amber-200 px-3.5 py-2.5">
           <ShieldAlert className="mt-0.5 h-4 w-4 shrink-0 text-amber-600" />
-          <p className="text-xs text-amber-800">
+          <p className="text-footnote text-amber-800">
             Shikoyatingiz moderatorlar tomonidan ko&apos;rib chiqiladi. Asossiz
             shikoyatlardan saqlaning.
           </p>
@@ -79,10 +79,10 @@ export function ReportDialog({ open, onClose, targetType, targetId }: ReportDial
               key={r}
               onClick={() => setReason(r)}
               className={cn(
-                'flex w-full items-center gap-3 rounded-xl border px-3.5 py-2.5 text-left text-sm font-medium transition-all',
+                'flex w-full items-center gap-3 rounded-ios-md border px-3.5 py-2.5 text-left text-subhead font-medium transition-all',
                 reason === r
                   ? 'border-accent-500 bg-accent-50 text-accent-800'
-                  : 'border-slate-200 text-slate-700 hover:border-slate-300 hover:bg-slate-50',
+                  : 'border-slate-200 text-slate-700 hover:border-slate-300 active:bg-fill-tertiary',
               )}
             >
               <span
@@ -100,7 +100,7 @@ export function ReportDialog({ open, onClose, targetType, targetId }: ReportDial
 
         {/* Izoh */}
         <div>
-          <label className="mb-1.5 block text-xs font-semibold text-slate-600">
+          <label className="mb-1.5 block text-footnote font-semibold text-slate-600">
             Qo&apos;shimcha izoh (ixtiyoriy)
           </label>
           <textarea
@@ -108,9 +108,9 @@ export function ReportDialog({ open, onClose, targetType, targetId }: ReportDial
             onChange={(e) => setDetails(e.target.value.slice(0, 300))}
             rows={3}
             placeholder="Muammoni qisqacha tasvirlab bering..."
-            className="w-full rounded-xl border border-slate-200 px-3 py-2.5 text-sm text-brand-900 placeholder:text-slate-400 focus:border-accent-500 focus:outline-none focus:ring-2 focus:ring-accent-500/15"
+            className="w-full rounded-ios-md border border-slate-200 px-3 py-2.5 text-subhead text-brand-900 placeholder:text-slate-400 focus:border-accent-500 focus:outline-none focus:ring-2 focus:ring-accent-500/15"
           />
-          <p className="mt-1 text-right text-[11px] text-slate-400">{details.length}/300</p>
+          <p className="mt-1 text-right text-caption-1 text-slate-400">{details.length}/300</p>
         </div>
 
         <div className="flex justify-end gap-2.5 pt-1">
@@ -164,7 +164,7 @@ export function ReportButton({
           aria-label={label}
           title={label}
           className={cn(
-            'inline-flex h-8 w-8 items-center justify-center rounded-lg text-slate-400 transition-all hover:bg-rose-50 hover:text-rose-600',
+            'inline-flex h-8 w-8 items-center justify-center rounded-ios text-slate-400 transition-all hover:bg-rose-50 hover:text-rose-600',
             className,
           )}
         >
@@ -174,7 +174,7 @@ export function ReportButton({
         <button
           onClick={trigger}
           className={cn(
-            'flex w-full items-center gap-2.5 px-3 py-2 text-left text-sm text-rose-600 hover:bg-rose-50',
+            'flex w-full items-center gap-2.5 px-3 py-2 text-left text-subhead text-rose-600 hover:bg-rose-50',
             className,
           )}
         >
@@ -184,7 +184,7 @@ export function ReportButton({
         <button
           onClick={trigger}
           className={cn(
-            'inline-flex items-center gap-1.5 text-xs font-semibold text-slate-500 transition-colors hover:text-rose-600',
+            'inline-flex items-center gap-1.5 text-footnote font-semibold text-slate-500 transition-colors hover:text-rose-600',
             className,
           )}
         >

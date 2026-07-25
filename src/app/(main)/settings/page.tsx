@@ -4,8 +4,8 @@ import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useQuery } from '@tanstack/react-query';
 import {
-  ArrowLeft, Save, KeyRound, Loader2, User as UserIcon, AtSign, Check, X, IdCard,
-} from 'lucide-react';
+  ChevronLeft, Save, KeyRound, Spinner, User as UserIcon, AtSign, Check, X, IdCard,
+} from '@/components/icons';
 import { usersApi, chatApi, getErrorMessage } from '@/lib/api';
 import { useAuthStore } from '@/store/auth.store';
 import { useDebounce } from '@/lib/use-debounce';
@@ -165,12 +165,12 @@ export default function SettingsPage() {
       <div className="max-w-2xl mx-auto space-y-6" aria-hidden>
         <div className="skeleton h-7 w-40 rounded-md" />
         {[0, 1].map((card) => (
-          <div key={card} className="rounded-2xl border border-slate-200 bg-white p-6 space-y-5">
+          <div key={card} className="space-y-5 rounded-ios-2xl bg-white p-5 sm:p-6">
             <div className="skeleton h-4 w-36 rounded-md" />
             {[0, 1, 2].map((f) => (
               <div key={f} className="space-y-1.5">
                 <div className="skeleton h-3 w-20 rounded" />
-                <div className="skeleton h-12 w-full rounded-xl" />
+                <div className="skeleton h-12 w-full rounded-ios-md" />
               </div>
             ))}
           </div>
@@ -183,23 +183,23 @@ export default function SettingsPage() {
     <div className="max-w-2xl mx-auto space-y-6">
       <button
         onClick={() => router.push('/profile')}
-        className="flex items-center gap-2 text-sm text-slate-500 hover:text-brand-900 transition-colors group"
+        className="tappable -ml-1 flex items-center gap-0.5 text-body text-accent-700"
       >
-        <ArrowLeft className="h-4 w-4 group-hover:-translate-x-0.5 transition-transform" /> Profil
+        <ChevronLeft className="h-[19px] w-[19px]" strokeWidth={3} /> Profil
       </button>
 
-      <h1 className="text-2xl font-bold text-brand-900">Sozlamalar</h1>
+      <h1 className="text-large-title font-bold tracking-tight text-brand-900">Sozlamalar</h1>
 
       {/* Public profile */}
-      <div className="bg-white border border-slate-200 rounded-2xl p-6 space-y-5">
+      <div className="space-y-5 rounded-ios-2xl bg-white p-5 sm:p-6">
         <div className="flex items-center justify-between">
-          <h2 className="text-sm font-bold text-slate-500 uppercase tracking-wider flex items-center gap-2">
+          <h2 className="flex items-center gap-2 text-title-3 font-semibold text-brand-900">
             <IdCard className="h-4 w-4" /> Ommaviy profil
           </h2>
           {me.username && (
             <button
               onClick={() => router.push(`/u/${me.username}`)}
-              className="text-xs font-semibold text-iris-700 hover:underline"
+              className="tappable text-footnote font-medium text-accent-700"
             >
               Profilni ko&apos;rish →
             </button>
@@ -234,7 +234,7 @@ export default function SettingsPage() {
               rightIcon={
                 usernameChanged && usernameValid ? (
                   checkingUsername ? (
-                    <Loader2 className="h-4 w-4 animate-spin text-slate-300" />
+                    <Spinner className="h-4 w-4 animate-spin text-slate-300" />
                   ) : availability?.available ? (
                     <Check className="h-4 w-4 text-accent-600" />
                   ) : (
@@ -270,8 +270,8 @@ export default function SettingsPage() {
       </div>
 
       {/* Profile */}
-      <div className="bg-white border border-slate-200 rounded-2xl p-6 space-y-5">
-        <h2 className="text-sm font-bold text-slate-500 uppercase tracking-wider flex items-center gap-2">
+      <div className="space-y-5 rounded-ios-2xl bg-white p-5 sm:p-6">
+        <h2 className="flex items-center gap-2 text-title-3 font-semibold text-brand-900">
           <UserIcon className="h-4 w-4" /> Shaxsiy ma&apos;lumotlar
         </h2>
 
@@ -325,22 +325,22 @@ export default function SettingsPage() {
       </div>
 
       {/* Email (read-only) */}
-      <div className="bg-white border border-slate-200 rounded-2xl p-6">
-        <h2 className="text-sm font-bold text-slate-500 uppercase tracking-wider mb-3">Email</h2>
+      <div className="rounded-ios-2xl bg-white p-5 sm:p-6">
+        <h2 className="mb-3 text-title-3 font-semibold text-brand-900">Email</h2>
         <div className="flex items-center justify-between">
-          <span className="text-sm text-brand-900">{me.email}</span>
+          <span className="text-body text-brand-900">{me.email}</span>
           {me.isEmailVerified && (
-            <span className="inline-flex items-center gap-1 text-xs font-semibold text-accent-700">
+            <span className="inline-flex items-center gap-1 text-footnote font-medium text-accent-700">
               <Check className="h-3.5 w-3.5" strokeWidth={3} /> Tasdiqlangan
             </span>
           )}
         </div>
-        <p className="text-xs text-slate-500 mt-1">Emailni o&apos;zgartirib bo&apos;lmaydi</p>
+        <p className="mt-1 text-footnote text-slate-500">Emailni o&apos;zgartirib bo&apos;lmaydi</p>
       </div>
 
       {/* Password */}
-      <div className="bg-white border border-slate-200 rounded-2xl p-6 space-y-5">
-        <h2 className="text-sm font-bold text-slate-500 uppercase tracking-wider flex items-center gap-2">
+      <div className="space-y-5 rounded-ios-2xl bg-white p-5 sm:p-6">
+        <h2 className="flex items-center gap-2 text-title-3 font-semibold text-brand-900">
           <KeyRound className="h-4 w-4" /> Parolni o&apos;zgartirish
         </h2>
         <Input

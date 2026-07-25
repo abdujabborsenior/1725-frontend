@@ -3,15 +3,16 @@
 import { useEffect, useState } from 'react';
 import { cn } from '@/lib/utils';
 
-const GRADIENTS = [
-  'from-emerald-400 to-teal-500',
-  'from-indigo-400 to-violet-500',
-  'from-sky-400 to-blue-500',
-  'from-amber-400 to-orange-500',
-  'from-rose-400 to-pink-500',
-  'from-fuchsia-400 to-purple-500',
-  'from-cyan-400 to-emerald-500',
-  'from-violet-400 to-indigo-500',
+/* iOS system ranglari — TEKIS (gradientsiz), Kontaktlar/Xabarlar ilovasidagidek. */
+const TINTS = [
+  'bg-[#007AFF]', // systemBlue
+  'bg-[#5856D6]', // systemIndigo
+  'bg-[#34C759]', // systemGreen
+  'bg-[#FF9500]', // systemOrange
+  'bg-[#FF2D55]', // systemPink
+  'bg-[#AF52DE]', // systemPurple
+  'bg-[#30B0C7]', // systemTeal
+  'bg-[#A2845E]', // systemBrown
 ];
 
 function hashString(s: string): number {
@@ -53,7 +54,7 @@ export function Avatar({
     setLoaded(false);
   }, [src]);
   const seed = name || 'user';
-  const gradient = GRADIENTS[hashString(seed) % GRADIENTS.length];
+  const tint = TINTS[hashString(seed) % TINTS.length];
   const fontSize = Math.max(10, Math.round(size * 0.4));
   const showImg = !!src && !failed;
 
@@ -71,12 +72,12 @@ export function Avatar({
         className={cn(
           'relative flex h-full w-full items-center justify-center overflow-hidden rounded-full',
           ring && 'ring-2 ring-white',
-          `bg-gradient-to-br ${gradient}`,
+          tint,
         )}
       >
         {/* Rasm yuklanguncha rangli fon + initsiallar turadi (Telegram uslubi) */}
         {(!showImg || !loaded) && (
-          <span className="font-bold text-white" style={{ fontSize }}>
+          <span className="font-medium tracking-tight text-white" style={{ fontSize }}>
             {initials(name ?? '')}
           </span>
         )}

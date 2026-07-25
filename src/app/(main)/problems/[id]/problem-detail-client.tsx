@@ -7,7 +7,7 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import {
   ArrowLeft, Eye, Clock, MessageSquare, Link2,
   Send, Trash2, CheckCircle2, ExternalLink, X, FileText, Video,
-} from 'lucide-react';
+} from '@/components/icons';
 import { problemsApi, commentsApi, solutionsApi, startupsApi, getErrorMessage } from '@/lib/api';
 import { useAuthStore } from '@/store/auth.store';
 import type { Problem, Comment, Solution } from '@/types';
@@ -25,7 +25,7 @@ import { cn } from '@/lib/utils';
 import { ProblemLikeButton } from '@/components/problems/like-button';
 import { ProblemShareModal } from '@/components/problems/share-modal';
 import { ReportButton } from '@/components/reports/report-dialog';
-import { Share2 } from 'lucide-react';
+import { Share2 } from '@/components/icons';
 import { formatDistanceToNow } from 'date-fns';
 import toast from 'react-hot-toast';
 
@@ -65,7 +65,7 @@ function CommentItem({
               {comment.author?.fullName ?? 'Foydalanuvchi'}
             </span>
           )}
-          <span className="text-[10px] text-slate-500">
+          <span className="text-caption-2 text-slate-500">
             {formatDistanceToNow(new Date(comment.createdAt), { addSuffix: true })}
           </span>
         </div>
@@ -387,7 +387,7 @@ export function ProblemDetailClient({ initialProblem }: { initialProblem: Proble
         onClick={() => router.back()}
         className="flex items-center gap-2 text-sm text-slate-500 hover:text-brand-900 transition-colors group"
       >
-        <ArrowLeft className="h-4 w-4 group-hover:-translate-x-0.5 transition-transform" />
+        <ArrowLeft className="h-4 w-4 transition-transform" />
         Orqaga
       </button>
 
@@ -524,7 +524,7 @@ export function ProblemDetailClient({ initialProblem }: { initialProblem: Proble
             >
               {label}
               <span className={
-                'px-1.5 py-0.5 rounded text-[10px] font-bold ' +
+                'px-1.5 py-0.5 rounded text-caption-2 font-bold ' +
                 (activeTab === key ? 'bg-white/20 text-white' : 'bg-slate-100 text-slate-600')
               }>{count}</span>
             </button>
@@ -590,7 +590,7 @@ export function ProblemDetailClient({ initialProblem }: { initialProblem: Proble
                       ) : (
                         <p className="text-sm font-semibold text-brand-900">{s.submittedBy?.fullName ?? s.fullName}</p>
                       )}
-                      <p className="text-[10px] text-slate-500">
+                      <p className="text-caption-2 text-slate-500">
                         {formatDistanceToNow(new Date(s.createdAt), { addSuffix: true })}
                       </p>
                     </div>

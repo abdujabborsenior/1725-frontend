@@ -1,13 +1,13 @@
 import {
-  CheckCircle2,
-  XCircle,
-  Award,
+  CheckCircleFill,
+  CloseCircleFill,
+  Ribbon,
   UserPlus,
-  MessageCircle,
-  Info,
-  Rocket,
+  MessageCircleFill,
+  InfoFill,
+  RocketFill,
   type LucideIcon,
-} from 'lucide-react';
+} from '@/components/icons';
 import type { NotificationType } from '@/types';
 
 /**
@@ -18,14 +18,15 @@ export const NOTIFICATION_META: Record<
   NotificationType,
   { icon: LucideIcon; color: string }
 > = {
-  problem_approved: { icon: CheckCircle2, color: 'text-accent-600 bg-accent-50' },
-  problem_rejected: { icon: XCircle, color: 'text-rose-600 bg-rose-50' },
-  solution_accepted: { icon: Award, color: 'text-amber-600 bg-amber-50' },
-  solution_rejected: { icon: XCircle, color: 'text-rose-600 bg-rose-50' },
-  new_follower: { icon: UserPlus, color: 'text-iris-600 bg-iris-50' },
-  founder_badge: { icon: Rocket, color: 'text-accent-700 bg-accent-50' },
-  new_message: { icon: MessageCircle, color: 'text-sky-600 bg-sky-50' },
-  system: { icon: Info, color: 'text-slate-600 bg-slate-100' },
+  problem_approved: { icon: CheckCircleFill, color: 'bg-emerald-400 text-white' },
+  problem_rejected: { icon: CloseCircleFill, color: 'bg-rose-500 text-white' },
+  solution_accepted: { icon: Ribbon, color: 'bg-amber-500 text-white' },
+  solution_rejected: { icon: CloseCircleFill, color: 'bg-rose-500 text-white' },
+  new_follower: { icon: UserPlus, color: 'bg-iris-500 text-white' },
+  founder_badge: { icon: RocketFill, color: 'bg-accent-500 text-white' },
+  // iOS'da Xabarlar ilovasi yashil — bildirishnoma belgisi ham shunday
+  new_message: { icon: MessageCircleFill, color: 'bg-emerald-400 text-white' },
+  system: { icon: InfoFill, color: 'bg-slate-400 text-white' },
 };
 
 export function notificationMeta(type: NotificationType) {

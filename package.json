@@ -14,7 +14,8 @@
     "dev": "next dev -p 3330",
     "build": "next build",
     "start": "next start -p 3330",
-    "lint": "next lint"
+    "lint": "next lint",
+    "icons:gen": "node scripts/gen-icons.js"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.9.1",
@@ -23,7 +24,6 @@
     "clsx": "^2.1.1",
     "date-fns": "^4.1.0",
     "framer-motion": "^11.11.17",
-    "lucide-react": "^0.460.0",
     "next": "14.2.29",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
@@ -44,6 +44,7 @@
     "postcss": "^8.4.47",
     "puppeteer-core": "^23.11.1",
     "tailwindcss": "^3.4.14",
-    "typescript": "^5.6.3"
+    "typescript": "^5.6.3",
+    "ionicons": "^8.0.13"
   }
 }
