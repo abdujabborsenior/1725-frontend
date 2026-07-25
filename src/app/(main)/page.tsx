@@ -183,20 +183,8 @@ export default function LandingPage() {
         {/* Hero kirish harakati — sof CSS (`.hero-enter`): birinchi paint bilanoq
             boshlanadi, framer hydration'ини kutmaydi (LCP 2+ s tezlashdi) */}
         <div className="relative z-10 mx-auto max-w-3xl text-center">
-          <div
-            className="hero-enter inline-flex items-center gap-2 rounded-full border border-slate-200 bg-white/80 px-4 py-1.5 shadow-soft backdrop-blur"
-          >
-            <span className="relative flex h-2 w-2">
-              <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-accent-500 opacity-70" />
-              <span className="relative inline-flex h-2 w-2 rounded-full bg-accent-500" />
-            </span>
-            <span className="text-xs font-semibold text-brand-800 md:text-sm">
-              Yangi — real-vaqt chat, hamjamiyat va ovoz berish
-            </span>
-          </div>
-
           <h1
-            className="mt-6 text-[2.6rem] font-black leading-[1.04] tracking-tight text-brand-900 md:text-7xl"
+            className="text-[2.6rem] font-black leading-[1.04] tracking-tight text-brand-900 md:text-7xl"
           >
             G‘oyadan
             <br />
