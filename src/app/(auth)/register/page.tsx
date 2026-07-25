@@ -8,8 +8,8 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { useMutation } from '@tanstack/react-query';
 import {
-  GraduationCap, School, User, ArrowRight, Eye, EyeOff,
-  ChevronLeft, Mail, Lock, MapPin,
+  GraduationCap, School, User, Eye, EyeOff,
+  ChevronLeft, ChevronRight, Mail, Lock, MapPin,
 } from '@/components/icons';
 import { authApi, getErrorMessage } from '@/lib/api';
 import { useAuthStore } from '@/store/auth.store';
@@ -92,7 +92,7 @@ const PasswordInput = React.forwardRef<HTMLInputElement, PwdProps>(
     const [show, setShow] = useState(false);
     return (
       <div className="flex flex-col gap-1.5">
-        <label className="text-xs font-semibold text-slate-700 uppercase tracking-wider">{label}</label>
+        <label className="text-footnote font-medium text-slate-500">{label}</label>
         <div className="relative">
           <Lock className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400 pointer-events-none" />
           <input
@@ -101,7 +101,7 @@ const PasswordInput = React.forwardRef<HTMLInputElement, PwdProps>(
             type={show ? 'text' : 'password'}
             className={cn(
               'w-full h-12 pl-11 pr-12 rounded-xl bg-white border border-slate-200 hover:border-slate-300',
-              'text-sm text-brand-900 placeholder:text-slate-400 focus:outline-none input-focus transition-all duration-150',
+              'text-subhead text-brand-900 placeholder:text-slate-400 focus:outline-none input-focus transition-all duration-150',
               error && 'border-rose-400',
             )}
           />
@@ -115,8 +115,8 @@ const PasswordInput = React.forwardRef<HTMLInputElement, PwdProps>(
             {show ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
           </button>
         </div>
-        {error && <p className="text-xs text-rose-600">{error}</p>}
-        {hint && !error && <p className="text-xs text-slate-500">{hint}</p>}
+        {error && <p className="text-caption-1 text-rose-600">{error}</p>}
+        {hint && !error && <p className="text-caption-1 text-slate-500">{hint}</p>}
       </div>
     );
   },
@@ -125,7 +125,7 @@ PasswordInput.displayName = 'PasswordInput';
 
 function Footer() {
   return (
-    <p className="text-center text-sm text-slate-500 pt-1">
+    <p className="text-center text-subhead text-slate-500 pt-1">
       Hisobingiz bormi?{' '}
       <Link href="/login" className="text-accent-700 hover:text-accent-800 font-semibold transition-colors">
         Kirish
@@ -158,7 +158,7 @@ function GeneralForm() {
       <PasswordInput label="Parol" placeholder="P@ssword1" hint={PWD_HINT}
         error={errors.password?.message} {...register('password')} />
       <Button type="submit" size="lg" fullWidth loading={isPending}>
-        Ro&apos;yxatdan o&apos;tish <ArrowRight className="h-4 w-4" />
+        Ro&apos;yxatdan o&apos;tish
       </Button>
       <Footer />
     </form>
@@ -194,7 +194,7 @@ function SchoolForm() {
       <PasswordInput label="Parol" placeholder="P@ssword1" hint={PWD_HINT}
         error={errors.password?.message} {...register('password')} />
       <Button type="submit" size="lg" fullWidth loading={isPending}>
-        Ro&apos;yxatdan o&apos;tish <ArrowRight className="h-4 w-4" />
+        Ro&apos;yxatdan o&apos;tish
       </Button>
       <Footer />
     </form>
@@ -228,7 +228,7 @@ function UniversityForm() {
       <PasswordInput label="Parol" placeholder="P@ssword1" hint={PWD_HINT}
         error={errors.password?.message} {...register('password')} />
       <Button type="submit" size="lg" fullWidth loading={isPending}>
-        Ro&apos;yxatdan o&apos;tish <ArrowRight className="h-4 w-4" />
+        Ro&apos;yxatdan o&apos;tish
       </Button>
       <Footer />
     </form>
@@ -249,22 +249,22 @@ export default function RegisterPage() {
       {/* Allaqachon kirgan foydalanuvchi formani ko'rmaydi — maqsadiga qaytadi */}
       <AuthedRedirect />
       <AuthMobileLogo />
-      <div className="rounded-3xl border border-slate-200/80 bg-white/90 p-7 shadow-card backdrop-blur-sm sm:p-8">
+      <div className="rounded-ios-2xl bg-white p-7 shadow-card sm:p-8">
           <div className="flex items-center gap-3 mb-7">
             {EDU_TYPES_ENABLED && userType && (
               <button
                 onClick={() => setUserType(null)}
                 aria-label="Orqaga"
-                className="h-9 w-9 rounded-lg border border-slate-200 flex items-center justify-center text-slate-500 hover:text-brand-900 hover:border-slate-300 transition-all flex-shrink-0"
+                className="tappable h-9 w-9 rounded-full bg-fill-tertiary flex items-center justify-center text-accent-700 flex-shrink-0"
               >
                 <ChevronLeft className="h-4 w-4" />
               </button>
             )}
             <div>
-              <h1 className="text-xl font-bold text-brand-900">
+              <h1 className="text-title-3 font-bold text-brand-900">
                 {selected ? selected.label : "Ro'yxatdan o'tish"}
               </h1>
-              <p className="text-xs text-slate-500 mt-0.5">
+              <p className="text-caption-1 text-slate-500 mt-0.5">
                 {selected
                   ? selected.desc
                   : EDU_TYPES_ENABLED
@@ -280,16 +280,16 @@ export default function RegisterPage() {
                 <button
                   key={id}
                   onClick={() => setUserType(id)}
-                  className="w-full flex items-center gap-4 p-4 rounded-xl border border-slate-200 hover:border-accent-500 hover:bg-accent-50/40 transition-all text-left group"
+                  className="w-full flex items-center gap-4 p-4 rounded-ios-lg bg-fill-tertiary transition-colors hover:bg-fill text-left group"
                 >
                   <span className="h-11 w-11 rounded-xl bg-brand-50 border border-brand-200 flex items-center justify-center flex-shrink-0 group-hover:bg-accent-100 group-hover:border-accent-300 transition-colors">
                     <Icon className="h-5 w-5 text-brand-900 group-hover:text-accent-700 transition-colors" />
                   </span>
                   <span className="flex-1 min-w-0">
-                    <span className="block text-sm font-semibold text-brand-900">{label}</span>
-                    <span className="block text-xs text-slate-500 mt-0.5">{desc}</span>
+                    <span className="block text-subhead font-semibold text-brand-900">{label}</span>
+                    <span className="block text-caption-1 text-slate-500 mt-0.5">{desc}</span>
                   </span>
-                  <ArrowRight className="h-4 w-4 text-slate-400 group-hover:text-accent-700 transition-all" />
+                  <ChevronRight className="h-4 w-4 text-slate-300" strokeWidth={3} />
                 </button>
               ))}
               <Footer />

@@ -25,7 +25,7 @@ export function StartupMiniCard({
     <Link
       href={`/startups/${startup.slug}`}
       className={cn(
-        'group flex items-center gap-3 rounded-ios-md border border-slate-200 bg-surface-soft p-3 transition-all hover:bg-white hover:shadow-card',
+        'group flex items-center gap-3 rounded-ios-md bg-fill-tertiary p-3 transition-colors hover:bg-fill',
         className,
       )}
     >

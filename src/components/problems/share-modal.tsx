@@ -81,8 +81,8 @@ export function ProblemShareModal({ open, onClose, problemId, problemTitle }: Pr
       <div className="space-y-4">
         {/* Link */}
         <div>
-          <p className="mb-1.5 text-footnote font-semibold uppercase tracking-wide text-slate-500">Havola</p>
-          <div className="flex items-center gap-2 rounded-ios-md border border-slate-200 bg-surface-soft p-1.5 pl-3">
+          <p className="mb-1.5 text-footnote font-medium text-slate-500">Havola</p>
+          <div className="flex items-center gap-2 rounded-ios-md bg-fill-tertiary p-1.5 pl-3">
             <span className="flex-1 truncate text-subhead text-slate-600">{shareUrl}</span>
             <button onClick={copy}
               className={cn('flex h-9 shrink-0 items-center gap-1.5 rounded-ios px-3 text-footnote font-semibold transition-all',
@@ -98,7 +98,7 @@ export function ProblemShareModal({ open, onClose, problemId, problemTitle }: Pr
 
         {typeof navigator !== 'undefined' && 'share' in navigator && (
           <button onClick={nativeShare}
-            className="flex w-full items-center justify-center gap-2 rounded-ios-md border border-slate-200 py-2.5 text-subhead font-semibold text-brand-900 hover:bg-surface-soft">
+            className="flex w-full items-center justify-center gap-2 rounded-ios-md bg-fill-tertiary py-2.5 text-subhead font-semibold text-accent-700 hover:bg-fill">
             <Share2 className="h-4 w-4" /> Boshqa ilovalar orqali ulashish
           </button>
         )}
@@ -106,7 +106,7 @@ export function ProblemShareModal({ open, onClose, problemId, problemTitle }: Pr
         {/* Forward to chat */}
         {token && (
           <div>
-            <p className="mb-1.5 flex items-center gap-1.5 text-footnote font-semibold uppercase tracking-wide text-slate-500">
+            <p className="mb-1.5 flex items-center gap-1.5 text-footnote font-medium text-slate-500">
               <MessageCircle className="h-3.5 w-3.5" /> Suhbatga yuborish
             </p>
             <div className="relative mb-2">

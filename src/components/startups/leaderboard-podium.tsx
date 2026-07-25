@@ -21,7 +21,7 @@ function PodiumCard({
     <Link
       href={`/startups/${entry.slug}`}
       className={cn(
-        'group relative flex flex-col items-center rounded-3xl border bg-white px-4 pb-5 text-center transition-all duration-200 hover:-translate-y-1 hover:shadow-card-hover',
+        'group relative flex flex-col items-center rounded-3xl border bg-white px-4 pb-5 text-center transition-all duration-200 hover:shadow-card-hover',
         elevated
           ? 'border-amber-200/80 pt-10 shadow-card-hover md:-mt-6'
           : 'border-slate-200 pt-9 shadow-card',

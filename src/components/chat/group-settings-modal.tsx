@@ -131,7 +131,7 @@ export function GroupSettingsModal({
         <button
           onClick={save}
           disabled={saving}
-          className="btn-lift flex h-11 w-full items-center justify-center gap-2 rounded-ios-md bg-accent-500 text-subhead font-semibold text-white transition-colors hover:bg-accent-600 disabled:opacity-60"
+          className="tappable flex h-11 w-full items-center justify-center gap-2 rounded-ios-md bg-accent-500 text-subhead font-semibold text-white transition-colors hover:bg-accent-600 disabled:opacity-60"
         >
           {saving ? 'Saqlanmoqda…' : 'Saqlash'}
         </button>

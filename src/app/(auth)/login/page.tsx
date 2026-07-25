@@ -6,7 +6,7 @@ import { useRouter } from 'next/navigation';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
-import { Mail, Lock, Eye, EyeOff, ArrowRight } from '@/components/icons';
+import { Mail, Lock, Eye, EyeOff } from '@/components/icons';
 import { authApi, getErrorMessage } from '@/lib/api';
 import { useAuthStore } from '@/store/auth.store';
 import { Button } from '@/components/ui/button';
@@ -74,7 +74,7 @@ export default function LoginPage() {
             />
 
             <div className="flex flex-col gap-1.5">
-              <label className="text-xs font-semibold text-slate-700 uppercase tracking-wider">
+              <label className="text-footnote font-medium text-slate-500">
                 Parol
               </label>
               <div className="relative">
@@ -96,12 +96,12 @@ export default function LoginPage() {
                 </button>
               </div>
               {errors.password && (
-                <p className="text-xs text-rose-600">{errors.password.message}</p>
+                <p className="text-caption-1 text-rose-600">{errors.password.message}</p>
               )}
               <div className="flex justify-end">
                 <Link
                   href="/forgot-password"
-                  className="text-xs text-slate-500 hover:text-accent-700 font-medium transition-colors"
+                  className="text-caption-1 text-slate-500 hover:text-accent-700 font-medium transition-colors"
                 >
                   Parolni unutdingizmi?
                 </Link>
@@ -117,14 +117,14 @@ export default function LoginPage() {
               className="mt-2"
             >
               Kirish
-              <ArrowRight className="h-4 w-4" />
+             
             </Button>
           </form>
 
           {/* Divider */}
           <div className="flex items-center gap-4 my-6">
             <div className="flex-1 h-px bg-slate-200" />
-            <span className="text-xs text-slate-500">yoki</span>
+            <span className="text-caption-1 text-slate-500">yoki</span>
             <div className="flex-1 h-px bg-slate-200" />
           </div>
 

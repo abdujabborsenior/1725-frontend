@@ -63,7 +63,7 @@ export function ProblemsClient({ initialList }: { initialList: PaginatedResponse
 
       {/* ── Grid ─────────────────────────────────────────── */}
       <h2 className="sr-only">Muammolar ro&apos;yxati</h2>
-      <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
+      <div className="grid-rise grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
         {isLoading
           ? Array.from({ length: 9 }).map((_, i) => <ProblemCardSkeleton key={i} />)
           : items.length === 0

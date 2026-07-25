@@ -71,7 +71,7 @@ export default function EditStartupPage() {
     <div className="max-w-2xl mx-auto space-y-6">
       <button
         onClick={() => router.back()}
-        className="flex items-center gap-2 text-sm text-slate-500 hover:text-brand-900 transition-colors group"
+        className="flex items-center gap-2 text-subhead text-slate-500 hover:text-brand-900 transition-colors group"
       >
         <ArrowLeft className="h-4 w-4 transition-transform" />
         Orqaga
@@ -98,7 +98,7 @@ export default function EditStartupPage() {
 
       <Modal open={confirmOpen} onClose={() => setConfirmOpen(false)} title="Startapni o'chirish">
         <div className="space-y-4">
-          <p className="text-sm text-slate-600 leading-relaxed">
+          <p className="text-subhead text-slate-600 leading-relaxed">
             <span className="font-semibold text-brand-900">&ldquo;{startup.title}&rdquo;</span>{' '}
             butunlay o&apos;chiriladi — buni ortga qaytarib bo&apos;lmaydi. Davom etasizmi?
           </p>

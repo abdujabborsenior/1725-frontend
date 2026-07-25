@@ -1,7 +1,7 @@
 'use client';
 
 import { useRef, useState } from 'react';
-import { Play, Rocket } from '@/components/icons';
+import { Play } from '@/components/icons';
 import { cn } from '@/lib/utils';
 
 /**
@@ -59,6 +59,8 @@ export function CoverMedia({
   className,
   /** Play tugmasining o'lchami — kartada kichik, detalda katta */
   size = 'sm',
+  /** Rasm bo'lmaganda ko'rinadigan yumshoq rangli fon (kategoriya rangi) */
+  tintClass,
 }: {
   coverUrl?: string | null;
   videoUrl?: string | null;
@@ -66,6 +68,7 @@ export function CoverMedia({
   priority?: boolean;
   className?: string;
   size?: 'sm' | 'lg';
+  tintClass?: string;
 }) {
   const [playing, setPlaying] = useState(false);
   const videoRef = useRef<HTMLVideoElement>(null);
@@ -120,7 +123,14 @@ export function CoverMedia({
 
   /* ── Muqova (poster) rejimi ────────────────────────────────── */
   return (
-    <div className={cn('relative h-full w-full overflow-hidden bg-slate-100', className)}>
+    <div
+      className={cn(
+        'relative h-full w-full overflow-hidden',
+        // Muqova rasmi bo'lmasa — kategoriya rangidagi yumshoq gradient
+        poster || isFileVideo ? 'bg-slate-100' : (tintClass ?? 'bg-slate-100'),
+        className,
+      )}
+    >
       {poster ? (
         // eslint-disable-next-line @next/next/no-img-element
         <img
@@ -142,9 +152,13 @@ export function CoverMedia({
           className="h-full w-full object-cover"
         />
       ) : (
-        <div className="absolute inset-0 flex items-center justify-center">
-          <Rocket className={cn(size === 'lg' ? 'h-12 w-12' : 'h-8 w-8', 'text-slate-300')} />
-        </div>
+        // Rasm ham, video ham yo'q — kategoriya rangidagi tekis sirt.
+        // Belgi QO'YILMAYDI: ustidagi ilova ikonkasi yetarli (App Store naqshi),
+        // umumiy "raketa" belgisi esa shablon taassurotini beradi.
+        <span
+          aria-hidden
+          className="absolute inset-0 bg-[radial-gradient(120%_90%_at_15%_0%,rgba(255,255,255,0.28),transparent_60%)]"
+        />
       )}
 
       {hasVideo && (

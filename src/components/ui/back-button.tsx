@@ -33,7 +33,7 @@ export function BackButton({ fallbackHref = '/', label, className }: BackButtonP
       <button
         type="button"
         onClick={goBack}
-        className={cn('tappable -ml-1 flex items-center gap-0.5 text-body text-accent-700', className)}
+        className={cn('tappable -ml-1 -my-2 flex min-h-[38px] items-center gap-0.5 py-2 text-body text-accent-700', className)}
       >
         <ChevronLeft className="h-[19px] w-[19px]" strokeWidth={3} />
         {label}

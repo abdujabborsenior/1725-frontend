@@ -20,7 +20,7 @@ import { FollowListModal } from '@/components/social/follow-list-modal';
 import { StartupCard } from '@/components/startups/startup-card';
 import { ROLE_LABEL, ROLE_BADGE } from '@/lib/constants';
 import { cn } from '@/lib/utils';
-import { format, formatDistanceToNow } from 'date-fns';
+import { formatDate, timeAgo } from '@/lib/date';
 import toast from 'react-hot-toast';
 
 export function ProfileClient({ initialProfile }: { initialProfile: PublicProfile | null }) {
@@ -64,7 +64,7 @@ export function ProfileClient({ initialProfile }: { initialProfile: PublicProfil
     return (
       <div className="mx-auto max-w-4xl" aria-hidden>
         <div className="skeleton mb-4 h-8 w-24 rounded-xl" />
-        <div className="overflow-hidden rounded-[2rem] border border-slate-200 bg-white shadow-soft">
+        <div className="overflow-hidden rounded-ios-2xl bg-white shadow-card">
           <div className="skeleton h-40 md:h-52" />
           <div className="px-5 pb-6 md:px-8">
             <div className="-mt-12 flex items-end gap-4 md:-mt-16">
@@ -90,8 +90,8 @@ export function ProfileClient({ initialProfile }: { initialProfile: PublicProfil
     return (
       <div className="py-28 text-center">
         <UserX className="mx-auto mb-3 h-10 w-10 text-slate-300" />
-        <p className="text-lg font-bold text-brand-900">Foydalanuvchi topilmadi</p>
-        <p className="mt-1 text-sm text-slate-500">Bunday username mavjud emas yoki hisob faol emas.</p>
+        <p className="text-title-3 font-bold text-brand-900">Foydalanuvchi topilmadi</p>
+        <p className="mt-1 text-subhead text-slate-500">Bunday username mavjud emas yoki hisob faol emas.</p>
       </div>
     );
   }
@@ -105,8 +105,8 @@ export function ProfileClient({ initialProfile }: { initialProfile: PublicProfil
     <div className="mx-auto max-w-4xl">
       <BackButton label="Ortga" className="mb-4" fallbackHref="/discover" />
       {/* Cover + header */}
-      <div className="overflow-hidden rounded-[2rem] border border-slate-200 bg-white shadow-soft">
-        <div className="relative h-40 bg-brand-900 md:h-52">
+      <div className="overflow-hidden rounded-ios-2xl bg-white shadow-card">
+        <div className="relative h-40 bg-slate-100 md:h-52">
           {profile.coverUrl && (
             // eslint-disable-next-line @next/next/no-img-element
             <img src={profile.coverUrl} alt="" fetchPriority="high" decoding="async" className="h-full w-full object-cover" />
@@ -150,27 +150,29 @@ export function ProfileClient({ initialProfile }: { initialProfile: PublicProfil
           {/* Identity */}
           <div className="mt-4">
             <div className="flex flex-wrap items-center gap-2">
-              <h1 className="text-2xl font-bold tracking-tight text-brand-900">{profile.fullName}</h1>
-              <span className={cn('rounded-md border px-2 py-0.5 text-caption-1 font-semibold', ROLE_BADGE[profile.role])}>
+              <h1 className="text-title-1 font-bold tracking-tight text-brand-900">{profile.fullName}</h1>
+              <span className={cn('rounded-full px-2.5 py-1 text-caption-1 font-medium', ROLE_BADGE[profile.role])}>
                 {ROLE_LABEL[profile.role]}
               </span>
               {profile.isFounder && <FounderBadge />}
               {profile.isFollowedBy && !profile.isMe && (
-                <span className="rounded-md bg-slate-100 px-2 py-0.5 text-caption-1 font-medium text-slate-500">
+                <span className="rounded-full bg-fill-tertiary px-2.5 py-1 text-caption-1 font-medium text-slate-500">
                   Sizni kuzatadi
                 </span>
               )}
             </div>
-            {profile.username && <p className="text-sm text-slate-500">@{profile.username}</p>}
-            {profile.headline && <p className="mt-2 text-sm font-medium text-brand-800">{profile.headline}</p>}
-            {profile.bio && <p className="mt-2 max-w-2xl text-sm leading-relaxed text-slate-600">{profile.bio}</p>}
+            {profile.username && <p className="text-subhead text-slate-500">@{profile.username}</p>}
+            {profile.headline && <p className="mt-2 text-callout text-brand-900">{profile.headline}</p>}
+            {profile.bio && (
+              <p className="mt-2 max-w-2xl text-subhead leading-relaxed text-slate-500">{profile.bio}</p>
+            )}
 
             {/* Meta */}
-            <div className="mt-3 flex flex-wrap items-center gap-x-4 gap-y-1 text-xs text-slate-500">
+            <div className="mt-3 flex flex-wrap items-center gap-x-4 gap-y-1 text-footnote text-slate-500">
               {profile.region && <span className="flex items-center gap-1"><MapPin className="h-3.5 w-3.5" /> {profile.region}</span>}
-              <span className="flex items-center gap-1"><CalendarDays className="h-3.5 w-3.5" /> {format(new Date(profile.createdAt), 'MMM yyyy')} dan beri</span>
+              <span className="flex items-center gap-1"><CalendarDays className="h-3.5 w-3.5" /> {formatDate(profile.createdAt, 'LLLL yyyy')} dan beri</span>
               {!online && profile.lastSeenAt && (
-                <span>oxirgi faollik {formatDistanceToNow(new Date(profile.lastSeenAt), { addSuffix: true })}</span>
+                <span>oxirgi faollik {timeAgo(profile.lastSeenAt)}</span>
               )}
               {online && <span className="flex items-center gap-1 font-semibold text-accent-600"><span className="h-2 w-2 rounded-full bg-accent-500" /> onlayn</span>}
             </div>
@@ -180,7 +182,7 @@ export function ProfileClient({ initialProfile }: { initialProfile: PublicProfil
               <div className="mt-3 flex flex-wrap gap-2">
                 {profile.links.map((l) => (
                   <a key={l} href={l} target="_blank" rel="noreferrer"
-                    className="inline-flex items-center gap-1 rounded-full border border-slate-200 bg-surface-soft px-3 py-1 text-xs font-medium text-iris-700 hover:border-iris-300">
+                    className="tappable inline-flex items-center gap-1 rounded-full bg-fill-tertiary px-3 py-1.5 text-footnote font-medium text-accent-700">
                     <LinkIcon className="h-3 w-3" /> {l.replace(/^https?:\/\//, '').slice(0, 28)}
                   </a>
                 ))}
@@ -190,12 +192,12 @@ export function ProfileClient({ initialProfile }: { initialProfile: PublicProfil
             {/* Counts */}
             <div className="mt-4 flex flex-wrap items-center gap-x-6 gap-y-3">
               <button onClick={() => setListMode('followers')} className="group text-left">
-                <span className="text-lg font-semibold text-brand-900">{followers.toLocaleString('uz')}</span>
-                <span className="ml-1 text-sm text-slate-500 group-hover:text-brand-900">obunachi</span>
+                <span className="text-title-3 font-semibold tabular-nums text-brand-900">{followers.toLocaleString('uz')}</span>
+                <span className="ml-1 text-subhead text-slate-500">obunachi</span>
               </button>
               <button onClick={() => setListMode('following')} className="group text-left">
-                <span className="text-lg font-semibold text-brand-900">{profile.followingCount.toLocaleString('uz')}</span>
-                <span className="ml-1 text-sm text-slate-500 group-hover:text-brand-900">obuna</span>
+                <span className="text-title-3 font-semibold tabular-nums text-brand-900">{profile.followingCount.toLocaleString('uz')}</span>
+                <span className="ml-1 text-subhead text-slate-500">obuna</span>
               </button>
               {/* Asoschiga ovoz — toggle (o'z profilida faqat hisob) */}
               {profile.isFounder && (
@@ -213,15 +215,13 @@ export function ProfileClient({ initialProfile }: { initialProfile: PublicProfil
 
       {/* Their startups */}
       <div className="mt-8">
-        <h2 className="mb-4 flex items-center gap-2 text-lg font-bold text-brand-900">
-          <Rocket className="h-5 w-5 text-accent-600" /> Startaplari
-        </h2>
+        <h2 className="ios-section-header">Startaplari</h2>
         {startups && startups.data.length > 0 ? (
-          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+          <div className="grid-rise grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
             {startups.data.map((s) => <StartupCard key={s.id} startup={s} />)}
           </div>
         ) : (
-          <div className="rounded-2xl bg-white py-12 text-center text-sm text-slate-500">
+          <div className="rounded-ios-2xl bg-white py-12 text-center text-subhead text-slate-500">
             Hali startaplar yo‘q
           </div>
         )}

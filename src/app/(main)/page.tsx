@@ -149,7 +149,7 @@ export default function LandingPage() {
 
   const { data: featuredStartups, isLoading: startupsLoading } = useQuery({
     queryKey: ['startups-landing'],
-    queryFn: () => startupsApi.list({ limit: 8, sort: 'featured' }),
+    queryFn: () => startupsApi.list({ limit: 6, sort: 'featured' }),
     staleTime: 60_000,
   });
   const { data: topRated } = useQuery({
@@ -361,13 +361,13 @@ export default function LandingPage() {
           />
         </Reveal>
         {startupsLoading ? (
-          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
-            {Array.from({ length: 4 }).map((_, i) => (
+          <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
+            {Array.from({ length: 3 }).map((_, i) => (
               <CardSkeleton key={i} />
             ))}
           </div>
         ) : featuredStartups && featuredStartups.data.length > 0 ? (
-          <RevealGroup className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+          <RevealGroup className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
             {featuredStartups.data.map((s) => (
               <RevealItem key={s.id}>
                 <StartupCard startup={s} />

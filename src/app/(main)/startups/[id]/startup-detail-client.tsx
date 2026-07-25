@@ -18,6 +18,7 @@ import { LikeButton, BookmarkButton } from '@/components/startups/engagement';
 import { Reviews } from '@/components/startups/reviews';
 import { RatingValue } from '@/components/startups/rating';
 import { CoverMedia, isPlayableVideo } from '@/components/startups/cover-media';
+import { StartupLogo } from '@/components/startups/startup-logo';
 import { cn } from '@/lib/utils';
 import { ReportDialog } from '@/components/reports/report-dialog';
 import { EmptyState } from '@/components/ui/page-header';
@@ -139,19 +140,15 @@ export function StartupDetailClient({ initialStartup }: { initialStartup: Startu
         <div className="relative z-10 px-5 md:px-8 pb-6">
           {/* Logo — faqat shu element cover ustiga chiqadi */}
           {/* Video muqovada logo ustiga chiqmaydi — player boshqaruvlarini to'sardi */}
-          <div className={cn(
-            'relative z-10 mb-3 inline-flex h-24 w-24 shrink-0 items-center justify-center overflow-hidden rounded-[22px] bg-white shadow-card ring-1 ring-black/[0.06]',
-            hasCoverVideo ? 'mt-4' : '-mt-12',
-          )}>
-            {startup.logoUrl ? (
-              // eslint-disable-next-line @next/next/no-img-element
-              <img src={startup.logoUrl} alt={startup.title} className="h-full w-full object-cover" />
-            ) : (
-              <span className="text-large-title font-semibold text-brand-900">
-                {startup.title.charAt(0).toUpperCase()}
-              </span>
+          <StartupLogo
+            src={startup.logoUrl}
+            title={startup.title}
+            size={96}
+            className={cn(
+              'relative z-10 mb-3 !rounded-[22px] shadow-card ring-1 ring-black/[0.06]',
+              hasCoverVideo ? 'mt-4' : '-mt-12',
             )}
-          </div>
+          />
           {/* Sarlavha + shior — oq maydonda, to'liq ko'rinadi */}
           <h1 className="text-title-1 font-bold tracking-tight text-brand-900 md:text-large-title">
             {startup.title}

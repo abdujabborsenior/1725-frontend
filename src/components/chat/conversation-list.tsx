@@ -4,7 +4,7 @@ import { useEffect, useMemo, useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
-import { MessageSquarePlus, Hash, Users, UsersRound, ChevronLeft } from '@/components/icons';
+import { MessageSquarePlus, Users, UsersRound, ChevronLeft } from '@/components/icons';
 import { chatApi } from '@/lib/api';
 import { getSocket } from '@/lib/socket';
 import { useAuthStore } from '@/store/auth.store';
@@ -12,7 +12,7 @@ import { Avatar } from '@/components/ui/avatar';
 import { ConversationListSkeleton } from './chat-skeletons';
 import { CreateGroupModal } from './create-group-modal';
 import { cn } from '@/lib/utils';
-import { formatDistanceToNowStrict } from 'date-fns';
+import { timeAgoShort } from '@/lib/date';
 import type { Conversation } from '@/types';
 
 type Filter = 'all' | 'direct' | 'group';
@@ -165,7 +165,7 @@ export function ConversationList({ activeId }: { activeId?: string }) {
                 key={t.id}
                 onClick={() => selectFilter(t.id)}
                 className={cn(
-                  'relative flex flex-1 items-center justify-center gap-1.5 rounded-xl px-2 py-1.5 text-xs font-bold transition-colors',
+                  'relative flex flex-1 items-center justify-center gap-1.5 rounded-xl px-2 py-1.5 text-caption-1 font-bold transition-colors',
                   active ? 'text-brand-900' : 'text-slate-600 hover:text-brand-800',
                 )}
               >
@@ -221,19 +221,15 @@ function ConversationRow({ c, active }: { c: Conversation; active: boolean }) {
         active ? 'bg-accent-50' : 'hover:bg-surface-soft',
       )}
     >
-      {c.type === 'group' && !c.avatarUrl ? (
-        <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-iris-500 text-white">
-          <Hash className="h-5 w-5" />
-        </span>
-      ) : (
-        <Avatar src={c.avatarUrl} name={c.title} size={48} />
-      )}
+      {/* Guruh ham, shaxs ham bir naqshda: rasm yoki nom bo'yicha barqaror iOS
+          tint + bosh harflar — har suhbat o'z rangi bilan farqlanadi. */}
+      <Avatar src={c.avatarUrl} name={c.title} size={48} />
       <div className="min-w-0 flex-1">
         <div className="flex items-center justify-between gap-2">
           <p className="truncate text-body font-semibold text-brand-900">{c.title}</p>
           {c.lastMessageAt && (
             <span className="shrink-0 text-footnote text-slate-400">
-              {formatDistanceToNowStrict(new Date(c.lastMessageAt))}
+              {timeAgoShort(c.lastMessageAt)}
             </span>
           )}
         </div>
@@ -283,9 +279,9 @@ function EmptyState({ filter, hasAny }: { filter: Filter; hasAny: boolean }) {
   return (
     <div className="px-4 py-16 text-center">
       <MessageSquarePlus className="mx-auto mb-2 h-8 w-8 text-slate-300" />
-      <p className="text-sm font-semibold text-brand-900">{hasAny ? 'Bu yerda hech narsa yo‘q' : 'Hali suhbatlar yo‘q'}</p>
-      <p className="mt-1 text-xs text-slate-500">Hamjamiyatdan odam toping va suhbat boshlang.</p>
-      <Link href="/discover" className="mt-3 inline-block text-xs font-semibold text-accent-700 hover:underline">Odamlarni topish →</Link>
+      <p className="text-subhead font-semibold text-brand-900">{hasAny ? 'Bu yerda hech narsa yo‘q' : 'Hali suhbatlar yo‘q'}</p>
+      <p className="mt-1 text-caption-1 text-slate-500">Hamjamiyatdan odam toping va suhbat boshlang.</p>
+      <Link href="/discover" className="mt-3 inline-block text-caption-1 font-semibold text-accent-700 hover:underline">Odamlarni topish →</Link>
     </div>
   );
 }

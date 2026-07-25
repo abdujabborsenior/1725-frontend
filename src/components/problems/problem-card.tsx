@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { ChevronRight, Eye } from '@/components/icons';
-import { formatDistanceToNow } from 'date-fns';
+import { timeAgo } from '@/lib/date';
 import { ProblemStatusPill } from '@/components/ui/badge';
 import { ProblemLikeButton } from '@/components/problems/like-button';
 import { cn } from '@/lib/utils';
@@ -20,7 +20,7 @@ export function ProblemCard({ problem, compact = false }: { problem: Problem; co
     <Link href={`/problems/${problem.id}`} className="group block h-full">
       <article
         className={cn(
-          'flex h-full flex-col rounded-ios-2xl bg-white transition-shadow duration-200 ease-ios hover:shadow-card-hover',
+          'card-today flex h-full flex-col rounded-ios-2xl bg-white shadow-card',
           compact ? 'p-5' : 'p-5 sm:p-6',
         )}
       >
@@ -95,7 +95,7 @@ export function ProblemCard({ problem, compact = false }: { problem: Problem; co
               </span>
             )}
             <span className="whitespace-nowrap">
-              {formatDistanceToNow(new Date(problem.createdAt), { addSuffix: true })}
+              {timeAgo(problem.createdAt)}
             </span>
             <ChevronRight className="h-3 w-3 text-slate-300" strokeWidth={3} />
           </div>

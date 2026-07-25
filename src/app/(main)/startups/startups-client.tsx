@@ -181,7 +181,7 @@ export function StartupsClient({
 
       {/* Grid */}
       <h2 className="sr-only">Startaplar ro&apos;yxati</h2>
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+      <div className="grid-rise grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
         {isLoading ? (
           Array.from({ length: 8 }).map((_, i) => <StartupCardSkeleton key={i} />)
         ) : items.length === 0 ? (

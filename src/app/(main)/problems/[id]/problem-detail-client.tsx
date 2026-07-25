@@ -5,7 +5,7 @@ import Link from 'next/link';
 import { useParams, useRouter } from 'next/navigation';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import {
-  ArrowLeft, Eye, Clock, MessageSquare, Link2,
+  ChevronLeft, Eye, Clock, MessageSquare, Link2,
   Send, Trash2, CheckCircle2, ExternalLink, X, FileText, Video,
 } from '@/components/icons';
 import { problemsApi, commentsApi, solutionsApi, startupsApi, getErrorMessage } from '@/lib/api';
@@ -18,6 +18,7 @@ import { Input } from '@/components/ui/input';
 import { Select } from '@/components/ui/select';
 import { Textarea } from '@/components/ui/textarea';
 import { ProblemStatusPill } from '@/components/ui/badge';
+import { Segmented } from '@/components/ui/segmented';
 import { SolutionHelpfulButton } from '@/components/solutions/helpful-button';
 import { PROBLEM_STATUS_META } from '@/lib/constants';
 import { Avatar } from '@/components/ui/avatar';
@@ -26,7 +27,7 @@ import { ProblemLikeButton } from '@/components/problems/like-button';
 import { ProblemShareModal } from '@/components/problems/share-modal';
 import { ReportButton } from '@/components/reports/report-dialog';
 import { Share2 } from '@/components/icons';
-import { formatDistanceToNow } from 'date-fns';
+import { timeAgo } from '@/lib/date';
 import toast from 'react-hot-toast';
 
 function isValidUrl(s: string) {
@@ -57,24 +58,24 @@ function CommentItem({
       <div className="flex-1 min-w-0">
         <div className="flex items-center gap-2 mb-1">
           {comment.author?.username ? (
-            <Link href={`/u/${comment.author.username}`} className="text-sm font-semibold text-brand-900 hover:underline">
+            <Link href={`/u/${comment.author.username}`} className="text-subhead font-semibold text-brand-900 hover:underline">
               {comment.author.fullName}
             </Link>
           ) : (
-            <span className="text-sm font-semibold text-brand-900">
+            <span className="text-subhead font-semibold text-brand-900">
               {comment.author?.fullName ?? 'Foydalanuvchi'}
             </span>
           )}
           <span className="text-caption-2 text-slate-500">
-            {formatDistanceToNow(new Date(comment.createdAt), { addSuffix: true })}
+            {timeAgo(comment.createdAt)}
           </span>
         </div>
-        <p className="text-sm text-slate-700 leading-relaxed whitespace-pre-wrap break-words">{comment.content}</p>
+        <p className="text-subhead text-slate-700 leading-relaxed whitespace-pre-wrap break-words">{comment.content}</p>
         {comment.links.length > 0 && (
           <div className="flex flex-wrap gap-2 mt-2">
             {comment.links.map((l) => (
               <a key={l} href={l} target="_blank" rel="noopener noreferrer"
-                className="flex items-center gap-1 text-xs text-accent-700 hover:text-accent-800 transition-colors">
+                className="flex items-center gap-1 text-caption-1 text-accent-700 hover:text-accent-800 transition-colors">
                 <ExternalLink className="h-3 w-3" /> {l.length > 40 ? `${l.slice(0, 40)}…` : l}
               </a>
             ))}
@@ -99,29 +100,28 @@ function CommentItem({
 function CommentForm({ problemId }: { problemId: string }) {
   const qc = useQueryClient();
   const [content, setContent] = useState('');
-  const [links, setLinks] = useState<string[]>([]);
-  const [linkInput, setLinkInput] = useState('');
+  /* Havola — ODDIY maydon: alohida "Qo'shish" tugmasi YO'Q, izoh bilan birga
+     yuboriladi (2026-07-25 direktivasi: havola qo'shish standart va tushunarli
+     bo'lsin). `https://` yozish shart emas — normalizatsiya o'zi qo'shadi. */
+  const [link, setLink] = useState('');
+
+  const normalized = normalizeLink(link);
+  const linkInvalid = link.trim().length > 0 && !normalized;
 
   const { mutate: addComment, isPending } = useMutation({
     mutationFn: () =>
-      commentsApi.create(problemId, { content: content.trim(), links }),
+      commentsApi.create(problemId, {
+        content: content.trim(),
+        links: normalized ? [normalized] : [],
+      }),
     onSuccess: () => {
       void qc.invalidateQueries({ queryKey: ['comments', problemId] });
       setContent('');
-      setLinks([]);
+      setLink('');
       toast.success("Izoh qo'shildi");
     },
     onError: (e) => toast.error(getErrorMessage(e)),
   });
-
-  function addLink() {
-    const trimmed = linkInput.trim();
-    if (!trimmed) return;
-    if (!isValidUrl(trimmed)) { toast.error("To'g'ri havola kiriting"); return; }
-    if (links.includes(trimmed)) return;
-    setLinks((l) => [...l, trimmed]);
-    setLinkInput('');
-  }
 
   return (
     <div className="space-y-3">
@@ -132,40 +132,38 @@ function CommentForm({ problemId }: { problemId: string }) {
         rows={3}
         count={{ current: content.length, max: 2000 }}
       />
-      <div className="flex gap-2">
-        <div className="relative flex-1">
-          <Link2 className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400 pointer-events-none" />
-          <input
-            value={linkInput}
-            onChange={(e) => setLinkInput(e.target.value)}
-            onKeyDown={(e) => { if (e.key === 'Enter') { e.preventDefault(); addLink(); } }}
-            placeholder="Havola qo'shish (ixtiyoriy)"
-            className="w-full h-10 pl-9 pr-3 rounded-lg bg-white border border-slate-200 hover:border-slate-300 text-sm text-brand-900 placeholder:text-slate-400 focus:outline-none input-focus transition-all"
-          />
-        </div>
-        <button type="button" onClick={addLink}
-          className="h-10 px-3 rounded-lg border border-slate-200 bg-white text-xs text-slate-600 hover:text-brand-900 hover:border-slate-300 transition-all whitespace-nowrap">
-          + Qo&apos;shish
-        </button>
-      </div>
-      {links.length > 0 && (
-        <div className="flex flex-wrap gap-2">
-          {links.map((l) => (
-            <div key={l} className="flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-accent-50 border border-accent-200 text-xs text-accent-700">
-              <ExternalLink className="h-3 w-3" />
-              <span className="truncate max-w-[160px]">{l}</span>
-              <button type="button" onClick={() => setLinks((ls) => ls.filter((x) => x !== l))} className="text-accent-700/60 hover:text-accent-700">
-                <X className="h-3 w-3" />
-              </button>
-            </div>
-          ))}
-        </div>
-      )}
-      <Button variant="accent" size="sm" loading={isPending} disabled={content.trim().length === 0} onClick={() => addComment()}>
-        <Send className="h-3.5 w-3.5" /> Yuborish
+      <Input
+        value={link}
+        onChange={(e) => setLink(e.target.value)}
+        placeholder="Havola (ixtiyoriy)"
+        inputMode="url"
+        icon={<Link2 className="h-[18px] w-[18px]" />}
+        error={linkInvalid ? "Havola to'g'ri emas" : undefined}
+      />
+      <Button
+        variant="accent"
+        loading={isPending}
+        disabled={content.trim().length === 0 || linkInvalid}
+        onClick={() => addComment()}
+      >
+        Yuborish
       </Button>
     </div>
   );
+}
+
+/** "example.uz" ham, "https://example.uz" ham qabul qilinadi; noto'g'ri bo'lsa null. */
+function normalizeLink(raw: string): string | null {
+  const v = raw.trim();
+  if (!v) return null;
+  const withScheme = /^https?:\/\//i.test(v) ? v : `https://${v}`;
+  if (!isValidUrl(withScheme)) return null;
+  try {
+    const u = new URL(withScheme);
+    return u.hostname.includes('.') ? u.toString() : null;
+  } catch {
+    return null;
+  }
 }
 
 /* ── Solution form ───────────────────────────────────────────── */
@@ -224,9 +222,9 @@ function SolutionForm({
     !videoInvalid;
 
   return (
-    <div className="bg-white border border-accent-200 rounded-2xl p-5 space-y-4 shadow-card animate-slide-up">
+    <div className="animate-slide-up space-y-4 rounded-ios-2xl bg-white p-5 shadow-card">
       <div className="flex items-center justify-between">
-        <h3 className="text-base font-semibold text-brand-900 flex items-center gap-2">
+        <h3 className="text-callout font-semibold text-brand-900 flex items-center gap-2">
           <CheckCircle2 className="h-4 w-4 text-accent-600" /> Yechim taqdim etish
         </h3>
         <button onClick={onClose} aria-label="Yopish" className="text-slate-400 hover:text-brand-900 transition-colors">
@@ -244,7 +242,7 @@ function SolutionForm({
       {/* O'z startapini yechim sifatida yuborish — tanlansa qolgan maydonlar ixtiyoriy */}
       {attachable.length > 0 && (
         <div className="space-y-2">
-          <label className="block text-sm font-medium text-brand-900">
+          <label className="block text-subhead font-medium text-brand-900">
             Startapingizni yechim sifatida yuborish{' '}
             <span className="font-normal text-slate-500">(ixtiyoriy)</span>
           </label>
@@ -259,7 +257,7 @@ function SolutionForm({
             className="h-10 rounded-lg px-3"
           />
           {selectedStartup && <StartupMiniCard startup={selectedStartup} />}
-          <p className="text-xs text-slate-500">
+          <p className="text-caption-1 text-slate-500">
             {hasStartup
               ? 'Startapingizning o’zi yechim sifatida yetarli — matn, taqdimot va video endi ixtiyoriy.'
               : 'Startap tanlasangiz, matn/taqdimot/video majburiy bo’lmaydi.'}
@@ -364,8 +362,8 @@ export function ProblemDetailClient({ initialProblem }: { initialProblem: Proble
     return (
       <div className="space-y-4 animate-pulse">
         <div className="h-6 w-32 rounded bg-slate-100" />
-        <div className="h-48 rounded-2xl bg-slate-100" />
-        <div className="h-64 rounded-2xl bg-slate-100" />
+        <div className="h-48 rounded-ios-2xl bg-slate-100" />
+        <div className="h-64 rounded-ios-2xl bg-slate-100" />
       </div>
     );
   }
@@ -385,42 +383,44 @@ export function ProblemDetailClient({ initialProblem }: { initialProblem: Proble
     <div className="max-w-4xl mx-auto space-y-6">
       <button
         onClick={() => router.back()}
-        className="flex items-center gap-2 text-sm text-slate-500 hover:text-brand-900 transition-colors group"
+        className="tappable -ml-1 flex items-center gap-0.5 text-body text-accent-700"
       >
-        <ArrowLeft className="h-4 w-4 transition-transform" />
+        <ChevronLeft className="h-[19px] w-[19px]" strokeWidth={3} />
         Orqaga
       </button>
 
       {/* Problem card */}
-      <article className="relative overflow-hidden rounded-[26px] border border-slate-200/70 bg-white p-6 shadow-soft md:p-8">
-        {/* status rangidagi yuqori urg'u chizig'i */}
-        <span className={cn('absolute inset-x-0 top-0 h-1', PROBLEM_STATUS_META[problem.status].bar)} />
-        <div className="pointer-events-none absolute -right-20 -top-24 h-56 w-56 rounded-full bg-accent-500/[0.06] blur-3xl" />
-
+      {/* Holat FAQAT pill orqali bildiriladi — kartaga rangli chiziq (web
+          urg'u naqshi) qo'yilmaydi (iOS: sirt tinch, ma'no belgida). */}
+      <article className="relative overflow-hidden rounded-ios-2xl bg-white p-6 shadow-card md:p-8">
         <div className="relative mb-5 flex flex-wrap items-center gap-3">
-          <ProblemStatusPill status={problem.status} className="px-3 py-1.5 text-xs" />
+          <ProblemStatusPill status={problem.status} />
           {problem.category && (
-            <span className="rounded-full bg-slate-50 px-3 py-1.5 text-xs font-semibold text-slate-600 ring-1 ring-inset ring-slate-200/70">
+            <span className="rounded-full bg-fill-tertiary px-2.5 py-1 text-caption-1 font-medium text-slate-500">
               {problem.category}
             </span>
           )}
-          <div className="ml-auto flex items-center gap-3.5 text-xs font-medium text-slate-500">
+          <div className="ml-auto flex items-center gap-3.5 text-footnote text-slate-500">
             <span className="flex items-center gap-1.5"><Eye className="h-3.5 w-3.5" /> {problem.viewCount.toLocaleString('uz')}</span>
             <span className="h-1 w-1 rounded-full bg-slate-300" />
             <span className="flex items-center gap-1.5"><Clock className="h-3.5 w-3.5" />
-              {formatDistanceToNow(new Date(problem.createdAt), { addSuffix: true })}
+              {timeAgo(problem.createdAt)}
             </span>
           </div>
         </div>
 
-        <h1 className="relative mb-4 text-2xl font-bold leading-tight tracking-tight text-brand-900 md:text-[1.75rem]">{problem.title}</h1>
-        <p className="relative leading-relaxed text-slate-600 whitespace-pre-wrap break-words">{problem.description}</p>
+        <h1 className="relative mb-4 text-title-1 font-bold leading-tight tracking-tight text-brand-900">
+          {problem.title}
+        </h1>
+        <p className="relative whitespace-pre-wrap break-words text-body leading-relaxed text-slate-600">
+          {problem.description}
+        </p>
 
         {problem.imageUrls.length > 0 && (
           <div className="mt-5 grid grid-cols-2 md:grid-cols-3 gap-3">
             {problem.imageUrls.map((url, i) => (
               <a key={i} href={url} target="_blank" rel="noopener noreferrer"
-                className="aspect-video rounded-lg overflow-hidden bg-slate-100 border border-slate-200 hover:border-accent-400 transition-all">
+                className="aspect-video overflow-hidden rounded-ios-md bg-fill-tertiary transition-opacity hover:opacity-90">
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img src={url} alt="Muammo rasmi" className="w-full h-full object-cover"
                   onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }} />
@@ -433,7 +433,7 @@ export function ProblemDetailClient({ initialProblem }: { initialProblem: Proble
           <div className="mt-4 space-y-3">
             {problem.videoUrls.map((url, i) => (
               <video key={i} src={url} controls playsInline
-                className="w-full max-h-96 rounded-xl border border-slate-200 bg-black" />
+                className="w-full max-h-96 rounded-ios-lg bg-black" />
             ))}
           </div>
         )}
@@ -447,20 +447,20 @@ export function ProblemDetailClient({ initialProblem }: { initialProblem: Proble
           />
           <button
             onClick={() => setShareOpen(true)}
-            className="btn-lift inline-flex h-10 items-center gap-2 rounded-full border border-slate-200 bg-white px-4 text-sm font-semibold text-slate-600 transition-all hover:border-accent-300 hover:text-accent-700"
+            className="tappable inline-flex h-10 items-center gap-2 rounded-full bg-fill-tertiary px-4 text-subhead font-semibold text-accent-700"
           >
             <Share2 className="h-4 w-4" /> Ulashish
           </button>
           <ReportButton
             targetType="problem"
             targetId={problem.id}
-            className="h-10 rounded-full border border-slate-200 bg-white px-4 hover:border-rose-200"
+            className="h-10 rounded-full bg-fill-tertiary px-4"
           />
 
           {problem.submittedBy && (
             <div className="ml-auto flex items-center gap-2.5">
               <Avatar src={problem.submittedBy.avatarUrl} name={problem.submittedBy.fullName} size={32} />
-              <span className="text-sm text-slate-500">
+              <span className="text-subhead text-slate-500">
                 {problem.submittedBy.username ? (
                   <Link href={`/u/${problem.submittedBy.username}`} className="font-semibold text-brand-900 hover:underline">
                     {problem.submittedBy.fullName}
@@ -475,8 +475,8 @@ export function ProblemDetailClient({ initialProblem }: { initialProblem: Proble
 
         {problem.analyzerNote && (
           <div className="mt-4 p-4 rounded-lg bg-accent-50 border border-accent-200">
-            <p className="text-xs font-semibold text-accent-700 mb-1 uppercase tracking-wide">Analizator izohi</p>
-            <p className="text-sm text-slate-700 whitespace-pre-wrap">{problem.analyzerNote}</p>
+            <p className="text-footnote font-semibold text-accent-700 mb-1">Analizator izohi</p>
+            <p className="text-subhead text-slate-700 whitespace-pre-wrap">{problem.analyzerNote}</p>
           </div>
         )}
       </article>
@@ -509,40 +509,30 @@ export function ProblemDetailClient({ initialProblem }: { initialProblem: Proble
 
       {/* Tabs */}
       <div>
-        <div className="flex gap-1 p-1 bg-white border border-slate-200 rounded-xl w-fit mb-5">
-          {([
-            { key: 'comments' as const, label: 'Izohlar', count: comments.length },
-            { key: 'solutions' as const, label: 'Yechimlar', count: solutions.length },
-          ]).map(({ key, label, count }) => (
-            <button
-              key={key}
-              onClick={() => setActiveTab(key)}
-              className={
-                'px-4 py-2 rounded-lg text-sm font-semibold flex items-center gap-2 transition-all duration-150 ' +
-                (activeTab === key ? 'bg-brand-900 text-white' : 'text-slate-600 hover:text-brand-900 hover:bg-slate-50')
-              }
-            >
-              {label}
-              <span className={
-                'px-1.5 py-0.5 rounded text-caption-2 font-bold ' +
-                (activeTab === key ? 'bg-white/20 text-white' : 'bg-slate-100 text-slate-600')
-              }>{count}</span>
-            </button>
-          ))}
+        <div className="mb-5 w-full sm:w-80">
+          <Segmented
+            aria-label="Izohlar yoki yechimlar"
+            value={activeTab}
+            onChange={(v) => setActiveTab(v)}
+            options={[
+              { value: 'comments', label: 'Izohlar', count: comments.length },
+              { value: 'solutions', label: 'Yechimlar', count: solutions.length },
+            ]}
+          />
         </div>
 
         {/* Comments */}
         {activeTab === 'comments' && (
           <div className="space-y-5">
             {token && isOpen ? (
-              <div className="bg-white border border-slate-200 rounded-2xl p-5">
-                <div className="flex items-center gap-2 mb-3 text-sm font-semibold text-brand-900">
+              <div className="rounded-ios-2xl bg-white p-5 shadow-card">
+                <div className="flex items-center gap-2 mb-3 text-subhead font-semibold text-brand-900">
                   <MessageSquare className="h-4 w-4 text-accent-600" /> Izoh yozish
                 </div>
                 <CommentForm problemId={id} />
               </div>
             ) : !token ? (
-              <p className="text-xs text-slate-500">
+              <p className="text-caption-1 text-slate-500">
                 Izoh yozish uchun{' '}
                 <Link
                   href={`/register?next=${encodeURIComponent(`/problems/${id}`)}`}
@@ -557,10 +547,10 @@ export function ProblemDetailClient({ initialProblem }: { initialProblem: Proble
             {comments.length === 0 ? (
               <div className="text-center py-12">
                 <MessageSquare className="h-10 w-10 text-slate-300 mx-auto mb-3" />
-                <p className="text-slate-500 text-sm">Hali izoh yo&apos;q</p>
+                <p className="text-slate-500 text-subhead">Hali izoh yo&apos;q</p>
               </div>
             ) : (
-              <div className="bg-white border border-slate-200 rounded-2xl p-5 space-y-5">
+              <div className="space-y-5 rounded-ios-2xl bg-white p-5 shadow-card">
                 {comments.map((c) => (
                   <CommentItem key={c.id} comment={c} myId={user?.id} problemId={id} />
                 ))}
@@ -575,30 +565,30 @@ export function ProblemDetailClient({ initialProblem }: { initialProblem: Proble
             {solutions.length === 0 ? (
               <div className="text-center py-12">
                 <CheckCircle2 className="h-10 w-10 text-slate-300 mx-auto mb-3" />
-                <p className="text-slate-500 text-sm">Hali yechim yo&apos;q — birinchi bo&apos;ling!</p>
+                <p className="text-slate-500 text-subhead">Hali yechim yo&apos;q — birinchi bo&apos;ling!</p>
               </div>
             ) : solutions.map((s: Solution) => (
-              <div key={s.id} className="bg-white border border-accent-200 rounded-2xl p-5 shadow-card">
+              <div key={s.id} className="rounded-ios-2xl bg-white p-5 shadow-card">
                 <div className="flex items-center justify-between mb-3">
                   <div className="flex items-center gap-2.5">
                     <Avatar src={s.submittedBy?.avatarUrl} name={s.submittedBy?.fullName ?? s.fullName} size={32} />
                     <div>
                       {s.submittedBy?.username ? (
-                        <Link href={`/u/${s.submittedBy.username}`} className="text-sm font-semibold text-brand-900 hover:underline">
+                        <Link href={`/u/${s.submittedBy.username}`} className="text-subhead font-semibold text-brand-900 hover:underline">
                           {s.submittedBy?.fullName ?? s.fullName}
                         </Link>
                       ) : (
-                        <p className="text-sm font-semibold text-brand-900">{s.submittedBy?.fullName ?? s.fullName}</p>
+                        <p className="text-subhead font-semibold text-brand-900">{s.submittedBy?.fullName ?? s.fullName}</p>
                       )}
                       <p className="text-caption-2 text-slate-500">
-                        {formatDistanceToNow(new Date(s.createdAt), { addSuffix: true })}
+                        {timeAgo(s.createdAt)}
                       </p>
                     </div>
                   </div>
                 </div>
                 {/* Startap yechim sifatida yuborilganda matn bo'sh bo'lishi mumkin */}
                 {s.content?.trim() && (
-                  <p className="text-sm text-slate-700 leading-relaxed whitespace-pre-wrap break-words">{s.content}</p>
+                  <p className="text-subhead text-slate-700 leading-relaxed whitespace-pre-wrap break-words">{s.content}</p>
                 )}
                 {/* Yechim sifatida biriktirilgan startap — card */}
                 {s.startup && (
@@ -610,13 +600,13 @@ export function ProblemDetailClient({ initialProblem }: { initialProblem: Proble
                   <div className="flex flex-wrap gap-2 mt-3">
                     {s.presentationUrl && (
                       <a href={s.presentationUrl} target="_blank" rel="noopener noreferrer"
-                        className="flex items-center gap-1 text-xs text-accent-700 hover:underline">
+                        className="flex items-center gap-1 text-caption-1 text-accent-700 hover:underline">
                         <FileText className="h-3 w-3" /> Taqdimot
                       </a>
                     )}
                     {s.videoUrl && (
                       <a href={s.videoUrl} target="_blank" rel="noopener noreferrer"
-                        className="flex items-center gap-1 text-xs text-violet-700 hover:underline">
+                        className="flex items-center gap-1 text-caption-1 text-violet-700 hover:underline">
                         <Video className="h-3 w-3" /> Video
                       </a>
                     )}
@@ -640,7 +630,7 @@ export function ProblemDetailClient({ initialProblem }: { initialProblem: Proble
       {/* O'xshash muammolar */}
       {similar && similar.length > 0 && (
         <section className="space-y-3 border-t border-slate-200 pt-6">
-          <h2 className="text-lg font-bold text-brand-900">O&apos;xshash muammolar</h2>
+          <h2 className="text-title-2 font-semibold text-brand-900">O&apos;xshash muammolar</h2>
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
             {similar.slice(0, 6).map((p) => (
               <ProblemCard key={p.id} problem={p} compact />

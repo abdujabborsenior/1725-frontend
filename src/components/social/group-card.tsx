@@ -43,7 +43,7 @@ export function GroupCard({ group, className }: { group: PublicGroup; className?
   }
 
   return (
-    <div className={cn('flex h-full flex-col rounded-ios-2xl bg-white p-5', className)}>
+    <div className={cn('card-today flex h-full flex-col rounded-ios-2xl bg-white p-5 shadow-card', className)}>
       <div className="flex items-center gap-3">
         {group.avatarUrl ? (
           <Avatar src={group.avatarUrl} name={group.title ?? 'G'} size={48} />

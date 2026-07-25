@@ -12,7 +12,7 @@ import { cn } from '@/lib/utils';
 export function FormulaExplainer({ formula }: { formula: LeaderboardFormula }) {
   const [open, setOpen] = useState(false);
   return (
-    <div className="rounded-ios-lg border border-slate-200 bg-surface-soft">
+    <div className="rounded-ios-lg bg-surface-soft">
       <button
         onClick={() => setOpen((v) => !v)}
         className="flex w-full items-center gap-2.5 px-4 py-3 text-left"
@@ -41,7 +41,7 @@ export function FormulaExplainer({ formula }: { formula: LeaderboardFormula }) {
             Top-250 kabi <b>Bayes (vaznli) reyting</b> ishlatamiz — ovozlar kam
             bo&apos;lsa, ball umumiy o&apos;rtachaga &laquo;tortiladi&raquo;.
           </p>
-          <div className="overflow-x-auto rounded-ios-md bg-brand-900 px-4 py-3 font-mono text-[13px] text-slate-100">
+          <div className="overflow-x-auto rounded-ios-md bg-brand-900 px-4 py-3 font-mono text-footnote text-slate-100">
             WR = (v / (v + m)) · R + (m / (v + m)) · C
           </div>
           <ul className="grid gap-1.5 sm:grid-cols-2">

@@ -32,7 +32,7 @@ export function AuthorLink({
     <span className={cn('flex min-w-0 items-center gap-2.5', className)}>
       <Avatar src={author?.avatarUrl} name={name} size={size} />
       <span className="min-w-0">
-        <span className="block truncate text-sm font-semibold text-brand-900">{name}</span>
+        <span className="block truncate text-subhead font-semibold text-brand-900">{name}</span>
         {subtitle && <span className="block truncate text-caption-1 text-slate-500">{subtitle}</span>}
       </span>
     </span>

@@ -11,7 +11,7 @@ import { notificationMeta, notificationTarget } from '@/lib/notification-meta';
 import type { AppNotification } from '@/types';
 import { Pagination } from '@/components/ui/pagination';
 import { EmptyState, PageHeader } from '@/components/ui/page-header';
-import { formatDistanceToNow } from 'date-fns';
+import { timeAgo } from '@/lib/date';
 
 export default function NotificationsPage() {
   const { token, hasHydrated } = useAuthStore();
@@ -116,7 +116,7 @@ export default function NotificationsPage() {
                       <span className="mt-0.5 block text-subhead text-slate-500">{n.body}</span>
                     )}
                     <span className="mt-1 block text-caption-1 text-slate-400">
-                      {formatDistanceToNow(new Date(n.createdAt), { addSuffix: true })}
+                      {timeAgo(n.createdAt)}
                     </span>
                   </span>
                   {!n.isRead && (

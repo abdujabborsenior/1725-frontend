@@ -83,7 +83,7 @@ export function FounderVoteButton({
     return (
       <span
         className={cn(
-          'inline-flex items-center gap-1.5 rounded-full border border-slate-200 bg-surface-soft font-semibold text-slate-600',
+          'inline-flex items-center gap-1.5 rounded-full bg-fill-tertiary font-semibold text-slate-600',
           size === 'sm' ? 'h-8 px-3 text-footnote' : 'h-10 px-4 text-subhead',
         )}
       >
@@ -99,7 +99,7 @@ export function FounderVoteButton({
       disabled={busy}
       aria-pressed={voted}
       className={cn(
-        'btn-lift inline-flex items-center gap-1.5 rounded-full border font-semibold transition-all',
+        'tappable inline-flex items-center gap-1.5 rounded-full border font-semibold transition-all',
         size === 'sm' ? 'h-8 px-3 text-footnote' : 'h-10 px-4 text-subhead',
         voted
           ? 'border-accent-700 bg-accent-700 text-white hover:bg-accent-800'

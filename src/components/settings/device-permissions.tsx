@@ -66,7 +66,7 @@ export function DevicePermissions() {
 
   return (
     <div className="rounded-ios-2xl bg-white p-6 space-y-4">
-      <h2 className="text-subhead font-bold text-slate-500 uppercase tracking-wider flex items-center gap-2">
+      <h2 className="ios-section-header !px-0 !pt-0 flex items-center gap-2">
         <ShieldCheck className="h-4 w-4" /> Qurilma ruxsatlari
       </h2>
 
@@ -90,7 +90,7 @@ export function DevicePermissions() {
                 <button
                   onClick={() => void request(key)}
                   disabled={busy !== null}
-                  className="shrink-0 rounded-ios border border-slate-200 px-3 py-1.5 text-footnote font-semibold text-brand-900 transition-colors hover:border-slate-300 active:bg-fill-tertiary disabled:opacity-60"
+                  className="shrink-0 rounded-full bg-fill-tertiary px-3.5 py-1.5 text-footnote font-semibold text-accent-700 transition-colors active:bg-fill disabled:opacity-60"
                 >
                   {busy === key ? <Spinner className="h-3.5 w-3.5 animate-spin" /> : "So'rash"}
                 </button>
@@ -110,7 +110,7 @@ export function DevicePermissions() {
               Rasm yoki video tanlaganingizda qurilmaning o&apos;zi ruxsat so&apos;raydi
             </p>
           </div>
-          <span className="shrink-0 rounded-full border border-slate-200 bg-slate-100 px-2.5 py-1 text-caption-1 font-semibold text-slate-600">
+          <span className="shrink-0 rounded-full bg-fill-tertiary px-2.5 py-1 text-caption-1 font-medium text-slate-600">
             Avtomatik
           </span>
         </div>

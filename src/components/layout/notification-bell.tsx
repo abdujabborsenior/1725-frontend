@@ -10,7 +10,7 @@ import { useAuthStore } from '@/store/auth.store';
 import { cn } from '@/lib/utils';
 import { notificationMeta, notificationTarget } from '@/lib/notification-meta';
 import type { AppNotification } from '@/types';
-import { formatDistanceToNow } from 'date-fns';
+import { timeAgo } from '@/lib/date';
 
 export function NotificationBell() {
   const { token } = useAuthStore();
@@ -141,7 +141,7 @@ export function NotificationBell() {
                         <span className="line-clamp-2 block text-footnote text-slate-500">{n.body}</span>
                       )}
                       <span className="mt-0.5 block text-caption-2 text-slate-400">
-                        {formatDistanceToNow(new Date(n.createdAt), { addSuffix: true })}
+                        {timeAgo(n.createdAt)}
                       </span>
                     </span>
                     {!n.isRead && (

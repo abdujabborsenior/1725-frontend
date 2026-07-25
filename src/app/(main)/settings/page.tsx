@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useQuery } from '@tanstack/react-query';
 import {
-  ChevronLeft, Save, KeyRound, Spinner, User as UserIcon, AtSign, Check, X, IdCard,
+  ChevronLeft, ChevronRight, Save, KeyRound, Spinner, User as UserIcon, AtSign, Check, X, IdCard,
 } from '@/components/icons';
 import { usersApi, chatApi, getErrorMessage } from '@/lib/api';
 import { useAuthStore } from '@/store/auth.store';
@@ -183,7 +183,7 @@ export default function SettingsPage() {
     <div className="max-w-2xl mx-auto space-y-6">
       <button
         onClick={() => router.push('/profile')}
-        className="tappable -ml-1 flex items-center gap-0.5 text-body text-accent-700"
+        className="tappable -ml-1 -my-2 flex min-h-[38px] items-center gap-0.5 py-2 text-body text-accent-700"
       >
         <ChevronLeft className="h-[19px] w-[19px]" strokeWidth={3} /> Profil
       </button>
@@ -199,9 +199,10 @@ export default function SettingsPage() {
           {me.username && (
             <button
               onClick={() => router.push(`/u/${me.username}`)}
-              className="tappable text-footnote font-medium text-accent-700"
+              className="tappable -my-2 flex min-h-[34px] items-center gap-0.5 py-2 text-footnote font-medium text-accent-700"
             >
-              Profilni ko&apos;rish →
+              Profilni ko&apos;rish
+              <ChevronRight className="h-3.5 w-3.5" strokeWidth={3} />
             </button>
           )}
         </div>
@@ -327,10 +328,12 @@ export default function SettingsPage() {
       {/* Email (read-only) */}
       <div className="rounded-ios-2xl bg-white p-5 sm:p-6">
         <h2 className="mb-3 text-title-3 font-semibold text-brand-900">Email</h2>
-        <div className="flex items-center justify-between">
-          <span className="text-body text-brand-900">{me.email}</span>
+        {/* Uzun email tor ekranda qatorni kengaytirib yubormasin:
+            manzil qisqaradi, tamg'a esa hech qachon siqilmaydi. */}
+        <div className="flex items-center justify-between gap-3">
+          <span className="min-w-0 truncate text-body text-brand-900">{me.email}</span>
           {me.isEmailVerified && (
-            <span className="inline-flex items-center gap-1 text-footnote font-medium text-accent-700">
+            <span className="inline-flex shrink-0 items-center gap-1 text-footnote font-medium text-accent-700">
               <Check className="h-3.5 w-3.5" strokeWidth={3} /> Tasdiqlangan
             </span>
           )}

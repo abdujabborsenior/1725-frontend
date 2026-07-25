@@ -84,19 +84,19 @@ export default function ResetPasswordPage() {
       title="Yangi parol o'rnatish"
       subtitle="Emailga yuborilgan kodni va yangi parolingizni kiriting"
     >
-          <p className="-mt-4 mb-5 truncate text-sm font-semibold text-accent-700">
+          <p className="-mt-4 mb-5 truncate text-subhead font-semibold text-accent-700">
             {pendingEmail}
           </p>
           <div className="space-y-5">
             <div className="flex flex-col items-center gap-3">
-              <label className="text-xs font-semibold text-slate-700 uppercase tracking-wider self-start">
+              <label className="text-footnote font-medium text-slate-500 self-start">
                 Tasdiqlash kodi
               </label>
               <OtpInput value={otp} onChange={setOtp} length={6} />
             </div>
 
             <div className="flex flex-col gap-1.5">
-              <label className="text-xs font-semibold text-slate-700 uppercase tracking-wider">
+              <label className="text-footnote font-medium text-slate-500">
                 Yangi parol
               </label>
               <div className="relative">
@@ -136,7 +136,7 @@ export default function ResetPasswordPage() {
             </div>
 
             <div className="flex flex-col gap-1.5">
-              <label className="text-xs font-semibold text-slate-700 uppercase tracking-wider">
+              <label className="text-footnote font-medium text-slate-500">
                 Parolni tasdiqlang
               </label>
               <div className="relative">
@@ -146,11 +146,11 @@ export default function ResetPasswordPage() {
                   value={confirm}
                   onChange={(e) => setConfirm(e.target.value)}
                   placeholder="••••••••"
-                  className="w-full h-12 pl-11 pr-4 rounded-xl bg-white border border-slate-200 hover:border-slate-300 text-sm text-brand-900 placeholder:text-slate-400 focus:outline-none input-focus transition-all duration-150"
+                  className="w-full h-12 pl-11 pr-4 rounded-xl bg-white border border-slate-200 hover:border-slate-300 text-subhead text-brand-900 placeholder:text-slate-400 focus:outline-none input-focus transition-all duration-150"
                 />
               </div>
               {confirm.length > 0 && !matches && (
-                <p className="text-xs text-rose-600">Parollar mos kelmadi</p>
+                <p className="text-caption-1 text-rose-600">Parollar mos kelmadi</p>
               )}
             </div>
 
@@ -167,7 +167,7 @@ export default function ResetPasswordPage() {
             <button
               onClick={handleResend}
               disabled={!canResend}
-              className="flex items-center justify-center gap-2 w-full text-sm text-slate-500 hover:text-brand-900 disabled:opacity-40 disabled:cursor-not-allowed transition-colors py-1"
+              className="flex items-center justify-center gap-2 w-full text-subhead text-slate-500 hover:text-brand-900 disabled:opacity-40 disabled:cursor-not-allowed transition-colors py-1"
             >
               <RefreshCw className="h-4 w-4" />
               {canResend ? 'Kodni qayta yuborish' : `Qayta yuborish (${resendCountdown}s)`}
@@ -176,7 +176,7 @@ export default function ResetPasswordPage() {
 
           <Link
             href="/login"
-            className="mt-5 flex items-center justify-center gap-1.5 text-sm text-slate-500 hover:text-brand-900 transition-colors"
+            className="mt-5 flex items-center justify-center gap-1.5 text-subhead text-slate-500 hover:text-brand-900 transition-colors"
           >
             <ArrowLeft className="h-4 w-4" /> Kirishga qaytish
           </Link>

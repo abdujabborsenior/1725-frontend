@@ -34,8 +34,6 @@ interface AvatarProps {
   /** Diametr (px) */
   size?: number;
   online?: boolean;
-  /** Tashqi halqa (story-style) */
-  ring?: boolean;
   className?: string;
 }
 
@@ -44,7 +42,6 @@ export function Avatar({
   name = '',
   size = 40,
   online,
-  ring,
   className,
 }: AvatarProps) {
   const [failed, setFailed] = useState(false);
@@ -63,7 +60,6 @@ export function Avatar({
       className={cn(
         'relative inline-flex shrink-0 items-center justify-center rounded-full',
         online && 'ring-online',
-        ring && 'p-[2px] bg-gradient-to-br from-accent-400 to-iris-500',
         className,
       )}
       style={{ height: size, width: size }}
@@ -71,7 +67,6 @@ export function Avatar({
       <span
         className={cn(
           'relative flex h-full w-full items-center justify-center overflow-hidden rounded-full',
-          ring && 'ring-2 ring-white',
           tint,
         )}
       >

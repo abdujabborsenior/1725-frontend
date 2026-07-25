@@ -84,7 +84,7 @@ export function SolutionHelpfulButton({
     return (
       <span
         className={cn(
-          'inline-flex h-8 items-center gap-1.5 rounded-ios border border-slate-200 bg-surface-soft px-2.5 text-footnote font-semibold text-slate-600',
+          'inline-flex h-8 items-center gap-1.5 rounded-ios bg-fill-tertiary px-2.5 text-footnote font-semibold text-slate-600',
           className,
         )}
       >

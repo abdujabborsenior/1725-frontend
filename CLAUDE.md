@@ -123,6 +123,15 @@ overflow tekshiruvi. Har katta o'zgarishdan keyin build + lint + vizual.
   sahifalar (home, startups CRUD + LinkFields, problems, solutions, polls,
   leaderboard, discover, profile, settings, notifications, auth, chat=iMessage,
   404). Build + lint toza; 18 marshrut × 2 viewport vizual tekshirildi.
+- [x] 2026-07-25 (2-to'lqin) — Karta tizimi (`.card-today`/`.cover-zoom`/
+  `.grid-rise`), kattaroq startap kartasi, kategoriya rangi, iOS profil.
+- [x] 2026-07-25 (3-to'lqin, YAKUNIY QAMROV) — qoldiq eski shkala (86 ta
+  `text-xs/sm/...`) iOS ramkasiga; sana tili (§8); poll kartasi iOS picker;
+  kategoriya rangi hash bilan 100% qamrov; muqova "raketa" zaxirasi olib
+  tashlandi; logotip hamma joyda `StartupLogo`; izohdagi "+ Qo'shish" havola
+  oqimi oddiy maydonga; `btn-lift`/hover-lift/CAPS yorliq/chegarali karta/CTA
+  strelkalari tozalandi; `/settings` mobil overflow tuzatildi. Build+lint toza,
+  20×desktop + 16×mobil skrinshot, overflow 0.
 - [ ] Admin panel (`../admin-panel-front`) — hali eski tilda (alohida vazifa).
 
 ## 7. Performance tizimi (2026-07-07 — REGRESS QILMA)
@@ -139,3 +148,15 @@ overflow tekshiruvi. Har katta o'zgarishdan keyin build + lint + vizual.
 6. **Kontrast AA**: §2.1 qiymatlari; `opacity-*` bilan matn xiralashtirish taqiq.
 7. **Home**: below-fold `LazySection` + `next/dynamic` + `cv-auto`.
 8. Above-fold'da cheksiz animatsiya taqiq.
+
+## 8. Sana/vaqt (i18n — MAJBURIY)
+`date-fns` TO'G'RIDAN chaqirilmaydi (locale'siz "1 day ago" kabi inglizcha matn
+beradi — §9 buzilishi). Yagona manba: **`src/lib/date.ts`** —
+`timeAgo` (qo'shimchali, "3 kun oldin") · `timeAgoShort` (chat ro'yxati, "3 kun") ·
+`formatDate` · `formatTime`. Til qo'shilganda locale FAQAT shu faylda almashadi.
+
+## 9. Demo/seed ma'lumot qoidasi
+Avatar/logotip uchun tashqi generator (dicebear, pravatar) ISHLATILMAYDI —
+ular gradientli rasm qaytaradi (dizayn tiliga zid) va tashqi bog'liqlik tug'diradi.
+Seed logotipni `null` qoldiradi; ilova o'zi tekis iOS "app icon" (bosh harflar +
+barqaror system rang) chizadi: `StartupLogo` (startap) / `Avatar` (odam, guruh).

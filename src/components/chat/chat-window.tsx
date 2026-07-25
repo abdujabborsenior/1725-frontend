@@ -19,7 +19,7 @@ import { ChatEmptyState } from './chat-empty';
 import { GroupSettingsModal } from './group-settings-modal';
 import { profileHref } from '@/components/social/user-list-item';
 import { cn } from '@/lib/utils';
-import { formatDistanceToNow } from 'date-fns';
+import { timeAgo } from '@/lib/date';
 import toast from 'react-hot-toast';
 import type { ChatMessage, Conversation } from '@/types';
 
@@ -310,7 +310,7 @@ export function ChatWindow({ conversationId }: { conversationId: string }) {
             {typingUser ? <span className="text-accent-600">yozmoqda…</span>
               : isGroup ? <span className="flex items-center gap-1"><Users className="h-3 w-3" /> {conv.participantCount} a&apos;zo{conv.username ? <span className="text-iris-500"> · @{conv.username}</span> : null}</span>
               : online ? <span className="text-accent-600">onlayn</span>
-              : conv.otherUser?.lastSeenAt ? `oxirgi faollik ${formatDistanceToNow(new Date(conv.otherUser.lastSeenAt), { addSuffix: true })}` : ''}
+              : conv.otherUser?.lastSeenAt ? `oxirgi faollik ${timeAgo(conv.otherUser.lastSeenAt)}` : ''}
           </p>
         </HeaderIdentity>
 
@@ -419,14 +419,14 @@ export function ChatWindow({ conversationId }: { conversationId: string }) {
               {conv.avatarUrl ? <Avatar src={conv.avatarUrl} name={conv.title} size={56} /> : <Hash className="h-6 w-6" />}
             </span>
             <div className="min-w-0">
-              <p className="truncate text-lg font-bold text-brand-900">{conv.title}</p>
-              {conv.username && <p className="text-sm text-iris-600">@{conv.username}</p>}
-              <p className="flex items-center gap-1 text-xs text-slate-500"><Users className="h-3 w-3" /> {conv.participantCount} a&apos;zo</p>
+              <p className="truncate text-title-3 font-bold text-brand-900">{conv.title}</p>
+              {conv.username && <p className="text-subhead text-iris-600">@{conv.username}</p>}
+              <p className="flex items-center gap-1 text-caption-1 text-slate-500"><Users className="h-3 w-3" /> {conv.participantCount} a&apos;zo</p>
             </div>
           </div>
-          {conv.description && <p className="text-sm leading-relaxed text-slate-600">{conv.description}</p>}
+          {conv.description && <p className="text-subhead leading-relaxed text-slate-600">{conv.description}</p>}
           {(conv.blockedMessageTypes ?? []).length > 0 && (
-            <div className="rounded-2xl bg-rose-50 p-3 text-xs text-rose-700">
+            <div className="rounded-2xl bg-rose-50 p-3 text-caption-1 text-rose-700">
               Cheklovlar yoqilgan: {(conv.blockedMessageTypes ?? []).map((t) => RESTRICTION_LABEL[t] ?? t).join(', ')}
             </div>
           )}
@@ -446,12 +446,12 @@ export function ChatWindow({ conversationId }: { conversationId: string }) {
       {/* Leave confirm */}
       <Modal open={leaveOpen} onClose={() => !leaving && setLeaveOpen(false)} title="Guruhdan chiqish">
         <div className="space-y-4">
-          <p className="text-sm text-slate-600">
+          <p className="text-subhead text-slate-600">
             <span className="font-semibold text-brand-900">{conv.title}</span> guruhidan chiqmoqchimisiz? Keyin uni qidiruvdan qayta topib qo&apos;shilishingiz mumkin.
           </p>
           <div className="flex justify-end gap-3">
-            <button onClick={() => setLeaveOpen(false)} disabled={leaving} className="rounded-xl px-4 py-2 text-sm font-semibold text-slate-600 hover:bg-surface-soft">Bekor</button>
-            <button onClick={handleLeave} disabled={leaving} className="btn-lift flex items-center gap-2 rounded-xl bg-rose-500 px-4 py-2 text-sm font-semibold text-white hover:bg-rose-600 disabled:opacity-60">
+            <button onClick={() => setLeaveOpen(false)} disabled={leaving} className="rounded-xl px-4 py-2 text-subhead font-semibold text-slate-600 hover:bg-surface-soft">Bekor</button>
+            <button onClick={handleLeave} disabled={leaving} className="tappable flex items-center gap-2 rounded-xl bg-rose-500 px-4 py-2 text-subhead font-semibold text-white hover:bg-rose-600 disabled:opacity-60">
               {leaving ? <Spinner className="h-4 w-4 animate-spin" /> : <LogOut className="h-4 w-4" />} Chiqish
             </button>
           </div>

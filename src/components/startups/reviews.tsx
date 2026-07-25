@@ -12,7 +12,7 @@ import { RatingValue, RatingInput, RATING_MAX } from './rating';
 import { Button } from '@/components/ui/button';
 import { Pagination } from '@/components/ui/pagination';
 import { AuthorLink } from '@/components/social/author-link';
-import { formatDistanceToNow } from 'date-fns';
+import { timeAgo } from '@/lib/date';
 import toast from 'react-hot-toast';
 import type { Startup } from '@/types';
 
@@ -85,7 +85,7 @@ export function Reviews({ startup }: { startup: Startup }) {
         <div className="shrink-0 text-center">
           <div className="flex items-baseline justify-center gap-1">
             <Star className="h-6 w-6 self-center text-amber-400 fill-amber-400" aria-hidden />
-            <span className="text-4xl font-semibold tabular-nums text-brand-900">
+            <span className="text-large-title font-semibold tabular-nums text-brand-900">
               {startup.ratingCount > 0 ? startup.ratingAvg.toFixed(1) : '—'}
             </span>
             <span className="text-title-3 font-semibold text-slate-400">/{RATING_MAX}</span>
@@ -176,7 +176,7 @@ export function Reviews({ startup }: { startup: Startup }) {
                 <AuthorLink
                   author={r.user}
                   size={36}
-                  subtitle={`${r.user ? ROLE_LABEL[r.user.role] : ''} · ${formatDistanceToNow(new Date(r.createdAt), { addSuffix: true })}`}
+                  subtitle={`${r.user ? ROLE_LABEL[r.user.role] : ''} · ${timeAgo(r.createdAt)}`}
                 />
                 <RatingValue value={r.rating} size="sm" />
               </div>

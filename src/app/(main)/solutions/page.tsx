@@ -10,11 +10,11 @@ import type { Solution } from '@/types';
 import { Pagination } from '@/components/ui/pagination';
 import { EmptyState, PageHeader } from '@/components/ui/page-header';
 import { StartupMiniCard } from '@/components/startups/startup-mini-card';
-import { formatDistanceToNow } from 'date-fns';
+import { timeAgo } from '@/lib/date';
 
 function SolutionCard({ solution }: { solution: Solution }) {
   return (
-    <article className="flex h-full flex-col rounded-ios-2xl bg-white p-5 transition-shadow duration-200 ease-ios hover:shadow-card-hover">
+    <article className="card-today flex h-full flex-col rounded-ios-2xl bg-white p-5 shadow-card">
       <div className="flex items-start justify-between gap-3 mb-3">
         {/* "Foydali" hisobi — yechim qadri (moderatsiya o'rniga hamjamiyat bahosi) */}
         <span className="inline-flex items-center gap-1.5 rounded-full bg-accent-50 px-2.5 py-1 text-caption-1 font-medium text-accent-700">
@@ -70,7 +70,7 @@ function SolutionCard({ solution }: { solution: Solution }) {
         </span>
         <span className="flex items-center gap-1 flex-shrink-0">
           <Clock className="h-3 w-3" />
-          {formatDistanceToNow(new Date(solution.createdAt), { addSuffix: true })}
+          {timeAgo(solution.createdAt)}
         </span>
       </div>
     </article>
@@ -130,7 +130,7 @@ export default function SolutionsPage() {
         subtitle={`Siz yuborgan ${data?.meta.total ?? '—'} ta yechim — barchasi joylangan zahoti hammaga ko'rinadi`}
       />
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+      <div className="grid-rise grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
         {isLoading
           ? Array.from({ length: 9 }).map((_, i) => <SkeletonCard key={i} />)
           : items.length === 0

@@ -120,7 +120,7 @@ export function LeaderboardClient({
           </FilterChip>
         ))}
         {isFetching && (
-          <span className="text-xs text-slate-500">yangilanmoqda…</span>
+          <span className="text-caption-1 text-slate-500">yangilanmoqda…</span>
         )}
       </div>
 

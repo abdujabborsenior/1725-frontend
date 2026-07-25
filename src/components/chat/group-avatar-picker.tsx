@@ -54,7 +54,7 @@ export function GroupAvatarPicker({
             // eslint-disable-next-line @next/next/no-img-element
             <img src={value} alt={name ?? 'Guruh'} className="h-full w-full object-cover" />
           ) : letter ? (
-            <span className="text-3xl font-semibold text-white">{letter}</span>
+            <span className="text-title-1 font-semibold text-white">{letter}</span>
           ) : (
             <Hash className="h-7 w-7 text-white" />
           )}

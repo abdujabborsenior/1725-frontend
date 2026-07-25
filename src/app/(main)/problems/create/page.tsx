@@ -130,7 +130,7 @@ export default function CreateProblemPage() {
         />
 
         <div className="flex flex-col gap-1.5">
-          <label className="text-xs font-semibold text-slate-700 uppercase tracking-wider">
+          <label className="text-footnote font-medium text-slate-500">
             Kategoriya (ixtiyoriy)
           </label>
           <div className="flex flex-wrap gap-2">
@@ -138,7 +138,7 @@ export default function CreateProblemPage() {
               const selected = watch('category') === cat;
               return (
                 <label key={cat} className={cn(
-                  'cursor-pointer px-3 py-1.5 rounded-lg text-xs font-medium border transition-all duration-150',
+                  'cursor-pointer px-3 py-1.5 rounded-lg text-caption-1 font-medium border transition-all duration-150',
                   selected
                     ? 'bg-brand-900 border-brand-900 text-white'
                     : 'bg-white border-slate-200 text-slate-600 hover:border-slate-300 hover:text-brand-900',
@@ -162,12 +162,12 @@ export default function CreateProblemPage() {
 
         {/* Images — upload yoki URL */}
         <div className="flex flex-col gap-2">
-          <label className="text-xs font-semibold text-slate-700 uppercase tracking-wider flex items-center gap-2">
+          <label className="text-footnote font-medium text-slate-500 flex items-center gap-2">
             <ImageIcon className="h-3.5 w-3.5" /> Rasmlar (max 5)
           </label>
           <div className="flex gap-2">
             <button type="button" onClick={() => imgFileRef.current?.click()} disabled={uploadingImg || imageUrls.length >= 5}
-              className="h-11 px-4 flex items-center gap-2 rounded-lg border-2 border-dashed border-slate-300 text-sm font-medium text-slate-500 hover:text-accent-700 disabled:opacity-50 transition-all shrink-0">
+              className="h-11 px-4 flex items-center gap-2 rounded-lg border-2 border-dashed border-slate-300 text-subhead font-medium text-slate-500 hover:text-accent-700 disabled:opacity-50 transition-all shrink-0">
               {uploadingImg ? <Spinner className="h-4 w-4 animate-spin" /> : <UploadCloud className="h-4 w-4" />} Rasm yuklash
             </button>
             <div className="relative flex-1">
@@ -175,17 +175,17 @@ export default function CreateProblemPage() {
               <input value={imageInput} onChange={(e) => setImageInput(e.target.value)}
                 onKeyDown={(e) => e.key === 'Enter' && (e.preventDefault(), addUrl('image'))}
                 placeholder="yoki URL joylashtiring"
-                className="w-full h-11 pl-9 pr-3 rounded-lg bg-white border border-slate-200 hover:border-slate-300 text-sm text-brand-900 placeholder:text-slate-400 focus:outline-none input-focus transition-all" />
+                className="w-full h-11 pl-9 pr-3 rounded-lg bg-white border border-slate-200 hover:border-slate-300 text-subhead text-brand-900 placeholder:text-slate-400 focus:outline-none input-focus transition-all" />
             </div>
             <button type="button" onClick={() => addUrl('image')} aria-label="Rasm qo'shish"
-              className="h-11 w-11 flex items-center justify-center rounded-lg bg-white border border-slate-200 text-slate-500 hover:text-brand-900 hover:border-slate-300 transition-all shrink-0">
+              className="tappable h-11 w-11 flex items-center justify-center rounded-ios-md bg-fill-tertiary text-accent-700 shrink-0">
               <Plus className="h-4 w-4" />
             </button>
           </div>
           {imageUrls.length > 0 && (
             <div className="flex flex-wrap gap-2">
               {imageUrls.map((u) => (
-                <div key={u} className="relative h-20 w-20 rounded-lg overflow-hidden border border-slate-200 bg-slate-100 group">
+                <div key={u} className="relative h-20 w-20 overflow-hidden rounded-ios-md bg-fill-tertiary group">
                   {/* eslint-disable-next-line @next/next/no-img-element */}
                   <img src={u} alt="" className="h-full w-full object-cover" />
                   <button type="button" onClick={() => setImageUrls(arr => arr.filter(x => x !== u))}
@@ -202,12 +202,12 @@ export default function CreateProblemPage() {
 
         {/* Videos — upload yoki URL */}
         <div className="flex flex-col gap-2">
-          <label className="text-xs font-semibold text-slate-700 uppercase tracking-wider flex items-center gap-2">
+          <label className="text-footnote font-medium text-slate-500 flex items-center gap-2">
             <Video className="h-3.5 w-3.5" /> Videolar (max 3)
           </label>
           <div className="flex gap-2">
             <button type="button" onClick={() => vidFileRef.current?.click()} disabled={uploadingVid || videoUrls.length >= 3}
-              className="h-11 px-4 flex items-center gap-2 rounded-lg border-2 border-dashed border-slate-300 text-sm font-medium text-slate-500 hover:text-accent-700 disabled:opacity-50 transition-all shrink-0">
+              className="h-11 px-4 flex items-center gap-2 rounded-lg border-2 border-dashed border-slate-300 text-subhead font-medium text-slate-500 hover:text-accent-700 disabled:opacity-50 transition-all shrink-0">
               {uploadingVid ? <Spinner className="h-4 w-4 animate-spin" /> : <UploadCloud className="h-4 w-4" />} Video yuklash
             </button>
             <div className="relative flex-1">
@@ -215,17 +215,17 @@ export default function CreateProblemPage() {
               <input value={videoInput} onChange={(e) => setVideoInput(e.target.value)}
                 onKeyDown={(e) => e.key === 'Enter' && (e.preventDefault(), addUrl('video'))}
                 placeholder="yoki YouTube/URL"
-                className="w-full h-11 pl-9 pr-3 rounded-lg bg-white border border-slate-200 hover:border-slate-300 text-sm text-brand-900 placeholder:text-slate-400 focus:outline-none input-focus transition-all" />
+                className="w-full h-11 pl-9 pr-3 rounded-lg bg-white border border-slate-200 hover:border-slate-300 text-subhead text-brand-900 placeholder:text-slate-400 focus:outline-none input-focus transition-all" />
             </div>
             <button type="button" onClick={() => addUrl('video')} aria-label="Video qo'shish"
-              className="h-11 w-11 flex items-center justify-center rounded-lg bg-white border border-slate-200 text-slate-500 hover:text-brand-900 hover:border-slate-300 transition-all shrink-0">
+              className="tappable h-11 w-11 flex items-center justify-center rounded-ios-md bg-fill-tertiary text-accent-700 shrink-0">
               <Plus className="h-4 w-4" />
             </button>
           </div>
           {videoUrls.length > 0 && (
             <div className="space-y-2">
               {videoUrls.map((u) => (
-                <div key={u} className="flex items-center gap-2 px-2.5 py-1.5 rounded-md bg-slate-50 border border-slate-200 text-xs text-slate-700">
+                <div key={u} className="flex items-center gap-2 rounded-full bg-fill-tertiary px-3 py-1.5 text-caption-1 text-slate-700">
                   <Video className="h-3.5 w-3.5 text-slate-400 flex-shrink-0" />
                   <span className="truncate flex-1">{u.split('/').pop()}</span>
                   <button type="button" onClick={() => setVideoUrls(arr => arr.filter(x => x !== u))} className="text-slate-400 hover:text-rose-600">
@@ -239,7 +239,7 @@ export default function CreateProblemPage() {
             onChange={(e) => { const f = e.target.files?.[0]; if (f) void uploadFile(f, 'video'); e.target.value = ''; }} />
         </div>
 
-        <div className="p-4 rounded-lg bg-accent-50 border border-accent-200 text-sm text-slate-700 leading-relaxed">
+        <div className="p-4 rounded-lg bg-accent-50 border border-accent-200 text-subhead text-slate-700 leading-relaxed">
           <strong className="text-accent-700">Eslatma:</strong> Muammongiz yuborilgan zahoti{' '}
           <span className="text-accent-700 font-semibold">e&apos;lon qilinadi</span> — hamjamiyat
           darhol yechim taklif qilishi mumkin.

@@ -59,12 +59,12 @@ export function Footer() {
         {COLS.map((col) => (
           <nav key={col.title} aria-label={col.title}>
             <h2 className="mb-2.5 text-footnote font-semibold text-brand-900">{col.title}</h2>
-            <ul className="space-y-2">
+            <ul className="space-y-0.5">
               {col.links.map((l) => (
                 <li key={l.label}>
                   <Link
                     href={l.href}
-                    className="text-footnote text-slate-500 transition-colors duration-150 hover:text-accent-700"
+                    className="inline-flex min-h-[32px] items-center py-1.5 text-footnote text-slate-500 transition-colors duration-150 hover:text-accent-700"
                   >
                     {l.label}
                   </Link>

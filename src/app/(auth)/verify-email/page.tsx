@@ -91,16 +91,16 @@ export default function VerifyEmailPage() {
   return (
     <div className="w-full max-w-md">
       <AuthMobileLogo />
-      <div className="rounded-3xl border border-slate-200/80 bg-white/90 p-7 text-center shadow-card backdrop-blur-sm sm:p-8">
-          <div className="h-20 w-20 rounded-2xl bg-accent-50 border border-accent-200 flex items-center justify-center mx-auto mb-6">
-            <Mail className="h-10 w-10 text-accent-600" />
+      <div className="rounded-ios-2xl bg-white p-7 text-center shadow-card sm:p-8">
+          <div className="h-20 w-20 rounded-[18px] bg-accent-500 flex items-center justify-center mx-auto mb-6">
+            <Mail className="h-10 w-10 text-white" />
           </div>
 
           <h1 className="mb-2 text-title-1 font-bold tracking-tight text-brand-900">Emailni tasdiqlang</h1>
-          <p className="text-slate-500 text-sm mb-1">
+          <p className="text-slate-500 text-subhead mb-1">
             6 xonali kod quyidagi emailga yuborildi:
           </p>
-          <p className="text-accent-700 font-semibold text-sm mb-8 truncate">
+          <p className="text-accent-700 font-semibold text-subhead mb-8 truncate">
             {pendingEmail}
           </p>
 
@@ -108,7 +108,7 @@ export default function VerifyEmailPage() {
             <OtpInput value={otp} onChange={setOtp} length={6} error={otpError} />
           </div>
           {otpError && (
-            <p className="text-sm text-rose-600 mb-4">Kod noto&apos;g&apos;ri yoki muddati o&apos;tgan</p>
+            <p className="text-subhead text-rose-600 mb-4">Kod noto&apos;g&apos;ri yoki muddati o&apos;tgan</p>
           )}
 
           <div className="space-y-3 mt-6">
@@ -125,7 +125,7 @@ export default function VerifyEmailPage() {
             <button
               onClick={handleResend}
               disabled={!canResend || resendLoading}
-              className="flex items-center justify-center gap-2 w-full text-sm text-slate-500 hover:text-brand-900 disabled:opacity-40 disabled:cursor-not-allowed transition-colors py-2"
+              className="flex items-center justify-center gap-2 w-full text-subhead text-slate-500 hover:text-brand-900 disabled:opacity-40 disabled:cursor-not-allowed transition-colors py-2"
             >
               <RefreshCw className={`h-4 w-4 ${resendLoading ? 'animate-spin' : ''}`} />
               {canResend
@@ -136,7 +136,7 @@ export default function VerifyEmailPage() {
 
           <button
             onClick={() => { clearAuth(); router.push('/login'); }}
-            className="mt-4 text-xs text-slate-400 hover:text-slate-600 transition-colors"
+            className="mt-4 text-caption-1 text-slate-400 hover:text-slate-600 transition-colors"
           >
             Boshqa email bilan kirish
           </button>

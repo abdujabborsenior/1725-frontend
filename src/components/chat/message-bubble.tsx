@@ -9,12 +9,12 @@ import { Avatar } from '@/components/ui/avatar';
 import { ReportDialog } from '@/components/reports/report-dialog';
 import { profileHref } from '@/components/social/user-list-item';
 import { cn } from '@/lib/utils';
-import { format } from 'date-fns';
+import { formatTime } from '@/lib/date';
 import type { ChatMessage, MessageAttachment } from '@/types';
 import toast from 'react-hot-toast';
 
 function fmtTime(iso: string) {
-  return format(new Date(iso), 'HH:mm');
+  return formatTime(iso);
 }
 function fmtDuration(sec?: number | null) {
   const s = Math.round(sec ?? 0);

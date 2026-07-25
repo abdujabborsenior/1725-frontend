@@ -11,7 +11,7 @@ export default function MessagesPage() {
           <MessageCircleFill className="h-8 w-8 text-white" />
         </div>
         <p className="text-title-3 font-semibold text-brand-900">Suhbatni tanlang</p>
-        <p className="mt-1 max-w-xs text-sm text-slate-500">
+        <p className="mt-1 max-w-xs text-subhead text-slate-500">
           Chap tomondan suhbat tanlang yoki hamjamiyatdan yangi odam toping.
         </p>
       </div>

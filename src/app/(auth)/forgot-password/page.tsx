@@ -6,7 +6,7 @@ import { useRouter } from 'next/navigation';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
-import { Mail, ArrowRight, ArrowLeft } from '@/components/icons';
+import { Mail, ChevronLeft } from '@/components/icons';
 import { authApi, getErrorMessage } from '@/lib/api';
 import { useAuthStore } from '@/store/auth.store';
 import { Button } from '@/components/ui/button';
@@ -63,12 +63,11 @@ export default function ForgotPasswordPage() {
               disabled={sent}
             >
               {sent ? 'Yuborildi' : 'Kod yuborish'}
-              {!sent && <ArrowRight className="h-4 w-4" />}
             </Button>
           </form>
 
           {sent && (
-            <p className="mt-4 text-center text-xs text-slate-500">
+            <p className="mt-4 text-center text-caption-1 text-slate-500">
               Kod <span className="text-accent-700 font-semibold">{getValues('email')}</span> ga yuborildi.
               Yo&apos;naltirilmoqda...
             </p>
@@ -76,9 +75,9 @@ export default function ForgotPasswordPage() {
 
           <Link
             href="/login"
-            className="mt-6 flex items-center justify-center gap-1.5 text-sm text-slate-500 hover:text-brand-900 transition-colors"
+            className="mt-6 flex items-center justify-center gap-1.5 text-subhead text-slate-500 hover:text-brand-900 transition-colors"
           >
-            <ArrowLeft className="h-4 w-4" /> Kirishga qaytish
+            <ChevronLeft className="h-4 w-4" strokeWidth={3} /> Kirishga qaytish
           </Link>
     </AuthCard>
   );
