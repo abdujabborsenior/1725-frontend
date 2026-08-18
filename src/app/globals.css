@@ -780,6 +780,109 @@ select:-webkit-autofill {
   animation: sparkFloat 0.85s var(--ease-ios) both;
 }
 
+/* ═══ YECHIM AI ════════════════════════════════════════════════════════
+   AI ning o'z vizual tili — mahsulotning qolgan qismidan ATAYLAB ajralib
+   turadi (foydalanuvchi "bu — aqlli qism" ekanini bir qarashda tushunsin),
+   lekin iOS intizomida qoladi: system ranglar, ease-ios, tinch sirtlar.
+   Gradient FAQAT AI markasi va uning ramkasida — boshqa joyga tarqalmaydi. */
+
+/* Skaner halqasi aylanishi — faqat "o'ylayapti" holatida (cheksiz emas). */
+@keyframes yechimOrbit {
+  to {
+    transform: rotate(360deg);
+  }
+}
+.yechim-orbit {
+  animation: yechimOrbit 2.6s linear infinite;
+}
+
+/* Markazdagi uchqun — halqa aylanayotganda "nafas oladi". */
+@keyframes yechimSpark {
+  0%,
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(0.86);
+    opacity: 0.7;
+  }
+}
+.yechim-spark {
+  animation: yechimSpark 1.5s var(--ease-ios) infinite;
+}
+
+/* "Yechim izlanmoqda…" matni bo'ylab yorug'lik yurishi. */
+@keyframes yechimShimmer {
+  to {
+    background-position: 200% center;
+  }
+}
+.yechim-shimmer {
+  background: linear-gradient(
+    90deg,
+    #8e8e93 0%,
+    #0a84ff 35%,
+    #af52de 50%,
+    #8e8e93 65%,
+    #8e8e93 100%
+  );
+  background-size: 200% auto;
+  background-clip: text;
+  -webkit-background-clip: text;
+  color: transparent;
+  animation: yechimShimmer 2.2s linear infinite;
+}
+
+/* AI kirish nuqtasining ramkasi: nozik gradient hoshiya (1px), ichi oq.
+   Soya/glow YO'Q — ajralib turish rang bilan, shovqin bilan emas. */
+.yechim-frame {
+  position: relative;
+  background: #fff;
+}
+.yechim-frame::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  padding: 1.5px;
+  background: linear-gradient(135deg, #0a84ff 0%, #5856d6 50%, #af52de 100%);
+  -webkit-mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  mask-composite: exclude;
+  pointer-events: none;
+}
+
+/* AI javob matni — bir tekis "yozilib chiqish" (typewriter emas, blok
+   ko'rinib chiqadi: LCP va CLS ga zarar bermaydi). */
+@keyframes yechimFade {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+.yechim-in {
+  animation: yechimFade 0.32s var(--ease-ios) both;
+}
+
+/* Ovoz yozish to'lqini — jonli amplituda (CSS o'zgaruvchisi bilan). */
+.yechim-bar {
+  width: 3px;
+  border-radius: 999px;
+  background: currentColor;
+  height: calc(4px + var(--amp, 0) * 22px);
+  transition: height 0.12s linear;
+}
+
 /* ═══ HARAKATNI KAMAYTIRISH ════════════════════════════════════════════ */
 @media (prefers-reduced-motion: reduce) {
   .animate-aurora,
@@ -791,8 +894,21 @@ select:-webkit-autofill {
   .animate-shine,
   .animate-pulse-dot,
   .typing-dot,
-  .rec-pulse::before {
+  .rec-pulse::before,
+  .yechim-orbit,
+  .yechim-spark,
+  .yechim-shimmer,
+  .yechim-in {
     animation: none !important;
+  }
+  .yechim-shimmer {
+    color: #6e6e73;
+    background: none;
+    -webkit-background-clip: initial;
+    background-clip: initial;
+  }
+  .yechim-in {
+    opacity: 1;
   }
   .reveal,
   .acc-panel,

@@ -483,3 +483,46 @@ export interface AuthState {
 }
 
 export type RegisterType = 'user' | 'school' | 'university';
+
+/* ── Yechim AI ────────────────────────────────────────────────── */
+
+export interface AiStatus {
+  enabled: boolean;
+  limit: number;
+  used: number;
+  remaining: number;
+  authenticated: boolean;
+}
+
+/** AI e'longa tayyorlab bergan muammo qoralamasi (foydalanuvchi tahrirlaydi) */
+export interface AiDraft {
+  title: string;
+  description: string;
+  category: string | null;
+}
+
+export interface AiMatch {
+  startup: Startup;
+  /** Nega aynan shu loyiha mos — AI izohi (1 gap) */
+  reason: string;
+}
+
+export interface AiRelatedProblem {
+  id: string;
+  title: string;
+  solutionCount: number;
+}
+
+export interface AiSolveResult {
+  queryId: string;
+  question: string;
+  answer: string;
+  matches: AiMatch[];
+  relatedProblems: AiRelatedProblem[];
+  /** Foydalanuvchi bugunoq qila oladigan amaliy qadamlar */
+  steps: string[];
+  /** Platformada mos yechim topilmadi — e'lon qilish taklif etiladi */
+  noSolution: boolean;
+  draft: AiDraft | null;
+  cached: boolean;
+}

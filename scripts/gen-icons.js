@@ -111,6 +111,11 @@ const MAP = {
   BookmarkFill: 'bookmark',
   ThumbsUp: 'thumbs-up-outline',
   ThumbsUpFill: 'thumbs-up',
+  ThumbsDown: 'thumbs-down-outline',
+  ThumbsDownFill: 'thumbs-down',
+  // Yechim AI — ovoz yozishni to'xtatish
+  StopCircle: 'stop-circle-outline',
+  StopCircleFill: 'stop-circle',
   Eye: 'eye-outline',
   EyeOff: 'eye-off-outline',
   Flag: 'flag-outline',

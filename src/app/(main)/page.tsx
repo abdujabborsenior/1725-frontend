@@ -18,6 +18,7 @@ import { problemsApi, startupsApi, chatApi, usersApi, pollsApi } from '@/lib/api
 import { useAuthStore } from '@/store/auth.store';
 import dynamic from 'next/dynamic';
 import { Reveal, RevealGroup, RevealItem } from '@/components/landing/reveal';
+import { AiLauncher } from '@/components/ai/ai-launcher';
 import { ChatFab } from '@/components/landing/chat-fab';
 import { CountUp } from '@/components/landing/count-up';
 import { Marquee } from '@/components/landing/marquee';
@@ -253,6 +254,13 @@ export default function LandingPage() {
           <Marquee />
         </div>
       </section>
+
+      {/* ── Yechim AI — mahsulotning aqlli kirish nuqtasi ───────────────
+          Hero'dan keyingi BIRINCHI blok: foydalanuvchi "nima qilaman?" degan
+          savolga javobni darhol shu yerdan oladi. */}
+      <Reveal>
+        <AiLauncher />
+      </Reveal>
 
       {/* ── Stats — iOS grouped karta, ustunlar orasida hairline ────────── */}
       <Reveal>

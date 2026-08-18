@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import { Plus, LogOut, Menu, X, Search, MessageCircle } from '@/components/icons';
 import { LogoMark } from '@/components/brand/logo-mark';
+import { YechimMark } from '@/components/ai/yechim-mark';
 import { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { cn } from '@/lib/utils';
@@ -117,6 +118,22 @@ export function Navbar() {
 
         {/* Desktop nav — iOS segment uslubidagi yumshoq faol holat */}
         <nav className="ml-2 hidden items-center gap-0.5 md:flex">
+          {/* Yechim AI — navigatsiyadagi yagona belgili band: mahsulotning
+              aqlli qismi bir qarashda ajralib tursin. */}
+          <Link
+            href="/ai"
+            aria-label="Yechim AI"
+            className={cn(
+              'flex items-center gap-1.5 whitespace-nowrap rounded-full py-1.5 pl-2 pr-2 text-subhead transition-colors duration-150 ease-ios lg:pr-3',
+              pathname.startsWith('/ai')
+                ? 'bg-fill-tertiary font-semibold text-brand-900'
+                : 'font-medium text-slate-500 hover:text-brand-900',
+            )}
+          >
+            <YechimMark size={18} />
+            {/* Tor desktopda (md) faqat belgi — navbar hech qachon o'ralmasin */}
+            <span className="hidden lg:inline">Yechim AI</span>
+          </Link>
           {links.map(({ href, label }) => {
             const active = pathname.startsWith(href);
             return (
@@ -185,7 +202,7 @@ export function Navbar() {
               </Link>
               <Link
                 href="/register"
-                className="tappable flex h-9 items-center rounded-full bg-fill-tertiary px-4 text-subhead font-semibold text-brand-900 active:bg-fill"
+                className="tappable flex h-9 shrink-0 items-center whitespace-nowrap rounded-full bg-fill-tertiary px-4 text-subhead font-semibold text-brand-900 active:bg-fill"
               >
                 Ro&apos;yxatdan o&apos;tish
               </Link>
@@ -219,6 +236,11 @@ export function Navbar() {
       {menuOpen && (
         <div className="hairline-t animate-slide-down bg-surface-soft px-4 py-4 md:hidden">
           <div className="ios-list" onClick={() => setMenuOpen(false)}>
+            {/* Yechim AI — ro'yxatning boshida, belgisi bilan */}
+            <Link href="/ai" className="ios-row">
+              <YechimMark size={22} />
+              <span className="flex-1 text-body text-brand-900">Yechim AI</span>
+            </Link>
             {links.map(({ href, label }) => (
               <Link key={href} href={href} className="ios-row">
                 <span className="flex-1 text-body text-brand-900">{label}</span>

@@ -5,6 +5,9 @@ import axios, {
 } from 'axios';
 import { API_URL, STORAGE } from './constants';
 import type {
+  AiDraft,
+  AiSolveResult,
+  AiStatus,
   ApiEnvelope,
   ApiErrorBody,
   AppNotification,
@@ -463,6 +466,42 @@ export const uploadsApi = {
       }),
     );
   },
+};
+
+/* ── Yechim AI ────────────────────────────────────────────────── */
+export const aiApi = {
+  /** AI yoqilganmi + kunlik limitdan qanchasi qolgani (mehmon ham chaqira oladi) */
+  status: () => unwrap<AiStatus>(api.get('/ai/status')),
+
+  /** Muammoni yuborish — mos loyihalar + javob + (kerak bo'lsa) qoralama */
+  solve: (question: string, source: 'text' | 'voice' = 'text') =>
+    unwrap<AiSolveResult>(api.post('/ai/solve', { question, source })),
+
+  /** Ovozli xabarni matnga o'girish (16kHz mono WAV — `wav-recorder.ts`) */
+  transcribe: (blob: Blob) => {
+    const form = new FormData();
+    form.append('file', blob, 'voice.wav');
+    return unwrap<{ text: string }>(
+      api.post('/ai/transcribe', form, {
+        headers: { 'Content-Type': 'multipart/form-data' },
+      }),
+    );
+  },
+
+  /** Foydalanuvchi tahrirlagan matnni qayta sayqallash (imlo + uslub) */
+  polish: (text: string) => unwrap<AiDraft>(api.post('/ai/polish', { text })),
+
+  /** Qoralamani muammo sifatida e'lon qilish (auth talab qilinadi) */
+  publishProblem: (data: {
+    queryId?: string;
+    title: string;
+    description: string;
+    category?: string;
+  }) =>
+    unwrap<{ data: Problem; message: string }>(api.post('/ai/publish-problem', data)),
+
+  feedback: (queryId: string, feedback: 'up' | 'down') =>
+    unwrap<{ message: string }>(api.post(`/ai/${queryId}/feedback`, { feedback })),
 };
 
 /* ── Notifications ────────────────────────────────────────────── */
