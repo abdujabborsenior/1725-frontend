@@ -6,7 +6,7 @@ import { IconBase, type IconProps } from './base';
 export function ArrowUpRight(props: IconProps) {
   return (
     <IconBase nativeStroke={32} {...props}>
-      <path d="M176 336 336 176M232 176h104v104" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/>
+      <path d="M176 336 336 176M232 176h104v104" fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round"/>
     </IconBase>
   );
 }

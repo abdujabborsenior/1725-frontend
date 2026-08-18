@@ -16,20 +16,19 @@ export const metadata: Metadata = {
  * Sarlavha server komponentida (SSR bilan darhol keladi — LCP matn),
  * interaktiv qism esa `AiConsole` klientida. `useSearchParams` ishlatilgani
  * uchun Suspense chegarasi majburiy (Next 14 app router).
+ *
+ * Sarlavha ATAYLAB ixcham: sahifaning asosiy qahramoni — konsolning o'zi,
+ * bo'sh holatdagi katta mark esa kirish taassurotini beradi.
  */
 export default function AiPage() {
   return (
     <div className="mx-auto max-w-3xl">
-      <header className="mb-6 flex items-center gap-3.5">
-        <YechimMark size={44} />
-        <div className="min-w-0">
-          <h1 className="text-large-title font-bold tracking-tight text-brand-900">
-            Yechim AI
-          </h1>
-          <p className="mt-0.5 text-subhead text-slate-500">
-            Muammoingizga platformadagi tayyor yechimni topadi
-          </p>
-        </div>
+      {/* Sahifa yorlig'i ATAYLAB kichik: qahramon — konsolning o'zi.
+          Katta sarlavha bo'sh holatning ichida (mark bilan birga) turadi,
+          shuning uchun bu yerda faqat "qayerdaman?" javobi bo'lishi kerak. */}
+      <header className="mb-4 flex items-center gap-2">
+        <YechimMark size={20} className="ai-open-mark" />
+        <h1 className="text-subhead font-semibold tracking-tight text-slate-500">Yechim AI</h1>
       </header>
 
       <Suspense fallback={null}>

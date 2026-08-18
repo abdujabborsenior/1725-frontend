@@ -26,7 +26,15 @@ function VoiceMessage({ att, mine }: { att: MessageAttachment; mine: boolean }) 
   const audioRef = useRef<HTMLAudioElement>(null);
   const [playing, setPlaying] = useState(false);
   const [progress, setProgress] = useState(0);
-  const bars = att.waveform?.length ? att.waveform : Array.from({ length: 32 }, () => 30 + Math.random() * 60);
+  // To'lqin ustunlari SONI cheklanadi: uzun yozuvda (waveform 100+ nuqta)
+  // pufak mobil ekrandan chiqib ketardi. Ortiqchasi tashlanmaydi —
+  // teng oraliqda TANLANADI, shakl saqlanadi.
+  const raw = att.waveform?.length ? att.waveform : Array.from({ length: 28 }, () => 30 + Math.random() * 60);
+  const MAX_BARS = 28;
+  const bars =
+    raw.length <= MAX_BARS
+      ? raw
+      : Array.from({ length: MAX_BARS }, (_, i) => raw[Math.floor((i * raw.length) / MAX_BARS)]);
 
   function toggle() {
     const a = audioRef.current;
@@ -35,7 +43,7 @@ function VoiceMessage({ att, mine }: { att: MessageAttachment; mine: boolean }) 
   }
 
   return (
-    <div className="flex items-center gap-3 py-1">
+    <div className="flex w-full min-w-0 items-center gap-3 py-1">
       <button
         onClick={toggle}
         className={cn(
@@ -45,14 +53,14 @@ function VoiceMessage({ att, mine }: { att: MessageAttachment; mine: boolean }) 
       >
         {playing ? <Pause className="h-4 w-4" /> : <Play className="h-4 w-4 translate-x-[1px]" />}
       </button>
-      <div className="flex h-8 items-center gap-[2px]">
+      <div className="flex h-8 min-w-0 flex-1 items-center gap-[2px]">
         {bars.map((h, i) => {
           const active = (i / bars.length) * 100 <= progress;
           return (
             <span
               key={i}
               className={cn(
-                'w-[3px] rounded-full',
+                'min-w-[2px] flex-1 rounded-full',
                 mine ? (active ? 'bg-white' : 'bg-white/40') : active ? 'bg-accent-500' : 'bg-slate-300',
               )}
               style={{ height: `${Math.max(15, Math.min(100, h))}%` }}
@@ -60,7 +68,7 @@ function VoiceMessage({ att, mine }: { att: MessageAttachment; mine: boolean }) 
           );
         })}
       </div>
-      <span className={cn('text-caption-1 tabular-nums', mine ? 'text-white/80' : 'text-slate-500')}>
+      <span className={cn('shrink-0 text-caption-1 tabular-nums', mine ? 'text-white/80' : 'text-slate-500')}>
         {fmtDuration(att.durationSec)}
       </span>
       <audio
@@ -208,13 +216,19 @@ interface Props {
   showAvatar: boolean;
   isGroup: boolean;
   read?: boolean;
+  /**
+   * Kirish animatsiyasi. FAQAT suhbat ochilgandan KEYIN kelgan (yoki
+   * yuborilgan) xabarlar uchun: aks holda ochilishda 30 ta pufak birdan
+   * sakraydi — shovqin bo'ladi va Telegram xulqiga zid.
+   */
+  animate?: boolean;
   onReply: (m: ChatMessage) => void;
   onEdit?: (m: ChatMessage) => void;
 }
 
 const SWIPE_THRESHOLD = 64;
 
-export function MessageBubble({ message, mine, showAvatar, isGroup, read, onReply, onEdit }: Props) {
+export function MessageBubble({ message, mine, showAvatar, isGroup, read, animate: animateIn, onReply, onEdit }: Props) {
   const [menu, setMenu] = useState<{ x: number; y: number } | null>(null);
   const [reportOpen, setReportOpen] = useState(false);
   const x = useMotionValue(0);
@@ -229,7 +243,7 @@ export function MessageBubble({ message, mine, showAvatar, isGroup, read, onRepl
   if (message.type === 'system') {
     return (
       <div className="my-2 flex justify-center">
-        <span className="rounded-full bg-fill-tertiary px-3 py-1 text-caption-1 font-medium text-slate-500">
+        <span className={cn('rounded-full bg-fill-tertiary px-3 py-1 text-caption-1 font-medium text-slate-500', animateIn && 'msg-pop')}>
           {message.content}
         </span>
       </div>
@@ -280,7 +294,13 @@ export function MessageBubble({ message, mine, showAvatar, isGroup, read, onRepl
   }
 
   return (
-    <div className={cn('group relative flex items-end gap-2 animate-msg-in', mine ? 'flex-row-reverse' : 'flex-row')}>
+    <div
+      className={cn(
+        'group relative flex items-end gap-2',
+        animateIn && 'msg-pop',
+        mine ? 'flex-row-reverse msg-pop-out' : 'flex-row msg-pop-in',
+      )}
+    >
       {/* Avatar (group, others) — profilga bog'langan */}
       {!mine && isGroup ? (
         showAvatar ? (

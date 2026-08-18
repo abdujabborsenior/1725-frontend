@@ -117,22 +117,21 @@ export function Navbar() {
         </Link>
 
         {/* Desktop nav — iOS segment uslubidagi yumshoq faol holat */}
-        <nav className="ml-2 hidden items-center gap-0.5 md:flex">
+        <nav className="ml-2 hidden items-center gap-0.5 xl:flex">
           {/* Yechim AI — navigatsiyadagi yagona belgili band: mahsulotning
               aqlli qismi bir qarashda ajralib tursin. */}
           <Link
             href="/ai"
             aria-label="Yechim AI"
             className={cn(
-              'flex items-center gap-1.5 whitespace-nowrap rounded-full py-1.5 pl-2 pr-2 text-subhead transition-colors duration-150 ease-ios lg:pr-3',
+              'flex items-center gap-1.5 whitespace-nowrap rounded-full py-1.5 pl-2 pr-3 text-subhead transition-colors duration-150 ease-ios',
               pathname.startsWith('/ai')
                 ? 'bg-fill-tertiary font-semibold text-brand-900'
                 : 'font-medium text-slate-500 hover:text-brand-900',
             )}
           >
             <YechimMark size={18} />
-            {/* Tor desktopda (md) faqat belgi — navbar hech qachon o'ralmasin */}
-            <span className="hidden lg:inline">Yechim AI</span>
+            <span>Yechim AI</span>
           </Link>
           {links.map(({ href, label }) => {
             const active = pathname.startsWith(href);
@@ -156,7 +155,7 @@ export function Navbar() {
         <div className="flex-1" />
 
         {/* Desktop amallar */}
-        <div className="hidden items-center gap-1.5 md:flex">
+        <div className="hidden items-center gap-1.5 xl:flex">
           <button
             onClick={openSearchPalette}
             aria-label="Qidirish"
@@ -164,7 +163,7 @@ export function Navbar() {
           >
             <Search className="h-4 w-4" />
             <span className="text-subhead">Qidirish</span>
-            <kbd className="ml-2 hidden rounded-md bg-white/70 px-1.5 py-0.5 text-caption-2 font-medium text-slate-500 lg:block">
+            <kbd className="ml-2 rounded-md bg-white/70 px-1.5 py-0.5 text-caption-2 font-medium text-slate-500">
               ⌘K
             </kbd>
           </button>
@@ -211,7 +210,7 @@ export function Navbar() {
         </div>
 
         {/* Mobil amallar */}
-        <div className="flex items-center gap-0.5 md:hidden">
+        <div className="flex items-center gap-0.5 xl:hidden">
           <button
             onClick={openSearchPalette}
             aria-label="Qidirish"
@@ -234,7 +233,7 @@ export function Navbar() {
 
       {/* Mobil menyu — iOS inset grouped ro'yxat */}
       {menuOpen && (
-        <div className="hairline-t animate-slide-down bg-surface-soft px-4 py-4 md:hidden">
+        <div className="hairline-t animate-slide-down bg-surface-soft px-4 py-4 xl:hidden">
           <div className="ios-list" onClick={() => setMenuOpen(false)}>
             {/* Yechim AI — ro'yxatning boshida, belgisi bilan */}
             <Link href="/ai" className="ios-row">

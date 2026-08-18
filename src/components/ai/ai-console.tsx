@@ -4,23 +4,16 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useQuery } from '@tanstack/react-query';
 
-import { AlertCircle, Mic, RefreshCw } from '@/components/icons';
-import { YechimMark, YechimThinking } from './yechim-mark';
+import { AlertCircle, RefreshCw } from '@/components/icons';
 import { AiComposer } from './ai-composer';
 import { AiAnswer } from './ai-answer';
+import { AiWelcome } from './ai-welcome';
+import { AiThinkingPanel } from './ai-thinking';
 import { AiPublishSheet, DRAFT_STORAGE_KEY } from './ai-publish-sheet';
 import { aiApi, getErrorMessage } from '@/lib/api';
 import { cn } from '@/lib/utils';
 import { useAuthStore } from '@/store/auth.store';
 import type { AiDraft, AiSolveResult } from '@/types';
-
-/** Bosh sahifadan tanish bo'lgan namunalar — bo'sh ekranda "nima yozay?" savoliga javob. */
-const EXAMPLES = [
-  'Ingliz tilini o‘rganmoqchiman, lekin kurslar juda qimmat',
-  'Kichik biznesim uchun arzon buxgalteriya yechimi kerak',
-  'Qishloqda internet sekin — onlayn darslarga ulana olmayapman',
-  'Fermer mahsulotlarimni to‘g‘ridan-to‘g‘ri sotmoqchiman',
-];
 
 interface Turn {
   id: string;
@@ -126,29 +119,26 @@ export function AiConsole() {
 
   return (
     <div className="flex flex-col">
-      {/* min-h faqat bo'sh holat uchun havo beradi; javob kelganda kontent
-          undan baland bo'lgani uchun hech qanday "o'lik bo'shliq" qolmaydi. */}
-      <div className="min-h-[38vh] flex-1 space-y-6">
+      {/* Kontent tabiiy oqimda: composer undan darhol keyin keladi (bo'sh
+          holatda "osilib qolgan" input yo'q), javob kelgach esa u sahifa
+          pastiga yopishadi. */}
+      <div className="flex-1 space-y-6">
         {turns.length === 0 ? (
-          <Welcome
+          <AiWelcome
             onPick={(q) => (token ? void ask(q) : requireAuth(q))}
             disabled={disabled}
           />
         ) : (
           turns.map((turn) => (
             <div key={turn.id} className="space-y-4">
-              {/* Savol — iMessage "chiquvchi" pufagi */}
+              {/* Savol — iMessage "chiquvchi" pufagi (spring bilan chiqadi) */}
               <div className="flex justify-end">
-                <p className="bubble-out bubble-tail-out max-w-[85%] whitespace-pre-line px-3.5 py-2 text-body text-white sm:max-w-[70%]">
+                <p className="ai-ask bubble-out bubble-tail-out relative max-w-[85%] whitespace-pre-line px-3.5 py-2 text-body text-white sm:max-w-[70%]">
                   {turn.question}
                 </p>
               </div>
 
-              {turn.status === 'thinking' && (
-                <div className="pl-1 pt-1">
-                  <YechimThinking />
-                </div>
-              )}
+              {turn.status === 'thinking' && <AiThinkingPanel />}
 
               {turn.status === 'error' && (
                 <div className="flex items-start gap-3 rounded-ios-xl bg-white p-4">
@@ -189,10 +179,16 @@ export function AiConsole() {
           composer uning ORTIDA qolib ketmasligi uchun shuncha ko'tariladi. */}
       <div
         className={cn(
-          'sticky -mx-4 mt-6 bg-surface-soft/80 px-4 pb-[max(0.75rem,env(safe-area-inset-bottom))] pt-3 backdrop-blur-xl md:-mx-2 md:bottom-0 md:px-2',
+          'sticky -mx-4 mt-6 bg-surface-soft px-4 pb-[max(0.75rem,env(safe-area-inset-bottom))] pt-3 md:-mx-2 md:bottom-0 md:px-2',
           token ? 'bottom-16' : 'bottom-0',
         )}
       >
+        {/* Kontent composer ostiga YUMSHOQ kirib ketsin: qattiq chekka
+            "kesilgan matn" taassurotini berardi (yarim ko'rinadigan qator). */}
+        <span
+          aria-hidden
+          className="pointer-events-none absolute inset-x-0 -top-8 h-8 bg-gradient-to-t from-surface-soft to-transparent"
+        />
         {disabled ? (
           <p className="rounded-ios-xl bg-white px-4 py-3.5 text-center text-subhead text-slate-500">
             Yechim AI hozircha o‘chirilgan. Tez orada qaytadi.
@@ -224,42 +220,6 @@ export function AiConsole() {
           draft={publish.draft}
           queryId={publish.queryId}
         />
-      )}
-    </div>
-  );
-}
-
-/** Bo'sh holat — AI nima qila olishini bir qarashda tushuntiradi. */
-function Welcome({ onPick, disabled }: { onPick: (q: string) => void; disabled?: boolean }) {
-  return (
-    <div className="py-6 text-center">
-      <YechimMark size={64} className="mx-auto" />
-      <h2 className="mt-5 text-title-2 font-semibold tracking-tight text-brand-900">
-        Muammoingizni ayting — yechimini topaman
-      </h2>
-      <p className="mx-auto mt-2 max-w-md text-callout leading-relaxed text-slate-500">
-        Yechim AI platformadagi barcha loyihalarni ko‘rib chiqadi va sizga
-        haqiqatan yordam beradiganini topib beradi. Topilmasa — muammoingizni
-        hamjamiyatga qo‘yishga yordam beradi.
-      </p>
-
-      <p className="mt-7 flex items-center justify-center gap-1.5 text-footnote text-slate-400">
-        <Mic className="h-4 w-4" /> Yozishga vaqt yo‘qmi? Aytib bering — o‘zim yozib olaman
-      </p>
-
-      {!disabled && (
-        <div className="mx-auto mt-4 grid max-w-2xl gap-2 sm:grid-cols-2">
-          {EXAMPLES.map((example) => (
-            <button
-              key={example}
-              type="button"
-              onClick={() => onPick(example)}
-              className="tappable rounded-ios-lg bg-white px-4 py-3 text-left text-subhead leading-snug text-slate-600"
-            >
-              {example}
-            </button>
-          ))}
-        </div>
       )}
     </div>
   );

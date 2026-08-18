@@ -1,11 +1,11 @@
 'use client';
 
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { Fragment, useCallback, useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useQueryClient } from '@tanstack/react-query';
 import {
-  ChevronLeft, Spinner, Users, Hash, MoreHorizontal, Info, LogOut, Settings,
+  ChevronLeft, Spinner, Users, Hash, MoreHorizontal, Info, LogOut, Settings, ArrowDown,
 } from '@/components/icons';
 import { chatApi, getErrorMessage, type SendMessagePayload } from '@/lib/api';
 import { getSocket } from '@/lib/socket';
@@ -19,7 +19,7 @@ import { ChatEmptyState } from './chat-empty';
 import { GroupSettingsModal } from './group-settings-modal';
 import { profileHref } from '@/components/social/user-list-item';
 import { cn } from '@/lib/utils';
-import { timeAgo } from '@/lib/date';
+import { timeAgo, dayLabel, sameDay } from '@/lib/date';
 import toast from 'react-hot-toast';
 import type { ChatMessage, Conversation } from '@/types';
 
@@ -88,14 +88,28 @@ export function ChatWindow({ conversationId }: { conversationId: string }) {
   const [leaveOpen, setLeaveOpen] = useState(false);
   const [leaving, setLeaving] = useState(false);
 
+  // "Pastga" tugmasi: foydalanuvchi eski xabarlarni o'qiyotganda kelgan yangi
+  // xabar uni pastga TORTIB KETMAYDI (Telegram xulqi) — o'rniga tugmada
+  // hisoblagich ko'rinadi va u o'zi qaytadi.
+  const [atBottom, setAtBottom] = useState(true);
+  const [newCount, setNewCount] = useState(0);
+
   const scrollRef = useRef<HTMLDivElement>(null);
   const typingTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  // Socket handler'lari eski closure'ni ushlab qolmasligi uchun ref orqali
+  const atBottomRef = useRef(true);
+  // Suhbat ochilgan lahza — shundan KEYIN yaratilgan xabarlargina kirish
+  // animatsiyasini oladi (mavjud tarix jimgina chiziladi).
+  const openedAt = useRef(Date.now());
 
   const scrollToBottom = useCallback((smooth = false) => {
     requestAnimationFrame(() => {
       const el = scrollRef.current;
       if (el) el.scrollTo({ top: el.scrollHeight, behavior: smooth ? 'smooth' : 'auto' });
     });
+    atBottomRef.current = true;
+    setAtBottom(true);
+    setNewCount(0);
   }, []);
 
   const markRead = useCallback(() => {
@@ -149,8 +163,11 @@ export function ChatWindow({ conversationId }: { conversationId: string }) {
         }
         return [...prev, msg];
       });
-      if (msg.sender?.id !== me?.id) { markRead(); setPeerRead(false); }
-      scrollToBottom(true);
+      const mine = msg.sender?.id === me?.id;
+      if (!mine) { markRead(); setPeerRead(false); }
+      // O'z xabaring — har doim pastga; boshqaniki — faqat pastda turgan bo'lsang
+      if (mine || atBottomRef.current) scrollToBottom(true);
+      else setNewCount((c) => c + 1);
     };
     const onTyping = (t: { conversationId: string; user: { id: string; fullName: string }; typing: boolean }) => {
       if (t.conversationId !== conversationId || t.user.id === me?.id) return;
@@ -356,9 +373,17 @@ export function ChatWindow({ conversationId }: { conversationId: string }) {
           <MessagesSkeleton />
         </div>
       ) : (
+      <div className="relative flex min-h-0 flex-1 flex-col">
       <div
         ref={scrollRef}
-        onScroll={(e) => { if (e.currentTarget.scrollTop < 60) void loadMore(); }}
+        onScroll={(e) => {
+          const el = e.currentTarget;
+          if (el.scrollTop < 60) void loadMore();
+          const bottom = el.scrollHeight - el.scrollTop - el.clientHeight < 80;
+          atBottomRef.current = bottom;
+          setAtBottom(bottom);
+          if (bottom && newCount) setNewCount(0);
+        }}
         className="chat-scroll flex min-h-0 flex-1 flex-col overflow-y-auto overscroll-contain bg-white px-3 py-4"
       >
         {messages.length === 0 && (
@@ -369,32 +394,67 @@ export function ChatWindow({ conversationId }: { conversationId: string }) {
           />
         )}
         {/* mt-auto — kam xabarda suhbat PASTDAN boshlanadi (Telegram) */}
-        <div className="mt-auto space-y-1.5">
+        <div className="mt-auto flex flex-col space-y-1.5">
         {loadingMore && <div className="flex justify-center py-2"><Spinner className="h-4 w-4 animate-spin text-slate-300" /></div>}
         {messages.map((m, i) => {
           const mine = m.sender?.id === me?.id;
           const prev = messages[i - 1];
           const showAvatar = !prev || prev.sender?.id !== m.sender?.id;
           const isLastMine = mine && i === messages.length - 1;
+          // Kun almashganda — yopishqoq sana ajratkichi (Telegram naqshi):
+          // uzun suhbatda "qachon?" savoli scroll paytida ham javobsiz qolmaydi.
+          const showDay = !prev || !sameDay(prev.createdAt, m.createdAt);
           return (
-            <MessageBubble
-              key={m.id}
-              message={m}
-              mine={mine}
-              isGroup={isGroup}
-              showAvatar={showAvatar}
-              read={isLastMine ? peerRead : undefined}
-              onReply={setReplyTo}
-              onEdit={setEditing}
-            />
+            <Fragment key={m.id}>
+              {showDay && <span className="date-chip my-1.5">{dayLabel(m.createdAt)}</span>}
+              <MessageBubble
+                message={m}
+                animate={new Date(m.createdAt).getTime() > openedAt.current}
+                mine={mine}
+                isGroup={isGroup}
+                showAvatar={showAvatar}
+                read={isLastMine ? peerRead : undefined}
+                onReply={setReplyTo}
+                onEdit={setEditing}
+              />
+            </Fragment>
           );
         })}
+        {/* Yozmoqda — yalang'och nuqtalar emas, haqiqiy kiruvchi pufak ichida */}
         {typingUser && (
-          <div className="flex items-center gap-1 pl-2">
-            <span className="typing-dot" /><span className="typing-dot" /><span className="typing-dot" />
+          <div className="flex items-end gap-2">
+            <div className="bubble-in bubble-tail-in msg-pop msg-pop-in relative rounded-[18px] px-3.5 py-2.5">
+              {isGroup && (
+                <span className="mb-0.5 block text-caption-2 font-semibold text-iris-600">
+                  {typingUser}
+                </span>
+              )}
+              <span className="flex items-center gap-1">
+                <span className="typing-dot" /><span className="typing-dot" /><span className="typing-dot" />
+              </span>
+            </div>
           </div>
         )}
         </div>
+      </div>
+
+      {/* "Pastga" — faqat kerak bo'lganda (pastda emassan). Yangi xabar
+          kelgan bo'lsa soni bilan: nima o'tkazib yuborilganini aytadi. */}
+      {!atBottom && (
+        <button
+          type="button"
+          onClick={() => scrollToBottom(true)}
+          aria-label={newCount ? `${newCount} ta yangi xabar — pastga` : 'Pastga'}
+          className="jump-btn material-thick tappable-scale absolute bottom-3 right-3 z-20 flex h-11 w-11 items-center justify-center rounded-full text-accent-700 shadow-card-hover ring-1 ring-black/[0.04]"
+        >
+          <ArrowDown className="h-[19px] w-[19px]" strokeWidth={2.5} />
+          {newCount > 0 && (
+            <span className="absolute -top-1 -right-1 flex h-[18px] min-w-[18px] items-center justify-center rounded-full bg-accent-600 px-1 text-caption-2 font-semibold text-white">
+              {newCount > 99 ? '99+' : newCount}
+            </span>
+          )}
+        </button>
+      )}
       </div>
       )}
 

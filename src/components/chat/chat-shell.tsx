@@ -23,8 +23,8 @@ export function ChatShell({
   return (
     // Balandlik ota-layoutdan (h-dvh flex) keladi — sahifa scroll bo'lmaydi,
     // faqat ichki ro'yxat/xabarlar scroll (Telegram). Mobil full-bleed, desktop karta.
-    <div className="flex min-h-0 flex-1 overflow-hidden bg-white md:rounded-3xl md:border md:border-slate-200 md:shadow-soft">
-      <aside className={cn('h-full w-full shrink-0 overflow-hidden md:flex md:w-80 md:border-r md:border-slate-200', activeId ? 'hidden' : 'flex')}>
+    <div className="flex min-h-0 flex-1 overflow-hidden bg-white md:rounded-[22px] md:shadow-card">
+      <aside className={cn('h-full w-full shrink-0 overflow-hidden md:flex md:w-[21rem] md:border-r md:border-separator/60', activeId ? 'hidden' : 'flex')}>
         <ConversationList activeId={activeId} />
       </aside>
       <section className={cn('h-full min-w-0 flex-1 overflow-hidden bg-surface-soft', activeId ? 'flex' : 'hidden md:flex')}>

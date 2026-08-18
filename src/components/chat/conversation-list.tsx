@@ -1,10 +1,10 @@
 'use client';
 
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useState, type CSSProperties } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
-import { MessageSquarePlus, Users, UsersRound, ChevronLeft } from '@/components/icons';
+import { MessageSquarePlus, Users, UsersRound, ChevronLeft, Search, X } from '@/components/icons';
 import { chatApi } from '@/lib/api';
 import { getSocket } from '@/lib/socket';
 import { useAuthStore } from '@/store/auth.store';
@@ -35,6 +35,9 @@ export function ConversationList({ activeId }: { activeId?: string }) {
   const qc = useQueryClient();
   const [groupModal, setGroupModal] = useState(false);
   const [filter, setFilter] = useState<Filter>('all');
+  // Lokal qidiruv — server so'rovi YO'Q: ro'yxat allaqachon keshda, shuning
+  // uchun filtrlash bir zumda va 100k yukda backendga hech qanday narx yo'q.
+  const [query, setQuery] = useState('');
   // Guruh ochish endi barcha foydalanuvchilarga ochiq (oddiy user — 3 tagacha,
   // limitni backend tekshiradi)
   const canCreateGroup = !!user;
@@ -117,6 +120,7 @@ export function ConversationList({ activeId }: { activeId?: string }) {
   }, [conversations]);
 
   const filtered = useMemo(() => {
+    const q = query.trim().toLowerCase();
     // Lokal kesh yangilanishlaridan keyin ham tartib to'g'ri bo'lishi uchun
     // har doim lastMessageAt bo'yicha saralaymiz (server tartibi bilan bir xil)
     const list = [...(conversations ?? [])].sort((a, b) => {
@@ -124,9 +128,15 @@ export function ConversationList({ activeId }: { activeId?: string }) {
       const tb = b.lastMessageAt ? new Date(b.lastMessageAt).getTime() : 0;
       return tb - ta;
     });
-    if (filter === 'all') return list;
-    return list.filter((c) => c.type === filter);
-  }, [conversations, filter]);
+    const byType = filter === 'all' ? list : list.filter((c) => c.type === filter);
+    if (!q) return byType;
+    return byType.filter(
+      (c) =>
+        (c.title ?? '').toLowerCase().includes(q) ||
+        (c.username ?? '').toLowerCase().includes(q) ||
+        (c.lastMessagePreview ?? '').toLowerCase().includes(q),
+    );
+  }, [conversations, filter, query]);
 
   return (
     <div className="flex h-full w-full flex-col overflow-hidden">
@@ -151,6 +161,30 @@ export function ConversationList({ activeId }: { activeId?: string }) {
           <Link href="/discover" aria-label="Yangi suhbat" className="tappable flex h-9 w-9 items-center justify-center rounded-full text-accent-700">
             <MessageSquarePlus className="h-5 w-5" />
           </Link>
+        </div>
+      </div>
+
+      {/* Qidiruv — suhbat nomi, @username yoki oxirgi xabar matni bo'yicha */}
+      <div className="px-3 pb-2">
+        <div className="ios-search flex items-center gap-2 px-3 py-1.5">
+          <Search className="h-4 w-4 shrink-0 text-slate-400" />
+          <input
+            value={query}
+            onChange={(e) => setQuery(e.target.value)}
+            placeholder="Suhbatlarda qidirish"
+            aria-label="Suhbatlarda qidirish"
+            className="min-w-0 flex-1 bg-transparent text-subhead text-brand-900 placeholder:text-slate-400 focus:outline-none"
+          />
+          {query && (
+            <button
+              type="button"
+              onClick={() => setQuery('')}
+              aria-label="Tozalash"
+              className="tappable flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-fill text-white"
+            >
+              <X className="h-3 w-3" strokeWidth={3} />
+            </button>
+          )}
         </div>
       </div>
 
@@ -196,7 +230,11 @@ export function ConversationList({ activeId }: { activeId?: string }) {
           <ConversationListSkeleton />
         ) : filtered.length > 0 ? (
           filtered.map((c, i) => (
-            <div key={c.id}>
+            <div
+              key={c.id}
+              className="row-in"
+              style={{ '--row-delay': `${Math.min(i, 8) * 0.035}s` } as CSSProperties}
+            >
               {/* Telegram uslubidagi inset ajratkich — matn boshlanishiga tekislangan */}
               {i > 0 && (
                 <div aria-hidden className="ml-[70px] mr-3 h-px origin-top scale-y-50 bg-[rgba(60,60,67,0.29)]" />
@@ -204,6 +242,14 @@ export function ConversationList({ activeId }: { activeId?: string }) {
               <ConversationRow c={c} active={c.id === activeId} />
             </div>
           ))
+        ) : query ? (
+          <div className="px-4 py-16 text-center">
+            <Search className="mx-auto mb-2 h-8 w-8 text-slate-300" />
+            <p className="text-subhead font-semibold text-brand-900">Hech narsa topilmadi</p>
+            <p className="mt-1 text-caption-1 text-slate-500">
+              «{query}» bo‘yicha suhbat yo‘q.
+            </p>
+          </div>
         ) : (
           <EmptyState filter={filter} hasAny={(conversations?.length ?? 0) > 0} />
         )}
@@ -254,7 +300,7 @@ function EmptyState({ filter, hasAny }: { filter: Filter; hasAny: boolean }) {
     return (
       <div className="px-4 py-16 text-center">
         <MessageSquarePlus className="mx-auto mb-2 h-9 w-9 text-slate-300" />
-        <p className="text-callout font-semibold text-brand-900">Shaxsiy suhbatlar yo&apos;q</p>
+        <p className="text-callout font-semibold text-brand-900">Shaxsiy suhbatlar yo‘q</p>
         <p className="mt-1 text-subhead text-slate-500">
           Hamjamiyatdan odam toping va suhbat boshlang.
         </p>
@@ -268,7 +314,7 @@ function EmptyState({ filter, hasAny }: { filter: Filter; hasAny: boolean }) {
     return (
       <div className="px-4 py-16 text-center">
         <UsersRound className="mx-auto mb-2 h-9 w-9 text-slate-300" />
-        <p className="text-callout font-semibold text-brand-900">Guruhlar yo&apos;q</p>
+        <p className="text-callout font-semibold text-brand-900">Guruhlar yo‘q</p>
         <p className="mt-1 text-subhead text-slate-500">Hamjamiyat guruhlariga qo&apos;shiling.</p>
         <Link href="/discover" className="tappable mt-3 inline-block text-subhead font-medium text-accent-700">
           Guruhlarni topish

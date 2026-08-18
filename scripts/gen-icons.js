@@ -219,11 +219,11 @@ const MAP = {
 const CUSTOM = {
   Hash: {
     stroke: 32,
-    body: `<path d="M176 96 144 416M368 96l-32 320M96 192h320M80 320h320" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/>`,
+    body: `<path d="M176 96 144 416M368 96l-32 320M96 192h320M80 320h320" fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round"/>`,
   },
   ArrowUpRight: {
     stroke: 32,
-    body: `<path d="M176 336 336 176M232 176h104v104" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/>`,
+    body: `<path d="M176 336 336 176M232 176h104v104" fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round"/>`,
   },
   Crown: {
     stroke: 0,
@@ -231,11 +231,11 @@ const CUSTOM = {
   },
   CrownOutline: {
     stroke: 32,
-    body: `<path d="M67 152a13 13 0 0 0-13 16l40 165a10 10 0 0 0 10 8h304a10 10 0 0 0 10-8l40-165a13 13 0 0 0-20-14l-71 51a28 28 0 0 1-40-9l-58-104a8 8 0 0 0-14 0l-58 104a28 28 0 0 1-40 9l-71-51a13 13 0 0 0-7-2zM104 424h304" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/>`,
+    body: `<path d="M67 152a13 13 0 0 0-13 16l40 165a10 10 0 0 0 10 8h304a10 10 0 0 0 10-8l40-165a13 13 0 0 0-20-14l-71 51a28 28 0 0 1-40-9l-58-104a8 8 0 0 0-14 0l-58 104a28 28 0 0 1-40 9l-71-51a13 13 0 0 0-7-2zM104 424h304" fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round"/>`,
   },
   UserCheck: {
     stroke: 32,
-    body: `<path d="M344 144c-4 71-56 128-120 128S100 215 104 144c4-74 55-128 120-128s124 56 120 128" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/><path d="M224 304c-71 0-142 39-165 110-6 20 5 42 25 42h182" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/><path d="m328 400 40 40 88-96" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/>`,
+    body: `<path d="M344 144c-4 71-56 128-120 128S100 215 104 144c4-74 55-128 120-128s124 56 120 128" fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round"/><path d="M224 304c-71 0-142 39-165 110-6 20 5 42 25 42h182" fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round"/><path d="m328 400 40 40 88-96" fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round"/>`,
   },
   /** iOS activity indicator — 12 ta kichrayuvchi tayoqcha (aylanma spinner). */
   Spinner: { stroke: 0, body: 'SPINNER' },

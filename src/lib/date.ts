@@ -1,4 +1,11 @@
-import { format, formatDistanceToNow, formatDistanceToNowStrict } from 'date-fns';
+import {
+  format,
+  formatDistanceToNow,
+  formatDistanceToNowStrict,
+  isSameDay,
+  isToday,
+  isYesterday,
+} from 'date-fns';
 import { uz } from 'date-fns/locale';
 
 /**
@@ -33,4 +40,23 @@ export function formatTime(date: string | number | Date): string {
 
 function toDate(date: string | number | Date): Date {
   return date instanceof Date ? date : new Date(date);
+}
+
+/**
+ * Chat sana ajratkichi uchun yorliq: "Bugun" / "Kecha" / "12-avgust" /
+ * "12-avgust, 2025" (o'tgan yil bo'lsa yil ham qo'shiladi).
+ */
+export function dayLabel(date: string | number | Date): string {
+  const d = toDate(date);
+  if (isToday(d)) return 'Bugun';
+  if (isYesterday(d)) return 'Kecha';
+  const sameYear = d.getFullYear() === new Date().getFullYear();
+  // O'zbek imlosida oy nomi kichik harf bilan yoziladi ("13-iyun"),
+  // date-fns esa locale'dan bosh harfli qaytaradi.
+  return format(d, sameYear ? 'd-MMMM' : 'd-MMMM, yyyy', { locale }).toLowerCase();
+}
+
+/** Ikki vaqt bir kunda bo'lsa — true (sana ajratkichini qo'yish qarori). */
+export function sameDay(a: string | number | Date, b: string | number | Date): boolean {
+  return isSameDay(toDate(a), toDate(b));
 }

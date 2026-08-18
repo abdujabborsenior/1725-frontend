@@ -503,6 +503,85 @@ select:-webkit-autofill {
   }
 }
 
+/* ── Xabar chiqishi — iMessage "pop" (mexanik slide emas) ──────────
+   Yuborilgan/kelgan pufak yengil spring bilan o'z o'rniga o'tiradi.
+   Transform-origin tomonga bog'liq: o'z xabaring o'ngdan, kelgani chapdan
+   "o'sadi" — bu yo'nalish hissi Telegram/iMessage'da yo'q va suhbatga
+   jonli ritm beradi. */
+@keyframes msgPop {
+  0% {
+    opacity: 0;
+    transform: translateY(8px) scale(0.94);
+  }
+  62% {
+    opacity: 1;
+    transform: translateY(-1px) scale(1.008);
+  }
+  100% {
+    opacity: 1;
+    transform: none;
+  }
+}
+.msg-pop {
+  animation: msgPop 0.34s cubic-bezier(0.34, 1.32, 0.64, 1) both;
+}
+.msg-pop-out {
+  transform-origin: bottom right;
+}
+.msg-pop-in {
+  transform-origin: bottom left;
+}
+
+/* ── Sticky sana ajratkichi (Telegram) ────────────────────────────── */
+.date-chip {
+  position: sticky;
+  top: 0.25rem;
+  z-index: 5;
+  align-self: center;
+  width: fit-content;
+  border-radius: 999px;
+  padding: 0.1875rem 0.75rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--ios-label-secondary);
+  background: rgba(255, 255, 255, 0.78);
+  -webkit-backdrop-filter: saturate(180%) blur(14px);
+  backdrop-filter: saturate(180%) blur(14px);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+  pointer-events: none;
+}
+
+/* ── "Pastga" tugmasi — yangi xabar kelganda ─────────────────────── */
+@keyframes jumpIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px) scale(0.86);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+.jump-btn {
+  animation: jumpIn 0.26s cubic-bezier(0.34, 1.3, 0.64, 1) both;
+}
+
+/* ── Suhbat qatorlari ketma-ket paydo bo'ladi (bir marta) ────────── */
+@keyframes rowIn {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+.row-in {
+  animation: rowIn 0.34s var(--ease-ios) both;
+  animation-delay: var(--row-delay, 0s);
+}
+
 /* Ovoz yozish pulsi (systemRed) */
 .rec-pulse {
   position: relative;
@@ -780,73 +859,76 @@ select:-webkit-autofill {
   animation: sparkFloat 0.85s var(--ease-ios) both;
 }
 
-/* ═══ YECHIM AI ════════════════════════════════════════════════════════
-   AI ning o'z vizual tili — mahsulotning qolgan qismidan ATAYLAB ajralib
-   turadi (foydalanuvchi "bu — aqlli qism" ekanini bir qarashda tushunsin),
-   lekin iOS intizomida qoladi: system ranglar, ease-ios, tinch sirtlar.
-   Gradient FAQAT AI markasi va uning ramkasida — boshqa joyga tarqalmaydi. */
+/* ═══ YECHIM AI — "Intelligence" qatlami ══════════════════════════════
+   AI mahsulotning yagona "aqlli" yuzasi. Uning vizual tili qolgan iOS
+   sirtlaridan ATAYLAB ajraladi (foydalanuvchi bir qarashda "bu — aqlli
+   qism" ekanini bilsin), lekin intizom saqlanadi:
+     · ranglar — Apple system spektri (blue → indigo → purple → pink),
+       boshqa hech qayerga tarqalmaydi;
+     · harakat — MAQSADLI: har animatsiya biror holatni bildiradi
+       (o'ylayapti / topildi / yangi kontent keldi), dekor uchun emas;
+     · sirtlar — oq va tinch; farq faqat NUR (aura/halo) bilan beriladi.
 
-/* Skaner halqasi aylanishi — faqat "o'ylayapti" holatida (cheksiz emas). */
-@keyframes yechimOrbit {
-  to {
-    transform: rotate(360deg);
-  }
-}
-.yechim-orbit {
-  animation: yechimOrbit 2.6s linear infinite;
-}
+   Signature: `.ai-reveal` — javob matni bo'ylab yorug'lik yugurib matnni
+   "ochib" chiqadi. Haqiqiy token-streaming emas (server javobi butun
+   keladi), lekin fikr tug'ilishining his-tuyg'usini beradi — va DOM
+   bir marta yoziladi, ya'ni CLS 0. */
 
-/* Markazdagi uchqun — halqa aylanayotganda "nafas oladi". */
-@keyframes yechimSpark {
-  0%,
-  100% {
-    transform: scale(1);
-    opacity: 1;
-  }
-  50% {
-    transform: scale(0.86);
-    opacity: 0.7;
-  }
-}
-.yechim-spark {
-  animation: yechimSpark 1.5s var(--ease-ios) infinite;
+/* Burchakni animatsiya qilish uchun (conic gradientni aylantirish).
+   Qo'llab-quvvatlanmasa — gradient statik qoladi (xavfsiz degradatsiya). */
+@property --ai-angle {
+  syntax: '<angle>';
+  initial-value: 0deg;
+  inherits: false;
 }
 
-/* "Yechim izlanmoqda…" matni bo'ylab yorug'lik yurishi. */
-@keyframes yechimShimmer {
-  to {
-    background-position: 200% center;
-  }
-}
-.yechim-shimmer {
-  background: linear-gradient(
-    90deg,
-    #8e8e93 0%,
-    #0a84ff 35%,
-    #af52de 50%,
-    #8e8e93 65%,
-    #8e8e93 100%
+:root {
+  --ai-1: #0a84ff; /* systemBlue */
+  --ai-2: #5856d6; /* systemIndigo */
+  --ai-3: #af52de; /* systemPurple */
+  --ai-4: #ff2d55; /* systemPink */
+  /* Ko'k → indigo asosiy; siyoh va pushti faqat "issiq" nuqta sifatida
+     (spektr aylanganda tor yoy) — hoshiya jiddiy qoladi, kamalak emas. */
+  --ai-spectrum: conic-gradient(
+    from var(--ai-angle),
+    var(--ai-1),
+    var(--ai-2) 30%,
+    var(--ai-3) 52%,
+    var(--ai-4) 62%,
+    var(--ai-3) 72%,
+    var(--ai-2) 88%,
+    var(--ai-1)
   );
-  background-size: 200% auto;
-  background-clip: text;
-  -webkit-background-clip: text;
-  color: transparent;
-  animation: yechimShimmer 2.2s linear infinite;
 }
 
-/* AI kirish nuqtasining ramkasi: nozik gradient hoshiya (1px), ichi oq.
-   Soya/glow YO'Q — ajralib turish rang bilan, shovqin bilan emas. */
-.yechim-frame {
-  position: relative;
-  background: #fff;
+@keyframes aiAngle {
+  to {
+    --ai-angle: 360deg;
+  }
 }
-.yechim-frame::before {
+
+/* ── AURA: aylanuvchi spektr hoshiya ────────────────────────────────
+   Ichi oq qoladi (mask-composite), ya'ni sirt tinch — faqat 1.5px
+   chegara "tirik". `data-state="thinking"` da tezlashadi va yorqinlashadi. */
+.ai-aura {
+  position: relative;
+  /* Oq sirt + deyarli sezilmas radial chuqurlik (4–5%): karta "tekis
+     qog'oz" emas, ichida yorug'lik bordek tuyuladi. Bu — Apple'ning
+     "material" hissi, gradient shovqini emas. */
+  background:
+    radial-gradient(120% 90% at 12% 0%, rgba(10, 132, 255, 0.05), transparent 60%),
+    radial-gradient(110% 90% at 100% 100%, rgba(88, 86, 214, 0.05), transparent 62%),
+    #fff;
+  isolation: isolate;
+}
+.ai-aura::before {
   content: '';
   position: absolute;
   inset: 0;
   border-radius: inherit;
-  padding: 1.5px;
-  background: linear-gradient(135deg, #0a84ff 0%, #5856d6 50%, #af52de 100%);
+  padding: var(--ai-ring, 1.5px);
+  background: var(--ai-spectrum);
+  opacity: var(--ai-ring-opacity, 0.85);
   -webkit-mask:
     linear-gradient(#000 0 0) content-box,
     linear-gradient(#000 0 0);
@@ -855,33 +937,345 @@ select:-webkit-autofill {
     linear-gradient(#000 0 0) content-box,
     linear-gradient(#000 0 0);
   mask-composite: exclude;
+  animation: aiAngle var(--ai-speed, 14s) linear infinite;
+  transition:
+    opacity 0.5s var(--ease-ios),
+    filter 0.5s var(--ease-ios);
   pointer-events: none;
 }
+/* Tashqi yumshoq nur — sirtdan "chiqib turadi", lekin juda past opacity */
+.ai-aura::after {
+  content: '';
+  position: absolute;
+  inset: -1px;
+  z-index: -1;
+  border-radius: inherit;
+  background: var(--ai-spectrum);
+  filter: blur(18px);
+  opacity: var(--ai-glow, 0);
+  transition: opacity 0.6s var(--ease-ios);
+  animation: aiAngle var(--ai-speed, 14s) linear infinite;
+  pointer-events: none;
+}
+/* Fokus / faol holat — nur jonlanadi (nozik, bachkana emas) */
+.ai-aura:focus-within,
+.ai-aura[data-state='thinking'] {
+  --ai-speed: 3.2s;
+  --ai-glow: 0.3;
+  --ai-ring-opacity: 1;
+}
+.ai-aura[data-state='thinking'] {
+  --ai-ring: 2px;
+}
 
-/* AI javob matni — bir tekis "yozilib chiqish" (typewriter emas, blok
-   ko'rinib chiqadi: LCP va CLS ga zarar bermaydi). */
-@keyframes yechimFade {
+/* ── SIGNATURE: javob matnining yorug'lik bilan ochilishi ───────────
+   Mask chapdan o'ngga suriladi: matn "yozilib" chiqqanday ko'rinadi. */
+@keyframes aiReveal {
+  from {
+    -webkit-mask-position: 100% 0;
+    mask-position: 100% 0;
+  }
+  to {
+    -webkit-mask-position: 0 0;
+    mask-position: 0 0;
+  }
+}
+.ai-reveal {
+  -webkit-mask-image: linear-gradient(
+    90deg,
+    #000 0 30%,
+    rgba(0, 0, 0, 0.55) 42%,
+    rgba(0, 0, 0, 0.06) 50%,
+    transparent 56%
+  );
+  mask-image: linear-gradient(
+    90deg,
+    #000 0 30%,
+    rgba(0, 0, 0, 0.55) 42%,
+    rgba(0, 0, 0, 0.06) 50%,
+    transparent 56%
+  );
+  -webkit-mask-size: 260% 100%;
+  mask-size: 260% 100%;
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  animation: aiReveal var(--ai-reveal-dur, 0.9s) var(--ease-ios) both;
+  animation-delay: var(--ai-delay, 0s);
+}
+
+/* ── Kontent bloklarining ketma-ket "materializatsiyasi" ───────────
+   Blur → sharp: natija "fokusga keladi" (AI aniqlik topgani hissi). */
+@keyframes aiFocusIn {
   from {
     opacity: 0;
-    transform: translateY(4px);
+    transform: translateY(10px) scale(0.985);
+    filter: blur(6px);
   }
   to {
     opacity: 1;
     transform: none;
+    filter: blur(0);
   }
 }
-.yechim-in {
-  animation: yechimFade 0.32s var(--ease-ios) both;
+.ai-focus-in {
+  animation: aiFocusIn 0.55s var(--ease-ios) both;
+  animation-delay: var(--ai-delay, 0s);
 }
 
-/* Ovoz yozish to'lqini — jonli amplituda (CSS o'zgaruvchisi bilan). */
-.yechim-bar {
+/* ── Savol pufagi — spring bilan "uchib chiqadi" ───────────────────── */
+@keyframes aiAsk {
+  0% {
+    opacity: 0;
+    transform: translateY(14px) scale(0.9);
+  }
+  60% {
+    opacity: 1;
+    transform: translateY(-2px) scale(1.014);
+  }
+  100% {
+    opacity: 1;
+    transform: none;
+  }
+}
+.ai-ask {
+  animation: aiAsk 0.46s cubic-bezier(0.34, 1.35, 0.64, 1) both;
+}
+
+/* ── Skaner nuri: "loyihalar ko'rib chiqilmoqda" ───────────────────
+   Yuzasi bo'ylab yupqa yorug'lik pastga tushadi (thinking paytida). */
+@keyframes aiScan {
+  0% {
+    transform: translateY(-120%);
+    opacity: 0;
+  }
+  15%,
+  85% {
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(320%);
+    opacity: 0;
+  }
+}
+.ai-scan {
+  position: relative;
+  overflow: hidden;
+}
+.ai-scan::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  height: 34%;
+  background: linear-gradient(180deg, transparent, rgba(10, 132, 255, 0.13), transparent);
+  animation: aiScan 1.9s var(--ease-ios) infinite;
+  pointer-events: none;
+}
+
+/* ── Shimmer matn ("Yechim izlanmoqda…") ───────────────────────────── */
+@keyframes aiShimmer {
+  to {
+    background-position: 200% center;
+  }
+}
+.ai-shimmer {
+  background: linear-gradient(
+    90deg,
+    #8e8e93 0%,
+    #8e8e93 28%,
+    var(--ai-1) 42%,
+    var(--ai-3) 52%,
+    #8e8e93 66%,
+    #8e8e93 100%
+  );
+  background-size: 220% auto;
+  background-clip: text;
+  -webkit-background-clip: text;
+  color: transparent;
+  animation: aiShimmer 2.4s linear infinite;
+}
+
+/* ── Mark holatlari (SVG ichida) ───────────────────────────────────── */
+@keyframes aiOrbit {
+  to {
+    transform: rotate(360deg);
+  }
+}
+@keyframes aiOrbitBack {
+  to {
+    transform: rotate(-360deg);
+  }
+}
+@keyframes aiBreath {
+  0%,
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(0.93);
+    opacity: 0.82;
+  }
+}
+@keyframes aiPulseRing {
+  0% {
+    transform: scale(0.7);
+    opacity: 0.5;
+  }
+  100% {
+    transform: scale(1.35);
+    opacity: 0;
+  }
+}
+/* Yechim topilgan lahza — uchqun bir marta "portlaydi" */
+@keyframes aiFound {
+  0% {
+    transform: scale(0.72) rotate(-24deg);
+    opacity: 0.4;
+  }
+  55% {
+    transform: scale(1.16) rotate(6deg);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(1) rotate(0deg);
+    opacity: 1;
+  }
+}
+.ai-orbit {
+  animation: aiOrbit var(--ai-orbit-dur, 2.4s) linear infinite;
+  transform-origin: center;
+}
+.ai-orbit-back {
+  animation: aiOrbitBack var(--ai-orbit-dur, 3.6s) linear infinite;
+  transform-origin: center;
+}
+.ai-breath {
+  animation: aiBreath 1.6s var(--ease-ios) infinite;
+  transform-origin: center;
+}
+.ai-breath-slow {
+  animation: aiBreath 4.5s var(--ease-ios) infinite;
+  transform-origin: center;
+}
+.ai-pulse-ring {
+  animation: aiPulseRing 1.9s var(--ease-ios) infinite;
+  transform-origin: center;
+}
+.ai-found {
+  animation: aiFound 0.62s cubic-bezier(0.34, 1.4, 0.64, 1) both;
+  transform-origin: center;
+}
+
+/* ── Typewriter kursori (jonli placeholder) ────────────────────────── */
+@keyframes aiCaret {
+  0%,
+  45% {
+    opacity: 1;
+  }
+  55%,
+  100% {
+    opacity: 0;
+  }
+}
+.ai-caret {
+  display: inline-block;
+  width: 1.5px;
+  height: 1.05em;
+  vertical-align: -0.16em;
+  margin-left: 1px;
+  background: var(--ai-1);
+  border-radius: 1px;
+  animation: aiCaret 1.05s steps(1, end) infinite;
+}
+
+/* ── Ovoz to'lqini (jonli amplituda) ──────────────────────────────── */
+.ai-bar {
   width: 3px;
   border-radius: 999px;
   background: currentColor;
-  height: calc(4px + var(--amp, 0) * 22px);
-  transition: height 0.12s linear;
+  height: calc(4px + var(--amp, 0) * 24px);
+  transition: height 0.1s linear;
 }
+
+/* ── SIGNATURE: "Yechim yig'ilishi" (AI sahifasi ochilishi) ─────────
+   Mahsulot g'oyasining bir sekundlik vizual bayoni: platformaga sochilgan
+   loyihalar (nuqtalar) chetdan kelib MARKAZGA yig'iladi va o'sha yerda
+   uchqun — yechim — yonadi. Ya'ni animatsiya bezak emas, u AI nima
+   qilishini AYTADI. Bir marta o'ynaydi, keyin DOM'da hech narsa
+   qimirlamaydi (`forwards` + `pointer-events:none`).
+
+   Har nuqta o'z burchagi (--a), radiusi (--r) va navbatiga (--d) ega. */
+@keyframes aiGather {
+  0% {
+    transform: rotate(var(--a)) translateY(calc(-1 * var(--r))) rotate(calc(-1 * var(--a))) scale(1);
+    opacity: 0;
+  }
+  14% {
+    opacity: 1;
+  }
+  55% {
+    transform: rotate(var(--a)) translateY(calc(-0.42 * var(--r))) rotate(calc(-1 * var(--a))) scale(0.95);
+    opacity: 1;
+  }
+  100% {
+    transform: rotate(var(--a)) translateY(0) rotate(calc(-1 * var(--a))) scale(0.15);
+    opacity: 0;
+  }
+}
+.ai-gather {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  height: 8px;
+  width: 8px;
+  margin: -4px 0 0 -4px;
+  border-radius: 999px;
+  background: var(--c, var(--ai-1));
+  /* Zarraga yorug'lik: markazga yaqinlashganda "ichkariga so'riladi" */
+  box-shadow: 0 0 10px var(--c, var(--ai-1));
+  animation: aiGather 1.25s cubic-bezier(0.42, 0, 0.25, 1) both;
+  animation-delay: var(--d, 0s);
+  pointer-events: none;
+}
+
+/* ── Sahifa ochilish sekvensiyasi ─────────────────────────────────── */
+@keyframes aiOpenMark {
+  0% {
+    opacity: 0;
+    transform: scale(0.55) rotate(-40deg);
+  }
+  60% {
+    opacity: 1;
+    transform: scale(1.08) rotate(4deg);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1) rotate(0);
+  }
+}
+.ai-open-mark {
+  animation: aiOpenMark 0.72s cubic-bezier(0.34, 1.28, 0.64, 1) both;
+}
+@keyframes aiOpenText {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+    filter: blur(4px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+    filter: blur(0);
+  }
+}
+.ai-open-text {
+  animation: aiOpenText 0.55s var(--ease-ios) both;
+  animation-delay: var(--ai-delay, 0.1s);
+}
+
+
 
 /* ═══ HARAKATNI KAMAYTIRISH ════════════════════════════════════════════ */
 @media (prefers-reduced-motion: reduce) {
@@ -895,20 +1289,55 @@ select:-webkit-autofill {
   .animate-pulse-dot,
   .typing-dot,
   .rec-pulse::before,
-  .yechim-orbit,
-  .yechim-spark,
-  .yechim-shimmer,
-  .yechim-in {
+  .ai-aura::before,
+  .ai-aura::after,
+  .ai-scan::after,
+  .ai-orbit,
+  .ai-orbit-back,
+  .ai-breath,
+  .ai-breath-slow,
+  .ai-pulse-ring,
+  .ai-found,
+  .ai-caret,
+  .ai-shimmer,
+  .ai-reveal,
+  .ai-focus-in,
+  .ai-ask,
+  .ai-open-mark,
+  .ai-open-text,
+  .msg-pop,
+  .row-in,
+  .jump-btn,
+  .ai-gather {
     animation: none !important;
   }
-  .yechim-shimmer {
+  .ai-gather {
+    display: none;
+  }
+  .ai-shimmer {
     color: #6e6e73;
     background: none;
     -webkit-background-clip: initial;
     background-clip: initial;
   }
-  .yechim-in {
+  /* Harakatsiz ham kontent to'liq ko'rinishi SHART (mask/opacity qoldiq yo'q) */
+  .ai-reveal {
+    -webkit-mask-image: none;
+    mask-image: none;
+  }
+  .ai-focus-in,
+  .ai-ask,
+  .ai-open-mark,
+  .ai-open-text,
+  .msg-pop,
+  .row-in,
+  .jump-btn {
     opacity: 1;
+    transform: none;
+    filter: none;
+  }
+  .ai-scan::after {
+    display: none;
   }
   .reveal,
   .acc-panel,

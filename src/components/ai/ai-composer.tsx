@@ -98,7 +98,7 @@ export function AiComposer({
   /* ── Yozuv rejimi ────────────────────────────────────────────── */
   if (recorder.recording) {
     return (
-      <div className="flex items-center gap-3 rounded-full bg-white px-4 py-2.5 shadow-card-hover">
+      <div className="ai-aura flex items-center gap-3 rounded-full px-4 py-2.5 shadow-card-hover" data-state="thinking">
         <button
           type="button"
           onClick={recorder.cancel}
@@ -118,7 +118,7 @@ export function AiComposer({
           {Array.from({ length: 22 }).map((_, i) => (
             <span
               key={i}
-              className="yechim-bar"
+              className="ai-bar"
               style={
                 {
                   '--amp': Math.max(0.06, recorder.level * (0.55 + Math.sin(i * 1.7) * 0.45)),
@@ -144,7 +144,10 @@ export function AiComposer({
   const canSend = value.trim().length >= 8 && !disabled;
 
   return (
-    <div className="flex items-end gap-2 rounded-[22px] bg-white px-2 py-2 shadow-card-hover">
+    <div
+      className="ai-aura flex items-end gap-2 rounded-[22px] px-2 py-2 shadow-card-hover"
+      data-state={disabled ? 'thinking' : undefined}
+    >
       <textarea
         ref={ref}
         rows={1}

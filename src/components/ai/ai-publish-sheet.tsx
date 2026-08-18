@@ -11,6 +11,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Select } from '@/components/ui/select';
 import { Button } from '@/components/ui/button';
 import { Sparkles } from '@/components/icons';
+import { YechimMark } from './yechim-mark';
 import { aiApi, getErrorMessage, startupsApi } from '@/lib/api';
 import { useAuthStore } from '@/store/auth.store';
 import type { AiDraft } from '@/types';
@@ -131,11 +132,16 @@ export function AiPublishSheet({ open, onClose, draft, queryId }: Props) {
   return (
     <Modal open={open} onClose={onClose} title="Muammoni joylash" className="sm:max-w-lg">
       <div className="space-y-4">
-        <p className="text-subhead leading-relaxed text-slate-500">
-          Matnni AI tayyorladi — imlo va uslub to‘g‘rilandi. Xohlagancha
-          o‘zgartiring, keyin joylang. E’lon qilingach muammo hammaga ko‘rinadi
-          va profilingizdagi “Muammolarim”da saqlanadi.
-        </p>
+        {/* Manba belgisi: bu matnni AI yozgan — foydalanuvchi buni bir
+            qarashda bilishi kerak (ishonch va mas'uliyat aniqligi). */}
+        <div className="flex items-start gap-2.5">
+          <YechimMark size={22} state="found" className="mt-0.5 shrink-0" />
+          <p className="text-subhead leading-relaxed text-slate-500">
+            Matnni Yechim AI tayyorladi — imlo va uslub to‘g‘rilandi. Xohlagancha
+            o‘zgartiring, keyin joylang. E’lon qilingach muammo hammaga ko‘rinadi
+            va profilingizdagi “Muammolarim”da saqlanadi.
+          </p>
+        </div>
 
         <Input
           label="Sarlavha"
