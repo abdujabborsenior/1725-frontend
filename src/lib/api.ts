@@ -177,7 +177,23 @@ async function unwrap<T>(p: Promise<AxiosResponse<ApiEnvelope<T>>>): Promise<T> 
 
 export function getErrorMessage(err: unknown, fallback = 'Xatolik yuz berdi'): string {
   const body = (err as AxiosError<ApiErrorBody>)?.response?.data;
-  return body?.error?.message ?? fallback;
+  const message = body?.error?.message;
+  if (!message) {
+    // Tarmoq uzilishi — server javob bermagan (backend "xatolik" degani emas)
+    if ((err as AxiosError)?.code === 'ERR_NETWORK') {
+      return 'Internet aloqasi yo‘q. Ulanishni tekshirib, qayta urinib ko‘ring.';
+    }
+    return fallback;
+  }
+  // Ichki kod (masalan "AI_UPSTREAM") hech qachon ekranga chiqmasligi kerak:
+  // backend uni tarjima qilishi shart, lekin bu — ikkinchi himoya qatlami
+  // (eski server versiyasi yoki qoplanmagan modul bo'lsa ham).
+  return isRawErrorCode(message) ? fallback : message;
+}
+
+/** FAQAT_KATTA_HARF_VA_PASTKI_CHIZIQ — odam uchun yozilmagan matn. */
+function isRawErrorCode(message: string): boolean {
+  return /^[A-Z][A-Z0-9_]{2,}$/.test(message.trim());
 }
 
 /* ── Auth ─────────────────────────────────────────────────────── */

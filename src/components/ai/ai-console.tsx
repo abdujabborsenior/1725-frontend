@@ -64,7 +64,7 @@ export function AiConsole() {
         setTurns((prev) =>
           prev.map((t) =>
             t.id === id
-              ? { ...t, status: 'error', error: getErrorMessage(err, 'Javob olinmadi') }
+              ? { ...t, status: 'error', error: getErrorMessage(err, 'Javob olinmadi. Bir oz kutib, qayta urinib ko‘ring.') }
               : t,
           ),
         );
