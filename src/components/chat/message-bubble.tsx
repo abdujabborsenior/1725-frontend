@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
 import { createPortal } from 'react-dom';
 import { motion, AnimatePresence, useMotionValue, useTransform, animate } from 'framer-motion';
-import { Play, Pause, FileText, Reply, Check, CheckCheck, Download, Copy, Flag, Clock, Paperclip, Pencil } from '@/components/icons';
+import { Play, Pause, FileText, Reply, Download, Copy, Flag, Paperclip, Pencil } from '@/components/icons';
 import { Avatar } from '@/components/ui/avatar';
 import { ReportDialog } from '@/components/reports/report-dialog';
 import { profileHref } from '@/components/social/user-list-item';
@@ -46,8 +46,9 @@ function VoiceMessage({ att, mine }: { att: MessageAttachment; mine: boolean }) 
     <div className="flex w-full min-w-0 items-center gap-3 py-1">
       <button
         onClick={toggle}
+        aria-label={playing ? 'To‘xtatish' : 'Tinglash'}
         className={cn(
-          'flex h-10 w-10 shrink-0 items-center justify-center rounded-full',
+          'tappable-scale flex h-10 w-10 shrink-0 items-center justify-center rounded-full',
           mine ? 'bg-white/25 text-white' : 'bg-accent-500 text-white',
         )}
       >
@@ -60,7 +61,7 @@ function VoiceMessage({ att, mine }: { att: MessageAttachment; mine: boolean }) 
             <span
               key={i}
               className={cn(
-                'min-w-[2px] flex-1 rounded-full',
+                'min-w-[2px] flex-1 rounded-full transition-colors duration-150',
                 mine ? (active ? 'bg-white' : 'bg-white/40') : active ? 'bg-accent-500' : 'bg-slate-300',
               )}
               style={{ height: `${Math.max(15, Math.min(100, h))}%` }}
@@ -101,14 +102,14 @@ function Attachment({ att, mine }: { att: MessageAttachment; mine: boolean }) {
   }
   if (att.type === 'video') {
     return (
-      <video src={att.url} controls playsInline className="max-h-80 w-full rounded-[14px] object-cover" />
+      <video src={att.url} controls playsInline className="max-h-80 w-full rounded-[15px] object-cover" />
     );
   }
   if (att.type === 'image') {
     return (
       <a href={att.url} target="_blank" rel="noreferrer">
         {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img src={att.url} alt={att.name ?? ''} className="max-h-80 rounded-[14px] object-cover" />
+        <img src={att.url} alt={att.name ?? ''} className="max-h-80 rounded-[15px] object-cover" />
       </a>
     );
   }
@@ -119,8 +120,8 @@ function Attachment({ att, mine }: { att: MessageAttachment; mine: boolean }) {
       target="_blank"
       rel="noreferrer"
       className={cn(
-        'flex items-center gap-3 rounded-xl px-3 py-2',
-        mine ? 'bg-white/15' : 'bg-surface-soft',
+        'flex items-center gap-3 rounded-[14px] px-3 py-2',
+        mine ? 'bg-white/15' : 'bg-fill-tertiary',
       )}
     >
       <span className={cn('flex h-9 w-9 items-center justify-center rounded-[9px]', mine ? 'bg-white/20' : 'bg-white')}>
@@ -213,7 +214,10 @@ function ContextMenu({
 interface Props {
   message: ChatMessage;
   mine: boolean;
+  /** Guruh (ketma-ket bir muallif xabarlari) BOSHI — avatar va ism shu yerda */
   showAvatar: boolean;
+  /** Guruh OXIRI — pastki burchak to'liq yumaloq qoladi */
+  groupEnd?: boolean;
   isGroup: boolean;
   read?: boolean;
   /**
@@ -228,7 +232,9 @@ interface Props {
 
 const SWIPE_THRESHOLD = 64;
 
-export function MessageBubble({ message, mine, showAvatar, isGroup, read, animate: animateIn, onReply, onEdit }: Props) {
+export function MessageBubble({
+  message, mine, showAvatar, groupEnd = true, isGroup, read, animate: animateIn, onReply, onEdit,
+}: Props) {
   const [menu, setMenu] = useState<{ x: number; y: number } | null>(null);
   const [reportOpen, setReportOpen] = useState(false);
   const x = useMotionValue(0);
@@ -243,7 +249,7 @@ export function MessageBubble({ message, mine, showAvatar, isGroup, read, animat
   if (message.type === 'system') {
     return (
       <div className="my-2 flex justify-center">
-        <span className={cn('rounded-full bg-fill-tertiary px-3 py-1 text-caption-1 font-medium text-slate-500', animateIn && 'msg-pop')}>
+        <span className={cn('rounded-full bg-black/[0.06] px-3 py-1 text-caption-1 font-medium text-slate-500', animateIn && 'msg-pop')}>
           {message.content}
         </span>
       </div>
@@ -255,6 +261,11 @@ export function MessageBubble({ message, mine, showAvatar, isGroup, read, animat
     !message.content &&
     message.attachments.length > 0 &&
     message.attachments.every((a) => ['image', 'video', 'round_video'].includes(a.type));
+
+  // Vaqt pufak ichida, oxirgi qatorda turadi — shuning uchun oxirgi qatorda
+  // unga joy ajratiladi (`bubble-gap`). Kengligi meta uzunligiga bog'liq.
+  const edited = !!message.editedAt && !message.pending;
+  const metaGap = edited ? 92 : 40;
 
   function triggerReply() {
     onReply(message);
@@ -293,6 +304,19 @@ export function MessageBubble({ message, mine, showAvatar, isGroup, read, animat
     if (longPress.current) { clearTimeout(longPress.current); longPress.current = null; }
   }
 
+  const meta = !isRound && (
+    <span
+      className={cn(
+        'bubble-meta',
+        onlyMedia && 'bubble-meta-over',
+        mine && !onlyMedia ? 'text-white/75' : onlyMedia ? '' : 'text-slate-400',
+      )}
+    >
+      {edited && <span className="italic">tahrirlangan</span>}
+      {fmtTime(message.createdAt)}
+    </span>
+  );
+
   return (
     <div
       className={cn(
@@ -324,18 +348,7 @@ export function MessageBubble({ message, mine, showAvatar, isGroup, read, animat
         <Reply className="h-4 w-4" />
       </motion.span>
 
-      <div className={cn('relative z-10 flex max-w-[82%] flex-col sm:max-w-[78%]', mine ? 'items-end' : 'items-start')}>
-        {/* Hover "Javob" affordans (desktop) */}
-        <button
-          onClick={triggerReply}
-          className={cn(
-            'mb-1 hidden items-center gap-1 text-caption-1 text-slate-400 transition-colors hover:text-accent-600 group-hover:flex',
-            mine ? 'flex-row-reverse' : '',
-          )}
-        >
-          <Reply className="h-3 w-3" /> Javob
-        </button>
-
+      <div className={cn('relative z-10 flex max-w-[82%] flex-col sm:max-w-[76%]', mine ? 'items-end' : 'items-start')}>
         <motion.div
           drag="x"
           dragConstraints={{ left: 0, right: SWIPE_THRESHOLD + 24 }}
@@ -357,13 +370,20 @@ export function MessageBubble({ message, mine, showAvatar, isGroup, read, animat
           onPointerCancel={cancelLongPress}
           onPointerMove={(e) => { if (e.pointerType === 'touch') cancelLongPress(); }}
           className={cn(
-            'relative cursor-pointer touch-pan-y select-none rounded-[18px] px-3.5 py-2',
+            'bubble relative cursor-pointer touch-pan-y select-none px-3.5 py-2',
             isRound
-              ? 'bg-transparent p-0'
+              ? 'bg-transparent p-0 shadow-none'
               : mine
-                ? 'bubble-out bubble-tail-out'
-                : 'bubble-in bubble-tail-in',
+                ? 'bubble-out'
+                : 'bubble-in',
+            // Guruhlash: qo'shni burchaklar toraytiriladi (dumcha o'rniga)
+            !isRound && !showAvatar && (mine ? 'bubble-mid-out' : 'bubble-mid-in'),
+            !isRound && !groupEnd && (mine ? 'bubble-cont-out' : 'bubble-cont-in'),
             onlyMedia && !isRound && 'overflow-hidden p-1',
+            // Matnsiz biriktirma (fayl/ovoz): vaqt absolyut turadi — unga joy
+            !isRound && !onlyMedia && !message.content && 'pb-5',
+            // Yuborilmoqda — pufak bo'ylab yorug'lik yuguradi (soat ikonkasi yo'q)
+            !isRound && message.pending && 'bubble-pending',
           )}
         >
           {/* Sender name (group) — profilga bog'langan */}
@@ -372,7 +392,7 @@ export function MessageBubble({ message, mine, showAvatar, isGroup, read, animat
               href={profileHref(message.sender)}
               onClick={(e) => e.stopPropagation()}
               draggable={false}
-              className="mb-0.5 block text-footnote font-semibold text-iris-600"
+              className="mb-0.5 block text-footnote font-semibold text-accent-700"
             >
               {message.sender.fullName}
             </Link>
@@ -395,23 +415,36 @@ export function MessageBubble({ message, mine, showAvatar, isGroup, read, animat
             </div>
           ))}
 
-          {/* Text */}
+          {/* Text — oxiriga vaqt uchun joy ajratiladi (pufak matnni quchoqlaydi) */}
           {message.content && (
-            <p className={cn('whitespace-pre-wrap break-words text-body leading-snug', onlyMedia && 'px-2 pb-1')}>
+            <p className="whitespace-pre-wrap break-words text-body leading-snug">
               {message.content}
+              {!isRound && <span aria-hidden className="bubble-gap" style={{ width: metaGap }} />}
             </p>
           )}
 
-          {/* Meta */}
-          {!isRound && (
-            <span className={cn('mt-0.5 flex items-center justify-end gap-1 text-caption-2', mine ? 'text-white/75' : 'text-slate-400')}>
-              {message.editedAt && !message.pending && <span className="italic">tahrirlangan</span>}
-              {message.pending ? <Clock className="h-3 w-3 animate-pulse" /> : fmtTime(message.createdAt)}
-              {mine && !message.pending && (read ? <CheckCheck className="h-3 w-3" /> : <Check className="h-3 w-3" />)}
-            </span>
-          )}
+          {/* Faqat biriktirma bo'lsa — vaqt uchun alohida joy kerak emas */}
+          {meta}
         </motion.div>
+
+        {/* Holat — HAR pufakda emas, faqat oxirgi o'z xabaring ostida */}
+        {mine && read !== undefined && (
+          <span className="bubble-status">
+            {message.pending ? 'Yuborilmoqda' : read ? 'Ko‘rildi' : 'Yetkazildi'}
+          </span>
+        )}
       </div>
+
+      {/* Javob affordansi (desktop) — matnli yorliq emas, pufak yonidagi
+          ixcham ikonka; sichqoncha kelgandagina paydo bo'ladi. */}
+      <button
+        onClick={triggerReply}
+        aria-label="Javob berish"
+        title="Javob berish"
+        className="btn-round mb-1 hidden h-7 w-7 shrink-0 items-center justify-center rounded-full text-slate-400 group-hover:flex"
+      >
+        <Reply className="h-[15px] w-[15px]" />
+      </button>
 
       <AnimatePresence>
         {menu && (

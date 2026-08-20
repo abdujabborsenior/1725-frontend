@@ -133,7 +133,7 @@ export function AiConsole() {
             <div key={turn.id} className="space-y-4">
               {/* Savol — iMessage "chiquvchi" pufagi (spring bilan chiqadi) */}
               <div className="flex justify-end">
-                <p className="ai-ask bubble-out bubble-tail-out relative max-w-[85%] whitespace-pre-line px-3.5 py-2 text-body text-white sm:max-w-[70%]">
+                <p className="ai-ask bubble bubble-out relative max-w-[85%] whitespace-pre-line px-4 py-2.5 text-body leading-snug sm:max-w-[70%]">
                   {turn.question}
                 </p>
               </div>

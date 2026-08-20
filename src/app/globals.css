@@ -211,8 +211,16 @@ select:-webkit-autofill {
   backdrop-filter: saturate(180%) blur(14px);
 }
 /* Kontekst menyu / popover materiali */
+/* Suzuvchi menyular (biriktirish, kontekst, bildirishnoma, select).
+   MUHIM: bu menyular ko'pincha `backdrop-filter`li ota-element ICHIDA
+   turadi (masalan composer'ning `.material-bar`i). Bunday holatda ichki
+   `backdrop-filter` ORTIDAGI sahifani umuman ko'rmaydi — u faqat o'z
+   "backdrop root"i ichidagini oladi, ya'ni blur amalda ishlamaydi va
+   menyu ostidagi matn o'qilib turadi. Shuning uchun sirt deyarli
+   NOSHAFFOF: o'qilishi blur'ga bog'liq bo'lib qolmaydi, blur esa
+   ishlagan joyda qo'shimcha chuqurlik beradi. */
 .material-menu {
-  background: rgba(249, 249, 249, 0.82);
+  background: rgba(252, 252, 253, 0.97);
   -webkit-backdrop-filter: saturate(180%) blur(24px);
   backdrop-filter: saturate(180%) blur(24px);
 }
@@ -439,40 +447,159 @@ select:-webkit-autofill {
   scrollbar-color: rgba(60, 60, 67, 0.26) transparent;
   overscroll-behavior-y: contain;
 }
-/* Chiquvchi — iOS ko'k pufak */
-.bubble-out {
-  background: #007aff;
-  color: #ffffff;
+/* ── Suhbat kanvasi ────────────────────────────────────────────────
+   Pufaklar oq QOG'OZ ustida emas, yumshoq tinted sirtda "yotadi" —
+   shu bitta qaror butun suhbatga qatlam hissi beradi (kiruvchi pufak
+   endi OQ bo'ladi, kulrang emas). Ustida MYMarkaz belgisi juda past
+   opacity bilan — firma blankasidagi suv belgisi kabi: ko'zga
+   tashlanmaydi, lekin sirt "hech kimniki emas" bo'lib qolmaydi. */
+.chat-canvas {
+  position: relative;
+  background:
+    radial-gradient(115% 55% at 50% 0%, rgba(10, 132, 255, 0.05), transparent 60%),
+    linear-gradient(180deg, #f7f8fb 0%, #f2f2f7 100%);
 }
-/* Kiruvchi — iOS kulrang pufak */
-.bubble-in {
-  background: #e9e9eb;
-  color: var(--ios-label);
-  border: none;
-}
-/* Pufak dumchasi (iMessage) — burchakdagi kichik uchburchak */
-.bubble-tail-out::after,
-.bubble-tail-in::after {
+.chat-canvas::before {
   content: '';
   position: absolute;
-  bottom: 0;
-  width: 12px;
-  height: 16px;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0.014;
+  background-repeat: no-repeat;
+  background-position: 50% 44%;
+  background-size: min(30%, 200px) auto;
+  background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cg fill='%230A192F' stroke='%230A192F' stroke-width='6' stroke-linejoin='round'%3E%3Cpath d='M46.93 28.22L38.14 7L61.86 7L53.07 28.22Z'/%3E%3Cpath d='M46.93 28.22L38.14 7L61.86 7L53.07 28.22Z' transform='rotate(45 50 50)'/%3E%3Cpath d='M46.93 28.22L38.14 7L61.86 7L53.07 28.22Z' transform='rotate(90 50 50)'/%3E%3Cpath d='M46.93 28.22L38.14 7L61.86 7L53.07 28.22Z' transform='rotate(135 50 50)'/%3E%3Cpath d='M46.93 28.22L38.14 7L61.86 7L53.07 28.22Z' transform='rotate(180 50 50)'/%3E%3Cpath d='M46.93 28.22L38.14 7L61.86 7L53.07 28.22Z' transform='rotate(225 50 50)'/%3E%3Cpath d='M46.93 28.22L38.14 7L61.86 7L53.07 28.22Z' transform='rotate(270 50 50)'/%3E%3Cpath d='M46.93 28.22L38.14 7L61.86 7L53.07 28.22Z' transform='rotate(315 50 50)'/%3E%3C/g%3E%3Ccircle cx='50' cy='50' r='11' fill='%230A192F'/%3E%3C/svg%3E");
+}
+/* Kanvas cheti materialga yumshoq singadi (qattiq "kesilgan qator" yo'q) */
+.chat-fade-top {
+  position: absolute;
+  inset: 0 0 auto 0;
+  height: 18px;
+  z-index: 4;
+  pointer-events: none;
+  background: linear-gradient(180deg, #f7f8fb, rgba(247, 248, 251, 0));
+}
+
+/* ── Pufaklar ──────────────────────────────────────────────────────
+   Dumcha (tail) ATAYLAB yo'q: u burchakda uzilib qoladigan artefakt
+   berardi. O'rniga zamonaviy messenjerlar naqshi — GURUHLASH: ketma-ket
+   xabarlarda qo'shni burchaklar toraytiriladi, guruh chetlari to'liq
+   yumaloq qoladi. Shakl har doim toza, hech qanday "o'tkir burchak" yo'q. */
+.bubble {
+  --bubble-r: 20px;
+  --bubble-r-tight: 7px;
+  position: relative;
+  border-radius: var(--bubble-r);
+}
+/* Chiquvchi — tekis slab emas: yuqoridan pastga nozik gradient + rangli
+   soya. Shu ikkisi "qog'ozga bosilgan" emas, "yorug'lik chiqaradigan"
+   sirt hissini beradi (o'rtacha rang oq matn uchun AA: 4.6:1). */
+.bubble-out {
+  background: linear-gradient(180deg, #0a84ff 0%, #0059d6 100%);
+  color: #ffffff;
+  box-shadow:
+    0 1px 2px rgba(0, 61, 138, 0.22),
+    inset 0 0.5px 0 rgba(255, 255, 255, 0.22);
+}
+/* Kiruvchi — kanvasdan ko'tarilgan oq varaq */
+.bubble-in {
+  background: #ffffff;
+  color: var(--ios-label);
+  border: none;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.07);
+}
+/* Guruhlash: qo'shni tomondagi burchak toraytiriladi */
+.bubble-mid-out {
+  border-top-right-radius: var(--bubble-r-tight);
+}
+.bubble-mid-in {
+  border-top-left-radius: var(--bubble-r-tight);
+}
+.bubble-cont-out {
+  border-bottom-right-radius: var(--bubble-r-tight);
+}
+.bubble-cont-in {
+  border-bottom-left-radius: var(--bubble-r-tight);
+}
+
+/* Vaqt pufak ICHIDA, oxirgi qator bilan bir qatorda (Telegram naqshi):
+   pufak matnni quchoqlaydi, ostida bo'sh qator qolmaydi. `bubble-gap`
+   oxirgi qatorda vaqt uchun joy ajratadi. */
+.bubble-meta {
+  position: absolute;
+  right: 12px;
+  bottom: 6px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 11px;
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
   pointer-events: none;
 }
-.bubble-tail-out::after {
-  right: -6px;
-  background: #007aff;
-  -webkit-mask-image: radial-gradient(circle at 0 0, transparent 12px, #000 12.5px);
-  mask-image: radial-gradient(circle at 0 0, transparent 12px, #000 12.5px);
-  border-bottom-left-radius: 14px;
+.bubble-gap {
+  display: inline-block;
+  height: 1px;
+  vertical-align: bottom;
 }
-.bubble-tail-in::after {
-  left: -6px;
-  background: #e9e9eb;
-  -webkit-mask-image: radial-gradient(circle at 100% 0, transparent 12px, #000 12.5px);
-  mask-image: radial-gradient(circle at 100% 0, transparent 12px, #000 12.5px);
-  border-bottom-right-radius: 14px;
+/* Media ustidagi vaqt — o'qilishi uchun to'q shisha kapsula */
+.bubble-meta-over {
+  right: 8px;
+  bottom: 8px;
+  padding: 2px 7px;
+  border-radius: 999px;
+  color: #fff;
+  background: rgba(0, 0, 0, 0.38);
+  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(8px);
+}
+
+/* Yuborilmoqda — pufak ustidan bir marta yorug'lik yuguradi. Bu holatni
+   ikonka bilan emas, MATERIAL bilan aytadi: tez tarmoqda deyarli
+   sezilmaydi, sekin tarmoqda esa "ketyapti" degani aniq ko'rinadi. */
+.bubble-pending {
+  overflow: hidden;
+}
+.bubble-pending::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: linear-gradient(
+    100deg,
+    transparent 34%,
+    rgba(255, 255, 255, 0.26) 50%,
+    transparent 66%
+  );
+  transform: translateX(-100%);
+  animation: bubbleSending 1.15s var(--ease-ios) infinite;
+}
+@keyframes bubbleSending {
+  to {
+    transform: translateX(100%);
+  }
+}
+
+/* Yetkazildi / Ko'rildi — HAR pufakda belgicha emas, faqat oxirgi
+   o'z xabaring ostida bitta qator (iMessage). Shovqin keskin kamayadi. */
+.bubble-status {
+  margin-top: 2px;
+  padding-right: 4px;
+  font-size: 11px;
+  line-height: 1.2;
+  color: var(--ios-label-tertiary, #a1a1a6);
+  animation: statusIn 0.3s var(--ease-ios) both;
+}
+@keyframes statusIn {
+  from {
+    opacity: 0;
+    transform: translateY(-2px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
 }
 
 /* Yozmoqda — iOS uch nuqta */
@@ -603,6 +730,70 @@ select:-webkit-autofill {
     transform: scale(1.55);
     opacity: 0;
   }
+}
+
+/* ── COMPOSER — yagona kapsula (biriktirish + matn + yuborish) ──────
+   Ilgari uchta alohida boshqaruv qatorda "suzib" turardi va bo'sh
+   maydonda o'lik (disabled) yuborish tugmasi qolardi. Endi hammasi
+   BITTA kapsula ichida: chekka boshqaruvlar matn bilan bir sirtda. */
+.composer-field {
+  background: #ffffff;
+  border-radius: 22px;
+  box-shadow:
+    0 0 0 0.5px rgba(60, 60, 67, 0.22),
+    0 1px 2px rgba(0, 0, 0, 0.04);
+  transition: box-shadow 0.2s var(--ease-ios);
+}
+.composer-field:focus-within {
+  box-shadow:
+    0 0 0 1.5px rgba(10, 132, 255, 0.55),
+    0 1px 3px rgba(0, 90, 200, 0.1);
+}
+
+/* Yuborish tugmasi — matn paydo bo'lganda O'ZI springlab chiqadi
+   (bo'sh maydonda umuman turmaydi: o'lik boshqaruv yo'q). */
+@keyframes sendPop {
+  0% {
+    opacity: 0;
+    transform: scale(0.4) rotate(-25deg);
+  }
+  100% {
+    opacity: 1;
+    transform: none;
+  }
+}
+.btn-send {
+  background: linear-gradient(180deg, #0a84ff 0%, #0064e0 100%);
+  color: #fff;
+  box-shadow: 0 1px 3px rgba(0, 80, 190, 0.38);
+  animation: sendPop 0.26s cubic-bezier(0.34, 1.42, 0.64, 1) both;
+  transition:
+    transform 0.16s var(--ease-ios),
+    filter 0.16s var(--ease-ios);
+}
+.btn-send:active {
+  transform: scale(0.86);
+}
+.btn-send:disabled {
+  background: rgba(60, 60, 67, 0.18);
+  color: rgba(60, 60, 67, 0.5);
+  box-shadow: none;
+}
+
+/* Yumaloq ikonka boshqaruvlari (biriktirish, mikrofon) — sirtsiz,
+   faqat bosilganda/hover'da yumshoq fill (iOS bar tugmasi). */
+.btn-round {
+  transition:
+    background-color 0.18s var(--ease-ios),
+    color 0.18s var(--ease-ios),
+    transform 0.16s var(--ease-ios);
+}
+.btn-round:hover {
+  background: rgba(60, 60, 67, 0.06);
+}
+.btn-round:active {
+  background: rgba(60, 60, 67, 0.12);
+  transform: scale(0.92);
 }
 
 /* ═══ MATN GRADIENTLARI (Apple — juda sokin) ═══════════════════════════ */
@@ -883,10 +1074,13 @@ select:-webkit-autofill {
 }
 
 :root {
+  /* Spektr ATAYLAB tor: ko'k → indigo → bitta yumshoq binafsha nuqta.
+     Pushti/magenta OLIB TASHLANDI — u "kamalak" (vibe-code) hidini berardi
+     va mahsulotning yagona tint oilasidan chiqib ketardi. */
   --ai-1: #0a84ff; /* systemBlue */
-  --ai-2: #5856d6; /* systemIndigo */
-  --ai-3: #af52de; /* systemPurple */
-  --ai-4: #ff2d55; /* systemPink */
+  --ai-2: #3f7bf5; /* ko'k → indigo o'tishi */
+  --ai-3: #5856d6; /* systemIndigo */
+  --ai-4: #7b62e0; /* yumshoq binafsha — tor "issiq" nuqta */
   /* Ko'k → indigo asosiy; siyoh va pushti faqat "issiq" nuqta sifatida
      (spektr aylanganda tor yoy) — hoshiya jiddiy qoladi, kamalak emas. */
   --ai-spectrum: conic-gradient(
@@ -1308,6 +1502,9 @@ select:-webkit-autofill {
   .msg-pop,
   .row-in,
   .jump-btn,
+  .btn-send,
+  .bubble-status,
+  .bubble-pending::after,
   .ai-gather {
     animation: none !important;
   }
@@ -1331,12 +1528,15 @@ select:-webkit-autofill {
   .ai-open-text,
   .msg-pop,
   .row-in,
-  .jump-btn {
+  .jump-btn,
+  .btn-send,
+  .bubble-status {
     opacity: 1;
     transform: none;
     filter: none;
   }
-  .ai-scan::after {
+  .ai-scan::after,
+  .bubble-pending::after {
     display: none;
   }
   .reveal,

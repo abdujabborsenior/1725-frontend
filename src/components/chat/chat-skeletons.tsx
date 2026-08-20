@@ -48,10 +48,10 @@ export function MessagesSkeleton() {
         <div key={i} className={cn('flex', r.mine ? 'justify-end' : 'justify-start')}>
           <div
             className={cn(
-              'skeleton max-w-[75%] rounded-2xl',
+              'skeleton max-w-[75%] rounded-[20px]',
               r.w,
               r.h,
-              r.mine ? 'rounded-br-md' : 'rounded-bl-md',
+              r.mine ? 'rounded-br-[7px]' : 'rounded-bl-[7px]',
             )}
           />
         </div>
@@ -64,7 +64,7 @@ export function MessagesSkeleton() {
 export function ChatOpeningSkeleton() {
   return (
     <div className="flex h-full w-full flex-col overflow-hidden" aria-hidden>
-      <div className="flex items-center gap-3 border-b border-slate-200 bg-white/90 px-3 py-2.5">
+      <div className="material-bar hairline-b flex items-center gap-3 px-3 py-2.5">
         <div className="skeleton h-9 w-9 shrink-0 rounded-lg" />
         <div className="skeleton h-10 w-10 shrink-0 rounded-full" />
         <div className="min-w-0 flex-1 space-y-2">
@@ -72,11 +72,11 @@ export function ChatOpeningSkeleton() {
           <div className="skeleton h-2.5 w-20 rounded-md" />
         </div>
       </div>
-      <div className="min-h-0 flex-1 bg-surface-soft">
+      <div className="chat-canvas min-h-0 flex-1">
         <MessagesSkeleton />
       </div>
-      <div className="border-t border-slate-200 bg-white px-3 py-2.5">
-        <div className="skeleton h-11 w-full rounded-2xl" />
+      <div className="material-bar hairline-t px-3 py-2.5">
+        <div className="skeleton h-11 w-full rounded-[22px]" />
       </div>
     </div>
   );

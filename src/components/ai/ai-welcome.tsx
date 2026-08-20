@@ -22,10 +22,10 @@ const EXAMPLES = [
 const GATHER = [
   { a: 12, r: 96, d: 0, c: '#0A84FF' },
   { a: 58, r: 74, d: 0.06, c: '#5856D6' },
-  { a: 104, r: 108, d: 0.12, c: '#AF52DE' },
+  { a: 104, r: 108, d: 0.12, c: '#7B62E0' },
   { a: 150, r: 82, d: 0.04, c: '#0A84FF' },
   { a: 196, r: 100, d: 0.16, c: '#5856D6' },
-  { a: 242, r: 70, d: 0.1, c: '#FF2D55' },
+  { a: 242, r: 70, d: 0.1, c: '#7B62E0' },
   { a: 288, r: 104, d: 0.02, c: '#5856D6' },
   { a: 334, r: 86, d: 0.14, c: '#0A84FF' },
 ];
@@ -51,7 +51,7 @@ export function AiWelcome({
   disabled?: boolean;
 }) {
   return (
-    <div className="py-4 text-center sm:py-6">
+    <div className="py-3 text-center sm:py-6">
       {/* Ochilish: sochilgan loyihalar markazga yig'iladi → uchqun yonadi.
           Nuqtalar mark BILAN BIR VAQTDA harakat qiladi (mark spring bilan
           ochilayotganda ular ichkariga cho'kadi) — bitta yaxlit lahza. */}
@@ -77,7 +77,7 @@ export function AiWelcome({
       </span>
 
       <h2
-        className="ai-open-text mt-5 text-title-2 font-semibold tracking-tight text-brand-900"
+        className="ai-open-text mt-4 text-title-2 font-semibold tracking-tight text-brand-900 sm:mt-5"
         style={{ '--ai-delay': '0.12s' } as CSSProperties}
       >
         Muammoingizni ayting — yechimini topaman
@@ -97,7 +97,7 @@ export function AiWelcome({
       {/* Qanday ishlaydi — uch qadam. Mobilda ustun, desktopda bir qator:
           "qora quti" taassurotini yo'qotadi, ishonch beradi. */}
       <div
-        className="ai-open-text mx-auto mt-6 flex w-fit flex-col items-start gap-2 sm:flex-row sm:items-center sm:gap-6"
+        className="ai-open-text mx-auto mt-5 flex w-fit flex-col items-start gap-1.5 sm:mt-6 sm:flex-row sm:items-center sm:gap-6"
         style={{ '--ai-delay': '0.28s' } as CSSProperties}
       >
         {HOW.map(({ icon: Icon, label }) => (
@@ -109,7 +109,7 @@ export function AiWelcome({
       </div>
 
       {!disabled && (
-        <div className="mx-auto mt-6 grid max-w-2xl gap-2 sm:grid-cols-2">
+        <div className="mx-auto mt-5 grid max-w-2xl gap-2 sm:mt-6 sm:grid-cols-2">
           {EXAMPLES.map((example, i) => (
             <button
               key={example}

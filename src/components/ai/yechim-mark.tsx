@@ -72,12 +72,12 @@ export function YechimMark({
           <linearGradient id={`${id}-g`} x1="10" y1="6" x2="38" y2="42" gradientUnits="userSpaceOnUse">
             <stop stopColor="#0A84FF" />
             <stop offset="0.5" stopColor="#5856D6" />
-            <stop offset="1" stopColor="#AF52DE" />
+            <stop offset="1" stopColor="#7B62E0" />
           </linearGradient>
           <linearGradient id={`${id}-r`} x1="6" y1="6" x2="42" y2="42" gradientUnits="userSpaceOnUse">
             <stop stopColor="#0A84FF" />
             <stop offset="0.55" stopColor="#5856D6" />
-            <stop offset="1" stopColor="#FF2D55" />
+            <stop offset="1" stopColor="#7B62E0" />
           </linearGradient>
           <radialGradient id={`${id}-h`} cx="0.5" cy="0.5" r="0.5">
             <stop stopColor="#5856D6" stopOpacity="0.28" />

@@ -5,7 +5,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useQueryClient } from '@tanstack/react-query';
 import {
-  ChevronLeft, Spinner, Users, Hash, MoreHorizontal, Info, LogOut, Settings, ArrowDown,
+  ChevronLeft, Spinner, Users, MoreHorizontal, Info, LogOut, Settings, ArrowDown,
 } from '@/components/icons';
 import { chatApi, getErrorMessage, type SendMessagePayload } from '@/lib/api';
 import { getSocket } from '@/lib/socket';
@@ -309,13 +309,13 @@ export function ChatWindow({ conversationId }: { conversationId: string }) {
           onClick={() => router.push('/messages')}
           aria-label="Ortga"
           title="Ortga"
-          className="tappable flex h-9 w-9 shrink-0 items-center justify-center rounded-full text-accent-700"
+          className="btn-round flex h-9 w-9 shrink-0 items-center justify-center rounded-full text-accent-600"
         >
           <ChevronLeft className="h-[22px] w-[22px]" strokeWidth={3} />
         </button>
         {isGroup ? (
-          <button onClick={() => setInfoOpen(true)} className="flex h-10 w-10 items-center justify-center rounded-full bg-iris-500 text-white">
-            {conv.avatarUrl ? <Avatar src={conv.avatarUrl} name={conv.title} size={40} /> : <Hash className="h-5 w-5" />}
+          <button onClick={() => setInfoOpen(true)} aria-label="Guruh ma'lumoti" className="shrink-0">
+            <Avatar src={conv.avatarUrl} name={conv.title} size={40} />
           </button>
         ) : (
           <Link href={headerHref}><Avatar src={conv.avatarUrl} name={conv.title} size={40} online={online} /></Link>
@@ -325,7 +325,7 @@ export function ChatWindow({ conversationId }: { conversationId: string }) {
           <p className="truncate text-callout font-semibold text-brand-900">{conv.title}</p>
           <p className="truncate text-footnote text-slate-500">
             {typingUser ? <span className="text-accent-600">yozmoqda…</span>
-              : isGroup ? <span className="flex items-center gap-1"><Users className="h-3 w-3" /> {conv.participantCount} a&apos;zo{conv.username ? <span className="text-iris-500"> · @{conv.username}</span> : null}</span>
+              : isGroup ? <span className="flex items-center gap-1"><Users className="h-3 w-3" /> {conv.participantCount} a&apos;zo{conv.username ? <span> · @{conv.username}</span> : null}</span>
               : online ? <span className="text-accent-600">onlayn</span>
               : conv.otherUser?.lastSeenAt ? `oxirgi faollik ${timeAgo(conv.otherUser.lastSeenAt)}` : ''}
           </p>
@@ -337,7 +337,7 @@ export function ChatWindow({ conversationId }: { conversationId: string }) {
             <button
               onClick={() => setMenuOpen((v) => !v)}
               aria-label="Menyu"
-              className="tappable flex h-9 w-9 items-center justify-center rounded-full text-accent-700"
+              className="btn-round flex h-9 w-9 items-center justify-center rounded-full text-accent-600"
             >
               <MoreHorizontal className="h-[22px] w-[22px]" />
             </button>
@@ -369,11 +369,13 @@ export function ChatWindow({ conversationId }: { conversationId: string }) {
 
       {/* Messages — yuklanishda Telegram uslubidagi bubble skeletonlar */}
       {loading ? (
-        <div className="min-h-0 flex-1 overflow-hidden bg-white">
+        <div className="chat-canvas min-h-0 flex-1 overflow-hidden">
           <MessagesSkeleton />
         </div>
       ) : (
-      <div className="relative flex min-h-0 flex-1 flex-col">
+      <div className="chat-canvas relative flex min-h-0 flex-1 flex-col">
+      {/* Kontent header materialiga yumshoq singadi (qattiq kesilgan qator yo'q) */}
+      <span aria-hidden className="chat-fade-top" />
       <div
         ref={scrollRef}
         onScroll={(e) => {
@@ -384,7 +386,7 @@ export function ChatWindow({ conversationId }: { conversationId: string }) {
           setAtBottom(bottom);
           if (bottom && newCount) setNewCount(0);
         }}
-        className="chat-scroll flex min-h-0 flex-1 flex-col overflow-y-auto overscroll-contain bg-white px-3 py-4"
+        className="chat-scroll relative flex min-h-0 flex-1 flex-col overflow-y-auto overscroll-contain px-3 py-4"
       >
         {messages.length === 0 && (
           <ChatEmptyState
@@ -399,7 +401,10 @@ export function ChatWindow({ conversationId }: { conversationId: string }) {
         {messages.map((m, i) => {
           const mine = m.sender?.id === me?.id;
           const prev = messages[i - 1];
+          const next = messages[i + 1];
           const showAvatar = !prev || prev.sender?.id !== m.sender?.id;
+          // Guruh oxiri — keyingi xabar boshqa muallifdan yoki boshqa kundan
+          const groupEnd = !next || next.sender?.id !== m.sender?.id || !sameDay(m.createdAt, next.createdAt);
           const isLastMine = mine && i === messages.length - 1;
           // Kun almashganda — yopishqoq sana ajratkichi (Telegram naqshi):
           // uzun suhbatda "qachon?" savoli scroll paytida ham javobsiz qolmaydi.
@@ -413,6 +418,7 @@ export function ChatWindow({ conversationId }: { conversationId: string }) {
                 mine={mine}
                 isGroup={isGroup}
                 showAvatar={showAvatar}
+                groupEnd={groupEnd}
                 read={isLastMine ? peerRead : undefined}
                 onReply={setReplyTo}
                 onEdit={setEditing}
@@ -423,9 +429,9 @@ export function ChatWindow({ conversationId }: { conversationId: string }) {
         {/* Yozmoqda — yalang'och nuqtalar emas, haqiqiy kiruvchi pufak ichida */}
         {typingUser && (
           <div className="flex items-end gap-2">
-            <div className="bubble-in bubble-tail-in msg-pop msg-pop-in relative rounded-[18px] px-3.5 py-2.5">
+            <div className="bubble bubble-in msg-pop msg-pop-in relative px-3.5 py-2.5">
               {isGroup && (
-                <span className="mb-0.5 block text-caption-2 font-semibold text-iris-600">
+                <span className="mb-0.5 block text-caption-2 font-semibold text-accent-700">
                   {typingUser}
                 </span>
               )}
@@ -475,12 +481,12 @@ export function ChatWindow({ conversationId }: { conversationId: string }) {
       <Modal open={infoOpen} onClose={() => setInfoOpen(false)} title="Guruh ma'lumoti">
         <div className="space-y-4">
           <div className="flex items-center gap-3">
-            <span className="flex h-14 w-14 items-center justify-center rounded-2xl bg-iris-500 text-white">
-              {conv.avatarUrl ? <Avatar src={conv.avatarUrl} name={conv.title} size={56} /> : <Hash className="h-6 w-6" />}
+            <span className="shrink-0">
+              <Avatar src={conv.avatarUrl} name={conv.title} size={56} />
             </span>
             <div className="min-w-0">
               <p className="truncate text-title-3 font-bold text-brand-900">{conv.title}</p>
-              {conv.username && <p className="text-subhead text-iris-600">@{conv.username}</p>}
+              {conv.username && <p className="text-subhead text-accent-700">@{conv.username}</p>}
               <p className="flex items-center gap-1 text-caption-1 text-slate-500"><Users className="h-3 w-3" /> {conv.participantCount} a&apos;zo</p>
             </div>
           </div>

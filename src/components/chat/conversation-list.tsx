@@ -146,7 +146,7 @@ export function ConversationList({ activeId }: { activeId?: string }) {
             onClick={() => router.push('/')}
             aria-label="Ortga"
             title="Ortga"
-            className="tappable flex h-9 w-9 items-center justify-center rounded-full text-accent-700"
+            className="btn-round flex h-9 w-9 items-center justify-center rounded-full text-accent-600 md:hidden"
           >
             <ChevronLeft className="h-[22px] w-[22px]" strokeWidth={3} />
           </button>
@@ -154,11 +154,11 @@ export function ConversationList({ activeId }: { activeId?: string }) {
         </div>
         <div className="flex items-center gap-1">
           {canCreateGroup && (
-            <button onClick={() => setGroupModal(true)} aria-label="Guruh yaratish" className="tappable flex h-9 w-9 items-center justify-center rounded-full text-accent-700">
+            <button onClick={() => setGroupModal(true)} aria-label="Guruh yaratish" className="btn-round flex h-9 w-9 items-center justify-center rounded-full text-accent-600">
               <UsersRound className="h-5 w-5" />
             </button>
           )}
-          <Link href="/discover" aria-label="Yangi suhbat" className="tappable flex h-9 w-9 items-center justify-center rounded-full text-accent-700">
+          <Link href="/discover" aria-label="Yangi suhbat" className="btn-round flex h-9 w-9 items-center justify-center rounded-full text-accent-600">
             <MessageSquarePlus className="h-5 w-5" />
           </Link>
         </div>
@@ -324,10 +324,10 @@ function EmptyState({ filter, hasAny }: { filter: Filter; hasAny: boolean }) {
   }
   return (
     <div className="px-4 py-16 text-center">
-      <MessageSquarePlus className="mx-auto mb-2 h-8 w-8 text-slate-300" />
-      <p className="text-subhead font-semibold text-brand-900">{hasAny ? 'Bu yerda hech narsa yo‘q' : 'Hali suhbatlar yo‘q'}</p>
-      <p className="mt-1 text-caption-1 text-slate-500">Hamjamiyatdan odam toping va suhbat boshlang.</p>
-      <Link href="/discover" className="mt-3 inline-block text-caption-1 font-semibold text-accent-700 hover:underline">Odamlarni topish →</Link>
+      <MessageSquarePlus className="mx-auto mb-2 h-9 w-9 text-slate-300" />
+      <p className="text-callout font-semibold text-brand-900">{hasAny ? 'Bu yerda hech narsa yo‘q' : 'Hali suhbatlar yo‘q'}</p>
+      <p className="mt-1 text-subhead text-slate-500">Hamjamiyatdan odam toping va suhbat boshlang.</p>
+      <Link href="/discover" className="tappable mt-3 inline-block text-subhead font-medium text-accent-700">Odamlarni topish</Link>
     </div>
   );
 }

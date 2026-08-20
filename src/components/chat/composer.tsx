@@ -294,13 +294,19 @@ export function Composer({
 
   const mmss = `${Math.floor(rec.seconds / 60)}:${String(rec.seconds % 60).padStart(2, '0')}`;
   const hasStaged = staged.length > 0;
-  // Ovoz/video xabar tugmalari mavjud bo'lmasa — o'ng tomon bo'sh qolmasin:
-  // yuborish tugmasi doimo turadi (matn yo'q bo'lsa — o'chirilgan holatda).
   const hasQuickRecord = !voiceBlocked || !roundBlocked;
-  const showSendBtn = isEditing || hasStaged || !!text.trim() || !hasQuickRecord;
+  // Yuborish tugmasi FAQAT yuboriladigan narsa bo'lganda ko'rinadi (spring
+  // bilan chiqadi). Ilgari bo'sh maydonda o'chirilgan "arvoh" tugma turardi —
+  // hech narsa qilmaydigan boshqaruv interfeysda qolmasin.
+  const showSendBtn = isEditing || hasStaged || !!text.trim();
 
+  // z-30: `material-bar` dagi backdrop-filter YANGI stacking context ochadi —
+  // busiz biriktirish menyusi (z-20) xabar pufaklari (z-10) OSTIDA qolardi.
   return (
-    <div className="material-bar hairline-t px-3 py-2.5" style={{ paddingBottom: 'max(0.625rem, env(safe-area-inset-bottom))' }}>
+    <div
+      className="material-bar hairline-t relative z-30 px-3 py-2.5"
+      style={{ paddingBottom: 'max(0.625rem, env(safe-area-inset-bottom))' }}
+    >
       {/* Cheklov banneri */}
       {restrictionList.length > 0 && !isEditing && (
         <div className="mb-2 flex items-center gap-2 rounded-ios-md bg-rose-50 px-3 py-2 text-footnote font-medium text-rose-600">
@@ -394,142 +400,165 @@ export function Composer({
 
       {/* Voice recording bar */}
       {rec.kind === 'audio' ? (
-        <div className="flex items-center gap-3 rounded-full bg-fill-tertiary px-3 py-2">
-          <button onClick={rec.cancel} className="rec-pulse flex h-9 w-9 items-center justify-center rounded-full bg-rose-500 text-white">
+        <div className="composer-field flex items-center gap-3 !rounded-full px-2 py-1.5">
+          <button
+            onClick={rec.cancel}
+            aria-label="Bekor qilish"
+            className="rec-pulse flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-rose-500 text-white"
+          >
             <Trash2 className="h-4 w-4" />
           </button>
-          <div className="flex flex-1 items-center gap-[2px]">
+          <div className="flex h-7 min-w-0 flex-1 items-center gap-[3px] overflow-hidden">
             {rec.waveform.map((h, i) => (
-              <span key={i} className="w-[3px] rounded-full bg-accent-500" style={{ height: `${Math.max(15, h)}%` }} />
+              <span
+                key={i}
+                className="w-[3px] shrink-0 rounded-full bg-accent-500/80"
+                style={{ height: `${Math.max(15, h)}%` }}
+              />
             ))}
           </div>
-          <span className="text-subhead font-semibold tabular-nums text-brand-900">{mmss}</span>
+          <span className="shrink-0 text-subhead font-semibold tabular-nums text-brand-900">{mmss}</span>
           <button
             onClick={finishRecording}
             disabled={uploading}
-            className="tappable flex h-9 w-9 items-center justify-center rounded-full bg-accent-500 text-white"
+            aria-label="Yuborish"
+            className="btn-send flex h-9 w-9 shrink-0 items-center justify-center rounded-full"
           >
             {uploading ? (
               <Spinner className="h-4 w-4 animate-spin" />
             ) : (
-              <ArrowUp className="h-[18px] w-[18px]" strokeWidth={3.2} />
+              <ArrowUp className="h-[19px] w-[19px]" strokeWidth={3} />
             )}
           </button>
         </div>
       ) : rec.kind === 'video' ? null : (
         <div className="flex items-end gap-2">
-          {/* Biriktirish — edit rejimida yashiringan */}
-          {!isEditing && (
-            <div ref={attachRef} className="relative shrink-0">
-              <button
-                onClick={() => setAttachOpen((o) => !o)}
-                disabled={uploading}
-                aria-label="Biriktirish"
-                aria-expanded={attachOpen}
-                className={cn(
-                  'tappable flex h-10 w-10 items-center justify-center rounded-full text-accent-700',
-                  attachOpen && 'bg-fill-tertiary',
+          {/* Yagona kapsula: biriktirish + matn + yuborish bitta sirtda —
+              ilgari uchtasi qatorda alohida "suzib" turardi. */}
+          <div className="composer-field flex min-w-0 flex-1 items-end gap-1 p-1">
+            {/* Biriktirish — edit rejimida yashiringan */}
+            {!isEditing && (
+              <div ref={attachRef} className="relative shrink-0">
+                <button
+                  onClick={() => setAttachOpen((o) => !o)}
+                  disabled={uploading}
+                  aria-label="Biriktirish"
+                  aria-expanded={attachOpen}
+                  className={cn(
+                    'btn-round flex h-9 w-9 items-center justify-center rounded-full text-slate-500',
+                    attachOpen && 'bg-fill-tertiary text-accent-600',
+                  )}
+                >
+                  {uploading ? (
+                    <Spinner className="h-5 w-5 animate-spin" />
+                  ) : (
+                    <Plus
+                      className={cn(
+                        'h-[22px] w-[22px] transition-transform duration-250 ease-ios',
+                        attachOpen && 'rotate-45',
+                      )}
+                      strokeWidth={2.2}
+                    />
+                  )}
+                </button>
+
+                {/* Manba menyusi — Telegram uslubi */}
+                {attachOpen && (
+                  <div className="material-menu absolute bottom-12 left-0 z-20 w-56 origin-bottom-left animate-scale-in rounded-ios-lg p-1 shadow-modal ring-1 ring-black/[0.06]">
+                    <button
+                      onClick={() => pickFrom(galleryRef)}
+                      className="flex w-full items-center gap-3 rounded-[9px] px-2.5 py-2 text-left transition-colors duration-150 active:bg-fill-tertiary"
+                    >
+                      <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-[9px] bg-accent-500 text-white">
+                        <Images className="h-[18px] w-[18px]" />
+                      </span>
+                      <span className="min-w-0">
+                        <span className="block text-body text-brand-900">Galereya</span>
+                        <span className="block text-caption-1 text-slate-500">
+                          {VIDEO_ENABLED ? 'Rasm va video' : 'Rasm'}
+                        </span>
+                      </span>
+                    </button>
+                    {/* Kamera — faqat sensorli qurilmalarda (desktop'da capture ishlamaydi) */}
+                    <button
+                      onClick={() => pickFrom(cameraRef)}
+                      className="hidden w-full items-center gap-3 rounded-[9px] px-2.5 py-2 text-left transition-colors duration-150 active:bg-fill-tertiary [@media(pointer:coarse)]:flex"
+                    >
+                      <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-[9px] bg-iris-500 text-white">
+                        <Camera className="h-[18px] w-[18px]" />
+                      </span>
+                      <span className="min-w-0">
+                        <span className="block text-body text-brand-900">Kamera</span>
+                        <span className="block text-caption-1 text-slate-500">Suratga olish</span>
+                      </span>
+                    </button>
+                    <button
+                      onClick={() => pickFrom(fileRef)}
+                      className="flex w-full items-center gap-3 rounded-[9px] px-2.5 py-2 text-left transition-colors duration-150 active:bg-fill-tertiary"
+                    >
+                      <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-[9px] bg-slate-400 text-white">
+                        <FileText className="h-[18px] w-[18px]" />
+                      </span>
+                      <span className="min-w-0">
+                        <span className="block text-body text-brand-900">Fayl</span>
+                        <span className="block text-caption-1 text-slate-500">
+                          {VOICE_ENABLED ? 'Hujjat, audio, arxiv' : 'Hujjat, arxiv'}
+                        </span>
+                      </span>
+                    </button>
+                  </div>
                 )}
+              </div>
+            )}
+
+            <textarea
+              value={text}
+              disabled={textBlocked && !isEditing && !hasStaged}
+              onChange={(e) => { setText(e.target.value); emitTyping(); }}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); primaryAction(); }
+                if (e.key === 'Escape' && isEditing) { setText(''); onCancelEdit?.(); }
+              }}
+              rows={1}
+              placeholder={
+                isEditing ? 'Xabarni tahrirlang…'
+                  : hasStaged ? 'Izoh qo‘shing (ixtiyoriy)…'
+                  : textBlocked ? 'Bu guruhda matn taqiqlangan' : 'Xabar yozing…'
+              }
+              className="chat-scroll max-h-32 min-h-[36px] flex-1 resize-none bg-transparent px-2 py-2 text-body leading-snug text-brand-900 placeholder:text-slate-400 focus:outline-none disabled:cursor-not-allowed disabled:opacity-50"
+            />
+
+            {showSendBtn && (
+              <button
+                onClick={primaryAction}
+                disabled={uploading || savingEdit}
+                className={cn(
+                  'btn-send flex h-9 w-9 shrink-0 items-center justify-center rounded-full',
+                  isEditing && 'bg-none bg-iris-600',
+                )}
+                aria-label={isEditing ? 'Saqlash' : 'Yuborish'}
               >
-                {uploading ? (
-                  <Spinner className="h-5 w-5 animate-spin" />
+                {uploading || savingEdit ? (
+                  <Spinner className="h-[18px] w-[18px] animate-spin" />
+                ) : isEditing ? (
+                  <Check className="h-[18px] w-[18px]" strokeWidth={3} />
                 ) : (
-                  <Paperclip className="h-[22px] w-[22px]" />
+                  <ArrowUp className="h-[19px] w-[19px]" strokeWidth={3} />
                 )}
               </button>
+            )}
+          </div>
 
-              {/* Manba menyusi — Telegram uslubi */}
-              {attachOpen && (
-                <div className="material-menu absolute bottom-12 left-0 z-20 w-56 origin-bottom-left animate-scale-in rounded-ios-lg p-1 shadow-modal ring-1 ring-black/[0.06]">
-                  <button
-                    onClick={() => pickFrom(galleryRef)}
-                    className="flex w-full items-center gap-3 rounded-[9px] px-2.5 py-2 text-left transition-colors duration-150 active:bg-fill-tertiary"
-                  >
-                    <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-[9px] bg-accent-500 text-white">
-                      <Images className="h-[18px] w-[18px]" />
-                    </span>
-                    <span className="min-w-0">
-                      <span className="block text-body text-brand-900">Galereya</span>
-                      <span className="block text-caption-1 text-slate-500">
-                        {VIDEO_ENABLED ? 'Rasm va video' : 'Rasm'}
-                      </span>
-                    </span>
-                  </button>
-                  {/* Kamera — faqat sensorli qurilmalarda (desktop'da capture ishlamaydi) */}
-                  <button
-                    onClick={() => pickFrom(cameraRef)}
-                    className="hidden w-full items-center gap-3 rounded-[9px] px-2.5 py-2 text-left transition-colors duration-150 active:bg-fill-tertiary [@media(pointer:coarse)]:flex"
-                  >
-                    <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-[9px] bg-iris-500 text-white">
-                      <Camera className="h-[18px] w-[18px]" />
-                    </span>
-                    <span className="min-w-0">
-                      <span className="block text-body text-brand-900">Kamera</span>
-                      <span className="block text-caption-1 text-slate-500">Suratga olish</span>
-                    </span>
-                  </button>
-                  <button
-                    onClick={() => pickFrom(fileRef)}
-                    className="flex w-full items-center gap-3 rounded-[9px] px-2.5 py-2 text-left transition-colors duration-150 active:bg-fill-tertiary"
-                  >
-                    <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-[9px] bg-slate-400 text-white">
-                      <FileText className="h-[18px] w-[18px]" />
-                    </span>
-                    <span className="min-w-0">
-                      <span className="block text-body text-brand-900">Fayl</span>
-                      <span className="block text-caption-1 text-slate-500">
-                        {VOICE_ENABLED ? 'Hujjat, audio, arxiv' : 'Hujjat, arxiv'}
-                      </span>
-                    </span>
-                  </button>
-                </div>
-              )}
-            </div>
-          )}
-
-          <textarea
-            value={text}
-            disabled={textBlocked && !isEditing && !hasStaged}
-            onChange={(e) => { setText(e.target.value); emitTyping(); }}
-            onKeyDown={(e) => {
-              if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); primaryAction(); }
-              if (e.key === 'Escape' && isEditing) { setText(''); onCancelEdit?.(); }
-            }}
-            rows={1}
-            placeholder={
-              isEditing ? 'Xabarni tahrirlang…'
-                : hasStaged ? 'Izoh qo‘shing (ixtiyoriy)…'
-                : textBlocked ? 'Bu guruhda matn taqiqlangan' : 'Xabar yozing…'
-            }
-            className="chat-scroll max-h-32 flex-1 resize-none rounded-[20px] border border-slate-200 bg-white px-4 py-2.5 text-body text-brand-900 placeholder:text-slate-400 focus:border-accent-400 focus:outline-none disabled:cursor-not-allowed disabled:opacity-50"
-          />
-
-          {showSendBtn ? (
-            <button
-              onClick={primaryAction}
-              disabled={uploading || savingEdit || (!isEditing && !hasStaged && !text.trim())}
-              className={cn(
-                'tappable-scale tappable flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-white disabled:opacity-40',
-                isEditing ? 'bg-iris-600' : 'bg-accent-500',
-              )}
-              aria-label={isEditing ? 'Saqlash' : 'Yuborish'}
-            >
-              {uploading || savingEdit ? (
-                <Spinner className="h-5 w-5 animate-spin" />
-              ) : isEditing ? (
-                <Check className="h-[18px] w-[18px]" strokeWidth={3} />
-              ) : (
-                <ArrowUp className="h-[18px] w-[18px]" strokeWidth={3.2} />
-              )}
-            </button>
-          ) : (
+          {/* Tez yozib yuborish — kapsuladan tashqarida (yozilayotgan matn bo'lsa
+              yuborish tugmasi o'rnini oladi) */}
+          {!showSendBtn && hasQuickRecord && (
             <>
               {!roundBlocked && (
                 <button
                   onClick={() => void startRec('video')}
                   aria-label="Dumaloq video"
                   title="Dumaloq video"
-                  className="tappable flex h-10 w-10 shrink-0 items-center justify-center rounded-full text-accent-700"
+                  className="btn-round flex h-10 w-10 shrink-0 items-center justify-center rounded-full text-slate-500"
                 >
                   <Video className="h-[22px] w-[22px]" />
                 </button>
@@ -539,7 +568,7 @@ export function Composer({
                   onClick={() => void startRec('audio')}
                   aria-label="Ovozli xabar"
                   title="Ovozli xabar"
-                  className="tappable flex h-10 w-10 shrink-0 items-center justify-center rounded-full text-accent-700"
+                  className="btn-round flex h-10 w-10 shrink-0 items-center justify-center rounded-full text-slate-500"
                 >
                   <Mic className="h-[22px] w-[22px]" />
                 </button>

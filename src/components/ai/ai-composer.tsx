@@ -6,7 +6,6 @@ import toast from 'react-hot-toast';
 import { ArrowUp, Mic, Spinner, StopCircleFill, X } from '@/components/icons';
 import { MAX_SECONDS, useWavRecorder } from '@/lib/wav-recorder';
 import { aiApi, getErrorMessage } from '@/lib/api';
-import { cn } from '@/lib/utils';
 
 const MAX_CHARS = 1200;
 
@@ -103,7 +102,7 @@ export function AiComposer({
           type="button"
           onClick={recorder.cancel}
           aria-label="Bekor qilish"
-          className="tappable flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-fill-tertiary text-slate-500"
+          className="btn-round flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-fill-tertiary text-slate-500"
         >
           <X className="h-[18px] w-[18px]" strokeWidth={2.5} />
         </button>
@@ -132,7 +131,7 @@ export function AiComposer({
           type="button"
           onClick={() => void finishRecording()}
           aria-label="Yozuvni tugatish"
-          className="tappable flex h-9 w-9 shrink-0 items-center justify-center rounded-full text-accent-600"
+          className="tappable-scale flex h-9 w-9 shrink-0 items-center justify-center rounded-full text-accent-600"
         >
           <StopCircleFill className="h-8 w-8" />
         </button>
@@ -176,7 +175,7 @@ export function AiComposer({
         onClick={() => void startRecording()}
         disabled={disabled || transcribing}
         aria-label="Ovozli xabar"
-        className="tappable flex h-9 w-9 shrink-0 items-center justify-center rounded-full text-slate-500 disabled:opacity-40"
+        className="btn-round flex h-9 w-9 shrink-0 items-center justify-center rounded-full text-slate-500 disabled:opacity-40"
       >
         {transcribing ? (
           <Spinner className="h-[19px] w-[19px] animate-spin" />
@@ -185,20 +184,18 @@ export function AiComposer({
         )}
       </button>
 
-      <button
-        type="button"
-        onClick={submit}
-        disabled={!canSend}
-        aria-label="Yuborish"
-        className={cn(
-          'flex h-9 w-9 shrink-0 items-center justify-center rounded-full transition-[background-color,opacity] duration-150 ease-ios',
-          canSend
-            ? 'tappable-scale bg-accent-600 text-white active:bg-accent-700'
-            : 'bg-fill-tertiary text-slate-400',
-        )}
-      >
-        <ArrowUp className="h-[19px] w-[19px]" strokeWidth={2.6} />
-      </button>
+      {value.trim().length > 0 && (
+        <button
+          type="button"
+          onClick={submit}
+          disabled={!canSend}
+          aria-label="Yuborish"
+          title={canSend ? 'Yuborish' : 'Kamida 8 ta belgi yozing'}
+          className="btn-send flex h-9 w-9 shrink-0 items-center justify-center rounded-full"
+        >
+          <ArrowUp className="h-[19px] w-[19px]" strokeWidth={3} />
+        </button>
+      )}
     </div>
   );
 }
