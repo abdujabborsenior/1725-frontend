@@ -29,6 +29,9 @@ export function Providers({ children }: { children: React.ReactNode }) {
       {children}
       <Toaster
         position="top-center"
+        // Navbar (sticky, ~52px) ustiga tushib logotipni yopib qolmasin —
+        // banner uning OSTIDAN chiqadi (iOS'dagi kabi tartib).
+        containerStyle={{ top: 'calc(env(safe-area-inset-top) + 64px)' }}
         toastOptions={{
           // iOS banner: och material sirt, to'q matn, chuqur yumshoq soya
           style: {

@@ -4,10 +4,22 @@ import { useEffect, useRef, useState } from 'react';
 import toast from 'react-hot-toast';
 
 import { ArrowUp, Mic, Spinner, StopCircleFill, X } from '@/components/icons';
-import { MAX_SECONDS, useWavRecorder } from '@/lib/wav-recorder';
+import {
+  MAX_SECONDS,
+  useWavRecorder,
+  type RecorderFailure,
+} from '@/lib/wav-recorder';
 import { aiApi, getErrorMessage } from '@/lib/api';
 
 const MAX_CHARS = 1200;
+
+/** Yozuv yuborilmaganda — sababi bo'yicha aniq maslahat (umumiy xato emas). */
+const FAILURE_HINT: Record<RecorderFailure, string> = {
+  empty: 'Yozuv olinmadi. Mikrofon tugmasini bosib, gapirib bo‘lgach to‘xtating.',
+  'too-short': 'Juda qisqa bo‘ldi — kamida bir gap aytib ko‘ring.',
+  silent:
+    'Ovoz eshitilmadi. Mikrofon ochiqligini tekshiring va telefonga yaqinroq gapiring.',
+};
 
 /**
  * AI kirish maydoni — iOS kapsula composer (chat composer bilan bir tilda).
@@ -18,6 +30,11 @@ const MAX_CHARS = 1200;
  *    to'xtatilganda audio serverga o'giriladi va **matn maydoniga tushadi**
  *    (darhol yuborilmaydi — foydalanuvchi ko'rib, tuzatib yuborishi mumkin).
  *    Bu ataylab: nutq tanish 100% aniq emas, matnni tasdiqlash — hurmat.
+ *
+ * ⚠️ O'lcham intizomi: maydon **bir qator** balandligida turadi va faqat
+ * YOZILGAN matn bilan o'sadi. Placeholder bo'yicha o'sish mumkin emas —
+ * Chrome'da `scrollHeight` placeholder o'ralganini ham hisoblaydi, shu sababli
+ * mobilda maydon ikki qator bo'lib ketardi (tugmalar esa mayda ko'rinardi).
  */
 export function AiComposer({
   onSubmit,
@@ -38,20 +55,34 @@ export function AiComposer({
   const [value, setValue] = useState('');
   const [fromVoice, setFromVoice] = useState(false);
   const [transcribing, setTranscribing] = useState(false);
+  /** Yozuv davomida hech bo'lmasa bir marta ovoz eshitildimi. */
+  const [heard, setHeard] = useState(false);
   const ref = useRef<HTMLTextAreaElement>(null);
+  const finishing = useRef(false);
   const recorder = useWavRecorder();
 
-  // Balandlikni kontentga moslash (maks ~5 qator)
+  // Balandlikni FAQAT yozilgan matnga moslash (maks ~5 qator).
   useEffect(() => {
     const el = ref.current;
     if (!el) return;
-    el.style.height = 'auto';
+    el.style.height = '';
+    if (!value) return; // bo'sh maydon — CSS'dagi bir qator balandligi
     el.style.height = `${Math.min(el.scrollHeight, 132)}px`;
   }, [value]);
 
   useEffect(() => {
     if (autoFocus) ref.current?.focus();
   }, [autoFocus]);
+
+  // Mikrofon jim qolayotganini DARHOL ko'rsatamiz — foydalanuvchi 90 soniya
+  // gapirib bo'lib, oxirida "ovoz yo'q" degan xabarni ko'rmasin.
+  useEffect(() => {
+    if (!recorder.recording) {
+      setHeard(false);
+      return;
+    }
+    if (recorder.level > 0.02) setHeard(true);
+  }, [recorder.level, recorder.recording]);
 
   // Maksimal davomiylikda avtomatik to'xtash (fayl hajmi cheklangan qoladi)
   useEffect(() => {
@@ -79,11 +110,22 @@ export function AiComposer({
   }
 
   async function finishRecording() {
-    const res = recorder.stop();
-    if (!res) return;
+    if (finishing.current) return; // avto-to'xtash va bosish bir vaqtda
+    finishing.current = true;
+    const res = await recorder.stop();
+    finishing.current = false;
+    // Jim / juda qisqa yozuv serverga UMUMAN yuborilmaydi: model bunday
+    // audioda matn "o'ylab topadi" (gallyutsinatsiya) — foydalanuvchi esa
+    // umuman aytmagan gapini ko'radi.
+    if (!res.ok) {
+      if (res.reason !== 'empty' || !recorder.error) {
+        toast.error(FAILURE_HINT[res.reason]);
+      }
+      return;
+    }
     setTranscribing(true);
     try {
-      const { text } = await aiApi.transcribe(res.blob);
+      const { text } = await aiApi.transcribe(res.result.blob);
       setValue((prev) => (prev ? `${prev.trim()} ${text}` : text).slice(0, MAX_CHARS));
       setFromVoice(true);
       ref.current?.focus();
@@ -95,16 +137,20 @@ export function AiComposer({
   }
 
   /* ── Yozuv rejimi ────────────────────────────────────────────── */
+  const noSignal = recorder.recording && !heard && recorder.seconds >= 3;
   if (recorder.recording) {
     return (
-      <div className="ai-aura flex items-center gap-3 rounded-full px-4 py-2.5 shadow-card-hover" data-state="thinking">
+      <div
+        className="ai-aura flex h-[52px] items-center gap-3 rounded-full px-2.5 shadow-card-hover"
+        data-state="thinking"
+      >
         <button
           type="button"
           onClick={recorder.cancel}
           aria-label="Bekor qilish"
-          className="btn-round flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-fill-tertiary text-slate-500"
+          className="btn-round flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-fill-tertiary text-slate-500"
         >
-          <X className="h-[18px] w-[18px]" strokeWidth={2.5} />
+          <X className="h-5 w-5" strokeWidth={2.5} />
         </button>
 
         <span className="flex h-2 w-2 shrink-0 rounded-full bg-rose-500 motion-safe:animate-pulse" />
@@ -112,7 +158,13 @@ export function AiComposer({
           {formatTime(recorder.seconds)}
         </span>
 
-        {/* Jonli to'lqin — oxirgi amplituda bo'yicha */}
+        {/* Ovoz kelmayotgani — yozuv davomida aytiladi (kech emas) */}
+        {noSignal ? (
+          <p className="min-w-0 flex-1 truncate text-footnote text-rose-600">
+            Ovoz eshitilmayapti
+          </p>
+        ) : (
+        /* Jonli to'lqin — oxirgi amplituda bo'yicha */
         <div className="flex h-7 min-w-0 flex-1 items-center gap-[3px] overflow-hidden text-accent-600">
           {Array.from({ length: 22 }).map((_, i) => (
             <span
@@ -126,12 +178,13 @@ export function AiComposer({
             />
           ))}
         </div>
+        )}
 
         <button
           type="button"
           onClick={() => void finishRecording()}
           aria-label="Yozuvni tugatish"
-          className="tappable-scale flex h-9 w-9 shrink-0 items-center justify-center rounded-full text-accent-600"
+          className="tappable-scale flex h-10 w-10 shrink-0 items-center justify-center rounded-full text-accent-600"
         >
           <StopCircleFill className="h-8 w-8" />
         </button>
@@ -144,7 +197,7 @@ export function AiComposer({
 
   return (
     <div
-      className="ai-aura flex items-end gap-2 rounded-[22px] px-2 py-2 shadow-card-hover"
+      className="ai-aura flex items-end gap-1.5 rounded-[26px] p-1.5 shadow-card-hover"
       data-state={disabled ? 'thinking' : undefined}
     >
       <textarea
@@ -164,10 +217,10 @@ export function AiComposer({
           }
         }}
         placeholder={
-          transcribing ? 'Ovoz matnga o‘girilmoqda…' : 'Muammoingizni yozing yoki aytib bering…'
+          transcribing ? 'Ovoz matnga o‘girilmoqda…' : 'Muammoingizni yozing yoki ayting…'
         }
         aria-label="Muammoingiz"
-        className="max-h-[132px] min-h-[36px] flex-1 resize-none bg-transparent px-2.5 py-1.5 text-body leading-snug text-brand-900 placeholder:text-slate-400 focus:outline-none disabled:opacity-60"
+        className="max-h-[132px] min-h-[40px] flex-1 resize-none bg-transparent px-3 py-2 text-body leading-snug text-brand-900 placeholder:overflow-hidden placeholder:text-ellipsis placeholder:whitespace-nowrap placeholder:text-slate-400 focus:outline-none disabled:opacity-60"
       />
 
       <button
@@ -175,12 +228,12 @@ export function AiComposer({
         onClick={() => void startRecording()}
         disabled={disabled || transcribing}
         aria-label="Ovozli xabar"
-        className="btn-round flex h-9 w-9 shrink-0 items-center justify-center rounded-full text-slate-500 disabled:opacity-40"
+        className="btn-round flex h-10 w-10 shrink-0 items-center justify-center rounded-full text-slate-500 disabled:opacity-40"
       >
         {transcribing ? (
-          <Spinner className="h-[19px] w-[19px] animate-spin" />
+          <Spinner className="h-5 w-5 animate-spin" />
         ) : (
-          <Mic className="h-[19px] w-[19px]" />
+          <Mic className="h-5 w-5" />
         )}
       </button>
 
@@ -191,9 +244,9 @@ export function AiComposer({
           disabled={!canSend}
           aria-label="Yuborish"
           title={canSend ? 'Yuborish' : 'Kamida 8 ta belgi yozing'}
-          className="btn-send flex h-9 w-9 shrink-0 items-center justify-center rounded-full"
+          className="btn-send flex h-10 w-10 shrink-0 items-center justify-center rounded-full"
         >
-          <ArrowUp className="h-[19px] w-[19px]" strokeWidth={3} />
+          <ArrowUp className="h-5 w-5" strokeWidth={3} />
         </button>
       )}
     </div>
