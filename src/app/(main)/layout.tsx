@@ -9,7 +9,7 @@ export default function MainLayout({ children }: { children: React.ReactNode }) 
       {/* iOS: fon tinch va tekis (systemGroupedBackground) — dekor gradient yo'q */}
       <div className="flex min-h-screen flex-col">
         <Navbar />
-        <main className="mx-auto w-full max-w-6xl flex-1 px-4 pt-6 pb-24 md:py-8">
+        <main className="mx-auto w-full max-w-6xl flex-1 px-4 pb-10 pt-6 md:py-8">
           {children}
         </main>
         <Footer />

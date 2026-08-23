@@ -6,12 +6,16 @@ import { ArrowUpRight, Mic, Search, Layers, Sparkles } from '@/components/icons'
 import { cn } from '@/lib/utils';
 import { YechimMark } from './yechim-mark';
 
-/** Bo'sh ekranda "nima yozay?" savoliga javob — real foydalanuvchi ohangi. */
+/**
+ * Bo'sh ekranda "nima yozay?" savoliga javob — real foydalanuvchi ohangi.
+ * ⚠️ Uzunlik intizomi: har biri mobilda BIR QATORGA sig'adi — bo'sh holat
+ * kichik ekranda ham (667px) composerga tegmasdan to'liq ko'rinishi kerak.
+ */
 const EXAMPLES = [
-  'Ingliz tilini o‘rganmoqchiman, lekin kurslar juda qimmat',
-  'Kichik biznesim uchun arzon buxgalteriya yechimi kerak',
-  'Qishloqda internet sekin — onlayn darslarga ulana olmayapman',
-  'Fermer mahsulotlarimni to‘g‘ridan-to‘g‘ri sotmoqchiman',
+  'Ingliz tilini arzon o‘rganmoqchiman',
+  'Buxgalteriya yechimi kerak',
+  'Qishloqda internet sekin',
+  'Mahsulotlarimni onlayn sotmoqchiman',
 ];
 
 /**
@@ -51,7 +55,7 @@ export function AiWelcome({
   disabled?: boolean;
 }) {
   return (
-    <div className="py-3 text-center sm:py-6">
+    <div className="py-1 text-center sm:py-6">
       {/* Ochilish: sochilgan loyihalar markazga yig'iladi → uchqun yonadi.
           Nuqtalar mark BILAN BIR VAQTDA harakat qiladi (mark spring bilan
           ochilayotganda ular ichkariga cho'kadi) — bitta yaxlit lahza. */}
@@ -73,11 +77,11 @@ export function AiWelcome({
             />
           ))}
         </span>
-        <YechimMark size={84} className="ai-open-mark relative" />
+        <YechimMark size={68} className="ai-open-mark relative" />
       </span>
 
       <h2
-        className="ai-open-text mt-4 text-title-2 font-semibold tracking-tight text-brand-900 sm:mt-5"
+        className="ai-open-text mt-3 text-title-2 font-semibold tracking-tight text-brand-900 sm:mt-5"
         style={{ '--ai-delay': '0.12s' } as CSSProperties}
       >
         Muammoingizni ayting — yechimini topaman
@@ -86,8 +90,7 @@ export function AiWelcome({
         className="ai-open-text mx-auto mt-2 max-w-md text-callout leading-relaxed text-slate-500"
         style={{ '--ai-delay': '0.2s' } as CSSProperties}
       >
-        Platformadagi barcha loyihalarni ko‘rib chiqaman va sizga haqiqatan
-        yordam beradiganini topib beraman.
+        Platformadagi loyihalar orasidan sizga mos keladiganini topib beraman.
         <span className="hidden sm:inline">
           {' '}
           Topilmasa — muammoingizni hamjamiyatga qo‘yishga yordam beraman.
@@ -97,7 +100,7 @@ export function AiWelcome({
       {/* Qanday ishlaydi — uch qadam. Mobilda ustun, desktopda bir qator:
           "qora quti" taassurotini yo'qotadi, ishonch beradi. */}
       <div
-        className="ai-open-text mx-auto mt-5 flex w-fit flex-col items-start gap-1.5 sm:mt-6 sm:flex-row sm:items-center sm:gap-6"
+        className="ai-open-text mx-auto mt-3 flex w-fit flex-col items-start gap-1 sm:mt-6 sm:flex-row sm:items-center sm:gap-6"
         style={{ '--ai-delay': '0.28s' } as CSSProperties}
       >
         {HOW.map(({ icon: Icon, label }) => (
@@ -109,7 +112,7 @@ export function AiWelcome({
       </div>
 
       {!disabled && (
-        <div className="mx-auto mt-5 grid max-w-2xl gap-2 sm:mt-6 sm:grid-cols-2">
+        <div className="mx-auto mt-3 grid max-w-2xl gap-2 sm:mt-6 sm:grid-cols-2">
           {EXAMPLES.map((example, i) => (
             <button
               key={example}
@@ -117,7 +120,7 @@ export function AiWelcome({
               onClick={() => onPick(example)}
               style={{ '--ai-delay': `${0.34 + i * 0.06}s` } as CSSProperties}
               className={cn(
-                'ai-focus-in tappable group flex items-start gap-2.5 rounded-ios-lg bg-white px-4 py-3.5 text-left shadow-card transition-shadow duration-250 ease-ios hover:shadow-card-hover',
+                'ai-focus-in tappable group flex items-start gap-2.5 rounded-ios-lg bg-white px-4 py-3 text-left shadow-card transition-shadow duration-250 ease-ios hover:shadow-card-hover sm:py-3.5',
                 // Mobil ekranda faqat ikkitasi: qolgani composer ostiga
                 // tushib "yarim kesilgan" bo'lib ko'rinardi.
                 i > 1 && 'hidden sm:flex',

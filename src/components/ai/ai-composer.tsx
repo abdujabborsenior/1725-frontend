@@ -217,7 +217,7 @@ export function AiComposer({
           }
         }}
         placeholder={
-          transcribing ? 'Ovoz matnga o‘girilmoqda…' : 'Muammoingizni yozing yoki ayting…'
+          transcribing ? 'Ovoz matnga o‘girilmoqda…' : 'Muammoni yozing yoki ayting…'
         }
         aria-label="Muammoingiz"
         className="max-h-[132px] min-h-[40px] flex-1 resize-none bg-transparent px-3 py-2 text-body leading-snug text-brand-900 placeholder:overflow-hidden placeholder:text-ellipsis placeholder:whitespace-nowrap placeholder:text-slate-400 focus:outline-none disabled:opacity-60"

@@ -118,11 +118,16 @@ export function AiConsole() {
   const disabled = status?.enabled === false;
 
   return (
-    <div className="flex flex-col">
-      {/* Kontent tabiiy oqimda: composer undan darhol keyin keladi (bo'sh
-          holatda "osilib qolgan" input yo'q), javob kelgach esa u sahifa
-          pastiga yopishadi. */}
-      <div className="flex-1 space-y-6">
+    <div className="flex min-h-0 flex-1 flex-col">
+      {/* Oqim — YAGONA scroll maydoni (sahifa o'zi scroll bo'lmaydi).
+          Bo'sh holatda kontent vertikal markazda turadi: `safe center` —
+          sig'masa tepa kesilmaydi, oddiy scroll bo'ladi. */}
+      <div
+        className={cn(
+          'flex min-h-0 flex-1 flex-col gap-6 overflow-y-auto pb-1 pt-3 [&>*]:shrink-0',
+          turns.length === 0 && '[justify-content:safe_center]',
+        )}
+      >
         {turns.length === 0 ? (
           <AiWelcome
             onPick={(q) => (token ? void ask(q) : requireAuth(q))}
@@ -171,16 +176,19 @@ export function AiConsole() {
             </div>
           ))
         )}
-        <div ref={endRef} />
+        <div ref={endRef} className="shrink-0" />
       </div>
 
-      {/* ── Composer — pastda yopishqoq ───────────────────────────
-          Mobilda kirgan foydalanuvchida pastki tab bar (fixed, 4rem) bor —
-          composer uning ORTIDA qolib ketmasligi uchun shuncha ko'tariladi. */}
+      {/* ── Composer — oqim ostida, ekran pastida ─────────────────
+          Maket qamalgan (h-dvh), shuning uchun bu blok DOIM ko'rinadi va
+          uning OSTIDA bo'sh joy qolmaydi. Mobilda kirgan foydalanuvchida
+          pastki tab bar (fixed, 4rem) bor — shuncha joy ajratiladi. */}
       <div
         className={cn(
-          'sticky -mx-4 mt-6 bg-surface-soft px-4 pb-[max(0.75rem,env(safe-area-inset-bottom))] pt-3 md:-mx-2 md:bottom-0 md:px-2',
-          token ? 'bottom-16' : 'bottom-0',
+          'relative shrink-0 pt-3',
+          token
+            ? 'pb-[calc(4rem+env(safe-area-inset-bottom))] md:pb-4'
+            : 'pb-[max(0.75rem,env(safe-area-inset-bottom))] md:pb-4',
         )}
       >
         {/* Kontent composer ostiga YUMSHOQ kirib ketsin: qattiq chekka
@@ -206,8 +214,8 @@ export function AiConsole() {
               {!hasHydrated || token
                 ? status && status.remaining <= 5
                   ? `Bugun yana ${status.remaining} ta so‘rov qoldi`
-                  : 'Yechim AI xato qilishi mumkin — muhim qarorlarni tekshirib ko‘ring'
-                : 'Yechim AI dan foydalanish uchun ro‘yxatdan o‘ting — bir daqiqada, bepul'}
+                  : 'Yechim AI xato qilishi mumkin — tekshirib ko‘ring'
+                : 'Ro‘yxatdan o‘ting — bir daqiqada, bepul'}
             </p>
           </>
         )}

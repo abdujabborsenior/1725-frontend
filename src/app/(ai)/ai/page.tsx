@@ -17,16 +17,16 @@ export const metadata: Metadata = {
  * interaktiv qism esa `AiConsole` klientida. `useSearchParams` ishlatilgani
  * uchun Suspense chegarasi majburiy (Next 14 app router).
  *
- * Sarlavha ATAYLAB ixcham: sahifaning asosiy qahramoni — konsolning o'zi,
- * bo'sh holatdagi katta mark esa kirish taassurotini beradi.
+ * Maket: sahifa ekran balandligiga qamalgan (layout `h-dvh`) — sarlavha
+ * tepada qotadi, konsol qolgan bo'shliqni to'liq egallaydi.
  */
 export default function AiPage() {
   return (
-    <div className="mx-auto max-w-3xl">
+    <>
       {/* Sahifa yorlig'i ATAYLAB kichik: qahramon — konsolning o'zi.
           Katta sarlavha bo'sh holatning ichida (mark bilan birga) turadi,
           shuning uchun bu yerda faqat "qayerdaman?" javobi bo'lishi kerak. */}
-      <header className="mb-4 flex items-center gap-2">
+      <header className="mb-1 flex shrink-0 items-center gap-2">
         <YechimMark size={20} className="ai-open-mark" />
         <h1 className="text-subhead font-semibold tracking-tight text-slate-500">Yechim AI</h1>
       </header>
@@ -34,6 +34,6 @@ export default function AiPage() {
       <Suspense fallback={null}>
         <AiConsole />
       </Suspense>
-    </div>
+    </>
   );
 }

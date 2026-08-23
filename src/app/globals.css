@@ -233,8 +233,11 @@ select:-webkit-autofill {
 
 /* ═══ HAIRLINE (0.5px iOS ajratkichi) ══════════════════════════════════
    Retina'da haqiqiy yarim piksel: 1px chiziq scaleY(0.5) bilan siqiladi. */
-.hairline-b,
-.hairline-t {
+/* ⚠️ `:where()` — 0 spetsifikatsiya. Aks holda bu qoida Tailwind'ning
+   `sticky`/`fixed` utilitalarini BOSIB ketardi (bir xil spetsifikatsiya,
+   keyingi manba) va `hairline-*` qo'yilgan navbar sticky, pastki tab bar
+   esa fixed bo'lmay qolardi — ular hujjat oqimida pastda "qolib" ketardi. */
+:where(.hairline-b, .hairline-t) {
   position: relative;
 }
 .hairline-b::after,
@@ -1160,6 +1163,17 @@ select:-webkit-autofill {
 }
 .ai-aura[data-state='thinking'] {
   --ai-ring: 2px;
+}
+
+/* Aura sirtining RINGSIZ varianti — karta/panel uchun.
+   Qoida: bitta ekranda faqat BITTA "tirik" hoshiya bo'ladi (diqqat
+   markazi bitta). Konteyner `.ai-surface` bilan tinch qoladi, hoshiya
+   esa asosiy harakat elementiga (kirish maydoni) beriladi. */
+.ai-surface {
+  background:
+    radial-gradient(120% 90% at 12% 0%, rgba(10, 132, 255, 0.05), transparent 60%),
+    radial-gradient(110% 90% at 100% 100%, rgba(88, 86, 214, 0.05), transparent 62%),
+    #fff;
 }
 
 /* ── SIGNATURE: javob matnining yorug'lik bilan ochilishi ───────────
