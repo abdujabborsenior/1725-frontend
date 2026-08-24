@@ -11,6 +11,11 @@ import type {
   ApiEnvelope,
   ApiErrorBody,
   AppNotification,
+  BillingCheckout,
+  BillingMe,
+  BillingOrder,
+  BillingPlan,
+  BillingStatusInfo,
   CategoryCount,
   ChatMessage,
   Comment,
@@ -725,6 +730,44 @@ export const chatApi = {
       }),
     );
   },
+};
+
+/* ── Obuna / to'lov (Payme) ───────────────────────────────────── */
+/**
+ * VAQTINCHA O'CHIQ bo'lim (`lib/billing.ts` → BILLING_ENABLED).
+ * Backendда `BILLING_ENABLED=false` bo'lsa `billing` moduli umuman
+ * yuklanmaydi va bu endpointlar 404 qaytaradi — shuning uchun `status()`
+ * xatoni yutib, `enabled:false` deb qaytaradi (sahifa jimgina yashiriladi).
+ */
+export const billingApi = {
+  status: async (): Promise<BillingStatusInfo> => {
+    try {
+      return await unwrap<BillingStatusInfo>(api.get('/billing/status'));
+    } catch {
+      return { enabled: false, provider: 'payme', freeStartupLimit: 0 };
+    }
+  },
+
+  /** Barcha faol tariflar (oylik + yillik) — ochiq, mehmon ham ko'radi */
+  plans: () => unwrap<BillingPlan[]>(api.get('/billing/plans')),
+
+  /** Joriy obuna + loyihalar limitidan foydalanish */
+  me: () => unwrap<BillingMe>(api.get('/billing/me')),
+
+  /**
+   * To'lovni boshlash: server buyurtma (order) yaratadi va Payme checkout
+   * havolasini qaytaradi. Summani MIJOZ yubormaydi — u serverda tarifdan
+   * olinadi (narxni brauzerdan o'zgartirib bo'lmaydi).
+   */
+  checkout: (data: { planId: string; returnUrl?: string }) =>
+    unwrap<BillingCheckout>(api.post('/billing/checkout', data)),
+
+  /** Bitta buyurtma holati — to'lovdan qaytgach shu so'rov bilan kuzatiladi */
+  order: (id: string) => unwrap<BillingOrder>(api.get(`/billing/orders/${id}`)),
+
+  /** To'lovlar tarixi */
+  orders: (params?: { page?: number; limit?: number }) =>
+    unwrap<PaginatedResponse<BillingOrder>>(api.get('/billing/orders', { params })),
 };
 
 /* ── Profile ──────────────────────────────────────────────────── */

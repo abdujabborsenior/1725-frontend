@@ -17,6 +17,7 @@ import {
   CheckCircleFill,
   Settings,
   ChevronRight,
+  Wallet,
 } from '@/components/icons';
 import { profileApi, authApi, startupsApi, getErrorMessage } from '@/lib/api';
 import { useAuthStore } from '@/store/auth.store';
@@ -31,6 +32,7 @@ import { EmptyState } from '@/components/ui/page-header';
 import { ROLE_LABEL, ROLE_BADGE } from '@/lib/constants';
 import { FounderBadge } from '@/components/social/founder-badge';
 import { timeAgo } from '@/lib/date';
+import { BILLING_ENABLED } from '@/lib/billing';
 import toast from 'react-hot-toast';
 
 /**
@@ -300,6 +302,16 @@ export default function ProfilePage() {
       {/* ── Amallar — iOS Sozlamalar guruhi (destruktiv alohida) ───────── */}
       <section className="space-y-5 pt-1">
         <div className="ios-list">
+          {/* Obuna — VAQTINCHA o'chiq bo'lim (flag `false` bo'lsa qator umuman yo'q) */}
+          {BILLING_ENABLED && (
+            <Link href="/billing" className="ios-row">
+              <span className="flex h-[29px] w-[29px] shrink-0 items-center justify-center rounded-[7px] bg-accent-600 text-white">
+                <Wallet className="h-[17px] w-[17px]" />
+              </span>
+              <span className="flex-1 text-body text-brand-900">Obunam</span>
+              <ChevronRight className="h-[15px] w-[15px] shrink-0 text-slate-300" strokeWidth={3} />
+            </Link>
+          )}
           <Link href="/settings" className="ios-row">
             <span className="flex h-[29px] w-[29px] shrink-0 items-center justify-center rounded-[7px] bg-slate-400 text-white">
               <Settings className="h-[17px] w-[17px]" />

@@ -56,6 +56,10 @@ jobs:
       - name: Build (standalone)
         env:
           NEXT_PUBLIC_API_URL: ${{ vars.NEXT_PUBLIC_API_URL }}
+          # Obuna/to'lov bo'limi — o'rnatilmagan bo'lsa bo'sh => O'CHIQ.
+          # Yoqish: Settings → Variables → NEXT_PUBLIC_BILLING_ENABLED=true
+          # (backendда ham BILLING_ENABLED=true bo'lishi shart).
+          NEXT_PUBLIC_BILLING_ENABLED: ${{ vars.NEXT_PUBLIC_BILLING_ENABLED }}
         run: npm run build
 
       # Standalone artefakt: server.js + minimal node_modules + static + public.

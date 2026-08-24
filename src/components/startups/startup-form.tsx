@@ -8,6 +8,7 @@ import { z } from 'zod';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { ChevronDown, Plus, X } from '@/components/icons';
 import { startupsApi, getErrorMessage, type StartupPayload } from '@/lib/api';
+import { BILLING_ENABLED, isStartupLimitError } from '@/lib/billing';
 import type { Startup } from '@/types';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -129,7 +130,16 @@ export function StartupForm({ initial }: { initial?: Startup }) {
       toast.success(editing ? 'Startap yangilandi!' : "Startap e'lon qilindi!");
       router.push(`/startups/${res.data.id}`);
     },
-    onError: (e) => toast.error(getErrorMessage(e)),
+    onError: (e) => {
+      // Tarif limiti tugagan — bu "xato" emas, tarif tanlash taklifi.
+      // (Bo'lim o'chiq bo'lsa bunday javob umuman kelmaydi.)
+      if (BILLING_ENABLED && isStartupLimitError(e)) {
+        toast.error(getErrorMessage(e, 'Loyihalar limiti tugagan'));
+        router.push('/pricing');
+        return;
+      }
+      toast.error(getErrorMessage(e));
+    },
   });
 
   function onSubmit(d: FormData) {

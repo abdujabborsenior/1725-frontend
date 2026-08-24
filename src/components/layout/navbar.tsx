@@ -14,6 +14,7 @@ import { Avatar } from '@/components/ui/avatar';
 import { NotificationBell } from '@/components/layout/notification-bell';
 import { SearchPalette, openSearchPalette } from '@/components/layout/search-palette';
 import toast from 'react-hot-toast';
+import { BILLING_ENABLED } from '@/lib/billing';
 
 // Asosiy navigatsiya. "Ovoz berish" ATAYLAB bu yerda emas — ikkilamchi
 // funksiya sifatida footer va bosh sahifaning quyi bo'limida qoladi.
@@ -24,6 +25,9 @@ const NAV_LINKS: { href: string; label: string; authOnly?: boolean }[] = [
   // Shaxsiy sahifa — faqat kirgan foydalanuvchiga ko'rinadi
   { href: '/solutions', label: 'Yechimlarim', authOnly: true },
   { href: '/discover', label: 'Hamjamiyat' },
+  // Obuna/to'lov bo'limi VAQTINCHA o'chiq: flag `false` bo'lganda band
+  // massivga umuman qo'shilmaydi (navbarда ham, mobil menyuda ham yo'q).
+  ...(BILLING_ENABLED ? [{ href: '/pricing', label: 'Tariflar' }] : []),
 ];
 
 /** iOS badge — nav ikonkasi ustidagi qizil hisob (systemRed). */

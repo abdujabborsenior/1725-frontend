@@ -526,3 +526,88 @@ export interface AiSolveResult {
   draft: AiDraft | null;
   cached: boolean;
 }
+
+/* ── Obuna / to'lov (Payme) ───────────────────────────────────── */
+/* Bu qism VAQTINCHA o'chiq mahsulot bo'limi — `lib/billing.ts` dagi
+   BILLING_ENABLED flagiga qarang. Turlar backenddagi `billing` moduli
+   javoblariga aynan mos. Barcha summalar — TIYIN (butun son). */
+
+export type BillingInterval = 'monthly' | 'yearly';
+export type PlanTier = 'starter' | 'pro' | 'business';
+export type BillingOrderStatus = 'pending' | 'paid' | 'cancelled' | 'expired';
+export type BillingSubscriptionStatus =
+  | 'active'
+  | 'expired'
+  | 'cancelled'
+  | 'superseded';
+
+export interface BillingPlan {
+  id: string;
+  /** `pro_yearly` kabi barqaror kod — kodda shu bo'yicha murojaat qilinadi */
+  code: string;
+  tier: PlanTier;
+  interval: BillingInterval;
+  name: string;
+  description: string | null;
+  /** Shu tarif bilan e'lon qilish mumkin bo'lgan loyihalar soni */
+  startupLimit: number;
+  /** TIYIN (1 so'm = 100 tiyin) */
+  price: number;
+  currency: 'UZS';
+  isPopular: boolean;
+  sortOrder: number;
+}
+
+export interface BillingSubscription {
+  id: string;
+  planId: string;
+  plan: BillingPlan | null;
+  tier: PlanTier;
+  interval: BillingInterval;
+  startupLimit: number;
+  status: BillingSubscriptionStatus;
+  startsAt: string;
+  endsAt: string;
+}
+
+export interface BillingUsage {
+  /** Hozircha e'lon qilingan loyihalar soni */
+  startups: number;
+  /** Joriy tarif limiti (obuna yo'q bo'lsa — bepul limit) */
+  limit: number;
+  remaining: number;
+}
+
+export interface BillingMe {
+  subscription: BillingSubscription | null;
+  usage: BillingUsage;
+}
+
+export interface BillingOrder {
+  id: string;
+  planId: string;
+  plan: BillingPlan | null;
+  /** TIYIN */
+  amount: number;
+  status: BillingOrderStatus;
+  provider: 'payme';
+  createdAt: string;
+  paidAt: string | null;
+  expiresAt: string;
+}
+
+export interface BillingStatusInfo {
+  enabled: boolean;
+  provider: 'payme';
+  /** Obunasiz foydalanuvchi e'lon qila oladigan loyihalar soni */
+  freeStartupLimit: number;
+}
+
+export interface BillingCheckout {
+  orderId: string;
+  /** TIYIN — Payme ham shu birlikda ishlaydi */
+  amount: number;
+  /** Payme checkout sahifasi (foydalanuvchi shu manzilga yo'naltiriladi) */
+  checkoutUrl: string;
+  provider: 'payme';
+}
