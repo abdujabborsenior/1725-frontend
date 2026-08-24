@@ -16,6 +16,7 @@ import type {
   BillingOrder,
   BillingPlan,
   BillingStatusInfo,
+  PaymentProvider,
   CategoryCount,
   ChatMessage,
   Comment,
@@ -744,7 +745,7 @@ export const billingApi = {
     try {
       return await unwrap<BillingStatusInfo>(api.get('/billing/status'));
     } catch {
-      return { enabled: false, provider: 'payme', freeStartupLimit: 0 };
+      return { enabled: false, providers: [], freeStartupLimit: 0 };
     }
   },
 
@@ -759,7 +760,12 @@ export const billingApi = {
    * havolasini qaytaradi. Summani MIJOZ yubormaydi — u serverda tarifdan
    * olinadi (narxni brauzerdan o'zgartirib bo'lmaydi).
    */
-  checkout: (data: { planId: string; returnUrl?: string }) =>
+  checkout: (data: {
+    planId: string;
+    /** Berilmasa server sozlangan birinchi usulni tanlaydi */
+    provider?: PaymentProvider;
+    returnUrl?: string;
+  }) =>
     unwrap<BillingCheckout>(api.post('/billing/checkout', data)),
 
   /** Bitta buyurtma holati — to'lovdan qaytgach shu so'rov bilan kuzatiladi */

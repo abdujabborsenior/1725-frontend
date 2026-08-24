@@ -1,4 +1,9 @@
-import type { BillingInterval, BillingPlan, PlanTier } from '@/types';
+import type {
+  BillingInterval,
+  BillingPlan,
+  PaymentProvider,
+  PlanTier,
+} from '@/types';
 
 /**
  * **To'lov tizimi (obuna) — VAQTINCHA O'CHIQ.**
@@ -20,9 +25,6 @@ import type { BillingInterval, BillingPlan, PlanTier } from '@/types';
  * build/deploy qilinadi.
  */
 export const BILLING_ENABLED = process.env.NEXT_PUBLIC_BILLING_ENABLED === 'true';
-
-/** Foydalanuvchiga ko'rinadigan to'lov provayderi nomi (hozircha yagona). */
-export const BILLING_PROVIDER_LABEL = 'Payme';
 
 /* ── Narx / muddat formatlash ─────────────────────────────────── */
 
@@ -67,8 +69,8 @@ export const INTERVAL_SUFFIX: Record<BillingInterval, string> = {
 
 /**
  * Daraja uchun VIZUAL meta (matn/rang) — narx va limit BACKENDDAN keladi.
- * Narxni frontendда hech qachon qattiq yozmaymiz: u serverda o'zgarganda
- * ekranда darhol yangilanishi kerak (va to'lov summasi doim server hisobi).
+ * Narxni frontendda hech qachon qattiq yozmaymiz: u serverda o'zgarganda
+ * ekranda darhol yangilanishi kerak (va to'lov summasi doim server hisobi).
  */
 export const TIER_META: Record<
   PlanTier,
@@ -149,4 +151,44 @@ export function isStartupLimitError(err: unknown): boolean {
   const data = (err as { response?: { data?: { error?: { code?: string } } } })
     ?.response?.data;
   return data?.error?.code === STARTUP_LIMIT_ERROR_CODE;
+}
+
+/* ── To'lov usullari ──────────────────────────────────────────── */
+
+/**
+ * Provayder meta-ma'lumoti. Ranglar — brendlarning RASMIY ranglari
+ * (`components/brand/payment-marks.tsx` bilan bir xil manba).
+ *
+ * ⚠️ Bu ranglar FAQAT tanlangan usulning belgisi atrofidagi nozik nurda
+ * ishlatiladi. Tugmalar, matnlar va boshqa sirtlar loyihaning o'z accent
+ * rangida qoladi: begona brend rangini interfeysga yoyish "kamalak" effekti
+ * beradi va Charter §2 (premium = restraint) ga zid. Qolaversa, Payme cyan
+ * (#25E8FF) ustidagi oq matn kontrast bo'yicha AA dan o'tmaydi.
+ */
+export const PROVIDER_META: Record<
+  PaymentProvider,
+  { label: string; cards: string; brand: string }
+> = {
+  payme: {
+    label: 'Payme',
+    cards: 'Uzcard · Humo · Visa',
+    brand: '#25E8FF',
+  },
+  click: {
+    label: 'Click',
+    cards: 'Uzcard · Humo · Visa',
+    brand: '#0065FF',
+  },
+};
+
+/** Ekrandagi tartib — sozlanganlari orasidan shu ketma-ketlikda. */
+export const PROVIDER_ORDER: PaymentProvider[] = ['payme', 'click'];
+
+/** Sozlangan usullar ro'yxatidan matn: "Payme", "Payme yoki Click". */
+export function providersLabel(providers: PaymentProvider[]): string {
+  const names = PROVIDER_ORDER.filter((p) => providers.includes(p)).map(
+    (p) => PROVIDER_META[p].label,
+  );
+  if (names.length === 0) return 'Karta';
+  return names.join(' yoki ');
 }

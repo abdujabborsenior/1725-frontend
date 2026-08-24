@@ -533,6 +533,8 @@ export interface AiSolveResult {
    javoblariga aynan mos. Barcha summalar — TIYIN (butun son). */
 
 export type BillingInterval = 'monthly' | 'yearly';
+/** To'lov usuli. Backend faqat SOZLANGANLARINI qaytaradi (`/billing/status`). */
+export type PaymentProvider = 'payme' | 'click';
 export type PlanTier = 'starter' | 'pro' | 'business';
 export type BillingOrderStatus = 'pending' | 'paid' | 'cancelled' | 'expired';
 export type BillingSubscriptionStatus =
@@ -590,7 +592,7 @@ export interface BillingOrder {
   /** TIYIN */
   amount: number;
   status: BillingOrderStatus;
-  provider: 'payme';
+  provider: PaymentProvider;
   createdAt: string;
   paidAt: string | null;
   expiresAt: string;
@@ -598,7 +600,8 @@ export interface BillingOrder {
 
 export interface BillingStatusInfo {
   enabled: boolean;
-  provider: 'payme';
+  /** Sozlangan to'lov usullari — ekranda faqat shular ko'rsatiladi */
+  providers: PaymentProvider[];
   /** Obunasiz foydalanuvchi e'lon qila oladigan loyihalar soni */
   freeStartupLimit: number;
 }
@@ -607,7 +610,7 @@ export interface BillingCheckout {
   orderId: string;
   /** TIYIN — Payme ham shu birlikda ishlaydi */
   amount: number;
-  /** Payme checkout sahifasi (foydalanuvchi shu manzilga yo'naltiriladi) */
+  /** Provayder to'lov sahifasi (foydalanuvchi shu manzilga yo'naltiriladi) */
   checkoutUrl: string;
-  provider: 'payme';
+  provider: PaymentProvider;
 }

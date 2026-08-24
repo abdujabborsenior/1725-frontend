@@ -18,8 +18,7 @@ interface PlanCardProps {
   savingPercent?: number | null;
   /** Foydalanuvchining joriy tarifi shumi */
   current?: boolean;
-  loading?: boolean;
-  disabled?: boolean;
+  /** Bosilganda to'lov usuli varaqasi ochiladi (kutish holati o'sha yerda) */
   onSelect: (plan: BillingPlan) => void;
 }
 
@@ -33,8 +32,6 @@ export function PlanCard({
   plan,
   savingPercent,
   current,
-  loading,
-  disabled,
   onSelect,
 }: PlanCardProps) {
   const meta = TIER_META[plan.tier];
@@ -107,8 +104,6 @@ export function PlanCard({
             fullWidth
             size="md"
             variant={plan.isPopular ? 'primary' : 'secondary'}
-            loading={loading}
-            disabled={disabled}
             onClick={() => onSelect(plan)}
           >
             Tanlash

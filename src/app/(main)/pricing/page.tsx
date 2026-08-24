@@ -20,7 +20,7 @@ export const revalidate = 300;
  *
  * Flag yoqilmagan bo'lsa sahifa `notFound()` beradi — ya'ni marshrut amalda
  * mavjud emas: foydalanuvchi ham, qidiruv tizimi ham topa olmaydi. Kod esa
- * repoда to'liq tayyor turadi (yoqish = bitta env o'zgaruvchi + deploy).
+ * repoda to'liq tayyor turadi (yoqish = bitta env o'zgaruvchi + deploy).
  */
 export default async function PricingPage() {
   if (!BILLING_ENABLED) notFound();

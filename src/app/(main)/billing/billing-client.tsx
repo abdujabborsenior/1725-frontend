@@ -6,7 +6,7 @@ import { useRouter } from 'next/navigation';
 import { useQuery } from '@tanstack/react-query';
 
 import { billingApi } from '@/lib/api';
-import { INTERVAL_LABEL, formatSum } from '@/lib/billing';
+import { INTERVAL_LABEL, PROVIDER_META, formatSum } from '@/lib/billing';
 import { formatDate } from '@/lib/date';
 import { useAuthStore } from '@/store/auth.store';
 import { cn } from '@/lib/utils';
@@ -186,7 +186,7 @@ export function BillingClient() {
                       )}
                     </span>
                     <span className="mt-0.5 block text-footnote text-slate-500">
-                      {formatDate(order.createdAt)}
+                      {formatDate(order.createdAt)} · {PROVIDER_META[order.provider]?.label ?? order.provider}
                     </span>
                   </span>
                   <span className="shrink-0 text-right">

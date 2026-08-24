@@ -8,18 +8,21 @@ import toast from 'react-hot-toast';
 
 import { billingApi, getErrorMessage } from '@/lib/api';
 import {
-  BILLING_PROVIDER_LABEL,
   INTERVAL_LABEL,
+  PROVIDER_ORDER,
   bestYearlySaving,
+  providersLabel,
   yearlySavingPercent,
 } from '@/lib/billing';
+import { ClickMark, PaymeMark } from '@/components/brand/payment-marks';
 import { useAuthStore } from '@/store/auth.store';
 import { PlanCard } from '@/components/billing/plan-card';
+import { PaymentSheet } from '@/components/billing/payment-sheet';
 import { PageHeader } from '@/components/ui/page-header';
 import { Segmented } from '@/components/ui/segmented';
 import { CardSkeleton } from '@/components/ui/skeleton';
 import { LockOpen, ShieldCheck, Wallet } from '@/components/icons';
-import type { BillingInterval, BillingPlan } from '@/types';
+import type { BillingInterval, BillingPlan, PaymentProvider } from '@/types';
 
 /**
  * Tariflar sahifasi. Naqsh — Claude/Apple obuna varaqasi:
@@ -31,7 +34,9 @@ export function PricingClient({ initialPlans }: { initialPlans: BillingPlan[] | 
   const router = useRouter();
   const { token, hasHydrated } = useAuthStore();
   const [interval, setInterval] = useState<BillingInterval>('monthly');
-  const [busyPlanId, setBusyPlanId] = useState<string | null>(null);
+  /** To'lov varaqasida turgan tarif (null — varaqa yopiq) */
+  const [checkoutPlan, setCheckoutPlan] = useState<BillingPlan | null>(null);
+  const [paying, setPaying] = useState(false);
 
   const { data: plans, isLoading } = useQuery({
     queryKey: ['billing', 'plans'],
@@ -40,6 +45,13 @@ export function PricingClient({ initialPlans }: { initialPlans: BillingPlan[] | 
     // SSR ma'lumot "eski" deb belgilanadi → shaxsiy bo'lmagan ro'yxat fonda
     // bir marta yangilanadi, lekin ekran darhol to'la ko'rinadi.
     initialDataUpdatedAt: 0,
+    staleTime: 5 * 60_000,
+  });
+
+  /** Sozlangan to'lov usullari (Payme / Click) — serverdan. */
+  const { data: status } = useQuery({
+    queryKey: ['billing', 'status'],
+    queryFn: () => billingApi.status(),
     staleTime: 5 * 60_000,
   });
 
@@ -60,18 +72,31 @@ export function PricingClient({ initialPlans }: { initialPlans: BillingPlan[] | 
     [all, interval],
   );
   const bestSaving = useMemo(() => bestYearlySaving(all), [all]);
+  /** Sozlangan usullar — ekrandagi tartibda (server ro'yxatiga tayanadi). */
+  const activeProviders = useMemo(
+    () => PROVIDER_ORDER.filter((p) => (status?.providers ?? []).includes(p)),
+    [status?.providers],
+  );
 
-  async function handleSelect(plan: BillingPlan) {
+  /** "Tanlash" — to'lov usuli varaqasini ochadi (hali hech narsa yaratilmaydi). */
+  function handleSelect(plan: BillingPlan) {
     // Mehmon → ro'yxatdan o'tib AYNAN shu sahifaga qaytadi (loyihadagi
     // guest→register→qaytish oqimi; `?next=` middleware bilan ishlaydi).
     if (!token) {
       router.push('/register?next=/pricing');
       return;
     }
-    setBusyPlanId(plan.id);
+    setCheckoutPlan(plan);
+  }
+
+  /** Usul tanlangach — buyurtma yaratiladi va provayder sahifasiga o'tiladi. */
+  async function handleConfirm(provider: PaymentProvider) {
+    if (!checkoutPlan) return;
+    setPaying(true);
     try {
       const res = await billingApi.checkout({
-        planId: plan.id,
+        planId: checkoutPlan.id,
+        provider,
         // To'lovdan keyin qaytish manzili. Buyurtma ID'sini SERVER qo'shadi
         // (`?order=...`) — mijoz uni bilishi shart emas va o'zgartira olmaydi.
         returnUrl:
@@ -79,11 +104,11 @@ export function PricingClient({ initialPlans }: { initialPlans: BillingPlan[] | 
             ? `${window.location.origin}/billing/status`
             : undefined,
       });
-      // Payme checkout sahifasiga o'tamiz (tashqi manzil — router emas).
+      // Tashqi to'lov sahifasi — Next router emas, to'liq navigatsiya.
       window.location.assign(res.checkoutUrl);
     } catch (err) {
       toast.error(getErrorMessage(err, 'To‘lovni boshlab bo‘lmadi'));
-      setBusyPlanId(null);
+      setPaying(false);
     }
   }
 
@@ -136,8 +161,6 @@ export function PricingClient({ initialPlans }: { initialPlans: BillingPlan[] | 
                 plan.interval === 'yearly' ? yearlySavingPercent(all, plan.tier) : null
               }
               current={me?.subscription?.planId === plan.id}
-              loading={busyPlanId === plan.id}
-              disabled={busyPlanId !== null && busyPlanId !== plan.id}
               onSelect={handleSelect}
             />
           ))}
@@ -146,12 +169,43 @@ export function PricingClient({ initialPlans }: { initialPlans: BillingPlan[] | 
 
       {/* Ishonch qatori — to'lov oldidan odam bilishi kerak bo'lgan uchta narsa */}
       <section className="grid gap-3 sm:grid-cols-3">
+        {/*
+          1-karta: umumiy "hamyon" belgisi o'rniga QABUL QILINADIGAN
+          USULLARNING o'zi ko'rsatiladi. Ro'yxat serverdan keladi
+          (`/billing/status`), shuning uchun provayder qo'shilsa/o'chirilsa
+          bu joy o'z-o'zidan to'g'ri qoladi — matnda hech qanday brend nomi
+          qattiq yozilmaydi.
+        */}
+        <div className="rounded-ios-xl bg-white p-4">
+          <span className="mb-2.5 flex items-center gap-1.5">
+            {activeProviders.length > 0 ? (
+              activeProviders.map((p) => (
+                <span
+                  key={p}
+                  className="flex h-8 w-[52px] items-center justify-center rounded-[9px] bg-fill-tertiary text-brand-900"
+                >
+                  {p === 'payme' ? (
+                    <PaymeMark className="h-[18px] w-auto" />
+                  ) : (
+                    <ClickMark className="w-[40px] h-auto" />
+                  )}
+                </span>
+              ))
+            ) : (
+              <span className="flex h-8 w-8 items-center justify-center rounded-[9px] bg-fill-tertiary text-slate-500 [&>svg]:h-[18px] [&>svg]:w-[18px]">
+                <Wallet />
+              </span>
+            )}
+          </span>
+          <p className="text-subhead font-semibold text-brand-900">
+            {providersLabel(status?.providers ?? [])} orqali to‘lov
+          </p>
+          <p className="mt-0.5 text-footnote text-slate-500">
+            Karta ma’lumotlari saytimizda saqlanmaydi.
+          </p>
+        </div>
+
         {[
-          {
-            icon: <Wallet />,
-            title: `${BILLING_PROVIDER_LABEL} orqali to‘lov`,
-            text: 'Karta ma’lumotlari saytimizda saqlanmaydi.',
-          },
           {
             icon: <ShieldCheck />,
             title: 'Avtomatik yechim yo‘q',
@@ -164,7 +218,7 @@ export function PricingClient({ initialPlans }: { initialPlans: BillingPlan[] | 
           },
         ].map((item) => (
           <div key={item.title} className="rounded-ios-xl bg-white p-4">
-            <span className="mb-2 flex h-8 w-8 items-center justify-center rounded-[9px] bg-fill-tertiary text-slate-500 [&>svg]:h-[18px] [&>svg]:w-[18px]">
+            <span className="mb-2.5 flex h-8 w-8 items-center justify-center rounded-[9px] bg-fill-tertiary text-slate-500 [&>svg]:h-[18px] [&>svg]:w-[18px]">
               {item.icon}
             </span>
             <p className="text-subhead font-semibold text-brand-900">{item.title}</p>
@@ -172,6 +226,15 @@ export function PricingClient({ initialPlans }: { initialPlans: BillingPlan[] | 
           </div>
         ))}
       </section>
+
+      <PaymentSheet
+        open={checkoutPlan !== null}
+        plan={checkoutPlan}
+        providers={status?.providers ?? []}
+        loading={paying}
+        onClose={() => !paying && setCheckoutPlan(null)}
+        onConfirm={handleConfirm}
+      />
 
       {token && (
         <p className="text-center text-footnote text-slate-500">
