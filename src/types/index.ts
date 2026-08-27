@@ -1,5 +1,6 @@
 export type UserRole =
-  | 'superadmin' | 'analyzer' | 'school_student' | 'university_student' | 'user';
+  | 'superadmin' | 'analyzer' | 'school_student' | 'university_student' | 'user'
+  | 'investor';
 
 export type ProblemStatus =
   | 'pending' | 'open' | 'under_review' | 'resolved' | 'rejected';
@@ -360,6 +361,24 @@ export interface Startup {
   bookmarkedByMe?: boolean;
   foundedYear: number | null;
   teamName: string | null;
+
+  /* ── Investorlar uchun (barchasi IXTIYORIY) ──────────────── */
+  stage: StartupStage | null;
+  businessModel: BusinessModel | null;
+  needs: VentureNeed[];
+  isSeekingInvestment: boolean;
+  askAmountMin: number | null;
+  askAmountMax: number | null;
+  teamSize: number | null;
+  monthlyRevenue: number | null;
+  monthlyActiveUsers: number | null;
+  payingCustomers: number | null;
+  problemStatement: string | null;
+  targetAudience: string | null;
+  traction: string | null;
+  /** 0–100: profil qanchalik to'ldirilgan (faqat rag'bat uchun) */
+  profileCompleteness: number;
+
   createdById: string | null;
   createdBy?: PublicAuthor | null;
   createdAt: string;
@@ -613,4 +632,176 @@ export interface BillingCheckout {
   /** Provayder to'lov sahifasi (foydalanuvchi shu manzilga yo'naltiriladi) */
   checkoutUrl: string;
   provider: PaymentProvider;
+}
+
+/* ══════════ Venture platformasi ══════════════════════════════ */
+
+export type StartupStage =
+  | 'idea' | 'prototype' | 'mvp' | 'early_revenue' | 'growth';
+
+export type BusinessModel =
+  | 'b2c' | 'b2b' | 'b2b2c' | 'marketplace' | 'subscription'
+  | 'ads' | 'hardware' | 'service' | 'nonprofit' | 'other';
+
+export type VentureNeed =
+  | 'investment' | 'grant' | 'mentor' | 'team' | 'customers' | 'partner';
+
+export type InvestorKind =
+  | 'angel' | 'fund' | 'accelerator' | 'grant' | 'corporate';
+
+export type IntroStatus = 'pending' | 'accepted' | 'declined' | 'withdrawn';
+
+export interface InvestorProfile {
+  id: string;
+  userId: string;
+  kind: InvestorKind;
+  orgName: string | null;
+  website: string | null;
+  thesis: string | null;
+  categories: string[];
+  stages: StartupStage[];
+  regions: string[];
+  offers: VentureNeed[];
+  checkMin: number | null;
+  checkMax: number | null;
+  contactEmail: string | null;
+  contactPhone: string | null;
+  isVerified: boolean;
+  verifiedAt: string | null;
+  isActive: boolean;
+  alertsEnabled: boolean;
+  lastMatchedAt: string | null;
+  createdAt: string;
+  updatedAt: string;
+  user?: PublicAuthor & { email?: string } | null;
+}
+
+export interface InvestorMe {
+  profile: InvestorProfile | null;
+  savedCount: number;
+  newMatches: number;
+}
+
+export type MatchFactorKey =
+  | 'category' | 'stage' | 'check' | 'needs' | 'region' | 'traction' | 'semantic';
+
+export type MatchDetailKey =
+  | 'exact' | 'partial' | 'open' | 'none' | 'unknown';
+
+export interface MatchFactor {
+  key: MatchFactorKey;
+  earned: number;
+  max: number;
+  detail: MatchDetailKey;
+}
+
+export interface ReadinessSummary {
+  score: number;
+  grade: ReadinessGrade;
+  dimensions: AssessmentDimension[];
+}
+
+export interface DealflowItem {
+  startup: Startup;
+  score: number;
+  factors: MatchFactor[];
+  isNew: boolean;
+  saved: boolean;
+  readiness: ReadinessSummary | null;
+  computedAt: string;
+}
+
+export interface MatchDetailResponse {
+  startup: Startup;
+  score: number;
+  factors: MatchFactor[];
+  readiness: ReadinessSummary | null;
+  saved: boolean;
+  note: string | null;
+  intro: { id: string; status: IntroStatus; createdAt: string } | null;
+}
+
+export interface IntroRequestItem {
+  id: string;
+  status: IntroStatus;
+  message: string;
+  createdAt: string;
+  respondedAt: string | null;
+  conversationId: string | null;
+  matchScore: number | null;
+  startup: Pick<Startup, 'id' | 'title' | 'slug' | 'logoUrl'> | null;
+  investor: PublicAuthor | null;
+}
+
+export interface StartupInterest {
+  inDealflow: boolean;
+  matchCount: number;
+  pendingIntros: number;
+}
+
+/* ── Loyiha tahlili ─────────────────────────────────────────── */
+
+export type ReadinessGrade = 'strong' | 'good' | 'basic' | 'early';
+
+export type AssessmentDimensionKey =
+  | 'clarity' | 'market' | 'product' | 'traction' | 'team' | 'ask';
+
+export interface AssessmentDimension {
+  key: AssessmentDimensionKey;
+  score: number;
+  weight: number;
+}
+
+export interface AssessmentFinding {
+  code: string;
+  severity: 'error' | 'warning' | 'info';
+  args?: Record<string, string | number>;
+  /** Backend tomonidan foydalanuvchi tiliga o'girilgan matn */
+  message: string;
+}
+
+export interface StartupAssessment {
+  readinessScore: number;
+  grade: ReadinessGrade;
+  dimensions: AssessmentDimension[];
+  findings: AssessmentFinding[];
+  market: { slug: string; label: string | null; demandScore: number | null } | null;
+  ai: {
+    summary: string | null;
+    strengths: string[];
+    weaknesses: string[];
+    opportunities: string[];
+    risks: string[];
+    recommendations: string[];
+    generatedAt: string;
+  } | null;
+  aiAvailable: boolean;
+  computedAt: string;
+}
+
+/* ── Bozor klasterlari ──────────────────────────────────────── */
+
+export interface MarketCluster {
+  id: string;
+  slug: string;
+  label: string;
+  summary: string | null;
+  keywords: string[];
+  size: number;
+  unmetCount: number;
+  unmetRatio: number;
+  demandScore: number;
+  coverageCount: number;
+  opportunityScore: number;
+  cohesion: number;
+  samples: string[];
+  categoryHint: string | null;
+  mode: 'vector' | 'keyword';
+  computedAt: string;
+}
+
+export interface MarketClusterDetail extends MarketCluster {
+  startups: Pick<Startup,
+    'id' | 'title' | 'slug' | 'tagline' | 'logoUrl' | 'coverUrl' | 'category' | 'ratingAvg' | 'ratingCount'
+  >[];
 }

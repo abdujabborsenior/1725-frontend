@@ -48,6 +48,19 @@ import type {
   UploadResult,
   User,
   UserRole,
+  BusinessModel,
+  StartupStage,
+  VentureNeed,
+  InvestorKind,
+  InvestorMe,
+  InvestorProfile,
+  DealflowItem,
+  MatchDetailResponse,
+  IntroRequestItem,
+  StartupInterest,
+  StartupAssessment,
+  MarketCluster,
+  MarketClusterDetail,
 } from '@/types';
 
 /* ── Axios instance ───────────────────────────────────────────── */
@@ -359,6 +372,20 @@ export interface StartupPayload {
   sortOrder?: number;
   foundedYear?: number | null;
   teamName?: string | null;
+
+  /* ── Investorlar uchun (IXTIYORIY) ────────────────────────── */
+  stage?: StartupStage | null;
+  businessModel?: BusinessModel | null;
+  needs?: VentureNeed[];
+  askAmountMin?: number | null;
+  askAmountMax?: number | null;
+  teamSize?: number | null;
+  monthlyRevenue?: number | null;
+  monthlyActiveUsers?: number | null;
+  payingCustomers?: number | null;
+  problemStatement?: string | null;
+  targetAudience?: string | null;
+  traction?: string | null;
 }
 
 export const startupsApi = {
@@ -785,3 +812,111 @@ export const profileApi = {
 };
 
 export type { User };
+
+
+/* ══════════ Venture: investor tomoni ═════════════════════════ */
+
+export interface InvestorProfilePayload {
+  kind: InvestorKind;
+  orgName?: string;
+  website?: string;
+  thesis?: string;
+  categories?: string[];
+  stages?: StartupStage[];
+  regions?: string[];
+  offers?: VentureNeed[];
+  checkMin?: number;
+  checkMax?: number;
+  contactEmail?: string;
+  contactPhone?: string;
+  isActive?: boolean;
+  alertsEnabled?: boolean;
+}
+
+export interface DealflowParams {
+  page?: number;
+  limit?: number;
+  minScore?: number;
+  onlyNew?: boolean;
+  saved?: boolean;
+}
+
+export const investorsApi = {
+  /** Profil bo'lmasa `profile: null` — frontend "ariza topshirish" ko'rsatadi. */
+  me: () => unwrap<InvestorMe>(api.get('/investors/me')),
+  upsert: (data: InvestorProfilePayload) =>
+    unwrap<{ data: InvestorProfile; message: string }>(
+      api.put('/investors/me', data),
+    ),
+
+  dealflow: (params?: DealflowParams) =>
+    unwrap<PaginatedResponse<DealflowItem>>(
+      api.get('/investors/dealflow', { params }),
+    ),
+  match: (startupId: string) =>
+    unwrap<MatchDetailResponse>(api.get(`/investors/dealflow/${startupId}`)),
+
+  save: (startupId: string, note?: string) =>
+    unwrap<{ message: string }>(
+      api.post(`/investors/saved/${startupId}`, { note }),
+    ),
+  unsave: (startupId: string) =>
+    unwrap<{ message: string }>(api.delete(`/investors/saved/${startupId}`)),
+  dismiss: (startupId: string, dismissed: boolean) =>
+    unwrap<{ message: string }>(
+      api.post(`/investors/dealflow/${startupId}/dismiss`, { dismissed }),
+    ),
+
+  sendIntro: (startupId: string, message: string) =>
+    unwrap<{ data: IntroRequestItem; message: string }>(
+      api.post('/investors/intro', { startupId, message }),
+    ),
+  sentIntros: (params?: { page?: number; limit?: number }) =>
+    unwrap<PaginatedResponse<IntroRequestItem>>(
+      api.get('/investors/intro/sent', { params }),
+    ),
+  withdrawIntro: (id: string) =>
+    unwrap<{ message: string }>(api.delete(`/investors/intro/${id}`)),
+};
+
+/* ══════════ Venture: asoschi tomoni ══════════════════════════ */
+
+export const founderApi = {
+  introRequests: (params?: { page?: number; limit?: number }) =>
+    unwrap<PaginatedResponse<IntroRequestItem>>(
+      api.get('/founder/intro-requests', { params }),
+    ),
+  pendingCount: () =>
+    unwrap<{ count: number }>(api.get('/founder/intro-requests/pending-count')),
+  respondIntro: (id: string, accept: boolean) =>
+    unwrap<{ data: IntroRequestItem; message: string }>(
+      api.post(`/founder/intro-requests/${id}/respond`, { accept }),
+    ),
+  startupInterest: (startupId: string) =>
+    unwrap<StartupInterest>(
+      api.get(`/founder/startups/${startupId}/interest`),
+    ),
+};
+
+/* ══════════ Venture: loyiha tahlili ══════════════════════════ */
+
+export const assessmentApi = {
+  get: (startupId: string) =>
+    unwrap<StartupAssessment>(api.get(`/assessment/startups/${startupId}`)),
+  refresh: (startupId: string) =>
+    unwrap<StartupAssessment>(
+      api.post(`/assessment/startups/${startupId}/refresh`),
+    ),
+  /** AI matnli tahlili — pullik chaqiruv, 6 soatda bir marta. */
+  generateAi: (startupId: string) =>
+    unwrap<StartupAssessment>(api.post(`/assessment/startups/${startupId}/ai`)),
+};
+
+/* ══════════ Venture: bozor xaritasi ══════════════════════════ */
+
+export const marketApi = {
+  clusters: (limit = 24) =>
+    unwrap<MarketCluster[]>(api.get('/market/clusters', { params: { limit } })),
+  cluster: (slug: string) =>
+    unwrap<MarketClusterDetail>(api.get(`/market/clusters/${slug}`)),
+};

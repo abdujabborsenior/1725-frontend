@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from 'react';
 import { useRouter } from 'next/navigation';
+import { createPortal } from 'react-dom';
 import { useQuery } from '@tanstack/react-query';
 import {
   Search, Rocket, FileText, Spinner, ChevronRight, CloseCircleFill,
@@ -25,9 +26,13 @@ export function openSearchPalette() {
 export function SearchPalette() {
   const router = useRouter();
   const [open, setOpen] = useState(false);
+  const [mounted, setMounted] = useState(false);
   const [q, setQ] = useState('');
   const inputRef = useRef<HTMLInputElement>(null);
   const debounced = useDebounce(q, 300);
+
+  // Portal faqat brauzerda — SSR paytida document mavjud emas.
+  useEffect(() => setMounted(true), []);
 
   // ⌘K / Ctrl+K + custom open event
   useEffect(() => {
@@ -88,14 +93,21 @@ export function SearchPalette() {
   const hasResults =
     userResults.length > 0 || startupResults.length > 0 || problemResults.length > 0;
 
-  if (!open) return null;
+  if (!open || !mounted) return null;
 
-  return (
+  /* ⚠️ Portal MAJBURIY: bu komponent navbar (`<header class="material-bar">`)
+     ichida turadi, `backdrop-filter`li element esa `position: fixed`
+     avlodlar uchun CONTAINING BLOCK yaratadi — portal'siz `fixed inset-0`
+     viewportga emas, header'ning tor yo'lagiga bog'lanardi (o'lchandi: 1440×90 —
+     faqat tepadagi tasmani qoplardi) va panelning `backdrop-filter` ildizi
+     ham header bo'lib qolardi (blur amalda ishlamasdi → sahifa matni
+     panel ostidan o'qilib turardi). */
+  return createPortal(
     <div className="fixed inset-0 z-[60] flex items-start justify-center px-4 pt-[10vh]">
       <div className="absolute inset-0 animate-fade-in bg-black/30 backdrop-blur-sm" onClick={() => setOpen(false)} />
 
-      {/* iOS Spotlight — material panel, grouped natijalar */}
-      <div className="material-thick relative w-full max-w-xl animate-scale-in overflow-hidden rounded-ios-2xl shadow-modal ring-1 ring-black/[0.06]">
+      {/* iOS Spotlight — NOSHAFFOF panel (o'qilishi blur'ga bog'liq emas) */}
+      <div className="relative w-full max-w-xl animate-scale-in overflow-hidden rounded-ios-2xl bg-white shadow-modal ring-1 ring-black/[0.06]">
         {/* Qidiruv maydoni */}
         <div className="hairline-b flex items-center gap-3 px-4">
           <Search className="h-[19px] w-[19px] shrink-0 text-slate-400" />
@@ -213,6 +225,7 @@ export function SearchPalette() {
           )}
         </div>
       </div>
-    </div>
+    </div>,
+    document.body,
   );
 }

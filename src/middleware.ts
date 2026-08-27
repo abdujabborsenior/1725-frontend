@@ -15,10 +15,18 @@ const PROTECTED_PATHS = [
   '/notifications',
   '/settings',
   '/messages',
+  // Investor kabineti — butunlay shaxsiy (lenta, shortlist, so'rovlar)
+  '/investor',
 ];
 // Joylash niyati (guest CTA) — bu yo'llarga kirmagan foydalanuvchi LOGIN emas,
 // REGISTER sahifasiga yo'naltiriladi (ro'yxatdan o'tib maqsadiga qaytadi).
-const CREATE_INTENT_PATHS = ['/problems/create', '/startups/create'];
+// `/investor` ham "niyat" yo'li: mehmon investor bo'lmoqchi bo'lsa, uni
+// LOGIN emas, REGISTER sahifasiga yuborish to'g'ri (hisobi hali yo'q).
+const CREATE_INTENT_PATHS = [
+  '/problems/create',
+  '/startups/create',
+  '/investor',
+];
 const EDIT_RE = /^\/startups\/[^/]+\/edit$/;
 
 /**

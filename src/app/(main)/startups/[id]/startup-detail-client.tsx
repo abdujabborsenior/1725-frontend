@@ -14,6 +14,7 @@ import { useAuthStore } from '@/store/auth.store';
 import { PLATFORM_ORDER } from '@/lib/constants';
 import { StoreButton } from '@/components/startups/platform';
 import { StartupCard } from '@/components/startups/startup-card';
+import { ReadinessPanel } from '@/components/startups/readiness-panel';
 import { LikeButton, BookmarkButton } from '@/components/startups/engagement';
 import { Reviews } from '@/components/startups/reviews';
 import { RatingValue } from '@/components/startups/rating';
@@ -298,6 +299,9 @@ export function StartupDetailClient({ initialStartup }: { initialStartup: Startu
           </div>
         </section>
       )}
+
+      {/* Loyiha tayyorligi — FAQAT egasiga (va adminga) */}
+      {isOwner && <ReadinessPanel startupId={startup.id} />}
 
       {/* Related */}
       {related && related.length > 0 && (

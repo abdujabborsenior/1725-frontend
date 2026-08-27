@@ -18,8 +18,17 @@ import {
   Settings,
   ChevronRight,
   Wallet,
+  MailOpen,
+  Briefcase,
 } from '@/components/icons';
-import { profileApi, authApi, startupsApi, getErrorMessage } from '@/lib/api';
+import {
+  profileApi,
+  authApi,
+  startupsApi,
+  founderApi,
+  investorsApi,
+  getErrorMessage,
+} from '@/lib/api';
 import { useAuthStore } from '@/store/auth.store';
 import type { Solution } from '@/types';
 import { Button } from '@/components/ui/button';
@@ -43,6 +52,26 @@ import toast from 'react-hot-toast';
 export default function ProfilePage() {
   const router = useRouter();
   const { user, token, refreshToken, hasHydrated, clearAuth } = useAuthStore();
+
+  /**
+   * Kelgan bog'lanish so'rovlari va investor profili.
+   *
+   * Ikkalasi ham JIM: yozuv bo'lmasa profil sahifasi bugungidek ko'rinadi
+   * (qator umuman chizilmaydi). Shu tufayli venture bo'limi mavjud
+   * foydalanuvchi tajribasiga hech narsa qo'shmaydi va hech narsa olmaydi.
+   */
+  const { data: pendingIntros } = useQuery({
+    queryKey: ['founder-pending'],
+    queryFn: () => founderApi.pendingCount(),
+    enabled: !!token,
+    staleTime: 60_000,
+  });
+  const { data: investorMe } = useQuery({
+    queryKey: ['investor-me'],
+    queryFn: () => investorsApi.me(),
+    enabled: !!token,
+    staleTime: 60_000,
+  });
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
   const [deleting, setDeleting] = useState(false);
 
@@ -309,6 +338,36 @@ export default function ProfilePage() {
                 <Wallet className="h-[17px] w-[17px]" />
               </span>
               <span className="flex-1 text-body text-brand-900">Obunam</span>
+              <ChevronRight className="h-[15px] w-[15px] shrink-0 text-slate-300" strokeWidth={3} />
+            </Link>
+          )}
+          {/* Bog'lanish so'rovlari — faqat kelgan bo'lsa ko'rinadi */}
+          {(pendingIntros?.count ?? 0) > 0 && (
+            <Link href="/profile/intro-requests" className="ios-row">
+              <span className="flex h-[29px] w-[29px] shrink-0 items-center justify-center rounded-[7px] bg-indigo-500 text-white">
+                <MailOpen className="h-[17px] w-[17px]" />
+              </span>
+              <span className="flex-1 text-body text-brand-900">
+                Bog&apos;lanish so&apos;rovlari
+              </span>
+              <span className="rounded-full bg-accent-600 px-2 py-0.5 text-caption-2 font-semibold text-white">
+                {pendingIntros?.count}
+              </span>
+              <ChevronRight className="h-[15px] w-[15px] shrink-0 text-slate-300" strokeWidth={3} />
+            </Link>
+          )}
+          {/* Investor kabineti — profil ochgan foydalanuvchilarga */}
+          {investorMe?.profile && (
+            <Link href="/investor" className="ios-row">
+              <span className="flex h-[29px] w-[29px] shrink-0 items-center justify-center rounded-[7px] bg-indigo-600 text-white">
+                <Briefcase className="h-[17px] w-[17px]" />
+              </span>
+              <span className="flex-1 text-body text-brand-900">Investor kabineti</span>
+              {(investorMe.newMatches ?? 0) > 0 && (
+                <span className="rounded-full bg-accent-600 px-2 py-0.5 text-caption-2 font-semibold text-white">
+                  {investorMe.newMatches}
+                </span>
+              )}
               <ChevronRight className="h-[15px] w-[15px] shrink-0 text-slate-300" strokeWidth={3} />
             </Link>
           )}

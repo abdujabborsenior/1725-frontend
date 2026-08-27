@@ -89,6 +89,7 @@ export const ROLE_LABEL: Record<UserRole, string> = {
   school_student: "Maktab o'quvchisi",
   university_student: 'Talaba',
   user: 'Foydalanuvchi',
+  investor: 'Investor',
 };
 
 export const ROLE_BADGE: Record<UserRole, string> = {
@@ -97,6 +98,7 @@ export const ROLE_BADGE: Record<UserRole, string> = {
   school_student:     'bg-accent-50 text-accent-700',
   university_student: 'bg-sky-50 text-sky-700',
   user:               'bg-slate-100 text-slate-600',
+  investor:           'bg-indigo-50 text-indigo-700',
 };
 
 /* ── Domain data ──────────────────────────────────────────────── */

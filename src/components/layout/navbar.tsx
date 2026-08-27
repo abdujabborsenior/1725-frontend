@@ -22,6 +22,9 @@ const NAV_LINKS: { href: string; label: string; authOnly?: boolean }[] = [
   { href: '/startups', label: 'Startaplar' },
   { href: '/leaderboard', label: 'Reyting' },
   { href: '/problems', label: 'Muammolar' },
+  // Bozor xaritasi — ommaviy: platformaning "nima uchun bu yerdaman"
+  // savoliga eng kuchli javobi mehmonlarga ham ochiq turishi kerak.
+  { href: '/market', label: 'Bozor' },
   // Shaxsiy sahifa — faqat kirgan foydalanuvchiga ko'rinadi
   { href: '/solutions', label: 'Yechimlarim', authOnly: true },
   { href: '/discover', label: 'Hamjamiyat' },

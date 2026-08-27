@@ -23,6 +23,12 @@ import {
   platformsFromLinks,
   type LinkValues,
 } from './link-fields';
+import {
+  InvestorFields,
+  investorFieldsFromStartup,
+  investorFieldsToPayload,
+  type InvestorFieldsValue,
+} from './investor-fields';
 import { STARTUP_CATEGORIES, UZ_REGIONS } from '@/lib/constants';
 import { cn } from '@/lib/utils';
 import toast from 'react-hot-toast';
@@ -80,6 +86,9 @@ export function StartupForm({ initial }: { initial?: Startup }) {
   const [links, setLinks] = useState<LinkValues>(() => linksFromPlatforms(initial?.platforms));
   const [tags, setTags] = useState<string[]>(initial?.tags ?? []);
   const [tagInput, setTagInput] = useState('');
+  const [investor, setInvestor] = useState<InvestorFieldsValue>(() =>
+    investorFieldsFromStartup(initial),
+  );
   const [moreOpen, setMoreOpen] = useState(
     !!(initial?.region || initial?.teamName || initial?.foundedYear || initial?.tags.length),
   );
@@ -121,6 +130,9 @@ export function StartupForm({ initial }: { initial?: Startup }) {
         videoUrl: videoUrl ?? undefined,
         platforms: platformsFromLinks(links),
         tags,
+        // Investorlar uchun maydonlar — faqat to'ldirilganlari yuboriladi
+        // (bo'sh qiymat `undefined` bo'lib tushadi va serverga bormaydi).
+        ...investorFieldsToPayload(investor),
       } as StartupPayload;
       return editing ? startupsApi.update(initial.id, payload) : startupsApi.create(payload);
     },
@@ -245,7 +257,14 @@ export function StartupForm({ initial }: { initial?: Startup }) {
         <LinkFields values={links} onChange={setLinks} />
       </Section>
 
-      {/* ── 4. Qo'shimcha (yig'ma) ──────────────────────────── */}
+      {/* ── 4. Investorlar uchun (ixtiyoriy, yig'ma) ─────────── */}
+      <InvestorFields
+        value={investor}
+        onChange={setInvestor}
+        defaultOpen={!!initial?.stage || (initial?.needs?.length ?? 0) > 0}
+      />
+
+      {/* ── 5. Qo'shimcha (yig'ma) ──────────────────────────── */}
       <section className="overflow-hidden rounded-ios-lg bg-white">
         <button
           type="button"
