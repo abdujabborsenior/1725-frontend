@@ -429,6 +429,27 @@ export interface LeaderboardResponse {
   meta: LeaderboardMeta;
 }
 
+/** Havoladan avtomatik olingan rasm (bizning storage'ga ko'chirilgan). */
+export interface ImportedImage {
+  url: string;
+  /** `false` — asl (tashqi) havola: storage vaqtincha ishlamagan. */
+  stored: boolean;
+  width: number | null;
+  height: number | null;
+}
+
+/** `POST /startups/link-metadata` javobi — muqova va logo avtomatik topiladi. */
+export interface LinkMetadata {
+  url: string;
+  detectedType: PlatformType;
+  /** Metadata qaysi manbadan olingani (foydalanuvchiga ko'rsatiladi). */
+  source: 'appstore' | 'playstore' | 'telegram' | 'website' | 'none';
+  title: string | null;
+  tagline: string | null;
+  cover: ImportedImage | null;
+  logo: ImportedImage | null;
+}
+
 export interface LinkPreview {
   url: string;
   detectedType: PlatformType;

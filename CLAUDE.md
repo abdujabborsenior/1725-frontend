@@ -83,6 +83,27 @@ Barchasi blur+saturate. Faqat chrome/overlay uchun — kontent kartasiga emas.
   `.cta-arrow` (hover'da 3px o'ngga). Hover qoidasi: har doim
   `@media (hover: hover)` ichida — sensorli ekranda holat "yopishib" qolmaydi.
 - **Tab bar** (mobil): faol band TO'LDIRILGAN (`*Fill`) ikonka + tint.
+- **Hero vizuali** (`landing/hero-visual.tsx`) — home hero'ning o'ng ustuni:
+  stock rasm emas, MAHSULOTNING o'zi. Uch sirt (muammo chipi → Yechim AI chipi
+  → startap kartasi) turli balandlikda qalashadi; chiplar kartaning faqat
+  BURCHAGINI qoplaydi (logotip/sarlavha/reyting hech qachon berkilmaydi).
+  Rasm fayli yo'q — DOM + tokenlar (retina'da aniq, tarmoq so'rovi 0, LCP
+  h1 matnida qoladi). **Mobilda ham uchala qatlam ko'rinadi** (2026-08-28):
+  kengliklar FOIZDA (karta 60% · muammo 53% · AI chipi 42% — yig'indisi
+  100% dan kam, ya'ni chip o'ng qirrasi kartaning 16px chekinishidan chapda
+  qoladi), matn qisqargan variant bilan. Qat'iy px kengliklar 360px'da
+  reyting qatorini qoplab qo'yardi. Kanvas balandligi o'zgarmadi.
+- **AI kirish nuqtasi** (`ai/ai-launcher.tsx`) — home'dagi Yechim AI moduli:
+  chapda NIMA ekani (marka + sarlavha + bir jumla), o'ngda NIMA QILISH kerakligi
+  (maydon + tez savollar). Ikki ustun faqat `lg`dan (768px'da sarlavha ustuni
+  siqilib ketadi). **O'lcham intizomi**: kirish maydoni HECH QACHON konteyner
+  kengligiga cho'zilmaydi — `max-w-[26rem]` + balandligi `/ai` composeri bilan
+  bir xil (52px pill, 40px boshqaruvlar). Bir mahsulotda bitta boshqaruv ikki
+  xil o'lchamda bo'lmaydi; cho'zilgan maydon boshqaruv emas, "tarnov" bo'lib
+  ko'rinadi. Tinch nur — `.ai-aura-idle` KLASSI (inline `style` bilan
+  `--ai-glow` berilsa `:focus-within` uni bosa olmaydi → maydon fokusda
+  jonlanmay qoladi). O'zbekcha maydonlarda `spellCheck={false}` (brauzer
+  lug'ati yo'q — qizil to'lqin butun matnni "xato" ko'rsatadi).
 
 ### 2.6 Ikonografiya — Ionicons (iOS to'plami)
 - Manba: **Ionicons 8** (MIT, iOS uchun chizilgan) → `npm run icons:gen`

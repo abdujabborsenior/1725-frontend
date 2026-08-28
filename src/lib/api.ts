@@ -24,6 +24,7 @@ import type {
   FounderEntry,
   LeaderboardPeriod,
   LeaderboardResponse,
+  LinkMetadata,
   LinkPreview,
   LoginResponse,
   MessageType,
@@ -423,6 +424,20 @@ export const startupsApi = {
     unwrap<{ message: string }>(api.delete(`/startups/${id}`)),
   linkPreview: (url: string) =>
     unwrap<LinkPreview>(api.get('/startups/link-preview', { params: { url } })),
+
+  /**
+   * Havoladan muqova va logoni avtomatik olish (App Store, Google Play,
+   * Telegram, sayt). `needCover`/`needLogo` — maydon allaqachon to'ldirilgan
+   * bo'lsa `false`: server o'sha rasmni bekorga yuklab olmaydi.
+   */
+  linkMetadata: (url: string, need: { cover: boolean; logo: boolean }) =>
+    unwrap<LinkMetadata>(
+      api.post('/startups/link-metadata', {
+        url,
+        needCover: need.cover,
+        needLogo: need.logo,
+      }),
+    ),
 
   // Reviews
   reviews: (idOrSlug: string, params?: { page?: number; limit?: number }) =>

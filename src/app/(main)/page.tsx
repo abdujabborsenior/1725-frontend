@@ -21,6 +21,7 @@ import { Reveal, RevealGroup, RevealItem } from '@/components/landing/reveal';
 import { AiLauncher } from '@/components/ai/ai-launcher';
 import { ChatFab } from '@/components/landing/chat-fab';
 import { CountUp } from '@/components/landing/count-up';
+import { HeroVisual } from '@/components/landing/hero-visual';
 import { Marquee } from '@/components/landing/marquee';
 import { LazySection } from '@/components/landing/lazy-section';
 
@@ -192,62 +193,70 @@ export default function LandingPage() {
       {/* ── Hero ─────────────────────────────────────────────────────────
           Apple mahsulot sahifasi ritmi: tinch oq sirt, yirik va zich
           sarlavha, bitta asosiy amal + bitta oddiy havola. Dekor yo'q. */}
-      <section className="-mx-4 bg-white px-4 pb-14 pt-12 text-center md:mx-0 md:rounded-ios-3xl md:px-6 md:pb-20 md:pt-20">
-        <div className="mx-auto max-w-3xl">
-          <h1 className="text-[2.5rem] font-semibold leading-[1.05] tracking-[-0.03em] text-brand-900 md:text-[4.5rem]">
-            G‘oyadan
-            <br />
-            biznes loyihagacha.
-          </h1>
+      <section className="-mx-4 bg-white px-4 pb-14 pt-12 text-center md:mx-0 md:rounded-ios-3xl md:px-6 md:pb-20 md:pt-16 lg:text-left">
+        <div className="mx-auto grid max-w-5xl items-center gap-12 lg:grid-cols-[minmax(0,1fr)_minmax(0,444px)] lg:gap-10">
+          <div>
+            <h1 className="text-[2.5rem] font-semibold leading-[1.05] tracking-[-0.03em] text-brand-900 md:text-[4.5rem] lg:text-[3.25rem] xl:text-[3.75rem]">
+              {/* Ikki ustunli maketda sarlavha o'zi tabiiy o'raladi */}
+              G‘oyadan{' '}
+              <br className="lg:hidden" />
+              biznes loyihagacha.
+            </h1>
 
-          <p className="mx-auto mt-5 max-w-xl text-title-3 font-normal leading-snug text-slate-500 md:mt-6">
-            MYMarkaz — o‘quvchilar, talabalar va kreativ yoshlar yig‘iladigan maydon. Muammoni
-            yozing, yechimini hamjamiyat bilan quring, jamoa toping va g‘oyangizni real mahsulotga
-            aylantiring.
-          </p>
+            <p className="mx-auto mt-5 max-w-xl text-title-3 font-normal leading-snug text-slate-500 md:mt-6 lg:mx-0">
+              MYMarkaz — o‘quvchilar, talabalar va kreativ yoshlar yig‘iladigan maydon. Muammoni
+              yozing, yechimini hamjamiyat bilan quring, jamoa toping va g‘oyangizni real
+              mahsulotga aylantiring.
+            </p>
 
-          <div
-            className="hero-enter mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row sm:gap-4"
-            style={{ '--enter-delay': '0.18s' } as CSSProperties}
-          >
-            {token ? (
-              <>
-                <Link
-                  href="/startups"
-                  className="tappable cta-fill flex h-[50px] min-w-[200px] items-center justify-center rounded-full bg-accent-600 px-7 text-body font-medium text-white active:bg-accent-700"
-                >
-                  Vitrinani ko‘rish
-                </Link>
-                <Link
-                  href="/messages"
-                  className="tappable cta-fill cta-fill-gray flex h-[50px] min-w-[200px] items-center justify-center gap-2 rounded-full bg-fill-tertiary px-7 text-body font-medium text-brand-900 active:bg-fill"
-                >
-                  <MessageCircle className="h-[19px] w-[19px]" /> Suhbatlar
-                </Link>
-              </>
-            ) : (
-              <>
-                <Link
-                  href="/register"
-                  className="tappable cta-fill flex h-[50px] min-w-[200px] items-center justify-center rounded-full bg-accent-600 px-7 text-body font-medium text-white active:bg-accent-700"
-                >
-                  Bepul boshlash
-                </Link>
-                <a
-                  href="#startap-nima"
-                  className="tappable cta-ghost inline-flex h-[50px] items-center justify-center gap-1 rounded-full px-5 text-body font-medium text-accent-700"
-                >
-                  Startap nima?
-                  <ChevronRight className="cta-arrow h-[15px] w-[15px]" strokeWidth={3} />
-                </a>
-              </>
-            )}
+            <div
+              className="hero-enter mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row sm:gap-4 lg:justify-start"
+              style={{ '--enter-delay': '0.18s' } as CSSProperties}
+            >
+              {token ? (
+                <>
+                  <Link
+                    href="/startups"
+                    className="tappable cta-fill flex h-[50px] min-w-[200px] items-center justify-center rounded-full bg-accent-600 px-7 text-body font-medium text-white active:bg-accent-700"
+                  >
+                    Vitrinani ko‘rish
+                  </Link>
+                  <Link
+                    href="/messages"
+                    className="tappable cta-fill cta-fill-gray flex h-[50px] min-w-[200px] items-center justify-center gap-2 rounded-full bg-fill-tertiary px-7 text-body font-medium text-brand-900 active:bg-fill"
+                  >
+                    <MessageCircle className="h-[19px] w-[19px]" /> Suhbatlar
+                  </Link>
+                </>
+              ) : (
+                <>
+                  <Link
+                    href="/register"
+                    className="tappable cta-fill flex h-[50px] min-w-[200px] items-center justify-center rounded-full bg-accent-600 px-7 text-body font-medium text-white active:bg-accent-700"
+                  >
+                    Bepul boshlash
+                  </Link>
+                  <a
+                    href="#startap-nima"
+                    className="tappable cta-ghost inline-flex h-[50px] items-center justify-center gap-1 rounded-full px-5 text-body font-medium text-accent-700"
+                  >
+                    Startap nima?
+                    <ChevronRight className="cta-arrow h-[15px] w-[15px]" strokeWidth={3} />
+                  </a>
+                </>
+              )}
+            </div>
+          </div>
+
+          {/* Vizual — stock rasm emas, mahsulotning o'zi (DOM, rasm fayli yo'q) */}
+          <div className="mt-2 lg:mt-0">
+            <HeroVisual />
           </div>
         </div>
 
         {/* Nimalar quriladi — marquee */}
         <div
-          className="hero-enter mx-auto mt-14 max-w-4xl"
+          className="hero-enter mx-auto mt-14 max-w-5xl"
           style={{ '--enter-delay': '0.34s' } as CSSProperties}
         >
           <p className="mb-3 text-footnote text-slate-400">Hamjamiyat shu yerda nimalar quryapti</p>

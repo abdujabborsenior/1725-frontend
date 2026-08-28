@@ -23,6 +23,7 @@ import {
   platformsFromLinks,
   type LinkValues,
 } from './link-fields';
+import { useLinkAutofill } from './use-link-autofill';
 import {
   InvestorFields,
   investorFieldsFromStartup,
@@ -178,6 +179,26 @@ export function StartupForm({ initial }: { initial?: Startup }) {
   const descLength = watch('description')?.length ?? 0;
   const selectedCategory = watch('category');
 
+  /**
+   * Havoladan avtomatik logo/muqova. Faqat BO'SH maydonlarni to'ldiradi —
+   * foydalanuvchi kiritganiga tegmaydi.
+   */
+  const autofill = useLinkAutofill(
+    links,
+    {
+      logo: logoUrl,
+      cover: coverUrl,
+      title: watch('title') ?? '',
+      tagline: watch('tagline') ?? '',
+    },
+    {
+      setLogo: setLogoUrl,
+      setCover: setCoverUrl,
+      setTitle: (v) => setValue('title', v, { shouldValidate: true }),
+      setTagline: (v) => setValue('tagline', v, { shouldValidate: true }),
+    },
+  );
+
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-9">
       {/* ── 1. Asosiy ma'lumot ──────────────────────────────── */}
@@ -232,7 +253,7 @@ export function StartupForm({ initial }: { initial?: Startup }) {
       {/* ── 2. Media (ixtiyoriy) ────────────────────────────── */}
       <Section
         title="Media"
-        hint="Ixtiyoriy — logo, muqova rasmi yoki video startapingizga ishonch qo'shadi"
+        hint="Ixtiyoriy — havolani kiritsangiz logo va muqova o'zi to'ldiriladi"
       >
         <div className="space-y-4">
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-[140px_1fr]">
@@ -254,7 +275,12 @@ export function StartupForm({ initial }: { initial?: Startup }) {
         title="Havolalar"
         hint="Foydalanuvchilar startapingizni qayerdan topadi? Bittasini to'ldirsangiz ham bo'ladi."
       >
-        <LinkFields values={links} onChange={setLinks} />
+        <LinkFields
+          values={links}
+          onChange={setLinks}
+          autofill={autofill.state}
+          onFieldBlur={autofill.flush}
+        />
       </Section>
 
       {/* ── 4. Investorlar uchun (ixtiyoriy, yig'ma) ─────────── */}

@@ -1209,6 +1209,14 @@ select:-webkit-autofill {
   animation: aiAngle var(--ai-speed, 14s) linear infinite;
   pointer-events: none;
 }
+/* Tinch holatdagi nur — landing kirish maydoni uchun (sirtdan ko'tarilib
+   turadi). ⚠️ Bu ATAYLAB klass: qiymat `style={{'--ai-glow'}}` bilan inline
+   berilsa, fokusdagi `--ai-glow: 0.3` uni HECH QACHON bosa olmaydi (inline
+   ustuvor) — maydon fokusda jonlanmay qolardi. */
+.ai-aura-idle {
+  --ai-glow: 0.14;
+}
+
 /* Fokus / faol holat — nur jonlanadi (nozik, bachkana emas) */
 .ai-aura:focus-within,
 .ai-aura[data-state='thinking'] {

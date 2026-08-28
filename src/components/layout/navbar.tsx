@@ -13,6 +13,7 @@ import { authApi, chatApi } from '@/lib/api';
 import { Avatar } from '@/components/ui/avatar';
 import { NotificationBell } from '@/components/layout/notification-bell';
 import { SearchPalette, openSearchPalette } from '@/components/layout/search-palette';
+import { AdaptiveNav, type NavItem } from '@/components/layout/adaptive-nav';
 import toast from 'react-hot-toast';
 import { BILLING_ENABLED } from '@/lib/billing';
 
@@ -112,9 +113,19 @@ export function Navbar() {
 
   const links = NAV_LINKS.filter((l) => !l.authOnly || token);
 
+  // Yechim AI — navigatsiyadagi yagona belgili band: mahsulotning aqlli qismi
+  // bir qarashda ajralib tursin. Ro'yxatning boshida turadi.
+  const navItems: NavItem[] = [
+    { href: '/ai', label: 'Yechim AI', icon: <YechimMark size={18} /> },
+    ...links.map(({ href, label }) => ({ href, label })),
+  ];
+
   return (
     <header className="material-bar hairline-b sticky top-0 z-40 w-full">
-      <div className="mx-auto flex h-[52px] max-w-6xl items-center gap-3 px-4">
+      {/* Navbar konteyneri sahifa kontentidan (max-w-6xl) KENGROQ: bu sirt
+          elementi va unda logo + bandlar + amallar turadi. Bandlar esa mavjud
+          joyga qarab `AdaptiveNav` bilan o'zi moslashadi. */}
+      <div className="mx-auto flex h-[52px] max-w-7xl items-center gap-3 px-4 2xl:max-w-[1400px]">
         {/* Logo */}
         <Link href="/" className="tappable flex shrink-0 items-center gap-2">
           <LogoMark className="h-[30px] w-[30px]" />
@@ -123,43 +134,15 @@ export function Navbar() {
           </span>
         </Link>
 
-        {/* Desktop nav — iOS segment uslubidagi yumshoq faol holat */}
-        <nav className="ml-2 hidden items-center gap-0.5 xl:flex">
-          {/* Yechim AI — navigatsiyadagi yagona belgili band: mahsulotning
-              aqlli qismi bir qarashda ajralib tursin. */}
-          <Link
-            href="/ai"
-            aria-label="Yechim AI"
-            className={cn(
-              'flex items-center gap-1.5 whitespace-nowrap rounded-full py-1.5 pl-2 pr-3 text-subhead transition-colors duration-150 ease-ios',
-              pathname.startsWith('/ai')
-                ? 'bg-fill-tertiary font-semibold text-brand-900'
-                : 'font-medium text-slate-500 hover:text-brand-900',
-            )}
-          >
-            <YechimMark size={18} />
-            <span>Yechim AI</span>
-          </Link>
-          {links.map(({ href, label }) => {
-            const active = pathname.startsWith(href);
-            return (
-              <Link
-                key={href}
-                href={href}
-                className={cn(
-                  'whitespace-nowrap rounded-full px-3 py-1.5 text-subhead transition-colors duration-150 ease-ios',
-                  active
-                    ? 'bg-fill-tertiary font-semibold text-brand-900'
-                    : 'font-medium text-slate-500 hover:text-brand-900',
-                )}
-              >
-                {label}
-              </Link>
-            );
-          })}
-        </nav>
+        {/*
+          Desktop nav — sig'ganicha ko'rsatadi, qolganini «•••» menyusiga yig'adi.
+          Qat'iy band ro'yxati o'rniga HAQIQIY o'lchov: band qo'shilganda ham
+          (masalan to'lov bo'limi yoqilsa "Tariflar") navbar toshib ketmaydi.
+        */}
+        <AdaptiveNav items={navItems} pathname={pathname} />
 
-        <div className="flex-1" />
+        {/* Mobilda amallarni o'ngga suradigan bo'shliq (desktopda nav o'zi cho'ziladi) */}
+        <div className="flex-1 xl:hidden" />
 
         {/* Desktop amallar */}
         <div className="hidden items-center gap-1.5 xl:flex">
@@ -169,8 +152,10 @@ export function Navbar() {
             className="ios-search tappable flex h-9 items-center gap-2 px-3 text-slate-500"
           >
             <Search className="h-4 w-4" />
-            <span className="text-subhead">Qidirish</span>
-            <kbd className="ml-2 rounded-md bg-white/70 px-1.5 py-0.5 text-caption-2 font-medium text-slate-500">
+            {/* "Qidirish" so'zi keng ekranda — tor desktopda ikonka + ⌘K
+                o'zi tushunarli va navigatsiyaga joy bo'shatadi. */}
+            <span className="hidden text-subhead 2xl:inline">Qidirish</span>
+            <kbd className="rounded-md bg-white/70 px-1.5 py-0.5 text-caption-2 font-medium text-slate-500 2xl:ml-2">
               ⌘K
             </kbd>
           </button>
