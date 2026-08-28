@@ -214,13 +214,13 @@ export default function LandingPage() {
               <>
                 <Link
                   href="/startups"
-                  className="tappable flex h-[50px] min-w-[200px] items-center justify-center rounded-full bg-accent-600 px-7 text-body font-medium text-white active:bg-accent-700"
+                  className="tappable cta-fill flex h-[50px] min-w-[200px] items-center justify-center rounded-full bg-accent-600 px-7 text-body font-medium text-white active:bg-accent-700"
                 >
                   Vitrinani ko‘rish
                 </Link>
                 <Link
                   href="/messages"
-                  className="tappable flex h-[50px] min-w-[200px] items-center justify-center gap-2 rounded-full bg-fill-tertiary px-7 text-body font-medium text-brand-900 active:bg-fill"
+                  className="tappable cta-fill cta-fill-gray flex h-[50px] min-w-[200px] items-center justify-center gap-2 rounded-full bg-fill-tertiary px-7 text-body font-medium text-brand-900 active:bg-fill"
                 >
                   <MessageCircle className="h-[19px] w-[19px]" /> Suhbatlar
                 </Link>
@@ -229,16 +229,16 @@ export default function LandingPage() {
               <>
                 <Link
                   href="/register"
-                  className="tappable flex h-[50px] min-w-[200px] items-center justify-center rounded-full bg-accent-600 px-7 text-body font-medium text-white active:bg-accent-700"
+                  className="tappable cta-fill flex h-[50px] min-w-[200px] items-center justify-center rounded-full bg-accent-600 px-7 text-body font-medium text-white active:bg-accent-700"
                 >
                   Bepul boshlash
                 </Link>
                 <a
                   href="#startap-nima"
-                  className="tappable inline-flex items-center gap-0.5 text-body font-medium text-accent-700"
+                  className="tappable cta-ghost inline-flex h-[50px] items-center justify-center gap-1 rounded-full px-5 text-body font-medium text-accent-700"
                 >
                   Startap nima?
-                  <ChevronRight className="h-[15px] w-[15px]" strokeWidth={3} />
+                  <ChevronRight className="cta-arrow h-[15px] w-[15px]" strokeWidth={3} />
                 </a>
               </>
             )}
@@ -522,16 +522,16 @@ export default function LandingPage() {
               <div className="mt-7 flex flex-col items-center justify-center gap-3 sm:flex-row sm:gap-4">
                 <Link
                   href="/register"
-                  className="tappable flex h-[50px] min-w-[200px] items-center justify-center rounded-full bg-white px-7 text-body font-medium text-brand-900"
+                  className="tappable cta-fill cta-fill-light flex h-[50px] min-w-[200px] items-center justify-center rounded-full bg-white px-7 text-body font-medium text-brand-900"
                 >
                   Bepul boshlash
                 </Link>
                 <Link
                   href="/login"
-                  className="tappable inline-flex items-center gap-0.5 text-body font-medium text-accent-400"
+                  className="tappable cta-ghost cta-ghost-dark inline-flex h-[50px] items-center justify-center gap-1 rounded-full px-5 text-body font-medium text-accent-400"
                 >
                   Kirish
-                  <ChevronRight className="h-[15px] w-[15px]" strokeWidth={3} />
+                  <ChevronRight className="cta-arrow h-[15px] w-[15px]" strokeWidth={3} />
                 </Link>
               </div>
             </div>

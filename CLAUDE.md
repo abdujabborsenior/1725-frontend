@@ -75,6 +75,13 @@ Barchasi blur+saturate. Faqat chrome/overlay uchun — kontent kartasiga emas.
   Orqaga = chevron + "Orqaga" tint matn (`ui/back-button.tsx`).
 - **Bosish javobi**: `.tappable` (opacity) / `.tappable-scale`. Hover-lift
   (`hover:-translate-y`) TAQIQ — iOS'da element ko'tarilmaydi.
+- **CTA juftligi** (hero / yakuniy chaqiruv): `.cta-fill` (to'ldirilgan tugma —
+  hover'da foni to'qlashadi + rangdosh yumshoq nur; sirtga qarab
+  `.cta-fill-light` navy ustidagi oq, `.cta-fill-gray` system fill) +
+  `.cta-ghost` (ikkilamchi — chegara DOIM turadi, faqat hover'da rangi
+  "chiqadi" → maket sakramaydi; navy ustida `.cta-ghost-dark`) va ichidagi
+  `.cta-arrow` (hover'da 3px o'ngga). Hover qoidasi: har doim
+  `@media (hover: hover)` ichida — sensorli ekranda holat "yopishib" qolmaydi.
 - **Tab bar** (mobil): faol band TO'LDIRILGAN (`*Fill`) ikonka + tint.
 
 ### 2.6 Ikonografiya — Ionicons (iOS to'plami)

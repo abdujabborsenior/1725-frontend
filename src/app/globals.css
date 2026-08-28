@@ -337,6 +337,61 @@ select:-webkit-autofill {
   opacity: 0.9;
 }
 
+/* ═══ CTA JUFTLIGI (hero / yakuniy chaqiruv) ═══════════════════════════
+   Kursorli qurilmada tugma KO'TARILMAYDI (iOS) — foni to'qlashadi va ostida
+   rangdosh yumshoq nur paydo bo'ladi. Ikkilamchi CTA tinch holatda fonsiz;
+   hoshiyasi hover'da "chiqadi" — chegara doim turadi, faqat rangi o'zgaradi,
+   ya'ni maket sakramaydi. Strelka bir qadam o'ngga siljib yo'nalishni aytadi.
+   Hover faqat `hover: hover` qurilmalarda — sensorli ekranda "yopishib"
+   qolgan holat bo'lmaydi. */
+.cta-fill {
+  --cta-hover: #0059b3; /* accent-700 */
+  --cta-glow: rgba(0, 113, 227, 0.5);
+  transition:
+    background-color var(--dur-micro) var(--ease-ios),
+    box-shadow var(--dur-base) var(--ease-ios),
+    opacity var(--dur-micro) var(--ease-ios);
+}
+/* Navy sirt ustidagi oq tugma */
+.cta-fill-light {
+  --cta-hover: #f2f2f7; /* iOS gray6 */
+  --cta-glow: rgba(255, 255, 255, 0.3);
+}
+/* Kulrang (system fill) ikkilamchi tugma */
+.cta-fill-gray {
+  --cta-hover: rgba(120, 120, 128, 0.2);
+  --cta-glow: rgba(0, 0, 0, 0.16);
+}
+.cta-ghost {
+  --cta-line: #adcfff; /* accent-200 */
+  --cta-tint: #ebf3ff; /* accent-50 */
+  border: 1px solid transparent;
+  transition:
+    border-color var(--dur-micro) var(--ease-ios),
+    background-color var(--dur-micro) var(--ease-ios);
+}
+/* Navy sirt ustidagi ikkilamchi CTA */
+.cta-ghost-dark {
+  --cta-line: rgba(255, 255, 255, 0.3);
+  --cta-tint: rgba(255, 255, 255, 0.08);
+}
+.cta-arrow {
+  transition: transform var(--dur-base) var(--ease-ios);
+}
+@media (hover: hover) {
+  .cta-fill:hover {
+    background-color: var(--cta-hover);
+    box-shadow: 0 10px 26px -12px var(--cta-glow);
+  }
+  .cta-ghost:hover {
+    border-color: var(--cta-line);
+    background-color: var(--cta-tint);
+  }
+  .cta-ghost:hover .cta-arrow {
+    transform: translateX(3px);
+  }
+}
+
 /* ═══ FOKUS (klaviatura) ═══════════════════════════════════════════════ */
 .input-focus:focus,
 .input-focus:focus-visible {
@@ -1487,6 +1542,13 @@ select:-webkit-autofill {
 
 /* ═══ HARAKATNI KAMAYTIRISH ════════════════════════════════════════════ */
 @media (prefers-reduced-motion: reduce) {
+  /* Hover'dagi strelka siljishi — harakat kamaytirilganda o'chadi */
+  .cta-arrow {
+    transition: none;
+  }
+  .cta-ghost:hover .cta-arrow {
+    transform: none;
+  }
   .animate-aurora,
   .animate-blob,
   .animate-marquee,
