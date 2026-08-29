@@ -157,7 +157,7 @@ export function StartupsClient({
               className="text-footnote"
             >
               {c.category}
-              <span className={cn('tabular-nums', category === c.category ? 'text-white/80' : 'text-slate-400')}>
+              <span className={cn('tabular-nums', category === c.category ? 'text-white/80' : 'text-slate-600')}>
                 {c.count}
               </span>
             </FilterChip>

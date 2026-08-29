@@ -282,7 +282,7 @@ select:-webkit-autofill {
   transform-origin: top;
   pointer-events: none;
 }
-.ios-row {
+:where(.ios-row) {
   display: flex;
   align-items: center;
   gap: 0.75rem;
@@ -517,26 +517,239 @@ select:-webkit-autofill {
   outline: none;
 }
 
+/* ═══ PODIUM METALLARI (reyting top-3) ════════════════════════════════
+   iOS system palitrasi bu yerda yetmaydi: `amber` = systemOrange, shuning
+   uchun 1- va 3-o'rin ayni bir to'q sariq bo'lib chiqardi va podium "medal"
+   ma'nosini yo'qotgan edi. Metal ranglari SHU YERDA, faqat podium uchun
+   e'lon qilinadi (mahsulotning qolgan qismiga tarqalmaydi):
+     --m1 yorug' qirra · --m2 asosiy metall · --m3 soya · --m-ink matn.
+   Har bir juftlik oq fonda AA dan o'tadi (matn --m-ink bilan yoziladi). */
+.medal-gold {
+  --m1: #fbeaa8;
+  --m2: #e0ac2b;
+  --m3: #a3730f;
+  --m-ink: #4a3106;
+  --m-soft: #fdf6e3;
+  --m-glow: rgba(224, 172, 43, 0.4);
+}
+.medal-silver {
+  --m1: #f4f6f9;
+  --m2: #c3c9d4;
+  --m3: #8a93a2;
+  --m-ink: #333a45;
+  --m-soft: #f5f7fa;
+  --m-glow: rgba(150, 160, 176, 0.38);
+}
+.medal-bronze {
+  --m1: #f3cba7;
+  --m2: #c47f3c;
+  --m3: #8a4f1d;
+  --m-ink: #43240c;
+  --m-soft: #fbf1e8;
+  --m-glow: rgba(196, 127, 60, 0.36);
+}
+
+/* Metal tamg'a — o'rin raqami. Yorug'lik yuqoridan tushadi (1 → 2 → 3),
+   ya'ni haqiqiy quyma metall qirrasi taassuroti; porloq "kamalak" emas. */
+:where(.medal-badge) {
+  background: linear-gradient(160deg, var(--m1) 0%, var(--m2) 52%, var(--m3) 100%);
+  color: var(--m-ink);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.65),
+    0 2px 6px rgba(0, 0, 0, 0.14);
+}
+/* Logotip atrofidagi metal halqa */
+.medal-ring {
+  box-shadow:
+    0 0 0 3px #ffffff,
+    0 0 0 5px var(--m2);
+}
+/* Kartaning yuqori qirrasidagi metal chizig'i */
+.medal-edge {
+  background: linear-gradient(90deg, var(--m3) 0%, var(--m1) 50%, var(--m3) 100%);
+}
+
+/* Podium kartasi — bu mahsulotdagi YAGONA "tantanali" sirt, shuning uchun
+   unga o'z interaksiyasi berilgan: kursor ostida karta bir oz ko'tariladi
+   va ostida metal rangidagi yumshoq nur paydo bo'ladi; tamg'a bo'ylab bir
+   marta yorug'lik yuguradi (metall aks etishi). Boshqa kartalarga bu
+   naqsh TARQALMAYDI — u faqat top-3 ga tegishli. */
+.podium-card {
+  transition:
+    transform 0.32s var(--ease-ios),
+    box-shadow 0.32s var(--ease-ios);
+  will-change: transform;
+}
+@media (hover: hover) and (pointer: fine) {
+  .podium-card:hover {
+    transform: translateY(-4px);
+    box-shadow:
+      0 18px 40px -14px var(--m-glow),
+      0 4px 12px rgba(0, 0, 0, 0.06);
+  }
+  /* Tamg'a bo'ylab yorug'lik — faqat hover'da, bir marta (cheksiz emas) */
+  .podium-card:hover .medal-badge::after {
+    animation: medalSheen 0.85s var(--ease-ios);
+  }
+}
+.podium-card:active {
+  transform: translateY(-1px) scale(0.992);
+}
+:where(.medal-badge) {
+  position: relative;
+  overflow: hidden;
+}
+.medal-badge::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    100deg,
+    transparent 30%,
+    rgba(255, 255, 255, 0.75) 50%,
+    transparent 70%
+  );
+  transform: translateX(-130%);
+  pointer-events: none;
+}
+@keyframes medalSheen {
+  to {
+    transform: translateX(130%);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .podium-card,
+  .podium-card:hover,
+  .podium-card:active {
+    transform: none;
+    transition: box-shadow 0.2s linear;
+  }
+  .podium-card:hover .medal-badge::after {
+    animation: none;
+  }
+}
+
+/* ═══ TOGGLE JAVOBI (yoqtirish / saqlash / foydali) ════════════════════
+   Ro'yxatda amal bajarilganini bildiradigan boshqa signal yo'q (sahifa
+   o'zgarmaydi, toast chiqmaydi) — shuning uchun belgi bir marta "urib"
+   qo'yadi. Faqat TO'LDIRILGAN holatga qo'llanadi va bir marta ijro etadi;
+   `prefers-reduced-motion`da umuman yo'q. */
+@keyframes heartPop {
+  0% {
+    transform: scale(0.72);
+  }
+  45% {
+    transform: scale(1.22);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+.heart-pop {
+  animation: heartPop 0.34s cubic-bezier(0.34, 1.3, 0.64, 1);
+  transform-origin: center;
+}
+@media (prefers-reduced-motion: reduce) {
+  .heart-pop {
+    animation: none;
+  }
+}
+
+/* ═══ BREND SIRTI (footer + auth paneli) ══════════════════════════════
+   Rang loyihaning O'ZIDAN olingan: MYMarkaz belgisi to'q dengiz-ko'k
+   (#0A192F) markazdan ochroq ko'kka (#74ABD8) o'sadi. Mahsulotdagi YAGONA
+   to'q sirt shu — footer ham, auth brend paneli ham undan foydalanadi,
+   shuning uchun "chuqur" holatlar bir xil his beradi. Dekorativ blob/
+   kamalak YO'Q: bitta chuqurlik gradienti. */
+.brand-surface {
+  position: relative;
+  background:
+    radial-gradient(120% 90% at 12% 0%, rgba(0, 122, 255, 0.16) 0%, transparent 62%),
+    linear-gradient(180deg, #0c2545 0%, #08182e 100%);
+  isolation: isolate;
+}
+/* Yuqori qirradagi imzo chizig'i — brend tinti chetlarga so'niydi (1px). */
+.footer-seam::before {
+  content: '';
+  position: absolute;
+  inset: 0 0 auto 0;
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(0, 122, 255, 0.55) 22%,
+    rgba(88, 86, 214, 0.55) 55%,
+    transparent 100%
+  );
+  pointer-events: none;
+}
+/* To'q sirtdagi ajratkich — footer ichidagi qatorlar uchun */
+.footer-rule {
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+/* Footer havolasi — to'q sirtda tinch holatda ham AA kontrast, hover'da oq.
+   Vazni `medium`: oldingi holatda ingichka va past kontrast edi (o'qilmasdi). */
+.footer-link {
+  color: rgba(235, 240, 248, 0.78);
+  transition:
+    color var(--dur-micro) var(--ease-ios),
+    opacity var(--dur-micro) var(--ease-ios);
+}
+@media (hover: hover) and (pointer: fine) {
+  .footer-link:hover {
+    color: #ffffff;
+  }
+}
+.footer-link:active {
+  opacity: 0.6;
+}
+/* Kontakt/social doirachasi — shisha sirt, hover'da tint */
+.footer-chip {
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  color: rgba(235, 240, 248, 0.88);
+  transition:
+    background-color var(--dur-micro) var(--ease-ios),
+    border-color var(--dur-micro) var(--ease-ios),
+    color var(--dur-micro) var(--ease-ios);
+}
+@media (hover: hover) and (pointer: fine) {
+  .footer-chip:hover {
+    background: rgba(0, 122, 255, 0.22);
+    border-color: rgba(0, 122, 255, 0.5);
+    color: #ffffff;
+  }
+}
+.footer-chip:active {
+  opacity: 0.7;
+}
+
 /* ═══ SIRTLAR ══════════════════════════════════════════════════════════ */
-.card {
+:where(.card) {
   background: #ffffff;
   border: 1px solid #e5e5ea;
   border-radius: 0.875rem;
 }
-.card-soft {
+:where(.card-soft) {
   background: var(--ios-gray6);
   border: 1px solid transparent;
   border-radius: 0.875rem;
 }
 
 /* ═══ SEGMENTED CONTROL (iOS) ══════════════════════════════════════════ */
-.segmented {
+/* ⚠️ `:where()` — 0 spetsifikatsiya (hairline darsi, 2026-08-23).
+   Bu qoida unlayered va Tailwind utilitalaridan KEYIN keladi, shuning uchun
+   oddiy `.segmented` yozilsa `display: inline-flex` komponentdagi `flex`
+   utilitasini BOSIB ketardi: segmented control inline-level bo'lib oldingi
+   matn qatoriga yopishib qolardi (reyting sahifasida "N ta baholangan
+   startap raqobatda" matni ustiga chiqib ketgan edi). */
+:where(.segmented) {
   display: inline-flex;
   padding: 2px;
   background: rgba(118, 118, 128, 0.12);
   border-radius: 0.5625rem;
 }
-.segment {
+:where(.segment) {
   position: relative;
   flex: 1 1 0;
   min-height: 32px;
@@ -644,7 +857,7 @@ select:-webkit-autofill {
    endi OQ bo'ladi, kulrang emas). Ustida MYMarkaz belgisi juda past
    opacity bilan — firma blankasidagi suv belgisi kabi: ko'zga
    tashlanmaydi, lekin sirt "hech kimniki emas" bo'lib qolmaydi. */
-.chat-canvas {
+:where(.chat-canvas) {
   position: relative;
   background:
     radial-gradient(115% 55% at 50% 0%, rgba(10, 132, 255, 0.05), transparent 60%),
@@ -901,7 +1114,7 @@ select:-webkit-autofill {
 }
 
 /* Ovoz yozish pulsi (systemRed) */
-.rec-pulse {
+:where(.rec-pulse) {
   position: relative;
 }
 .rec-pulse::before {
@@ -1311,7 +1524,7 @@ select:-webkit-autofill {
 /* ── AURA: aylanuvchi spektr hoshiya ────────────────────────────────
    Ichi oq qoladi (mask-composite), ya'ni sirt tinch — faqat 1.5px
    chegara "tirik". `data-state="thinking"` da tezlashadi va yorqinlashadi. */
-.ai-aura {
+:where(.ai-aura) {
   position: relative;
   /* Oq sirt + deyarli sezilmas radial chuqurlik (4–5%): karta "tekis
      qog'oz" emas, ichida yorug'lik bordek tuyuladi. Bu — Apple'ning
@@ -1488,7 +1701,7 @@ select:-webkit-autofill {
     opacity: 0;
   }
 }
-.ai-scan {
+:where(.ai-scan) {
   position: relative;
   overflow: hidden;
 }

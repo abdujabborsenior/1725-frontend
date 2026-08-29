@@ -2,6 +2,7 @@ import { Navbar } from '@/components/layout/navbar';
 import { BottomNav } from '@/components/layout/bottom-nav';
 import { Footer } from '@/components/layout/footer';
 import { MediaPermissionPrimer } from '@/components/media/permission-primer';
+import { ChatFab } from '@/components/layout/chat-fab';
 
 export default function MainLayout({ children }: { children: React.ReactNode }) {
   return (
@@ -15,6 +16,8 @@ export default function MainLayout({ children }: { children: React.ReactNode }) 
         <Footer />
       </div>
       <BottomNav />
+      {/* Suhbat FAB — kirgan foydalanuvchiga barcha sahifada (desktop) */}
+      <ChatFab />
       {/* Kamera/mikrofon ruxsatini bir marta nazokat bilan so'rash */}
       <MediaPermissionPrimer />
     </div>

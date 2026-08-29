@@ -136,7 +136,7 @@ export default function VerifyEmailPage() {
 
           <button
             onClick={() => { clearAuth(); router.push('/login'); }}
-            className="mt-4 text-caption-1 text-slate-400 hover:text-slate-600 transition-colors"
+            className="mt-4 text-caption-1 text-slate-500 hover:text-brand-900 transition-colors"
           >
             Boshqa email bilan kirish
           </button>

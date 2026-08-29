@@ -210,7 +210,7 @@ export function AiConsole() {
               onRequireAuth={token ? undefined : requireAuth}
               disabled={busy}
             />
-            <p className="mt-2 text-center text-caption-2 text-slate-400">
+            <p className="mt-2 text-center text-caption-2 text-slate-500">
               {!hasHydrated || token
                 ? status && status.remaining <= 5
                   ? `Bugun yana ${status.remaining} ta so‘rov qoldi`

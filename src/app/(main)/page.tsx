@@ -19,7 +19,6 @@ import { useAuthStore } from '@/store/auth.store';
 import dynamic from 'next/dynamic';
 import { Reveal, RevealGroup, RevealItem } from '@/components/landing/reveal';
 import { AiLauncher } from '@/components/ai/ai-launcher';
-import { ChatFab } from '@/components/landing/chat-fab';
 import { CountUp } from '@/components/landing/count-up';
 import { HeroVisual } from '@/components/landing/hero-visual';
 import { Marquee } from '@/components/landing/marquee';
@@ -262,7 +261,7 @@ export default function LandingPage() {
           className="hero-enter mx-auto mt-14 max-w-5xl"
           style={{ '--enter-delay': '0.34s' } as CSSProperties}
         >
-          <p className="mb-3 text-footnote text-slate-400">Hamjamiyat shu yerda nimalar quryapti</p>
+          <p className="mb-3 text-footnote text-slate-500">Hamjamiyat shu yerda nimalar quryapti</p>
           <Marquee />
         </div>
       </section>
@@ -556,13 +555,11 @@ export default function LandingPage() {
       )}
 
       {user && (
-        <p className="text-center text-footnote text-slate-400">
+        <p className="text-center text-footnote text-slate-500">
           Xush kelibsiz, {user.fullName}
         </p>
       )}
 
-      {/* Suzuvchi chat tugmasi — suhbatni shu yerdan boshlash */}
-      <ChatFab />
     </div>
   );
 }

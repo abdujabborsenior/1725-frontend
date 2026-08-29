@@ -1,14 +1,10 @@
 'use client';
 
-import { useEffect, useRef, useState } from 'react';
-import { usePathname, useRouter } from 'next/navigation';
-import { useQueryClient } from '@tanstack/react-query';
+import { useCallback } from 'react';
 import { Lightbulb, LightbulbFill } from '@/components/icons';
-import { problemsApi, getErrorMessage } from '@/lib/api';
-import { patchEntityInQueries } from '@/lib/entity-sync';
-import { useAuthStore } from '@/store/auth.store';
+import { problemsApi } from '@/lib/api';
+import { useToggleAction } from '@/lib/use-toggle-action';
 import { cn } from '@/lib/utils';
-import toast from 'react-hot-toast';
 
 interface Props {
   problemId: string;
@@ -19,82 +15,61 @@ interface Props {
   onChange?: (liked: boolean, count: number) => void;
 }
 
+/**
+ * Muammoni "Foydali" deb belgilash. Mantiq — `useToggleAction` (idempotent
+ * niyat + navbatlangan bosishlar + kesh sinxronizatsiyasi).
+ */
 export function ProblemLikeButton({
   problemId, initialLiked, initialCount, size = 'md', className, onChange,
 }: Props) {
-  const { token } = useAuthStore();
-  const router = useRouter();
-  const pathname = usePathname();
-  const qc = useQueryClient();
-  const [liked, setLiked] = useState(initialLiked);
-  const [count, setCount] = useState(initialCount);
-  const [loading, setLoading] = useState(false);
-  const interacted = useRef(false);
+  const commit = useCallback(
+    async (next: boolean) => {
+      const res = await problemsApi.toggleLike(problemId, next);
+      return { on: res.liked, count: res.likeCount };
+    },
+    [problemId],
+  );
 
-  // Server'dan yangilangan holat (auth bilan refetch) — foydalanuvchi hali
-  // bosmagan bo'lsa prop'ga ergashamiz (refresh'dan keyin holat to'g'ri turadi).
-  useEffect(() => {
-    if (interacted.current) return;
-    setLiked(initialLiked);
-    setCount(initialCount);
-  }, [initialLiked, initialCount]);
-
-  async function toggle(e: React.MouseEvent) {
-    e.preventDefault();
-    e.stopPropagation();
-    if (!token) {
-      router.push(`/login?next=${encodeURIComponent(pathname)}`);
-      return;
-    }
-    if (loading) return;
-    interacted.current = true;
-    const prevLiked = liked;
-    const prevCount = count;
-    setLiked(!prevLiked);
-    setCount(prevCount + (prevLiked ? -1 : 1));
-    setLoading(true);
-    try {
-      const res = await problemsApi.toggleLike(problemId);
-      setLiked(res.liked);
-      setCount(res.likeCount);
-      // Barcha sahifa keshlarida holat bir xil qolsin (orqaga qaytganda ham)
-      patchEntityInQueries(qc, problemId, {
-        likedByMe: res.liked,
-        likeCount: res.likeCount,
-      });
-      onChange?.(res.liked, res.likeCount);
-    } catch (err) {
-      setLiked(prevLiked);
-      setCount(prevCount);
-      toast.error(getErrorMessage(err));
-    } finally {
-      setLoading(false);
-    }
-  }
+  const {
+    on: liked,
+    count,
+    pending,
+    toggle,
+  } = useToggleAction({
+    id: problemId,
+    on: initialLiked,
+    count: initialCount,
+    commit,
+    fields: { on: 'likedByMe', count: 'likeCount' },
+    onChange,
+  });
 
   const sm = size === 'sm';
 
   return (
     <button
       onClick={toggle}
-      disabled={loading}
+      suppressHydrationWarning
       aria-pressed={liked}
+      aria-busy={pending}
       title="Foydali deb belgilash"
       className={cn(
-        'tappable inline-flex items-center rounded-full font-medium',
+        'tappable inline-flex items-center rounded-full font-medium transition-colors duration-150 ease-ios',
         sm ? 'h-8 gap-1.5 px-3.5 text-footnote' : 'h-10 gap-2 px-4 text-subhead',
-        liked ? 'bg-accent-600 text-white' : 'bg-fill-tertiary text-slate-600',
+        liked
+          ? 'bg-accent-600 text-white hover:bg-accent-700'
+          : 'bg-fill-tertiary text-slate-600 hover:bg-fill-secondary hover:text-brand-900',
         className,
       )}
     >
       {liked ? (
-        <LightbulbFill className={sm ? 'h-3.5 w-3.5' : 'h-4 w-4'} />
+        <LightbulbFill key="on" className={cn('heart-pop', sm ? 'h-3.5 w-3.5' : 'h-4 w-4')} />
       ) : (
         <Lightbulb className={sm ? 'h-3.5 w-3.5' : 'h-4 w-4'} />
       )}
       <span>Foydali</span>
       {count > 0 && (
-        <span className={cn('tabular-nums', liked ? 'text-white/80' : 'text-slate-400')}>
+        <span className={cn('tabular-nums', liked ? 'text-white/80' : 'text-slate-500')}>
           · {count.toLocaleString('uz')}
         </span>
       )}

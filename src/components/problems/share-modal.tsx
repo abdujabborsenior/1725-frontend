@@ -92,7 +92,7 @@ export function ProblemShareModal({ open, onClose, problemId, problemTitle }: Pr
               {copied ? 'Nusxalandi' : 'Nusxalash'}
             </button>
           </div>
-          <p className="mt-1.5 text-caption-1 text-slate-400">
+          <p className="mt-1.5 text-caption-1 text-slate-500">
             Havolani istalgan odamga yuboring — ro‘yxatdan o‘tgach aynan shu muammoga o‘tadi.
           </p>
         </div>
@@ -139,7 +139,7 @@ export function ProblemShareModal({ open, onClose, problemId, problemTitle }: Pr
                   );
                 })
               ) : (
-                <p className="py-6 text-center text-subhead text-slate-400">Suhbatlar topilmadi</p>
+                <p className="py-6 text-center text-subhead text-slate-500">Suhbatlar topilmadi</p>
               )}
             </div>
           </div>

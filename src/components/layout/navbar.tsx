@@ -232,11 +232,29 @@ export function Navbar() {
               <YechimMark size={22} />
               <span className="flex-1 text-body text-brand-900">Yechim AI</span>
             </Link>
-            {links.map(({ href, label }) => (
-              <Link key={href} href={href} className="ios-row">
-                <span className="flex-1 text-body text-brand-900">{label}</span>
-              </Link>
-            ))}
+            {links.map(({ href, label }) => {
+              const active = pathname.startsWith(href);
+              return (
+                <Link
+                  key={href}
+                  href={href}
+                  aria-current={active ? 'page' : undefined}
+                  className="ios-row"
+                >
+                  {/* Faol bo'lim mobil menyuda ham ko'rinadi (desktop bilan
+                      izchil: brend tinti + qalinroq vazn) */}
+                  <span
+                    className={cn(
+                      'flex-1 text-body',
+                      active ? 'font-semibold text-accent-700' : 'text-brand-900',
+                    )}
+                  >
+                    {label}
+                  </span>
+                  {active && <span className="h-1.5 w-1.5 rounded-full bg-accent-500" />}
+                </Link>
+              );
+            })}
           </div>
 
           <div className="ios-list mt-4" onClick={() => setMenuOpen(false)}>

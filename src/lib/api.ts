@@ -268,8 +268,11 @@ export const problemsApi = {
     videoUrls?: string[];
   }) => unwrap<{ data: Problem; message: string }>(api.post('/problems', data)),
 
-  toggleLike: (id: string) =>
-    unwrap<{ liked: boolean; likeCount: number }>(api.post(`/problems/${id}/like`)),
+  /** `liked` — kutilayotgan YAKUNIY holat (idempotent). Berilmasa toggle. */
+  toggleLike: (id: string, liked?: boolean) =>
+    unwrap<{ liked: boolean; likeCount: number }>(
+      api.post(`/problems/${id}/like`, liked === undefined ? {} : { liked }),
+    ),
 
   // O'xshash muammolar (kategoriya + matn o'xshashligi, backend'da keshlangan)
   similar: (id: string, limit = 6) =>
@@ -316,9 +319,12 @@ export const solutionsApi = {
     unwrap<PaginatedResponse<Solution>>(api.get('/solutions/my', { params })),
 
   // "Foydali" toggle — bosilsa belgilaydi, qayta bosilsa qaytarib oladi
-  toggleHelpful: (id: string) =>
+  toggleHelpful: (id: string, helpful?: boolean) =>
     unwrap<{ helpful: boolean; helpfulCount: number }>(
-      api.post(`/solutions/${id}/helpful`),
+      api.post(
+        `/solutions/${id}/helpful`,
+        helpful === undefined ? {} : { helpful },
+      ),
     ),
   submit: (data: {
     problemId: string;
@@ -404,10 +410,18 @@ export const startupsApi = {
     unwrap<LeaderboardResponse>(api.get('/startups/leaderboard', { params })),
 
   // Engagement (auth)
-  toggleLike: (id: string) =>
-    unwrap<{ liked: boolean; likeCount: number }>(api.post(`/startups/${id}/like`)),
-  toggleBookmark: (id: string) =>
-    unwrap<{ bookmarked: boolean }>(api.post(`/startups/${id}/bookmark`)),
+  /** `liked` — kutilayotgan YAKUNIY holat (idempotent). Berilmasa toggle. */
+  toggleLike: (id: string, liked?: boolean) =>
+    unwrap<{ liked: boolean; likeCount: number }>(
+      api.post(`/startups/${id}/like`, liked === undefined ? {} : { liked }),
+    ),
+  toggleBookmark: (id: string, bookmarked?: boolean) =>
+    unwrap<{ bookmarked: boolean }>(
+      api.post(
+        `/startups/${id}/bookmark`,
+        bookmarked === undefined ? {} : { bookmarked },
+      ),
+    ),
   myBookmarks: (params?: { page?: number; limit?: number }) =>
     unwrap<PaginatedResponse<Startup>>(api.get('/startups/me/bookmarks', { params })),
 
@@ -680,9 +694,10 @@ export const usersApi = {
     unwrap<PaginatedResponse<FounderEntry>>(
       api.get('/users/founders/leaderboard', { params }),
     ),
-  toggleFounderVote: (id: string) =>
+  /** `voted` — kutilayotgan YAKUNIY holat (idempotent). Berilmasa toggle. */
+  toggleFounderVote: (id: string, voted?: boolean) =>
     unwrap<{ voted: boolean; voteCount: number }>(
-      api.post(`/users/${id}/founder-vote`),
+      api.post(`/users/${id}/founder-vote`, voted === undefined ? {} : { voted }),
     ),
 
   // Admin

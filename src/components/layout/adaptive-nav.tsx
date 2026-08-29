@@ -224,9 +224,12 @@ function navItemClass(active: boolean, hasIcon: boolean): string {
   return cn(
     'whitespace-nowrap rounded-full py-1.5 text-subhead transition-colors duration-150 ease-ios',
     hasIcon ? 'flex items-center gap-1.5 pl-2 pr-2.5' : 'px-2.5',
+    // Faol band — brend tinti (kulrang emas): navigatsiyada foydalanuvchi
+    // qayerdaligi bir qarashda ko'rinishi kerak, kulrang fon esa qolgan
+    // kulrang sirtlardan ajralmasdi.
     active
-      ? 'bg-fill-tertiary font-semibold text-brand-900 hover:bg-fill-secondary'
-      : 'font-medium text-slate-500 hover:text-brand-900',
+      ? 'bg-accent-50 font-semibold text-accent-700 hover:bg-accent-100'
+      : 'font-medium text-slate-500 hover:bg-fill-quaternary hover:text-brand-900',
   );
 }
 
@@ -296,7 +299,7 @@ function OverflowMenu({
           MORE_BUTTON_CLASS,
           // Menyu ichida faol sahifa bo'lsa tugma ham faol ko'rinadi —
           // foydalanuvchi qayerdaligini yo'qotmasin.
-          (open || activeInside) && 'bg-fill-tertiary text-brand-900',
+          (open || activeInside) && 'bg-accent-50 text-accent-700',
         )}
       >
         <MoreHorizontal className="h-[18px] w-[18px]" />
@@ -320,7 +323,7 @@ function OverflowMenu({
                 className={cn(
                   'flex items-center gap-2.5 px-4 py-2.5 text-body transition-colors duration-150',
                   active
-                    ? 'bg-fill-tertiary font-semibold text-brand-900'
+                    ? 'bg-accent-50 font-semibold text-accent-700'
                     : 'text-brand-900 hover:bg-fill-tertiary/60',
                 )}
               >

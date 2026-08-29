@@ -137,7 +137,7 @@ export function DiscoverClient({
                 {peopleArr.length > 0 ? (
                   peopleArr.map((u) => <UserListItem key={u.id} user={u} />)
                 ) : !isFetching ? (
-                  <p className="py-8 text-center text-subhead text-slate-400">Hech kim topilmadi</p>
+                  <p className="py-8 text-center text-subhead text-slate-500">Hech kim topilmadi</p>
                 ) : (
                   <UserRowSkeleton rows={4} />
                 )}
@@ -153,7 +153,7 @@ export function DiscoverClient({
                   {groupsArr.map((g) => <GroupCard key={g.id} group={g} />)}
                 </div>
               ) : !isFetching ? (
-                <p className="rounded-ios-xl bg-white py-10 text-center text-subhead text-slate-400">
+                <p className="rounded-ios-xl bg-white py-10 text-center text-subhead text-slate-500">
                   Guruh topilmadi
                 </p>
               ) : (
@@ -207,7 +207,7 @@ export function DiscoverClient({
               ) : suggestions === undefined ? (
                 <><UserRowSkeleton rows={3} /><UserRowSkeleton rows={3} /></>
               ) : (
-                <p className="py-10 text-center text-subhead text-slate-400">
+                <p className="py-10 text-center text-subhead text-slate-500">
                   Hozircha tavsiyalar yo&lsquo;q
                 </p>
               )}

@@ -12,28 +12,43 @@ import { cn } from '@/lib/utils';
 export function FormulaExplainer({ formula }: { formula: LeaderboardFormula }) {
   const [open, setOpen] = useState(false);
   return (
-    <div className="rounded-ios-lg bg-surface-soft">
+    /* Sirt OQ: ilgari panel `surface-soft` (kulrang) edi va sahifa foni ham
+       kulrang — panel fondan ajralmasdi, ichidagi `slate-400` matn esa
+       amalda o'qilmasdi. Endi oq karta + hairline, matnlar `slate-600`. */
+    <div className="overflow-hidden rounded-ios-lg bg-white shadow-card">
       <button
         onClick={() => setOpen((v) => !v)}
-        className="flex w-full items-center gap-2.5 px-4 py-3 text-left transition-colors duration-150 hover:bg-fill-quaternary active:bg-fill-tertiary"
+        aria-expanded={open}
+        className="flex w-full items-center gap-2.5 px-4 py-3.5 text-left transition-colors duration-150 hover:bg-fill-quaternary active:bg-fill-tertiary"
       >
-        <Info className="h-4 w-4 shrink-0 text-iris-500" />
+        <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-accent-50 text-accent-600">
+          <Info className="h-4 w-4" />
+        </span>
         <span className="flex-1 text-subhead font-semibold text-brand-900">
           O&apos;rinlar qanday hisoblanadi?
         </span>
-        <span className="hidden text-footnote text-slate-400 sm:inline">
-          O&apos;rtacha = {formula.c.toFixed(2)} · ishonch ostonasi (m) ={' '}
-          {formula.m}
+        <span className="hidden text-footnote text-slate-600 sm:inline">
+          O&apos;rtacha ={' '}
+          <b className="font-semibold tabular-nums text-brand-900">
+            {formula.c.toFixed(2)}
+          </b>{' '}
+          · ishonch ostonasi (m) ={' '}
+          <b className="font-semibold tabular-nums text-brand-900">{formula.m}</b>
         </span>
-        <ChevronDown
+        {/* Strelka O'RALGAN: yalang'och ikonka kulrang fonda yo'qolib ketardi —
+            endi o'z doirasida turadi va tugma ekani ko'rinadi. */}
+        <span
+          aria-hidden
           className={cn(
-            'h-4 w-4 text-slate-400 transition-transform',
+            'flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-fill-tertiary text-slate-600 transition-transform duration-250 ease-ios',
             open && 'rotate-180',
           )}
-        />
+        >
+          <ChevronDown className="h-4 w-4" />
+        </span>
       </button>
       {open && (
-        <div className="space-y-3 border-t border-slate-200 px-4 py-4 text-subhead text-slate-600">
+        <div className="hairline-t space-y-3 px-4 py-4 text-subhead text-slate-600">
           <p>
             Baholar <b>10&nbsp;ballik</b> shkalada. Oddiy o&apos;rtacha adolatsiz
             bo&apos;lardi: bitta 10&nbsp;ball olgan startap, 1000 ta ovozli

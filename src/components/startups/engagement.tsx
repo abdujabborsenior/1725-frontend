@@ -1,31 +1,28 @@
 'use client';
 
-import { useEffect, useRef, useState } from 'react';
-import { useRouter } from 'next/navigation';
-import { useQueryClient } from '@tanstack/react-query';
+import { useCallback } from 'react';
 import { Heart, HeartFill, Bookmark, BookmarkFill } from '@/components/icons';
-import { startupsApi, getErrorMessage } from '@/lib/api';
-import { patchEntityInQueries } from '@/lib/entity-sync';
-import { useAuthStore } from '@/store/auth.store';
+import { startupsApi } from '@/lib/api';
+import { useToggleAction } from '@/lib/use-toggle-action';
 import { cn } from '@/lib/utils';
 import type { Startup } from '@/types';
 import toast from 'react-hot-toast';
 
 type Variant = 'card' | 'detail';
 
-function useAuthGuard() {
-  const { token } = useAuthStore();
-  const router = useRouter();
-  return () => {
-    if (!token) {
-      toast.error('Buning uchun tizimga kiring');
-      router.push('/login');
-      return false;
-    }
-    return true;
-  };
-}
-
+/**
+ * Yoqtirish tugmasi — ro'yxatda ham (`card`), detal sahifada ham (`detail`)
+ * bir xil ishonchli mantiq bilan: `useToggleAction` niyatni serverga yuboradi
+ * (idempotent), tez ketma-ket bosishni yo'qotmaydi va natijani butun React
+ * Query keshiga yozadi.
+ *
+ * `suppressHydrationWarning` — sanoq JONLI server qiymati: SSR HTML kesh'dan
+ * (30s) kelishi, klient esa yangi javobni olishi mumkin. React 18 gidratsiyasi
+ * uzilishi mumkin bo'lgani uchun bu "text content did not match" beradi
+ * (klientniki — to'g'risi). Qiymat tabiiy o'zgaruvchan, bu aynan shu bayroq
+ * mo'ljallangan holat; boshqa hech narsa yashirilmaydi (bayroq faqat shu
+ * elementga tegishli).
+ */
 export function LikeButton({
   startup,
   variant = 'detail',
@@ -35,71 +32,54 @@ export function LikeButton({
   variant?: Variant;
   onChange?: (liked: boolean, count: number) => void;
 }) {
-  const guard = useAuthGuard();
-  const qc = useQueryClient();
-  const [liked, setLiked] = useState(!!startup.likedByMe);
-  const [count, setCount] = useState(startup.likeCount ?? 0);
-  const [busy, setBusy] = useState(false);
-  const interacted = useRef(false);
+  const commit = useCallback(
+    async (next: boolean) => {
+      const res = await startupsApi.toggleLike(startup.id, next);
+      return { on: res.liked, count: res.likeCount };
+    },
+    [startup.id],
+  );
 
-  // Auth bilan refetch kelganda (SSR'da flag'lar bo'lmaydi) holatni sinxronlash
-  useEffect(() => {
-    if (interacted.current) return;
-    setLiked(!!startup.likedByMe);
-    setCount(startup.likeCount ?? 0);
-  }, [startup.likedByMe, startup.likeCount]);
+  const {
+    on: liked,
+    count,
+    pending,
+    toggle,
+  } = useToggleAction({
+    id: startup.id,
+    on: !!startup.likedByMe,
+    count: startup.likeCount ?? 0,
+    commit,
+    fields: { on: 'likedByMe', count: 'likeCount' },
+    onChange,
+  });
 
-  async function toggle(e: React.MouseEvent) {
-    // Karta ichida: bosish kartaning havolasiga O'TMAYDI (2026-08-29 —
-    // ilgari ro'yxatda yurak bosilsa startap sahifasi ochilib ketardi).
-    e.preventDefault();
-    e.stopPropagation();
-    if (busy || !guard()) return;
-    interacted.current = true;
+  const label = liked ? `Yoqtirishni olib tashlash — ${count}` : `Yoqtirish — ${count}`;
 
-    // optimistik
-    const next = !liked;
-    setLiked(next);
-    setCount((c) => Math.max(0, c + (next ? 1 : -1)));
-    setBusy(true);
-    try {
-      const res = await startupsApi.toggleLike(startup.id);
-      setLiked(res.liked);
-      setCount(res.likeCount);
-      // Barcha sahifa keshlarida holat bir xil qolsin
-      patchEntityInQueries(qc, startup.id, {
-        likedByMe: res.liked,
-        likeCount: res.likeCount,
-      });
-      onChange?.(res.liked, res.likeCount);
-    } catch (err) {
-      setLiked(!next);
-      setCount((c) => Math.max(0, c + (next ? -1 : 1)));
-      toast.error(getErrorMessage(err));
-    } finally {
-      setBusy(false);
-    }
-  }
-
-  /* Karta varianti — meta qatoridagi ixcham amal: ko'rishlar soni bilan bir
-     og'irlikda turadi, lekin haqiqiy tegish maydoniga ega. */
+  /* Karta varianti — meta qatoridagi ixcham amal, lekin haqiqiy 36px tegish
+     maydoni bilan. Bosilganda yurak "urib" qo'yadi: ro'yxatda boshqa tasdiq
+     (sahifa o'zgarishi, toast) yo'q — javob shu. */
   if (variant === 'card') {
     return (
       <button
         onClick={toggle}
-        disabled={busy}
+        suppressHydrationWarning
         aria-pressed={liked}
-        aria-label={liked ? `Yoqtirishni olib tashlash — ${count}` : `Yoqtirish — ${count}`}
+        aria-busy={pending}
+        aria-label={label}
+        title={label}
         className={cn(
-          'tappable relative z-10 -mx-2 inline-flex h-8 items-center gap-1 rounded-full px-2',
-          'text-footnote tabular-nums transition-colors duration-150 ease-ios',
-          liked ? 'text-rose-600' : 'text-slate-500 hover:text-rose-600',
+          'tappable relative z-10 -mr-1 inline-flex h-9 items-center gap-1.5 rounded-full px-2.5',
+          'text-footnote font-medium tabular-nums transition-colors duration-150 ease-ios',
+          liked
+            ? 'bg-rose-50 text-rose-600 hover:bg-rose-100'
+            : 'text-slate-500 hover:bg-fill-quaternary hover:text-rose-600',
         )}
       >
         {liked ? (
-          <HeartFill className="h-4 w-4" />
+          <HeartFill key="on" className="heart-pop h-[17px] w-[17px]" />
         ) : (
-          <Heart className="h-4 w-4" />
+          <Heart className="h-[17px] w-[17px]" />
         )}
         {count}
       </button>
@@ -109,15 +89,22 @@ export function LikeButton({
   return (
     <button
       onClick={toggle}
-      disabled={busy}
+      suppressHydrationWarning
       aria-pressed={liked}
-      aria-label={`Yoqtirish — ${count}`}
+      aria-busy={pending}
+      aria-label={label}
       className={cn(
         'tappable inline-flex h-9 items-center gap-1.5 rounded-full px-3.5 text-subhead font-medium tabular-nums transition-colors duration-150 ease-ios',
-        liked ? 'bg-rose-50 text-rose-600' : 'bg-fill-tertiary text-slate-600',
+        liked
+          ? 'bg-rose-50 text-rose-600 hover:bg-rose-100'
+          : 'bg-fill-tertiary text-slate-600 hover:bg-fill-secondary hover:text-rose-600',
       )}
     >
-      {liked ? <HeartFill className="h-[17px] w-[17px]" /> : <Heart className="h-[17px] w-[17px]" />}
+      {liked ? (
+        <HeartFill key="on" className="heart-pop h-[17px] w-[17px]" />
+      ) : (
+        <Heart className="h-[17px] w-[17px]" />
+      )}
       {count}
     </button>
   );
@@ -132,56 +119,43 @@ export function BookmarkButton({
   variant?: Variant;
   onChange?: (bookmarked: boolean) => void;
 }) {
-  const guard = useAuthGuard();
-  const qc = useQueryClient();
-  const [saved, setSaved] = useState(!!startup.bookmarkedByMe);
-  const [busy, setBusy] = useState(false);
-  const interacted = useRef(false);
-
-  // Auth bilan refetch kelganda holatni sinxronlash (refresh'dan keyin to'g'ri)
-  useEffect(() => {
-    if (interacted.current) return;
-    setSaved(!!startup.bookmarkedByMe);
-  }, [startup.bookmarkedByMe]);
-
-  async function toggle(e: React.MouseEvent) {
-    e.preventDefault();
-    e.stopPropagation();
-    if (busy || !guard()) return;
-    interacted.current = true;
-
-    const next = !saved;
-    setSaved(next);
-    setBusy(true);
-    try {
-      const res = await startupsApi.toggleBookmark(startup.id);
-      setSaved(res.bookmarked);
-      // Barcha sahifa keshlarida holat bir xil qolsin
-      patchEntityInQueries(qc, startup.id, { bookmarkedByMe: res.bookmarked });
-      onChange?.(res.bookmarked);
+  const commit = useCallback(
+    async (next: boolean) => {
+      const res = await startupsApi.toggleBookmark(startup.id, next);
+      // Saqlash "ko'rinmas" amal (sanoq chiqmaydi) — qisqa banner bilan tasdiq.
       toast.success(res.bookmarked ? 'Saqlandi' : 'Saqlanganlardan olib tashlandi');
-    } catch (err) {
-      setSaved(!next);
-      toast.error(getErrorMessage(err));
-    } finally {
-      setBusy(false);
-    }
-  }
+      return { on: res.bookmarked };
+    },
+    [startup.id],
+  );
+
+  const { on: saved, pending, toggle } = useToggleAction({
+    id: startup.id,
+    on: !!startup.bookmarkedByMe,
+    commit,
+    fields: { on: 'bookmarkedByMe' },
+    onChange: (v) => onChange?.(v),
+  });
+
+  const label = saved ? 'Saqlanganlardan olib tashlash' : 'Keyinroq uchun saqlash';
 
   if (variant === 'card') {
     return (
       <button
         onClick={toggle}
-        aria-label="Saqlash"
+        aria-pressed={saved}
+        aria-busy={pending}
+        aria-label={label}
+        title={label}
         className={cn(
-          'material-thick flex h-8 w-8 items-center justify-center rounded-full transition-colors duration-150 hover:text-accent-600',
-          saved ? 'text-accent-600' : 'text-slate-500',
+          'material-thick tappable flex h-9 w-9 items-center justify-center rounded-full transition-colors duration-150',
+          saved ? 'text-accent-600' : 'text-slate-600 hover:text-accent-600',
         )}
       >
         {saved ? (
-          <BookmarkFill className="h-[15px] w-[15px]" />
+          <BookmarkFill key="on" className="heart-pop h-4 w-4" />
         ) : (
-          <Bookmark className="h-[15px] w-[15px]" />
+          <Bookmark className="h-4 w-4" />
         )}
       </button>
     );
@@ -190,15 +164,18 @@ export function BookmarkButton({
   return (
     <button
       onClick={toggle}
-      disabled={busy}
-      aria-label="Saqlash"
+      aria-pressed={saved}
+      aria-busy={pending}
+      aria-label={label}
       className={cn(
         'tappable inline-flex h-9 w-9 items-center justify-center rounded-full transition-colors duration-150 ease-ios',
-        saved ? 'bg-accent-50 text-accent-600' : 'bg-fill-tertiary text-slate-600',
+        saved
+          ? 'bg-accent-50 text-accent-600'
+          : 'bg-fill-tertiary text-slate-600 hover:bg-fill-secondary hover:text-accent-600',
       )}
     >
       {saved ? (
-        <BookmarkFill className="h-[17px] w-[17px]" />
+        <BookmarkFill key="on" className="heart-pop h-[17px] w-[17px]" />
       ) : (
         <Bookmark className="h-[17px] w-[17px]" />
       )}

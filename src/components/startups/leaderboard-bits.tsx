@@ -28,7 +28,10 @@ export function RankMovement({
   }
   if (delta === 0) {
     return (
-      <span className={cn('inline-flex items-center text-slate-300', className)}>
+      <span
+        className={cn('inline-flex items-center text-slate-400', className)}
+        title="O'rin o'zgarmadi"
+      >
         <Minus className="h-3.5 w-3.5" />
       </span>
     );
@@ -89,45 +92,33 @@ export function ScoreBadge({
   );
 }
 
-/** Top-3 — vazmin, jiddiy oltin/kumush/bronza palitra (porloq emas) */
+/**
+ * Top-3 metallari — **oltin / kumush / mis**.
+ *
+ * `cls` — `globals.css` dagi metal o'zgaruvchilarini (`--m1…--m-ink`)
+ * o'rnatadigan klass; qolgan uslublar (`medal-badge`, `medal-ring`,
+ * `medal-edge`) shu o'zgaruvchilarni o'qiydi. Shu sababli rang bir joyda
+ * belgilanadi va podium/qator/kartada bir xil chiqadi.
+ *
+ * Ilgari bu yerda Tailwind `amber`/`orange` ishlatilgan edi — mahsulot
+ * palitrasida ikkalasi ham systemOrange, ya'ni 1- va 3-o'rin bir xil
+ * ko'rinardi (medal ma'nosi yo'qolgan edi).
+ */
 export const MEDAL = {
-  1: {
-    ring: 'ring-amber-300',
-    bg: 'bg-gradient-to-br from-amber-300 to-amber-500',
-    text: 'text-amber-950',
-    soft: 'bg-amber-50 text-amber-700 ring-amber-200',
-    icon: Trophy,
-    label: 'Oltin',
-  },
-  2: {
-    ring: 'ring-slate-300',
-    bg: 'bg-gradient-to-br from-slate-300 to-slate-400',
-    text: 'text-slate-800',
-    soft: 'bg-slate-100 text-slate-600 ring-slate-300',
-    icon: Medal,
-    label: 'Kumush',
-  },
-  3: {
-    ring: 'ring-orange-300',
-    bg: 'bg-gradient-to-br from-orange-300 to-orange-500',
-    text: 'text-orange-950',
-    soft: 'bg-orange-50 text-orange-700 ring-orange-200',
-    icon: Medal,
-    label: 'Bronza',
-  },
+  1: { cls: 'medal-gold', icon: Trophy, label: 'Oltin' },
+  2: { cls: 'medal-silver', icon: Medal, label: 'Kumush' },
+  3: { cls: 'medal-bronze', icon: Medal, label: 'Mis' },
 } as const;
 
-/** Yumaloq-kvadrat ichidagi o'rin raqami — top-3 medalli, qolgani sodda */
+/** Yumaloq-kvadrat ichidagi o'rin raqami — top-3 metall, qolgani sodda */
 export function RankNumber({ rank }: { rank: number }) {
   const medal = MEDAL[rank as 1 | 2 | 3];
   if (medal) {
     return (
       <span
         className={cn(
-          'flex h-9 w-9 items-center justify-center rounded-xl text-subhead font-semibold ring-1 ring-inset shadow-sm',
-          medal.bg,
-          medal.ring,
-          medal.text,
+          'medal-badge flex h-9 w-9 items-center justify-center rounded-xl text-subhead font-bold',
+          medal.cls,
         )}
       >
         {rank}
@@ -135,7 +126,7 @@ export function RankNumber({ rank }: { rank: number }) {
     );
   }
   return (
-    <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-slate-100 text-subhead font-bold text-slate-600">
+    <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-fill-tertiary text-subhead font-bold text-slate-600">
       {rank}
     </span>
   );

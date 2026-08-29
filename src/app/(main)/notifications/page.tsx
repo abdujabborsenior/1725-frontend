@@ -115,7 +115,7 @@ export default function NotificationsPage() {
                     {n.body && (
                       <span className="mt-0.5 block text-subhead text-slate-500">{n.body}</span>
                     )}
-                    <span className="mt-1 block text-caption-1 text-slate-400">
+                    <span className="mt-1 block text-caption-1 text-slate-500">
                       {timeAgo(n.createdAt)}
                     </span>
                   </span>

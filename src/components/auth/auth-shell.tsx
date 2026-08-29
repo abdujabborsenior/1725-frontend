@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import { Lightbulb, Rocket, Trophy } from '@/components/icons';
+import { ChevronLeft, Lightbulb, Rocket, Trophy } from '@/components/icons';
 import { LogoMark } from '@/components/brand/logo-mark';
 import { cn } from '@/lib/utils';
 
@@ -31,7 +31,7 @@ const HIGHLIGHTS = [
 
 export function AuthBrandPanel() {
   return (
-    <div className="hidden bg-brand-900 lg:flex lg:w-[46%] xl:w-[42%]">
+    <div className="brand-surface hidden lg:flex lg:w-[46%] xl:w-[42%]">
       <div className="flex w-full flex-col justify-between p-10 xl:p-14">
         {/* Logo */}
         <Link href="/" className="tappable inline-flex items-center gap-2.5 self-start">
@@ -46,7 +46,7 @@ export function AuthBrandPanel() {
           <h2 className="text-[2.25rem] font-semibold leading-[1.1] tracking-[-0.03em] text-white xl:text-[2.75rem]">
             G‘oyadan startapgacha — bitta platformada
           </h2>
-          <p className="mt-4 text-callout leading-relaxed text-slate-400">
+          <p className="mt-4 text-callout leading-relaxed text-white/60">
             O‘zbekiston yoshlari uchun muammolar, yechimlar va startaplar ekotizimi. Bilim
             almashing, jamoa quring va g‘oyangizni hayotga tatbiq eting.
           </p>
@@ -64,23 +64,40 @@ export function AuthBrandPanel() {
                 </span>
                 <div>
                   <p className="text-subhead font-semibold text-white">{title}</p>
-                  <p className="text-footnote text-slate-400">{text}</p>
+                  <p className="text-footnote text-white/55">{text}</p>
                 </div>
               </div>
             ))}
           </div>
         </div>
 
-        <p className="text-footnote text-slate-500">Ma‘lumotlaringiz xavfsiz himoyalangan</p>
+        <p className="text-footnote text-white/45">Ma‘lumotlaringiz xavfsiz himoyalangan</p>
       </div>
     </div>
+  );
+}
+
+/* ── Orqaga qaytish (iOS nav bar) ─────────────────────────────────
+   iOS'da har bir ekranda chap yuqorida orqaga boshqaruvi turadi. Auth
+   sahifalariga foydalanuvchi ko'pincha o'zi xohlamasdan tushadi (tizimdan
+   chiqish, mehmon holatida himoyalangan sahifa) — shuning uchun bosh
+   sahifaga qaytish yo'li DOIM ko'rinadi va 44px tegish maydoniga ega. */
+export function AuthHomeLink() {
+  return (
+    <Link
+      href="/"
+      className="tappable -ml-2 inline-flex h-11 w-fit items-center gap-0.5 rounded-full pl-1.5 pr-3.5 text-body font-medium text-accent-600 transition-colors duration-150 ease-ios hover:bg-accent-50 hover:text-accent-700"
+    >
+      <ChevronLeft className="h-[22px] w-[22px]" strokeWidth={2.4} />
+      Bosh sahifa
+    </Link>
   );
 }
 
 /* ── Mobil logo (brend panel ko'rinmaganda) ───────────────────── */
 export function AuthMobileLogo() {
   return (
-    <Link href="/" className="tappable mb-8 flex items-center justify-center gap-2.5 lg:hidden">
+    <Link href="/" className="tappable mb-7 flex items-center justify-center gap-2.5 lg:hidden">
       <LogoMark className="h-10 w-10" />
       <span className="text-title-2 font-semibold tracking-tight text-brand-900">MYMarkaz</span>
     </Link>

@@ -59,7 +59,7 @@ export function AiMatchCard({ match, index }: { match: AiMatch; index: number })
           <p className="mt-1 text-subhead leading-snug text-slate-600">{reason}</p>
         )}
         {startup.category && (
-          <p className="mt-1.5 text-caption-1 text-slate-400">{startup.category}</p>
+          <p className="mt-1.5 text-caption-1 text-slate-500">{startup.category}</p>
         )}
       </div>
 

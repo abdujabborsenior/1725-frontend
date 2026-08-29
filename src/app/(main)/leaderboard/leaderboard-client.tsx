@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { useQuery, keepPreviousData } from '@tanstack/react-query';
-import { Trophy, Flame } from '@/components/icons';
+import { Trophy, FlameFill } from '@/components/icons';
 import { startupsApi } from '@/lib/api';
 import { LEADERBOARD_PERIOD_OPTIONS } from '@/lib/constants';
 import type { CategoryCount, LeaderboardPeriod, LeaderboardResponse } from '@/types';
@@ -88,25 +88,33 @@ export function LeaderboardClient({
         }
       />
 
-      {tab === 'startups' && total > 0 && (
-        <p className="inline-flex items-center gap-1.5 text-footnote text-slate-500">
-          <Flame className="h-3.5 w-3.5 text-amber-500" />
-          {total} ta baholangan startap raqobatda
-        </p>
-      )}
+      {/* Reyting turi + raqobat ko'rsatkichi — bitta qatorda, lekin tor
+          ekranda ustma-ust (yopishib qolmaydi). */}
+      <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+        <Segmented
+          aria-label="Reyting turi"
+          fullWidth={false}
+          value={tab}
+          onChange={(v) => setTab(v)}
+          options={[
+            { value: 'startups', label: 'Startaplar' },
+            { value: 'founders', label: 'Asoschilar' },
+          ]}
+          className="w-full sm:w-72"
+        />
 
-      {/* Reyting turi — iOS segmented control */}
-      <Segmented
-        aria-label="Reyting turi"
-        fullWidth={false}
-        value={tab}
-        onChange={(v) => setTab(v)}
-        options={[
-          { value: 'startups', label: 'Startaplar' },
-          { value: 'founders', label: 'Asoschilar' },
-        ]}
-        className="w-full sm:w-72"
-      />
+        {tab === 'startups' && total > 0 && (
+          <span className="inline-flex w-fit items-center gap-2 rounded-full bg-amber-50 py-1.5 pl-2 pr-3.5 text-footnote font-medium text-amber-700">
+            <span className="flex h-6 w-6 items-center justify-center rounded-full bg-amber-500/15">
+              <FlameFill className="h-3.5 w-3.5 text-amber-600" />
+            </span>
+            <span>
+              <b className="font-semibold tabular-nums">{total}</b> ta baholangan startap
+              raqobatda
+            </span>
+          </span>
+        )}
+      </div>
 
       {tab === 'founders' ? (
         <FoundersBoard />
@@ -138,7 +146,7 @@ export function LeaderboardClient({
               className="text-footnote"
             >
               {c.category}
-              <span className={cn('tabular-nums', category === c.category ? 'text-white/80' : 'text-slate-400')}>
+              <span className={cn('tabular-nums', category === c.category ? 'text-white/80' : 'text-slate-600')}>
                 {c.count}
               </span>
             </FilterChip>

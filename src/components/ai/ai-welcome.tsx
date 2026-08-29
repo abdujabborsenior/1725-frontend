@@ -136,7 +136,7 @@ export function AiWelcome({
       )}
 
       <p
-        className="ai-open-text mt-5 hidden items-center justify-center gap-1.5 text-footnote text-slate-400 sm:flex"
+        className="ai-open-text mt-5 hidden items-center justify-center gap-1.5 text-footnote text-slate-500 sm:flex"
         style={{ '--ai-delay': '0.6s' } as CSSProperties}
       >
         <Mic className="h-4 w-4" /> Yozishga vaqt yo‘qmi? Aytib bering — o‘zim yozib olaman

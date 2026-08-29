@@ -146,7 +146,7 @@ export function SearchPalette() {
               ))}
             </div>
           ) : !hasResults && !fetching ? (
-            <p className="py-12 text-center text-subhead text-slate-400">Natija topilmadi</p>
+            <p className="py-12 text-center text-subhead text-slate-500">Natija topilmadi</p>
           ) : (
             <>
               {userResults.length > 0 && (

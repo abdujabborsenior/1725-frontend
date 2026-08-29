@@ -171,7 +171,7 @@ export function AiAnswer({
           className="ai-focus-in flex items-center gap-1.5 pt-0.5"
           style={{ '--ai-delay': '0.32s' } as CSSProperties}
         >
-          <span className="text-caption-1 text-slate-400">Javob foydali bo‘ldimi?</span>
+          <span className="text-caption-1 text-slate-500">Javob foydali bo‘ldimi?</span>
           <button
             type="button"
             onClick={() => void sendFeedback('up')}
@@ -201,7 +201,7 @@ export function AiAnswer({
             )}
           </button>
           {vote && (
-            <span className="ai-focus-in flex items-center gap-1 text-caption-1 text-slate-400">
+            <span className="ai-focus-in flex items-center gap-1 text-caption-1 text-slate-500">
               <Check className="h-3.5 w-3.5" strokeWidth={2.5} /> Rahmat
             </span>
           )}

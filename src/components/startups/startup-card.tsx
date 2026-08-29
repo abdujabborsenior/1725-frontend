@@ -150,7 +150,7 @@ export function StartupCard({
           {platformTypes.length > 0 ? (
             platformTypes.map((t) => <PlatformIcon key={t} type={t} className="h-[18px] w-[18px]" />)
           ) : (
-            <span className="text-footnote text-slate-400">G&apos;oya bosqichida</span>
+            <span className="text-footnote text-slate-500">G&apos;oya bosqichida</span>
           )}
         </div>
         <div className="flex items-center gap-3.5">

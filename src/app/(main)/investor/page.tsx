@@ -113,7 +113,7 @@ export default function InvestorPage() {
                   <span className="min-w-0 flex-1 text-body text-brand-900">
                     Saqlanganlar
                   </span>
-                  <span className="text-footnote tabular-nums text-slate-400">
+                  <span className="text-footnote tabular-nums text-slate-500">
                     {data?.savedCount ?? 0}
                   </span>
                   <ChevronRight className="h-4 w-4 text-slate-300" strokeWidth={2.5} />
@@ -152,7 +152,7 @@ export default function InvestorPage() {
 
           {/* Joriy kriteriyalar xulosasi */}
           <section className="rounded-ios-lg bg-white p-4">
-            <h2 className="text-footnote font-semibold uppercase tracking-wide text-slate-400">
+            <h2 className="text-footnote font-semibold uppercase tracking-wide text-slate-500">
               Hozirgi kriteriyalar
             </h2>
             <dl className="mt-3 space-y-2 text-subhead">

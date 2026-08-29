@@ -93,6 +93,24 @@ Barchasi blur+saturate. Faqat chrome/overlay uchun — kontent kartasiga emas.
   `after:absolute after:inset-0` qoplamasi. Sabab: kartadagi tugmalar (yurak,
   saqlash, video ijro) `<a>` ichida bo'lsa yaroqsiz HTML va tasodifiy navigatsiya
   beradi. Tugmalar `relative z-10` bilan qoplama USTIDA turadi.
+- **Toggle tugmalari (MAJBURIY, 2026-08-29)** — yoqtirish · saqlash · foydali ·
+  asoschiga ovoz · obuna: mantiq YAGONA joyda — `lib/use-toggle-action.ts`.
+  Uchta narsani kafolatlaydi: (1) serverga **niyat** yuboriladi (`{liked:true}`) —
+  ro'yxatlar SSR'da tokensiz kelgani uchun mijoz holati eskirgan bo'lishi mumkin,
+  sof toggle'da "yoqtirish" bosilsa server BEKOR qilardi; (2) tugma so'rov davomida
+  `disabled` QILINMAYDI — bosishlar navbatlanadi ("latest intent wins"), ko'rinayotgan
+  holat **ref**da saqlanadi (React `state` bir tikda yangilanmaydi → 4 ta tez bosish
+  1 ta o'zgarish bo'lib qolardi); (3) natija `patchEntityInQueries` bilan barcha
+  keshlarga yoziladi. Mehmon → `/login?next=<joriy>`. Yangi toggle tugmasi shu
+  hook'siz YOZILMAYDI.
+- **Podium metallari** (`.medal-gold/.medal-silver/.medal-bronze` + `.medal-badge/
+  -ring/-edge`, `globals.css`) — top-3 uchun ALOHIDA rang qatlami: mahsulot palitrasida
+  `amber` = systemOrange, shuning uchun 1- va 3-o'rin bir xil chiqardi. Metal
+  o'zgaruvchilari (`--m1…--m-ink`) faqat podiumda ishlatiladi. `.podium-card` hover'i
+  (4px ko'tarilish + metal nur + tamg'a bo'ylab bir marta yorug'lik) — bu YAGONA
+  istisno, boshqa kartalarga tarqatilmaydi.
+- **`.brand-surface`** — mahsulotdagi YAGONA to'q sirt (footer + auth brend paneli).
+  Rangi logotipdan: #0C2545→#08182E. Yangi to'q blok kerak bo'lsa shu klass olinadi.
 - **SearchField** — `ui/search-field.tsx` (maydon tizimi sirti, ichida lupa, × tozalash).
 - **Modal** — `ui/modal.tsx`: mobil = pastdan **sheet** (grabber + sudrab
   yopish), desktop = markaziy dialog. Sahifadagi popover = `.material-menu`.
@@ -197,6 +215,22 @@ yuqoriga strelka (`ArrowUp`, h-8 w-8). Composer kapsulasi oq, header/footer
 `.ios-section-header` yoki kichik tint eyebrow) · ❌ `border` bilan karta ·
 ❌ px-based `text-[..px]` · ❌ emoji-ikonka · ❌ lucide-react.
 
+## 3.1 CSS spetsifikatsiya qoidasi (⚠️ ikki marta tishlagan tuzoq)
+`globals.css` dagi komponent klasslari `@tailwind utilities` DAN KEYIN keladi va
+bir xil spetsifikatsiyaga ega — ya'ni ular utilitani BOSIB ketadi. Shuning uchun
+**struktura beruvchi xossalar** (`display`, `position`, `flex`) doim `:where()`
+ichida yoziladi (0 spetsifikatsiya → utilita doim yutadi):
+
+```css
+:where(.segmented) { display: inline-flex; }   /* to'g'ri */
+.segmented         { display: inline-flex; }   /* ❌ `flex` utilitasini bosadi */
+```
+Tarix: `hairline-*`ning `position:relative`i navbar `sticky`/tab bar `fixed`ni
+o'chirgan edi (2026-08-23); `.segmented`ning `inline-flex`i reyting sahifasida
+segment'ni matn ustiga chiqarib yuborgan edi (2026-08-29). Hozir `:where()` bilan
+himoyalanganlar: `hairline-b/t`, `segmented`, `segment`, `ios-row`, `card`,
+`card-soft`, `chat-canvas`, `rec-pulse`, `ai-aura`, `ai-scan`, `medal-badge`.
+
 ## 4. Buyruqlar
 ```bash
 npm run dev        # localhost:3330
@@ -226,6 +260,12 @@ overflow tekshiruvi. Har katta o'zgarishdan keyin build + lint + vizual.
   oqimi oddiy maydonga; `btn-lift`/hover-lift/CAPS yorliq/chegarali karta/CTA
   strelkalari tozalandi; `/settings` mobil overflow tuzatildi. Build+lint toza,
   20×desktop + 16×mobil skrinshot, overflow 0.
+- [x] 2026-08-29 (2-to'plam) — Footer rekvizit/kontakt/ishonch + `.brand-surface`;
+  toggle tizimi (`use-toggle-action`) va idempotent backend API; navbar faol band
+  brend tintida; `.segmented` spetsifikatsiya bugi (§3.1) va reyting sarlavha bloki;
+  podium metallari + hover; formula paneli + loyiha bo'ylab kontrast auditi (24 joy);
+  auth sahifalariga `AuthHomeLink` ("‹ Bosh sahifa"); chat FAB global + o'qilmagan
+  hisobi. Build+lint toza, 19 marshrut × 2 viewport overflow 0, konsol 0.
 - [ ] Admin panel (`../admin-panel-front`) — hali eski tilda (alohida vazifa).
 
 ## 7. Performance tizimi (2026-07-07 — REGRESS QILMA)

@@ -83,7 +83,7 @@ export default function LoginPage() {
               <div className="flex justify-end">
                 <Link
                   href="/forgot-password"
-                  className="text-caption-1 text-slate-500 hover:text-accent-700 font-medium transition-colors"
+                  className="tappable -mr-1 rounded-full px-1 py-0.5 text-caption-1 font-medium text-accent-600 transition-colors hover:text-accent-700"
                 >
                   Parolni unutdingizmi?
                 </Link>
@@ -99,24 +99,22 @@ export default function LoginPage() {
               className="mt-2"
             >
               Kirish
-             
             </Button>
           </form>
 
-          {/* Divider */}
-          <div className="flex items-center gap-4 my-6">
-            <div className="flex-1 h-px bg-slate-200" />
-            <span className="text-caption-1 text-slate-500">yoki</span>
-            <div className="flex-1 h-px bg-slate-200" />
+          {/* iOS: ikki chiziqli "divider" o'rniga bitta hairline —
+              qo'shimcha amal ostida, tinch. */}
+          <div className="hairline-t mt-7 pt-5">
+            <p className="text-center text-subhead text-slate-500">
+              Hisobingiz yo&apos;qmi?{' '}
+              <Link
+                href="/register"
+                className="font-semibold text-accent-600 transition-colors hover:text-accent-700"
+              >
+                Ro&apos;yxatdan o&apos;tish
+              </Link>
+            </p>
           </div>
-
-          {/* Register link */}
-          <p className="text-center text-subhead text-slate-500">
-            Hisobingiz yo&apos;qmi?{' '}
-            <Link href="/register" className="text-accent-700 hover:text-accent-800 font-semibold transition-colors">
-              Ro&apos;yxatdan o&apos;tish
-            </Link>
-          </p>
     </AuthCard>
   );
 }

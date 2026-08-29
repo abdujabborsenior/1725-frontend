@@ -90,7 +90,7 @@ export default function InvestorRequestsPage() {
                         {intro.startup.title}
                       </Link>
                     ) : (
-                      <span className="text-body text-slate-400">
+                      <span className="text-body text-slate-500">
                         Loyiha o&apos;chirilgan
                       </span>
                     )}
