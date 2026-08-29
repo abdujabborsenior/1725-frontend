@@ -1,7 +1,7 @@
 'use client';
 
 import { cn } from '@/lib/utils';
-import { Check, ChevronDown, ChevronUp } from '@/components/icons';
+import { Check, ChevronDown } from '@/components/icons';
 import {
   forwardRef,
   useEffect,
@@ -10,6 +10,13 @@ import {
   useState,
   type SelectHTMLAttributes,
 } from 'react';
+import {
+  FIELD_ERROR_TEXT,
+  FIELD_ICON,
+  FIELD_LABEL,
+  FIELD_SIZE,
+  FIELD_SURFACE,
+} from './field-styles';
 
 interface SelectProps extends SelectHTMLAttributes<HTMLSelectElement> {
   label?: string;
@@ -148,7 +155,7 @@ export const Select = forwardRef<HTMLSelectElement, SelectProps>(
 
     return (
       <div ref={rootRef} className={cn('flex flex-col gap-1.5', containerClassName)}>
-        {label && <label className="text-subhead font-medium text-slate-500">{label}</label>}
+        {label && <label className={FIELD_LABEL}>{label}</label>}
         <div className="relative">
           {/* Form manbai — yashirin native select (RHF ref shu yerga ulanadi) */}
           <select
@@ -190,10 +197,9 @@ export const Select = forwardRef<HTMLSelectElement, SelectProps>(
               }
             }}
             className={cn(
-              'h-12 w-full cursor-pointer rounded-ios-md bg-white px-4 pr-10 text-left text-body text-brand-900',
-              'border border-slate-200 transition-[border-color,box-shadow] duration-150 ease-ios',
-              'enabled:hover:border-slate-300',
-              'focus:outline-none input-focus',
+              FIELD_SURFACE,
+              FIELD_SIZE.md,
+              'cursor-pointer pr-10 text-left',
               'disabled:cursor-not-allowed disabled:opacity-40',
               error && 'border-rose-400',
               className,
@@ -201,9 +207,18 @@ export const Select = forwardRef<HTMLSelectElement, SelectProps>(
           >
             <span className="block truncate">{selectedLabel}</span>
           </button>
-          <span className="pointer-events-none absolute right-3 top-1/2 flex -translate-y-1/2 flex-col text-slate-400">
-            <ChevronUp className="h-[11px] w-[11px] -mb-[3px]" strokeWidth={3.5} />
-            <ChevronDown className="h-[11px] w-[11px]" strokeWidth={3.5} />
+          {/* Oshkor qilish belgisi — FAQAT pastga chevron (yuqori/past juftligi
+              iOS'da qiymatni o'zgartiruvchi stepper ma'nosini beradi, ro'yxat
+              ochuvchi maydonda emas). Ochilganda 180° buriladi. */}
+          <span
+            className={cn(
+              'pointer-events-none absolute right-3.5 top-1/2 flex -translate-y-1/2 items-center',
+              'transition-transform duration-250 ease-ios motion-reduce:transition-none',
+              FIELD_ICON,
+              open && 'rotate-180',
+            )}
+          >
+            <ChevronDown className="h-[15px] w-[15px]" strokeWidth={2.5} />
           </span>
 
           {open && (
@@ -241,7 +256,7 @@ export const Select = forwardRef<HTMLSelectElement, SelectProps>(
             </ul>
           )}
         </div>
-        {error && <p className="text-footnote text-rose-600">{error}</p>}
+        {error && <p className={FIELD_ERROR_TEXT}>{error}</p>}
       </div>
     );
   },

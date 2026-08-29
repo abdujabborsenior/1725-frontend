@@ -254,7 +254,6 @@ function SolutionForm({
               { value: '', label: 'Biriktirilmasin' },
               ...attachable.map((s) => ({ value: s.id, label: s.title })),
             ]}
-            className="h-10 rounded-lg px-3"
           />
           {selectedStartup && <StartupMiniCard startup={selectedStartup} />}
           <p className="text-caption-1 text-slate-500">

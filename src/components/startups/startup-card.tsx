@@ -4,7 +4,7 @@ import Link from 'next/link';
 import { Eye, StarFill } from '@/components/icons';
 import { PLATFORM_ORDER } from '@/lib/constants';
 import { PlatformIcon } from './platform';
-import { LikeCount, BookmarkButton } from './engagement';
+import { LikeButton, BookmarkButton } from './engagement';
 import { CoverMedia } from './cover-media';
 import { StartupLogo } from './startup-logo';
 import { RatingValue } from './rating';
@@ -78,80 +78,90 @@ export function StartupCard({
   const tint = categoryTint(startup.category);
 
   return (
-    <Link href={`/startups/${startup.slug}`} className="group block h-full">
-      <article className="card-today flex h-full flex-col overflow-hidden rounded-ios-2xl bg-white shadow-card">
-        {/* Muqova — kattaroq (h-40); rasm hover'da sekin kattaradi */}
-        <div className="relative h-40 overflow-hidden bg-slate-100">
-          <div className="cover-zoom h-full w-full">
-            <CoverMedia
-              coverUrl={startup.coverUrl}
-              videoUrl={startup.videoUrl}
-              title={startup.title}
-              priority={priority}
-              tintClass={tint.cover}
-            />
-          </div>
-          {startup.isFeatured && (
-            <span className="material-dark absolute right-3 top-3 inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-caption-2 font-semibold text-white">
-              <StarFill className="h-2.5 w-2.5 text-amber-400" /> TOP
+    /* Karta "stretched link" naqshida: butun sirt bosiladigan, LEKIN havola
+       ichida interaktiv tugma bo'lmaydi (yurak/saqlash). Ilgari karta butunlay
+       <Link> ichida edi — ro'yxatda yurakni bosish startap sahifasini ochib
+       yuborardi va <a> ichida <button> yaroqsiz nesting edi (2026-08-29). */
+    <article className="card-today relative flex h-full flex-col overflow-hidden rounded-ios-2xl bg-white shadow-card">
+      {/* Muqova — kattaroq (h-40); rasm hover'da sekin kattaradi */}
+      <div className="relative h-40 overflow-hidden bg-slate-100">
+        <div className="cover-zoom h-full w-full">
+          <CoverMedia
+            coverUrl={startup.coverUrl}
+            videoUrl={startup.videoUrl}
+            title={startup.title}
+            priority={priority}
+            tintClass={tint.cover}
+          />
+        </div>
+        {startup.isFeatured && (
+          <span className="material-dark absolute right-3 top-3 inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-caption-2 font-semibold text-white">
+            <StarFill className="h-2.5 w-2.5 text-amber-400" /> TOP
+          </span>
+        )}
+        <div className="absolute left-3 top-3 z-10">
+          <BookmarkButton startup={startup} variant="card" />
+        </div>
+        {/* Kategoriya rang chizig'i — muqova pastida, kartaning imzosi */}
+        <span className={`absolute inset-x-0 bottom-0 h-[3px] ${tint.bar}`} aria-hidden />
+      </div>
+
+      {/* Tana */}
+      <div className="flex-1 px-5 pb-5">
+        {/* Ikonka muqova ustiga chiqadi — `relative z-10` shart */}
+        <div className="relative z-10 -mt-9 mb-3 flex items-end justify-between gap-3">
+          <StartupLogo
+            src={startup.logoUrl}
+            title={startup.title}
+            size={68}
+            className="!rounded-[15px] shadow-card ring-1 ring-black/[0.06]"
+          />
+          {startup.category && (
+            <span
+              className={`mb-1 truncate rounded-full px-2.5 py-1 text-caption-1 font-medium ${tint.chip}`}
+            >
+              {startup.category}
             </span>
           )}
-          <div className="absolute left-3 top-3">
-            <BookmarkButton startup={startup} variant="card" />
-          </div>
-          {/* Kategoriya rang chizig'i — muqova pastida, kartaning imzosi */}
-          <span className={`absolute inset-x-0 bottom-0 h-[3px] ${tint.bar}`} aria-hidden />
         </div>
 
-        {/* Tana */}
-        <div className="flex-1 px-5 pb-5">
-          {/* Ikonka muqova ustiga chiqadi — `relative z-10` shart */}
-          <div className="relative z-10 -mt-9 mb-3 flex items-end justify-between gap-3">
-            <StartupLogo
-              src={startup.logoUrl}
-              title={startup.title}
-              size={68}
-              className="!rounded-[15px] shadow-card ring-1 ring-black/[0.06]"
-            />
-            {startup.category && (
-              <span
-                className={`mb-1 truncate rounded-full px-2.5 py-1 text-caption-1 font-medium ${tint.chip}`}
-              >
-                {startup.category}
-              </span>
-            )}
+        <h3 className="truncate text-title-3 font-semibold text-brand-900">
+          {/* Havolaning o'zi butun kartani qoplaydi (::after) */}
+          <Link
+            href={`/startups/${startup.slug}`}
+            className="after:absolute after:inset-0 after:z-0 after:content-['']"
+          >
+            {startup.title}
+          </Link>
+        </h3>
+        <p className="mt-1 line-clamp-2 min-h-[2.5rem] text-subhead leading-snug text-slate-500">
+          {startup.tagline || startup.description}
+        </p>
+        {startup.ratingCount > 0 && (
+          <div className="mt-2.5">
+            <RatingValue value={startup.ratingAvg} count={startup.ratingCount} size="sm" />
           </div>
+        )}
+      </div>
 
-          <h3 className="truncate text-title-3 font-semibold text-brand-900">{startup.title}</h3>
-          <p className="mt-1 line-clamp-2 min-h-[2.5rem] text-subhead leading-snug text-slate-500">
-            {startup.tagline || startup.description}
-          </p>
-          {startup.ratingCount > 0 && (
-            <div className="mt-2.5">
-              <RatingValue value={startup.ratingAvg} count={startup.ratingCount} size="sm" />
-            </div>
+      {/* Meta qatori */}
+      <div className="hairline-t flex items-center justify-between px-5 py-3">
+        <div className="flex items-center gap-2.5 text-slate-400">
+          {platformTypes.length > 0 ? (
+            platformTypes.map((t) => <PlatformIcon key={t} type={t} className="h-[18px] w-[18px]" />)
+          ) : (
+            <span className="text-footnote text-slate-400">G&apos;oya bosqichida</span>
           )}
         </div>
-
-        {/* Meta qatori */}
-        <div className="hairline-t flex items-center justify-between px-5 py-3">
-          <div className="flex items-center gap-2.5 text-slate-400">
-            {platformTypes.length > 0 ? (
-              platformTypes.map((t) => <PlatformIcon key={t} type={t} className="h-[18px] w-[18px]" />)
-            ) : (
-              <span className="text-footnote text-slate-400">G&apos;oya bosqichida</span>
-            )}
-          </div>
-          <div className="flex items-center gap-3.5">
-            {/* Ro'yxatda faqat son — yoqtirish amali detal sahifada */}
-            <LikeCount count={startup.likeCount ?? 0} />
-            <span className="flex items-center gap-1 text-footnote tabular-nums text-slate-500">
-              <Eye className="h-4 w-4" /> {startup.viewCount}
-            </span>
-          </div>
+        <div className="flex items-center gap-3.5">
+          {/* Yoqtirish ro'yxatda ham ishlaydi — sahifaga o'tmasdan */}
+          <LikeButton startup={startup} variant="card" />
+          <span className="flex items-center gap-1 text-footnote tabular-nums text-slate-500">
+            <Eye className="h-4 w-4" /> {startup.viewCount}
+          </span>
         </div>
-      </article>
-    </Link>
+      </div>
+    </article>
   );
 }
 

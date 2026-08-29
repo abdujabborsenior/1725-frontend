@@ -113,7 +113,6 @@ export function StartupsClient({
               setPage(1);
             }}
             options={STARTUP_SORT_OPTIONS}
-            className="h-10 text-subhead"
           />
         </div>
       </div>

@@ -166,7 +166,8 @@ export function CoverMedia({
           type="button"
           onClick={start}
           aria-label={title ? `${title} videosini ijro etish` : 'Videoni ijro etish'}
-          className="group/play absolute inset-0 flex items-center justify-center bg-black/15 transition-colors duration-150 hover:bg-black/25 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-white/80"
+          /* z-10 — karta "stretched link" qoplamasi ostida qolib ketmasin */
+          className="group/play absolute inset-0 z-10 flex items-center justify-center bg-black/15 transition-colors duration-150 hover:bg-black/25 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-white/80"
         >
           <span
             className={cn(

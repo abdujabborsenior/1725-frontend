@@ -525,7 +525,7 @@ export function Composer({
                   : hasStaged ? 'Izoh qo‘shing (ixtiyoriy)…'
                   : textBlocked ? 'Bu guruhda matn taqiqlangan' : 'Xabar yozing…'
               }
-              className="chat-scroll max-h-32 min-h-[36px] flex-1 resize-none bg-transparent px-2 py-2 text-body leading-snug text-brand-900 placeholder:text-slate-400 focus:outline-none disabled:cursor-not-allowed disabled:opacity-50"
+              className="chat-scroll max-h-32 min-h-[36px] flex-1 resize-none bg-transparent px-2 py-2 text-body leading-snug text-brand-900 placeholder:text-slate-500 focus:outline-none disabled:cursor-not-allowed disabled:opacity-50"
             />
 
             {showSendBtn && (

@@ -10,6 +10,7 @@ import { useAuthStore } from '@/store/auth.store';
 import { Modal } from '@/components/ui/modal';
 import { Avatar } from '@/components/ui/avatar';
 import { cn } from '@/lib/utils';
+import { FIELD_SIZE, FIELD_SURFACE } from '@/components/ui/field-styles';
 import { UserRowSkeleton } from '@/components/ui/skeleton';
 import toast from 'react-hot-toast';
 
@@ -112,7 +113,7 @@ export function ProblemShareModal({ open, onClose, problemId, problemTitle }: Pr
             <div className="relative mb-2">
               <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
               <input value={q} onChange={(e) => setQ(e.target.value)} placeholder="Suhbat qidirish…"
-                className="w-full rounded-ios-lg bg-white py-2 pl-9 pr-3 text-subhead focus:border-accent-300 focus:outline-none" />
+                className={cn(FIELD_SURFACE, FIELD_SIZE.sm, 'pl-9 pr-3 text-subhead')} />
             </div>
             <div className="max-h-56 overflow-y-auto chat-scroll -mx-1">
               {isLoading ? (

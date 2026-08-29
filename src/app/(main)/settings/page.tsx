@@ -11,6 +11,7 @@ import { useAuthStore } from '@/store/auth.store';
 import { useDebounce } from '@/lib/use-debounce';
 import { UZ_REGIONS, SCHOOL_GRADES, UNIVERSITY_COURSES } from '@/lib/constants';
 import { Input } from '@/components/ui/input';
+import { PasswordField, isPasswordValid } from '@/components/ui/password-field';
 import { Select } from '@/components/ui/select';
 import { DevicePermissions } from '@/components/settings/device-permissions';
 import { Button } from '@/components/ui/button';
@@ -142,7 +143,9 @@ export default function SettingsPage() {
   }
 
   async function savePassword() {
-    if (pw.newPassword.length < 8) return toast.error('Yangi parol kamida 8 ta belgi');
+    if (!isPasswordValid(pw.newPassword)) {
+      return toast.error('Parol talablarga mos emas');
+    }
     if (pw.newPassword !== pw.confirm) return toast.error('Parollar mos kelmadi');
     setSavingPw(true);
     try {
@@ -346,31 +349,35 @@ export default function SettingsPage() {
         <h2 className="flex items-center gap-2 text-title-3 font-semibold text-brand-900">
           <KeyRound className="h-4 w-4" /> Parolni o&apos;zgartirish
         </h2>
-        <Input
+        <PasswordField
           label="Joriy parol"
-          type="password"
+          placeholder="Joriy parolingiz"
+          autoComplete="current-password"
           value={pw.currentPassword}
           onChange={(e) => setPw((p) => ({ ...p, currentPassword: e.target.value }))}
         />
-        <div className="grid grid-cols-2 gap-4">
-          <Input
+        <div className="grid gap-4 sm:grid-cols-2">
+          <PasswordField
             label="Yangi parol"
-            type="password"
-            hint="Kamida 8 ta belgi"
+            placeholder="Yangi parol"
+            autoComplete="new-password"
+            rules
             value={pw.newPassword}
             onChange={(e) => setPw((p) => ({ ...p, newPassword: e.target.value }))}
           />
-          <Input
+          <PasswordField
             label="Tasdiqlash"
-            type="password"
+            placeholder="Yangi parolni takrorlang"
+            autoComplete="new-password"
             value={pw.confirm}
             onChange={(e) => setPw((p) => ({ ...p, confirm: e.target.value }))}
+            error={pw.confirm.length > 0 && pw.confirm !== pw.newPassword ? 'Parollar mos kelmadi' : undefined}
           />
         </div>
         <Button
           variant="primary"
           loading={savingPw}
-          disabled={!pw.currentPassword || !pw.newPassword}
+          disabled={!pw.currentPassword || !isPasswordValid(pw.newPassword) || pw.newPassword !== pw.confirm}
           onClick={savePassword}
         >
           <KeyRound className="h-4 w-4" /> Parolni yangilash

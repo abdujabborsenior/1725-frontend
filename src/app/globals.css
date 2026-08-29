@@ -482,9 +482,13 @@ select:-webkit-autofill {
     background-color var(--dur-micro) var(--ease-ios);
 }
 /* Navy sirt ustidagi ikkilamchi CTA */
+/* To'q sirtdagi ikkilamchi tugma — chegarasi TINCH holatda ham ko'rinadi:
+   yorug' sirtda yalang'och matn havolasi yetarli, to'q sirtda esa u juftlikni
+   "yarim tugma + matn" qilib buzadi (2026-08-29). */
 .cta-ghost-dark {
-  --cta-line: rgba(255, 255, 255, 0.3);
-  --cta-tint: rgba(255, 255, 255, 0.08);
+  --cta-line: rgba(255, 255, 255, 0.55);
+  --cta-tint: rgba(255, 255, 255, 0.12);
+  border-color: rgba(255, 255, 255, 0.28);
 }
 .cta-arrow {
   transition: transform var(--dur-base) var(--ease-ios);

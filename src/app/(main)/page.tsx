@@ -522,25 +522,29 @@ export default function LandingPage() {
       {/* ── Yakuniy CTA ─────────────────────────────────────────────────── */}
       {!token && (
         <Reveal>
-          <section className="rounded-ios-3xl bg-brand-900 px-6 py-14 text-center md:px-12 md:py-20">
+          {/* Sirt ATAYLAB brend ko'ki (accent-900) — ilgari bu yagona qora
+              slab edi va sahifadan "chiqib" turardi (2026-08-29 direktivasi). */}
+          <section className="rounded-ios-3xl bg-accent-900 px-6 py-14 text-center md:px-12 md:py-20">
             <div className="mx-auto max-w-2xl">
               <h2 className="text-title-1 font-semibold tracking-tight text-white md:text-[2.5rem]">
                 G‘oyangiz boshlanishini kutyapti
               </h2>
-              <p className="mx-auto mt-3 max-w-md text-callout leading-relaxed text-slate-300">
+              <p className="mx-auto mt-3 max-w-md text-callout leading-relaxed text-accent-100">
                 Bugun ro‘yxatdan o‘ting, birinchi muammongizni yozing va o‘zingizga o‘xshagan
                 yoshlar bilan birga ishni boshlang. Bir qadam — hammasining boshlanishi.
               </p>
-              <div className="mt-7 flex flex-col items-center justify-center gap-3 sm:flex-row sm:gap-4">
+              {/* Juftlik teng: ikkalasi ham 52px kapsula, ikkilamchisining
+                  chegarasi TINCH holatda ham ko'rinadi (yalang'och havola emas). */}
+              <div className="mt-8 flex flex-col items-stretch justify-center gap-3 sm:flex-row sm:items-center">
                 <Link
                   href="/register"
-                  className="tappable cta-fill cta-fill-light flex h-[50px] min-w-[200px] items-center justify-center rounded-full bg-white px-7 text-body font-medium text-brand-900"
+                  className="tappable cta-fill cta-fill-light inline-flex h-[52px] items-center justify-center rounded-full bg-white px-8 text-body font-semibold text-accent-800"
                 >
                   Bepul boshlash
                 </Link>
                 <Link
                   href="/login"
-                  className="tappable cta-ghost cta-ghost-dark inline-flex h-[50px] items-center justify-center gap-1 rounded-full px-5 text-body font-medium text-accent-400"
+                  className="tappable cta-ghost cta-ghost-dark inline-flex h-[52px] items-center justify-center gap-1 rounded-full px-7 text-body font-medium text-white"
                 >
                   Kirish
                   <ChevronRight className="cta-arrow h-[15px] w-[15px]" strokeWidth={3} />

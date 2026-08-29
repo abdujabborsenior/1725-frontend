@@ -18,6 +18,7 @@ import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { PROBLEM_CATEGORIES } from '@/lib/constants';
 import { cn } from '@/lib/utils';
+import { FIELD_SIZE, FIELD_SURFACE } from '@/components/ui/field-styles';
 import toast from 'react-hot-toast';
 
 const schema = z.object({
@@ -175,10 +176,10 @@ export default function CreateProblemPage() {
               <input value={imageInput} onChange={(e) => setImageInput(e.target.value)}
                 onKeyDown={(e) => e.key === 'Enter' && (e.preventDefault(), addUrl('image'))}
                 placeholder="yoki URL joylashtiring"
-                className="w-full h-11 pl-9 pr-3 rounded-lg bg-white border border-slate-200 hover:border-slate-300 text-subhead text-brand-900 placeholder:text-slate-400 focus:outline-none input-focus transition-all" />
+                className={cn(FIELD_SURFACE, FIELD_SIZE.md, 'pl-10 pr-3')} />
             </div>
             <button type="button" onClick={() => addUrl('image')} aria-label="Rasm qo'shish"
-              className="tappable h-11 w-11 flex items-center justify-center rounded-ios-md bg-fill-tertiary text-accent-700 shrink-0">
+              className="tappable h-12 w-12 flex items-center justify-center rounded-ios-md bg-fill-tertiary text-accent-700 shrink-0">
               <Plus className="h-4 w-4" />
             </button>
           </div>
@@ -215,10 +216,10 @@ export default function CreateProblemPage() {
               <input value={videoInput} onChange={(e) => setVideoInput(e.target.value)}
                 onKeyDown={(e) => e.key === 'Enter' && (e.preventDefault(), addUrl('video'))}
                 placeholder="yoki YouTube/URL"
-                className="w-full h-11 pl-9 pr-3 rounded-lg bg-white border border-slate-200 hover:border-slate-300 text-subhead text-brand-900 placeholder:text-slate-400 focus:outline-none input-focus transition-all" />
+                className={cn(FIELD_SURFACE, FIELD_SIZE.md, 'pl-10 pr-3')} />
             </div>
             <button type="button" onClick={() => addUrl('video')} aria-label="Video qo'shish"
-              className="tappable h-11 w-11 flex items-center justify-center rounded-ios-md bg-fill-tertiary text-accent-700 shrink-0">
+              className="tappable h-12 w-12 flex items-center justify-center rounded-ios-md bg-fill-tertiary text-accent-700 shrink-0">
               <Plus className="h-4 w-4" />
             </button>
           </div>

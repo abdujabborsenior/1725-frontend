@@ -12,6 +12,7 @@ import { Avatar } from '@/components/ui/avatar';
 import { ConversationListSkeleton } from './chat-skeletons';
 import { CreateGroupModal } from './create-group-modal';
 import { cn } from '@/lib/utils';
+import { FIELD_ICON, FIELD_SIZE, FIELD_SURFACE } from '@/components/ui/field-styles';
 import { timeAgoShort } from '@/lib/date';
 import type { Conversation } from '@/types';
 
@@ -166,21 +167,21 @@ export function ConversationList({ activeId }: { activeId?: string }) {
 
       {/* Qidiruv — suhbat nomi, @username yoki oxirgi xabar matni bo'yicha */}
       <div className="px-3 pb-2">
-        <div className="ios-search flex items-center gap-2 px-3 py-1.5">
-          <Search className="h-4 w-4 shrink-0 text-slate-400" />
+        <div className="relative flex items-center">
+          <Search className={cn('pointer-events-none absolute left-3 h-4 w-4', FIELD_ICON)} />
           <input
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             placeholder="Suhbatlarda qidirish"
             aria-label="Suhbatlarda qidirish"
-            className="min-w-0 flex-1 bg-transparent text-subhead text-brand-900 placeholder:text-slate-400 focus:outline-none"
+            className={cn(FIELD_SURFACE, FIELD_SIZE.sm, 'pl-9 pr-9 text-subhead')}
           />
           {query && (
             <button
               type="button"
               onClick={() => setQuery('')}
               aria-label="Tozalash"
-              className="tappable flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-fill text-white"
+              className="tappable absolute right-2.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-fill text-white"
             >
               <X className="h-3 w-3" strokeWidth={3} />
             </button>

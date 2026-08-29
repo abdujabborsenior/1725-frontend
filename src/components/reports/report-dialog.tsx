@@ -14,6 +14,7 @@ import {
 } from '@/lib/constants';
 import { useAuthStore } from '@/store/auth.store';
 import { cn } from '@/lib/utils';
+import { FIELD_SURFACE } from '@/components/ui/field-styles';
 import type { ReportReason, ReportTargetType } from '@/types';
 
 interface ReportDialogProps {
@@ -108,7 +109,7 @@ export function ReportDialog({ open, onClose, targetType, targetId }: ReportDial
             onChange={(e) => setDetails(e.target.value.slice(0, 300))}
             rows={3}
             placeholder="Muammoni qisqacha tasvirlab bering..."
-            className="w-full rounded-ios-md border border-slate-200 px-3 py-2.5 text-subhead text-brand-900 placeholder:text-slate-400 focus:border-accent-500 focus:outline-none focus:ring-2 focus:ring-accent-500/15"
+            className={cn(FIELD_SURFACE, 'resize-none px-4 py-3')}
           />
           <p className="mt-1 text-right text-caption-1 text-slate-400">{details.length}/300</p>
         </div>

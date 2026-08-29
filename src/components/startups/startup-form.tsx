@@ -32,6 +32,7 @@ import {
 } from './investor-fields';
 import { STARTUP_CATEGORIES, UZ_REGIONS } from '@/lib/constants';
 import { cn } from '@/lib/utils';
+import { FIELD_SIZE, FIELD_SURFACE } from '@/components/ui/field-styles';
 import toast from 'react-hot-toast';
 
 const schema = z.object({
@@ -356,13 +357,13 @@ export function StartupForm({ initial }: { initial?: Startup }) {
                     }
                   }}
                   placeholder="Masalan: AI, SaaS, logistika"
-                  className="h-11 flex-1 rounded-ios-md border border-slate-200 bg-white px-3.5 text-body text-brand-900 placeholder:text-slate-400 focus:outline-none input-focus"
+                  className={cn(FIELD_SURFACE, FIELD_SIZE.md, 'flex-1')}
                 />
                 <button
                   type="button"
                   onClick={addTag}
                   aria-label="Teg qo'shish"
-                  className="tappable flex h-11 w-11 shrink-0 items-center justify-center rounded-ios-md bg-fill-tertiary text-slate-600"
+                  className="tappable flex h-12 w-12 shrink-0 items-center justify-center rounded-ios-md bg-fill-tertiary text-slate-600"
                 >
                   <Plus className="h-[18px] w-[18px]" strokeWidth={2.5} />
                 </button>

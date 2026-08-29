@@ -8,18 +8,18 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { useMutation } from '@tanstack/react-query';
 import {
-  GraduationCap, School, User, Eye, EyeOff,
-  ChevronLeft, ChevronRight, Mail, Lock, MapPin,
+  GraduationCap, School, User,
+  ChevronLeft, ChevronRight, Mail, MapPin,
 } from '@/components/icons';
 import { authApi, getErrorMessage } from '@/lib/api';
 import { useAuthStore } from '@/store/auth.store';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Select } from '@/components/ui/select';
+import { PasswordField, PASSWORD_RULES } from '@/components/ui/password-field';
 import { AuthMobileLogo } from '@/components/auth/auth-shell';
 import { AuthedRedirect } from '@/components/auth/authed-redirect';
 import { UZ_REGIONS, SCHOOL_GRADES, UNIVERSITY_COURSES } from '@/lib/constants';
-import { cn } from '@/lib/utils';
 import toast from 'react-hot-toast';
 
 type UserType = 'general' | 'school' | 'university';
@@ -29,11 +29,15 @@ type UserType = 'general' | 'school' | 'university';
 // Qayta yoqish uchun `true` qilish kifoya — formalar va sxemalar saqlangan.
 const EDU_TYPES_ENABLED = false;
 
-const pwd = z.string()
-  .min(8, 'Kamida 8 ta belgi')
-  .regex(/[A-Z]/, 'Kamida 1 ta katta harf')
-  .regex(/[0-9]/, 'Kamida 1 ta raqam')
-  .regex(/[!@#$%^&*]/, 'Kamida 1 ta maxsus belgi (!@#$%^&*)');
+/* Parol qoidalari — `PASSWORD_RULES` (yagona manba) dan quriladi, shuning
+   uchun sxema va maydon ostidagi jonli ko'rsatkich hech qachon ajralmaydi. */
+const pwd = z.string().superRefine((v, ctx) => {
+  for (const rule of PASSWORD_RULES) {
+    if (!rule.test(v)) {
+      ctx.addIssue({ code: z.ZodIssueCode.custom, message: `Kerak: ${rule.label}` });
+    }
+  }
+});
 
 const generalSchema = z.object({
   fullName: z.string().min(2, 'Kamida 2 ta belgi').max(150),
@@ -83,46 +87,6 @@ const COURSE_OPTIONS = [
   ...UNIVERSITY_COURSES.map((c) => ({ value: String(c), label: `${c}-kurs` })),
 ];
 
-/* ── Password input ──────────────────────────────────────────── */
-type PwdProps = React.InputHTMLAttributes<HTMLInputElement> & {
-  label: string; error?: string; hint?: string;
-};
-const PasswordInput = React.forwardRef<HTMLInputElement, PwdProps>(
-  ({ label, error, hint, ...props }, ref) => {
-    const [show, setShow] = useState(false);
-    return (
-      <div className="flex flex-col gap-1.5">
-        <label className="text-footnote font-medium text-slate-500">{label}</label>
-        <div className="relative">
-          <Lock className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400 pointer-events-none" />
-          <input
-            ref={ref}
-            {...props}
-            type={show ? 'text' : 'password'}
-            className={cn(
-              'w-full h-12 pl-11 pr-12 rounded-xl bg-white border border-slate-200 hover:border-slate-300',
-              'text-subhead text-brand-900 placeholder:text-slate-400 focus:outline-none input-focus transition-all duration-150',
-              error && 'border-rose-400',
-            )}
-          />
-          <button
-            type="button"
-            tabIndex={-1}
-            onClick={() => setShow((s) => !s)}
-            className="absolute right-2 top-1/2 -translate-y-1/2 rounded-lg p-2 text-slate-400 hover:text-slate-700 transition-colors"
-            aria-label={show ? 'Yashirish' : "Ko'rsatish"}
-          >
-            {show ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
-          </button>
-        </div>
-        {error && <p className="text-caption-1 text-rose-600">{error}</p>}
-        {hint && !error && <p className="text-caption-1 text-slate-500">{hint}</p>}
-      </div>
-    );
-  },
-);
-PasswordInput.displayName = 'PasswordInput';
-
 function Footer() {
   return (
     <p className="text-center text-subhead text-slate-500 pt-1">
@@ -134,14 +98,12 @@ function Footer() {
   );
 }
 
-const PWD_HINT = '8+ belgi, katta harf, raqam, maxsus belgi';
-
 /* ── Forms ───────────────────────────────────────────────────── */
 function GeneralForm() {
   const router = useRouter();
   const { setPendingEmail } = useAuthStore();
   const { register, handleSubmit, formState: { errors } } =
-    useForm<GeneralData>({ resolver: zodResolver(generalSchema) });
+    useForm<GeneralData>({ resolver: zodResolver(generalSchema), mode: 'onChange' });
 
   const { mutate, isPending } = useMutation({
     mutationFn: (d: GeneralData) => authApi.register(d),
@@ -151,11 +113,14 @@ function GeneralForm() {
 
   return (
     <form onSubmit={handleSubmit((d) => mutate(d))} className="space-y-4">
-      <Input label="To'liq ism" placeholder="Ism Familiya" icon={<User className="h-4 w-4" />}
+      <Input label="To'liq ism" placeholder="Ism Familiya" autoComplete="name"
+        icon={<User className="h-4 w-4" />}
         error={errors.fullName?.message} {...register('fullName')} />
-      <Input label="Email" type="email" placeholder="email@example.com" icon={<Mail className="h-4 w-4" />}
+      <Input label="Email" type="email" placeholder="email@example.com" autoComplete="email"
+        icon={<Mail className="h-4 w-4" />}
         error={errors.email?.message} {...register('email')} />
-      <PasswordInput label="Parol" placeholder="P@ssword1" hint={PWD_HINT}
+      <PasswordField label="Parol" placeholder="Parol yarating" rules
+        autoComplete="new-password"
         error={errors.password?.message} {...register('password')} />
       <Button type="submit" size="lg" fullWidth loading={isPending}>
         Ro&apos;yxatdan o&apos;tish
@@ -169,7 +134,7 @@ function SchoolForm() {
   const router = useRouter();
   const { setPendingEmail } = useAuthStore();
   const { register, handleSubmit, formState: { errors } } =
-    useForm<SchoolData>({ resolver: zodResolver(schoolSchema) });
+    useForm<SchoolData>({ resolver: zodResolver(schoolSchema), mode: 'onChange' });
 
   const { mutate, isPending } = useMutation({
     mutationFn: (d: SchoolData) => authApi.registerSchool(d),
@@ -179,19 +144,22 @@ function SchoolForm() {
 
   return (
     <form onSubmit={handleSubmit((d) => mutate(d))} className="space-y-4">
-      <Input label="To'liq ism" placeholder="Ism Familiya" icon={<User className="h-4 w-4" />}
+      <Input label="To'liq ism" placeholder="Ism Familiya" autoComplete="name"
+        icon={<User className="h-4 w-4" />}
         error={errors.fullName?.message} {...register('fullName')} />
       <Select label="Viloyat" options={REGION_OPTIONS} error={errors.region?.message} {...register('region')} />
-      <Input label="Tuman" placeholder="Chilonzor tumani" icon={<MapPin className="h-4 w-4" />}
+      <Input label="Tuman" placeholder="Chilonzor tumani" autoComplete="address-level2" icon={<MapPin className="h-4 w-4" />}
         error={errors.district?.message} {...register('district')} />
       <div className="grid grid-cols-[1fr_120px] gap-3">
         <Input label="Maktab" placeholder="Maktab nomi / raqami" icon={<School className="h-4 w-4" />}
           error={errors.school?.message} {...register('school')} />
         <Select label="Sinf" options={GRADE_OPTIONS} error={errors.grade?.message} {...register('grade')} />
       </div>
-      <Input label="Email" type="email" placeholder="email@example.com" icon={<Mail className="h-4 w-4" />}
+      <Input label="Email" type="email" placeholder="email@example.com" autoComplete="email"
+        icon={<Mail className="h-4 w-4" />}
         error={errors.email?.message} {...register('email')} />
-      <PasswordInput label="Parol" placeholder="P@ssword1" hint={PWD_HINT}
+      <PasswordField label="Parol" placeholder="Parol yarating" rules
+        autoComplete="new-password"
         error={errors.password?.message} {...register('password')} />
       <Button type="submit" size="lg" fullWidth loading={isPending}>
         Ro&apos;yxatdan o&apos;tish
@@ -205,7 +173,7 @@ function UniversityForm() {
   const router = useRouter();
   const { setPendingEmail } = useAuthStore();
   const { register, handleSubmit, formState: { errors } } =
-    useForm<UniData>({ resolver: zodResolver(universitySchema) });
+    useForm<UniData>({ resolver: zodResolver(universitySchema), mode: 'onChange' });
 
   const { mutate, isPending } = useMutation({
     mutationFn: (d: UniData) => authApi.registerUniversity(d),
@@ -215,7 +183,8 @@ function UniversityForm() {
 
   return (
     <form onSubmit={handleSubmit((d) => mutate(d))} className="space-y-4">
-      <Input label="To'liq ism" placeholder="Ism Familiya" icon={<User className="h-4 w-4" />}
+      <Input label="To'liq ism" placeholder="Ism Familiya" autoComplete="name"
+        icon={<User className="h-4 w-4" />}
         error={errors.fullName?.message} {...register('fullName')} />
       <Select label="Viloyat" options={REGION_OPTIONS} error={errors.region?.message} {...register('region')} />
       <div className="grid grid-cols-[1fr_120px] gap-3">
@@ -223,9 +192,11 @@ function UniversityForm() {
           error={errors.university?.message} {...register('university')} />
         <Select label="Kurs" options={COURSE_OPTIONS} error={errors.course?.message} {...register('course')} />
       </div>
-      <Input label="Email" type="email" placeholder="email@example.com" icon={<Mail className="h-4 w-4" />}
+      <Input label="Email" type="email" placeholder="email@example.com" autoComplete="email"
+        icon={<Mail className="h-4 w-4" />}
         error={errors.email?.message} {...register('email')} />
-      <PasswordInput label="Parol" placeholder="P@ssword1" hint={PWD_HINT}
+      <PasswordField label="Parol" placeholder="Parol yarating" rules
+        autoComplete="new-password"
         error={errors.password?.message} {...register('password')} />
       <Button type="submit" size="lg" fullWidth loading={isPending}>
         Ro&apos;yxatdan o&apos;tish

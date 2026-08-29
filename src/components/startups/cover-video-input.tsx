@@ -4,6 +4,7 @@ import { useRef, useState } from 'react';
 import { Film, Link2, Spinner, UploadCloud, X, Youtube } from '@/components/icons';
 import { uploadsApi, getErrorMessage } from '@/lib/api';
 import { cn } from '@/lib/utils';
+import { FIELD_SIZE, FIELD_SURFACE } from '@/components/ui/field-styles';
 import { CoverMedia, youtubeId, isPlayableVideo } from './cover-media';
 import toast from 'react-hot-toast';
 
@@ -150,7 +151,7 @@ export function CoverVideoInput({
               onKeyDown={(e) => { if (e.key === 'Enter') { e.preventDefault(); applyLink(); } }}
               placeholder="https://youtube.com/watch?v=..."
               aria-label="YouTube havolasi"
-              className="input-focus h-11 w-full rounded-ios-lg bg-white pl-9 pr-3 text-subhead text-brand-900 transition-all placeholder:text-slate-400 hover:border-slate-300 focus:outline-none"
+              className={cn(FIELD_SURFACE, FIELD_SIZE.md, 'pl-10 pr-3')}
             />
           </div>
           <button

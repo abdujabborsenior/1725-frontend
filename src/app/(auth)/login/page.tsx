@@ -1,16 +1,16 @@
 'use client';
 
-import { useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
-import { Mail, Lock, Eye, EyeOff } from '@/components/icons';
+import { Mail } from '@/components/icons';
 import { authApi, getErrorMessage } from '@/lib/api';
 import { useAuthStore } from '@/store/auth.store';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import { PasswordField } from '@/components/ui/password-field';
 import { AuthCard } from '@/components/auth/auth-shell';
 import { consumeNext } from '@/components/auth/next-capture';
 import { AuthedRedirect } from '@/components/auth/authed-redirect';
@@ -26,7 +26,6 @@ type FormData = z.infer<typeof schema>;
 export default function LoginPage() {
   const router = useRouter();
   const { setAuth, setPendingEmail } = useAuthStore();
-  const [showPwd, setShowPwd] = useState(false);
 
   const { register, handleSubmit, formState: { errors, isSubmitting } } =
     useForm<FormData>({ resolver: zodResolver(schema) });
@@ -74,30 +73,13 @@ export default function LoginPage() {
             />
 
             <div className="flex flex-col gap-1.5">
-              <label className="text-footnote font-medium text-slate-500">
-                Parol
-              </label>
-              <div className="relative">
-                <Lock className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400 pointer-events-none" />
-                <input
-                  type={showPwd ? 'text' : 'password'}
-                  placeholder="••••••••"
-                  autoComplete="current-password"
-                  {...register('password')}
-                  className="h-12 w-full rounded-ios-md border border-slate-200 bg-white pl-11 pr-12 text-body text-brand-900 placeholder:text-slate-400 transition-[border-color,box-shadow] duration-150 ease-ios enabled:hover:border-slate-300 focus:outline-none input-focus"
-                />
-                <button
-                  type="button"
-                  onClick={() => setShowPwd((p) => !p)}
-                  className="absolute right-2 top-1/2 -translate-y-1/2 rounded-lg p-2 text-slate-400 hover:text-slate-700 transition-colors"
-                  aria-label={showPwd ? 'Parolni yashirish' : "Parolni ko'rsatish"}
-                >
-                  {showPwd ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
-                </button>
-              </div>
-              {errors.password && (
-                <p className="text-caption-1 text-rose-600">{errors.password.message}</p>
-              )}
+              <PasswordField
+                label="Parol"
+                placeholder="Parolingiz"
+                autoComplete="current-password"
+                error={errors.password?.message}
+                {...register('password')}
+              />
               <div className="flex justify-end">
                 <Link
                   href="/forgot-password"

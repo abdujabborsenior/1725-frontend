@@ -67,7 +67,33 @@ Barchasi blur+saturate. Faqat chrome/overlay uchun — kontent kartasiga emas.
 - **Segmented control** — `ui/segmented.tsx` yoki `.segmented/.segment` —
   tab almashtirish shu bilan (pill-tab emas).
 - **Switch** — `ui/switch.tsx` (UISwitch, systemGreen).
-- **SearchField** — `ui/search-field.tsx` (kulrang fill, ichida lupa, × tozalash).
+- **Maydon tizimi (MAJBURIY, 2026-08-29)** — matn kiritish sirtining YAGONA manbai
+  `ui/field-styles.ts`: `FIELD_SURFACE` (oq fon + 1px `slate-200` hairline +
+  `rounded-ios-md` + `input-focus` halqasi + `placeholder:text-slate-500`),
+  `FIELD_SIZE.md` (48px — standart) / `.sm` (40px — zich chrome, masalan chat
+  qidiruvi), `FIELD_INVALID`, `FIELD_LABEL`. Input · Textarea · Select ·
+  PasswordField · SearchField va HAR QANDAY qo'lda yozilgan maydon shundan oladi —
+  yangi maydon uchun class YOZILMAYDI. ⚠️ Kulrang `fill` (`.ios-search`) endi
+  maydonlarda ISHLATILMAYDI: iOS'da u nav bar (oq sirt) ichida turadi, bizda esa
+  sahifa foni `surface-soft` — kulrang ustidagi kulrang maydon ko'rinmay qoladi.
+  Kulrang fill faqat chrome tugmasida (navbar qidiruv trigger'i). Ataylab istisno:
+  AI composer/launcher (`.ai-aura`), chat composer (`.composer-field`), Spotlight
+  paneli va iOS Sozlamalar qatoridagi shaffof havola maydonlari (`link-fields`) —
+  ular O'Z sirtiga ega.
+- **PasswordField** (`ui/password-field.tsx`) — barcha parol maydonlari (login,
+  register, tiklash, sozlamalar). `autoComplete` MAJBURIY (`new-password` /
+  `current-password`) — busiz brauzer parol maydoniga EMAIL to'ldiradi.
+  `PASSWORD_RULES` — talablarning yagona manbai (zod sxemasi ham, ko'rsatkich ham
+  shundan). `rules` propi bilan jonli chiplar: bajarilgani yashil ✓, qolgani tinch
+  kulrang, maydondan chiqilgach (yoki xatoda) qizil. Parol formalarida
+  `useForm({ mode: 'onChange' })` — default `onSubmit` odamni "yubor → xato ko'r"
+  sikliga majburlaydi.
+- **Karta = "stretched link"** (startap va muammo kartalari): karta `<Link>` ICHIGA
+  o'ralmaydi — `<article class="relative">` + sarlavhadagi havolaning
+  `after:absolute after:inset-0` qoplamasi. Sabab: kartadagi tugmalar (yurak,
+  saqlash, video ijro) `<a>` ichida bo'lsa yaroqsiz HTML va tasodifiy navigatsiya
+  beradi. Tugmalar `relative z-10` bilan qoplama USTIDA turadi.
+- **SearchField** — `ui/search-field.tsx` (maydon tizimi sirti, ichida lupa, × tozalash).
 - **Modal** — `ui/modal.tsx`: mobil = pastdan **sheet** (grabber + sudrab
   yopish), desktop = markaziy dialog. Sahifadagi popover = `.material-menu`.
 - **Tugmalar**: `ui/button.tsx` (filled/gray/bordered/plain/destructive).

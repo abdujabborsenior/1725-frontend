@@ -8,6 +8,7 @@ import { startupsApi, getErrorMessage } from '@/lib/api';
 import { useAuthStore } from '@/store/auth.store';
 import { ROLE_LABEL } from '@/lib/constants';
 import { cn } from '@/lib/utils';
+import { FIELD_SURFACE } from '@/components/ui/field-styles';
 import { RatingValue, RatingInput, RATING_MAX } from './rating';
 import { Button } from '@/components/ui/button';
 import { Pagination } from '@/components/ui/pagination';
@@ -119,7 +120,7 @@ export function Reviews({ startup }: { startup: Startup }) {
             rows={3}
             maxLength={2000}
             placeholder="Fikringizni yozing (ixtiyoriy)..."
-            className="w-full rounded-ios-md bg-white border border-slate-200 hover:border-slate-300 px-4 py-3 text-subhead text-brand-900 placeholder:text-slate-400 focus:outline-none input-focus transition-all resize-none"
+            className={cn(FIELD_SURFACE, 'resize-none px-4 py-3')}
           />
           <div className="flex gap-2">
             <Button

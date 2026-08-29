@@ -116,7 +116,7 @@ export function SearchPalette() {
             value={q}
             onChange={(e) => setQ(e.target.value)}
             placeholder="Odam, startap yoki muammo qidiring"
-            className="h-[52px] flex-1 bg-transparent text-body text-brand-900 placeholder:text-slate-400 focus:outline-none"
+            className="h-[52px] flex-1 bg-transparent text-body text-brand-900 placeholder:text-slate-500 focus:outline-none"
           />
           {fetching && <Spinner className="h-4 w-4 animate-spin text-slate-400" />}
           {/* Yopish — barcha ekranlarda × (klaviatura yorlig'i ham ishlaydi) */}

@@ -3,6 +3,7 @@
 import { forwardRef, type InputHTMLAttributes } from 'react';
 import { CloseCircleFill, Search } from '@/components/icons';
 import { cn } from '@/lib/utils';
+import { FIELD_ICON, FIELD_SIZE, FIELD_SURFACE } from './field-styles';
 
 interface SearchFieldProps extends Omit<InputHTMLAttributes<HTMLInputElement>, 'onChange'> {
   value: string;
@@ -14,8 +15,14 @@ interface SearchFieldProps extends Omit<InputHTMLAttributes<HTMLInputElement>, '
 }
 
 /**
- * iOS **Search Field** (UISearchBar) — kulrang fill, ichkarida lupa,
- * matn kiritilganda tozalash uchun to'ldirilgan × belgisi.
+ * Sahifa qidiruv maydoni — sirti loyihaning boshqa BARCHA maydonlari bilan
+ * bir xil (`field-styles.ts`): oq fon + hairline chegara.
+ *
+ * ⚠️ Ilgari bu maydon iOS'ning kulrang `fill` sirtida edi (`.ios-search`).
+ * iOS'da u NAV BAR ichida (oq sirtda) turadi; bizda esa sahifa foni
+ * `surface-soft` (#F2F2F7) — kulrang ustidagi kulrang maydon amalda
+ * ko'rinmasdi (2026-08-29 direktivasi). Kulrang fill endi faqat chrome
+ * boshqaruvlarida (navbar qidiruv tugmasi) qoladi.
  */
 export const SearchField = forwardRef<HTMLInputElement, SearchFieldProps>(
   (
@@ -23,16 +30,22 @@ export const SearchField = forwardRef<HTMLInputElement, SearchFieldProps>(
     ref,
   ) => (
     <div className={cn('flex items-center gap-2.5', containerClassName)}>
-      <div className="ios-search relative flex h-9 min-w-0 flex-1 items-center">
-        <Search className="pointer-events-none absolute left-2.5 h-4 w-4 text-slate-400" />
+      <div className="relative flex min-w-0 flex-1 items-center">
+        <Search
+          className={cn(
+            'pointer-events-none absolute left-3.5 h-[18px] w-[18px]',
+            FIELD_ICON,
+          )}
+        />
         <input
           ref={ref}
           type="search"
           value={value}
           onChange={(e) => onValueChange(e.target.value)}
           className={cn(
-            'h-full w-full min-w-0 bg-transparent pl-8 pr-8 text-body text-brand-900',
-            'placeholder:text-slate-400 focus:outline-none',
+            FIELD_SURFACE,
+            FIELD_SIZE.md,
+            'pl-11 pr-11',
             '[&::-webkit-search-cancel-button]:appearance-none',
             className,
           )}
@@ -43,9 +56,12 @@ export const SearchField = forwardRef<HTMLInputElement, SearchFieldProps>(
             type="button"
             onClick={() => onValueChange('')}
             aria-label="Tozalash"
-            className="tappable absolute right-2 flex h-5 w-5 items-center justify-center text-slate-400"
+            className={cn(
+              'tappable absolute right-3 flex h-6 w-6 items-center justify-center rounded-full',
+              'text-slate-400 transition-colors duration-150 hover:text-slate-600',
+            )}
           >
-            <CloseCircleFill className="h-[18px] w-[18px]" />
+            <CloseCircleFill className="h-[19px] w-[19px]" />
           </button>
         )}
       </div>

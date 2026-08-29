@@ -26,26 +26,13 @@ function useAuthGuard() {
   };
 }
 
-/**
- * Faqat SON — ro'yxat/kartochkalarda ishlatiladi.
- * Yoqtirish amali ataylab faqat startap DETAL sahifasida mavjud: ro'yxatda
- * tasodifiy bosish va toggle bo'roni bo'lmaydi, karta esa sof navigatsiya
- * elementi bo'lib qoladi.
- */
-export function LikeCount({ count }: { count: number }) {
-  return (
-    <span className="inline-flex items-center gap-1 text-caption-1 tabular-nums text-slate-500">
-      <Heart className="h-3.5 w-3.5" aria-hidden />
-      {count}
-    </span>
-  );
-}
-
 export function LikeButton({
   startup,
+  variant = 'detail',
   onChange,
 }: {
   startup: Startup;
+  variant?: Variant;
   onChange?: (liked: boolean, count: number) => void;
 }) {
   const guard = useAuthGuard();
@@ -63,6 +50,8 @@ export function LikeButton({
   }, [startup.likedByMe, startup.likeCount]);
 
   async function toggle(e: React.MouseEvent) {
+    // Karta ichida: bosish kartaning havolasiga O'TMAYDI (2026-08-29 —
+    // ilgari ro'yxatda yurak bosilsa startap sahifasi ochilib ketardi).
     e.preventDefault();
     e.stopPropagation();
     if (busy || !guard()) return;
@@ -92,10 +81,36 @@ export function LikeButton({
     }
   }
 
+  /* Karta varianti — meta qatoridagi ixcham amal: ko'rishlar soni bilan bir
+     og'irlikda turadi, lekin haqiqiy tegish maydoniga ega. */
+  if (variant === 'card') {
+    return (
+      <button
+        onClick={toggle}
+        disabled={busy}
+        aria-pressed={liked}
+        aria-label={liked ? `Yoqtirishni olib tashlash — ${count}` : `Yoqtirish — ${count}`}
+        className={cn(
+          'tappable relative z-10 -mx-2 inline-flex h-8 items-center gap-1 rounded-full px-2',
+          'text-footnote tabular-nums transition-colors duration-150 ease-ios',
+          liked ? 'text-rose-600' : 'text-slate-500 hover:text-rose-600',
+        )}
+      >
+        {liked ? (
+          <HeartFill className="h-4 w-4" />
+        ) : (
+          <Heart className="h-4 w-4" />
+        )}
+        {count}
+      </button>
+    );
+  }
+
   return (
     <button
       onClick={toggle}
       disabled={busy}
+      aria-pressed={liked}
       aria-label={`Yoqtirish — ${count}`}
       className={cn(
         'tappable inline-flex h-9 items-center gap-1.5 rounded-full px-3.5 text-subhead font-medium tabular-nums transition-colors duration-150 ease-ios',
