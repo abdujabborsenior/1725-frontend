@@ -467,7 +467,7 @@ export function Composer({
                   <div className="material-menu absolute bottom-12 left-0 z-20 w-56 origin-bottom-left animate-scale-in rounded-ios-lg p-1 shadow-modal ring-1 ring-black/[0.06]">
                     <button
                       onClick={() => pickFrom(galleryRef)}
-                      className="flex w-full items-center gap-3 rounded-[9px] px-2.5 py-2 text-left transition-colors duration-150 active:bg-fill-tertiary"
+                      className="flex w-full items-center gap-3 rounded-[9px] px-2.5 py-2 text-left transition-colors duration-150 hover:bg-fill-quaternary active:bg-fill-tertiary"
                     >
                       <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-[9px] bg-accent-500 text-white">
                         <Images className="h-[18px] w-[18px]" />
@@ -482,7 +482,7 @@ export function Composer({
                     {/* Kamera — faqat sensorli qurilmalarda (desktop'da capture ishlamaydi) */}
                     <button
                       onClick={() => pickFrom(cameraRef)}
-                      className="hidden w-full items-center gap-3 rounded-[9px] px-2.5 py-2 text-left transition-colors duration-150 active:bg-fill-tertiary [@media(pointer:coarse)]:flex"
+                      className="hidden w-full items-center gap-3 rounded-[9px] px-2.5 py-2 text-left transition-colors duration-150 hover:bg-fill-quaternary active:bg-fill-tertiary [@media(pointer:coarse)]:flex"
                     >
                       <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-[9px] bg-iris-500 text-white">
                         <Camera className="h-[18px] w-[18px]" />
@@ -494,7 +494,7 @@ export function Composer({
                     </button>
                     <button
                       onClick={() => pickFrom(fileRef)}
-                      className="flex w-full items-center gap-3 rounded-[9px] px-2.5 py-2 text-left transition-colors duration-150 active:bg-fill-tertiary"
+                      className="flex w-full items-center gap-3 rounded-[9px] px-2.5 py-2 text-left transition-colors duration-150 hover:bg-fill-quaternary active:bg-fill-tertiary"
                     >
                       <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-[9px] bg-slate-400 text-white">
                         <FileText className="h-[18px] w-[18px]" />

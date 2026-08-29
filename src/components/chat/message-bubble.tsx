@@ -177,14 +177,14 @@ function ContextMenu({
       >
         <button
           onClick={() => { onReply(); onClose(); }}
-          className="flex w-full items-center gap-2.5 rounded-[9px] px-3 py-2 text-body text-brand-900 transition-colors duration-150 active:bg-fill-tertiary"
+          className="flex w-full items-center gap-2.5 rounded-[9px] px-3 py-2 text-body text-brand-900 transition-colors duration-150 hover:bg-fill-quaternary active:bg-fill-tertiary"
         >
           <Reply className="h-[18px] w-[18px] text-slate-500" /> Javob berish
         </button>
         {canEdit && (
           <button
             onClick={() => { onEdit(); onClose(); }}
-            className="flex w-full items-center gap-2.5 rounded-[9px] px-3 py-2 text-body text-brand-900 transition-colors duration-150 active:bg-fill-tertiary"
+            className="flex w-full items-center gap-2.5 rounded-[9px] px-3 py-2 text-body text-brand-900 transition-colors duration-150 hover:bg-fill-quaternary active:bg-fill-tertiary"
           >
             <Pencil className="h-[18px] w-[18px] text-slate-500" /> Tahrirlash
           </button>
@@ -192,7 +192,7 @@ function ContextMenu({
         {hasText && (
           <button
             onClick={() => { onCopy(); onClose(); }}
-            className="flex w-full items-center gap-2.5 rounded-[9px] px-3 py-2 text-body text-brand-900 transition-colors duration-150 active:bg-fill-tertiary"
+            className="flex w-full items-center gap-2.5 rounded-[9px] px-3 py-2 text-body text-brand-900 transition-colors duration-150 hover:bg-fill-quaternary active:bg-fill-tertiary"
           >
             <Copy className="h-[18px] w-[18px] text-slate-500" /> Nusxa olish
           </button>
@@ -200,7 +200,7 @@ function ContextMenu({
         {canReport && (
           <button
             onClick={() => { onReport(); onClose(); }}
-            className="flex w-full items-center gap-2.5 rounded-[9px] px-3 py-2 text-body text-rose-600 transition-colors duration-150 active:bg-rose-50"
+            className="flex w-full items-center gap-2.5 rounded-[9px] px-3 py-2 text-body text-rose-600 transition-colors duration-150 hover:bg-rose-50/60 active:bg-rose-50"
           >
             <Flag className="h-[18px] w-[18px]" /> Shikoyat qilish
           </button>
@@ -329,7 +329,7 @@ export function MessageBubble({
       {!mine && isGroup ? (
         showAvatar ? (
           message.sender ? (
-            <Link href={profileHref(message.sender)} className="shrink-0">
+            <Link href={profileHref(message.sender)} className="shrink-0 transition-opacity hover:opacity-80">
               <Avatar src={message.sender.avatarUrl} name={message.sender.fullName} size={28} />
             </Link>
           ) : (
@@ -392,7 +392,7 @@ export function MessageBubble({
               href={profileHref(message.sender)}
               onClick={(e) => e.stopPropagation()}
               draggable={false}
-              className="mb-0.5 block text-footnote font-semibold text-accent-700"
+              className="mb-0.5 block text-footnote font-semibold text-accent-700 underline-offset-2 transition-colors hover:text-accent-800 hover:underline"
             >
               {message.sender.fullName}
             </Link>

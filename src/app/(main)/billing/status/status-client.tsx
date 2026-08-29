@@ -61,7 +61,7 @@ export function PaymentStatusClient() {
   }
 
   if (isLoading || (!order && !timedOut)) {
-    return <Shell tone="pending" title="Tekshirilmoqda…" text="Buyurtma holati olinmoqda." />;
+    return <Shell tone="pending" title="Tekshirilmoqda…" text="Buyurtma holati olinmoqda" />;
   }
 
   if (order?.status === 'paid') {

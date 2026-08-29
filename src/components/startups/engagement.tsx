@@ -159,7 +159,7 @@ export function BookmarkButton({
         onClick={toggle}
         aria-label="Saqlash"
         className={cn(
-          'material-thick flex h-8 w-8 items-center justify-center rounded-full transition-colors duration-150',
+          'material-thick flex h-8 w-8 items-center justify-center rounded-full transition-colors duration-150 hover:text-accent-600',
           saved ? 'text-accent-600' : 'text-slate-500',
         )}
       >

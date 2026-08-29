@@ -30,6 +30,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
           className={cn(
             'h-12 w-full rounded-ios-md bg-white text-body text-brand-900 placeholder:text-slate-400',
             'border border-slate-200 transition-[border-color,box-shadow] duration-150 ease-ios',
+            'enabled:hover:border-slate-300',
             'focus:outline-none input-focus',
             icon ? 'pl-11 pr-4' : 'px-4',
             rightIcon && 'pr-11',

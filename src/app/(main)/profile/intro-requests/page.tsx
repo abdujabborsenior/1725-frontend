@@ -85,7 +85,7 @@ export default function IntroRequestsPage() {
         <EmptyState
           icon={<MailOpen />}
           title="Hozircha so'rov yo'q"
-          description="Loyihangiz profilini to'ldirsangiz — bosqich, ehtiyoj va ko'rsatkichlar — investorlar sizni tezroq topadi."
+          description="Loyihangiz profilini to'ldirsangiz — bosqich, ehtiyoj va ko'rsatkichlar — investorlar sizni tezroq topadi"
         />
       )}
 

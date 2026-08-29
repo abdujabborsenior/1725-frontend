@@ -201,7 +201,7 @@ function OptionRow({
         'group/row relative px-3.5 py-3 transition-colors duration-150 sm:px-4',
         !first && 'hairline-t',
         voted && 'bg-accent-50',
-        !closed && 'cursor-pointer active:bg-fill-tertiary',
+        !closed && 'cursor-pointer hover:bg-fill-quaternary active:bg-fill-tertiary',
       )}
     >
       <div className="flex items-center gap-3">

@@ -84,7 +84,7 @@ export default function LoginPage() {
                   placeholder="••••••••"
                   autoComplete="current-password"
                   {...register('password')}
-                  className="h-12 w-full rounded-ios-md border border-slate-200 bg-white pl-11 pr-12 text-body text-brand-900 placeholder:text-slate-400 transition-[border-color,box-shadow] duration-150 ease-ios focus:outline-none input-focus"
+                  className="h-12 w-full rounded-ios-md border border-slate-200 bg-white pl-11 pr-12 text-body text-brand-900 placeholder:text-slate-400 transition-[border-color,box-shadow] duration-150 ease-ios enabled:hover:border-slate-300 focus:outline-none input-focus"
                 />
                 <button
                   type="button"

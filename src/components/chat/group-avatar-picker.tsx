@@ -46,7 +46,7 @@ export function GroupAvatarPicker({
           type="button"
           onClick={() => inputRef.current?.click()}
           className={cn(
-            'group relative flex h-full w-full items-center justify-center overflow-hidden rounded-full ring-2 ring-white transition-shadow',
+            'group relative flex h-full w-full items-center justify-center overflow-hidden rounded-full ring-2 ring-white transition-shadow hover:shadow-card-hover',
             value ? 'shadow-card' : 'bg-iris-500',
           )}
         >

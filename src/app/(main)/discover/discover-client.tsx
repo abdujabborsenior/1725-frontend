@@ -107,7 +107,7 @@ export function DiscoverClient({
     <div className="mx-auto max-w-4xl space-y-7">
       <PageHeader
         title="Hamjamiyat"
-        subtitle="Odamlarni toping, kuzating va guruhlarga qo‘shiling."
+        subtitle="Odamlarni toping, kuzating va guruhlarga qo‘shiling"
       />
 
       {/* Qidiruv */}

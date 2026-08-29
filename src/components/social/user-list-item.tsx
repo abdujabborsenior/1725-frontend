@@ -31,12 +31,12 @@ export function UserListItem({ user, onClick, className, showFollow = true }: Pr
         className,
       )}
     >
-      <Link href={href} onClick={onClick} className="shrink-0">
+      <Link href={href} onClick={onClick} className="shrink-0 transition-opacity hover:opacity-80">
         <Avatar src={user.avatarUrl} name={user.fullName} size={44} />
       </Link>
-      <Link href={href} onClick={onClick} className="min-w-0 flex-1">
+      <Link href={href} onClick={onClick} className="group/name min-w-0 flex-1">
         <p className="flex items-center gap-1.5 text-body text-brand-900">
-          <span className="truncate">{user.fullName}</span>
+          <span className="truncate transition-colors group-hover/name:text-accent-700">{user.fullName}</span>
           {user.isFounder && <FounderBadge size="xs" className="shrink-0" />}
         </p>
         <p className="truncate text-footnote text-slate-500">

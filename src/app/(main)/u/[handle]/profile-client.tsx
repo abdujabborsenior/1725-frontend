@@ -91,7 +91,7 @@ export function ProfileClient({ initialProfile }: { initialProfile: PublicProfil
       <div className="py-28 text-center">
         <UserX className="mx-auto mb-3 h-10 w-10 text-slate-300" />
         <p className="text-title-3 font-bold text-brand-900">Foydalanuvchi topilmadi</p>
-        <p className="mt-1 text-subhead text-slate-500">Bunday username mavjud emas yoki hisob faol emas.</p>
+        <p className="mt-1 text-subhead text-slate-500">Bunday username mavjud emas yoki hisob faol emas</p>
       </div>
     );
   }
@@ -191,11 +191,11 @@ export function ProfileClient({ initialProfile }: { initialProfile: PublicProfil
 
             {/* Counts */}
             <div className="mt-4 flex flex-wrap items-center gap-x-6 gap-y-3">
-              <button onClick={() => setListMode('followers')} className="group text-left">
+              <button onClick={() => setListMode('followers')} className="tappable group text-left">
                 <span className="text-title-3 font-semibold tabular-nums text-brand-900">{followers.toLocaleString('uz')}</span>
                 <span className="ml-1 text-subhead text-slate-500">obunachi</span>
               </button>
-              <button onClick={() => setListMode('following')} className="group text-left">
+              <button onClick={() => setListMode('following')} className="tappable group text-left">
                 <span className="text-title-3 font-semibold tabular-nums text-brand-900">{profile.followingCount.toLocaleString('uz')}</span>
                 <span className="ml-1 text-subhead text-slate-500">obuna</span>
               </button>

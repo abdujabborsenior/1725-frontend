@@ -140,7 +140,7 @@ export function Reviews({ startup }: { startup: Startup }) {
       ) : (
         <button
           onClick={() => router.push('/login')}
-          className="w-full rounded-ios-lg bg-white py-5 text-subhead text-slate-600 transition-all"
+          className="w-full rounded-ios-lg bg-white py-5 text-subhead text-slate-600 transition-all hover:bg-slate-50"
         >
           Baho berish uchun <span className="font-semibold text-accent-700">tizimga kiring</span>
         </button>

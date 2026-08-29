@@ -13,7 +13,7 @@ export function LeaderboardMini({ entries }: { entries: LeaderboardEntry[] }) {
         <Link
           key={e.id}
           href={`/startups/${e.slug}`}
-          className={`group flex items-center gap-3 px-3 py-2.5 transition-colors active:bg-fill-tertiary ${
+          className={`group flex items-center gap-3 px-3 py-2.5 transition-colors hover:bg-fill-quaternary active:bg-fill-tertiary ${
             i > 0 ? 'border-t border-slate-100' : ''
           }`}
         >

@@ -314,11 +314,11 @@ export function ChatWindow({ conversationId }: { conversationId: string }) {
           <ChevronLeft className="h-[22px] w-[22px]" strokeWidth={3} />
         </button>
         {isGroup ? (
-          <button onClick={() => setInfoOpen(true)} aria-label="Guruh ma'lumoti" className="shrink-0">
+          <button onClick={() => setInfoOpen(true)} aria-label="Guruh ma'lumoti" className="shrink-0 transition-opacity hover:opacity-85">
             <Avatar src={conv.avatarUrl} name={conv.title} size={40} />
           </button>
         ) : (
-          <Link href={headerHref}><Avatar src={conv.avatarUrl} name={conv.title} size={40} online={online} /></Link>
+          <Link href={headerHref} className="transition-opacity hover:opacity-85"><Avatar src={conv.avatarUrl} name={conv.title} size={40} online={online} /></Link>
         )}
         {/* Guruhda — ma'lumot modali; shaxsiy suhbatda — suhbatdosh PROFILI */}
         <HeaderIdentity isGroup={isGroup} href={headerHref} onInfo={() => setInfoOpen(true)}>
@@ -347,16 +347,16 @@ export function ChatWindow({ conversationId }: { conversationId: string }) {
                   <div
                     className="material-menu absolute right-0 top-11 z-50 w-60 max-w-[calc(100vw-1.5rem)] origin-top-right animate-scale-in overflow-hidden rounded-ios-lg p-1 shadow-modal ring-1 ring-black/[0.06]"
                   >
-                    <button onClick={() => { setInfoOpen(true); setMenuOpen(false); }} className="flex w-full items-center gap-3 rounded-[9px] px-3 py-2.5 text-body text-brand-900 transition-colors duration-150 active:bg-fill-tertiary">
+                    <button onClick={() => { setInfoOpen(true); setMenuOpen(false); }} className="flex w-full items-center gap-3 rounded-[9px] px-3 py-2.5 text-body text-brand-900 transition-colors duration-150 hover:bg-fill-quaternary active:bg-fill-tertiary">
                       <Info className="h-4 w-4 text-slate-400" /> Guruh ma&apos;lumoti
                     </button>
                     {canManageGroup && (
-                      <button onClick={() => { setSettingsOpen(true); setMenuOpen(false); }} className="flex w-full items-center gap-3 rounded-[9px] px-3 py-2.5 text-body text-brand-900 transition-colors duration-150 active:bg-fill-tertiary">
+                      <button onClick={() => { setSettingsOpen(true); setMenuOpen(false); }} className="flex w-full items-center gap-3 rounded-[9px] px-3 py-2.5 text-body text-brand-900 transition-colors duration-150 hover:bg-fill-quaternary active:bg-fill-tertiary">
                         <Settings className="h-4 w-4 text-slate-400" /> Guruh sozlamalari
                       </button>
                     )}
                     {!isOwner && (
-                      <button onClick={() => { setLeaveOpen(true); setMenuOpen(false); }} className="flex w-full items-center gap-3 rounded-[9px] px-3 py-2.5 text-body text-rose-600 transition-colors duration-150 active:bg-rose-50">
+                      <button onClick={() => { setLeaveOpen(true); setMenuOpen(false); }} className="flex w-full items-center gap-3 rounded-[9px] px-3 py-2.5 text-body text-rose-600 transition-colors duration-150 hover:bg-rose-50/60 active:bg-rose-50">
                         <LogOut className="h-4 w-4" /> Guruhdan chiqish
                       </button>
                     )}

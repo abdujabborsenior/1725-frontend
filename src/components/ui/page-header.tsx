@@ -52,7 +52,9 @@ export function FilterChip({
       aria-pressed={active}
       className={cn(
         'tappable inline-flex shrink-0 items-center gap-1.5 whitespace-nowrap rounded-full px-3.5 py-1.5 text-subhead font-medium transition-colors duration-150 ease-ios',
-        active ? 'bg-accent-600 text-white' : 'bg-fill-tertiary text-slate-600',
+        active
+          ? 'bg-accent-600 text-white hover:bg-accent-700'
+          : 'bg-fill-tertiary text-slate-600 hover:bg-fill-secondary hover:text-brand-900',
         className,
       )}
     >

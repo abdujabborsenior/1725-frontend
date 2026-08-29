@@ -225,7 +225,7 @@ function navItemClass(active: boolean, hasIcon: boolean): string {
     'whitespace-nowrap rounded-full py-1.5 text-subhead transition-colors duration-150 ease-ios',
     hasIcon ? 'flex items-center gap-1.5 pl-2 pr-2.5' : 'px-2.5',
     active
-      ? 'bg-fill-tertiary font-semibold text-brand-900'
+      ? 'bg-fill-tertiary font-semibold text-brand-900 hover:bg-fill-secondary'
       : 'font-medium text-slate-500 hover:text-brand-900',
   );
 }

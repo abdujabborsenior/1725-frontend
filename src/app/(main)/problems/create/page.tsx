@@ -117,7 +117,7 @@ export default function CreateProblemPage() {
 
       <PageHeader
         title="Muammo qoldirish"
-        subtitle="Muammoni batafsil tasvirlab bering — hamjamiyat yechim taklif qiladi."
+        subtitle="Muammoni batafsil tasvirlab bering — hamjamiyat yechim taklif qiladi"
       />
 
       <form onSubmit={handleSubmit((d) => create(d))} className="space-y-5">

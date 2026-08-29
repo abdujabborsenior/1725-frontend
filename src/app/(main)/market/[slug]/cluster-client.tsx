@@ -42,7 +42,7 @@ export function ClusterClient({
         <EmptyState
           icon={<Compass />}
           title="Yo'nalish topilmadi"
-          description="U yashirilgan yoki qayta qurishda o‘zgargan bo‘lishi mumkin."
+          description="U yashirilgan yoki qayta qurishda o‘zgargan bo‘lishi mumkin"
           action={
             <Link
               href="/market"

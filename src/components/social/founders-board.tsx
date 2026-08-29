@@ -47,7 +47,7 @@ function FounderRow({ entry }: { entry: FounderEntry }) {
     <div className="flex items-center gap-3 rounded-ios-2xl bg-white p-3.5 transition-all hover:shadow-card-hover sm:gap-4 sm:p-4">
       <RankMark rank={entry.rank} />
 
-      <Link href={profileHref} className="shrink-0">
+      <Link href={profileHref} className="shrink-0 transition-opacity hover:opacity-80">
         <Avatar src={entry.avatarUrl} name={entry.fullName} size={44} />
       </Link>
 
@@ -127,7 +127,7 @@ export function FoundersBoard() {
         </div>
         <p className="font-semibold text-brand-900">Hozircha asoschilar yo&apos;q</p>
         <p className="mt-1 text-subhead text-slate-500">
-          Birinchi startap joylagan foydalanuvchi shu yerda paydo bo&apos;ladi.
+          Birinchi startap joylagan foydalanuvchi shu yerda paydo bo&apos;ladi
         </p>
       </div>
     );

@@ -18,7 +18,7 @@ export function Pagination({ page, totalPages, onChange }: PaginationProps) {
   const pages = Array.from({ length: windowSize }, (_, i) => start + i);
 
   const arrow =
-    'flex h-9 w-9 items-center justify-center rounded-ios text-slate-600 transition-colors duration-150 ease-ios active:bg-fill disabled:opacity-30';
+    'flex h-9 w-9 items-center justify-center rounded-ios text-slate-600 transition-colors duration-150 ease-ios enabled:hover:bg-white/70 active:bg-fill disabled:opacity-30';
 
   return (
     <div className="flex justify-center pt-2">
@@ -39,8 +39,8 @@ export function Pagination({ page, totalPages, onChange }: PaginationProps) {
             className={cn(
               'flex h-9 min-w-9 items-center justify-center rounded-ios px-2.5 text-subhead tabular-nums transition-all duration-150 ease-ios active:scale-95',
               p === page
-                ? 'bg-white font-semibold text-brand-900 shadow-segment'
-                : 'font-medium text-slate-600',
+                ? 'bg-white font-semibold text-brand-900 shadow-segment hover:shadow-card-hover'
+                : 'font-medium text-slate-600 hover:bg-white/70',
             )}
           >
             {p}

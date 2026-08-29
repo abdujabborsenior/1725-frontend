@@ -162,7 +162,7 @@ export function LeaderboardClient({
         <EmptyState
           icon={<Trophy />}
           title="Hozircha baho yo'q"
-          description="Bu davr/kategoriya bo'yicha baholangan startaplar topilmadi."
+          description="Bu davr/kategoriya bo'yicha baholangan startaplar topilmadi"
         />
       ) : (
         <div className="space-y-5">

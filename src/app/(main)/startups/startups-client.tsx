@@ -81,7 +81,7 @@ export function StartupsClient({
     <div className="space-y-6">
       <PageHeader
         title="Startaplar"
-        subtitle="Hamjamiyat ishlab chiqqan ilovalar, saytlar va Telegram botlar — bir joyda."
+        subtitle="Hamjamiyat ishlab chiqqan ilovalar, saytlar va Telegram botlar — bir joyda"
         action={
           /* Joylash CTA — guest bosganda register orqali aynan shu yerga qaytadi */
           <Link

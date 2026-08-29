@@ -294,9 +294,9 @@ select:-webkit-autofill {
 .ios-row:active {
   background: var(--ios-gray6);
 }
-@media (hover: hover) {
+@media (hover: hover) and (pointer: fine) {
   .ios-row:hover {
-    background: #fafafa;
+    background: #f7f7fa;
   }
 }
 /* Bo'lim sarlavhasi — iOS'da KATTA HARF, kichik, ikkilamchi */
@@ -316,25 +316,136 @@ select:-webkit-autofill {
   transition:
     opacity var(--dur-micro) var(--ease-ios),
     transform var(--dur-micro) var(--ease-ios),
+    filter var(--dur-micro) var(--ease-ios),
     background-color var(--dur-micro) var(--ease-ios);
   -webkit-tap-highlight-color: transparent;
-}
-.tappable:active {
-  opacity: 0.55;
-}
-.tappable-scale:active {
-  transform: scale(0.96);
 }
 /* Eski nom — endi iOS bosish javobi (ko'tarilish YO'Q) */
 .btn-lift {
   transition:
     opacity var(--dur-micro) var(--ease-ios),
     transform var(--dur-micro) var(--ease-ios),
+    filter var(--dur-micro) var(--ease-ios),
     background-color var(--dur-micro) var(--ease-ios);
+}
+
+/* ═══ HOVER — TIZIMLI ZAXIRA (faqat kursorli qurilma) ══════════════════
+   QOIDA: kursor ostidagi HAR BIR boshqaruv javob berishi shart — "o'lik"
+   element qolmaydi. `.tappable` butun mahsulotdagi boshqaruvlarni belgilab
+   turgani uchun hover ham shu YAGONA seam'da beriladi:
+     · foni bor boshqaruv (to'ldirilgan yoki tint tugma) — foni to'qlashadi
+       (`brightness`): maketga ta'sir qilmaydi, mavjud soya/chegara bilan
+       to'qnashmaydi va gradient sirtlarda ham to'g'ri ishlaydi;
+     · fonsiz boshqaruv (matn/ikonka) — iOS "plain button" kabi xiralashadi.
+   Komponent O'ZINING `hover:` utilitasini e'lon qilgan bo'lsa — bu zaxira
+   o'chadi (ikki karra effekt yo'q), ya'ni aniq sozlangan rang doim ustun.
+   Guard'lar `:where()` ichida — spetsifikatsiya (0,2,0) bo'lib qoladi va
+   quyidagi `:active` (bosish holati) hover'dan ustun turaveradi. */
+/* Zaxiradan CHIQARILADIGANLAR: hover'ni o'zi boshqaradigan elementlar —
+   Tailwind `hover:` utilitasi yozilganlar va o'z hover qoidasi bor tizim
+   klasslari (CTA, karta, bar tugmasi, yuborish, segment, ro'yxat qatori).
+   Aks holda ikki effekt ustma-ust tushardi (masalan CTA hero tugmasi
+   accent-700 ga o'tib, yana brightness bilan qorayib ketardi). */
+@media (hover: hover) and (pointer: fine) {
+  .tappable:where(
+      :not(
+          [class*='hover:'],
+          .cta-fill,
+          .cta-ghost,
+          .card-today,
+          .btn-round,
+          .btn-send,
+          .segment,
+          .ios-row,
+          :disabled
+        )
+    ):hover,
+  .btn-lift:where(
+      :not(
+          [class*='hover:'],
+          .cta-fill,
+          .cta-ghost,
+          .card-today,
+          .btn-round,
+          .btn-send,
+          .segment,
+          .ios-row,
+          :disabled
+        )
+    ):hover,
+  .tappable-scale:where(
+      :not(
+          [class*='hover:'],
+          .cta-fill,
+          .cta-ghost,
+          .card-today,
+          .btn-round,
+          .btn-send,
+          .segment,
+          .ios-row,
+          :disabled
+        )
+    ):hover {
+    opacity: 0.68;
+  }
+  .tappable:where(
+      :not(
+          [class*='hover:'],
+          .cta-fill,
+          .cta-ghost,
+          .card-today,
+          .btn-round,
+          .btn-send,
+          .segment,
+          .ios-row,
+          :disabled
+        )
+    ):where([class*='bg-'], [class*='gradient-']):hover,
+  .btn-lift:where(
+      :not(
+          [class*='hover:'],
+          .cta-fill,
+          .cta-ghost,
+          .card-today,
+          .btn-round,
+          .btn-send,
+          .segment,
+          .ios-row,
+          :disabled
+        )
+    ):where([class*='bg-'], [class*='gradient-']):hover,
+  .tappable-scale:where(
+      :not(
+          [class*='hover:'],
+          .cta-fill,
+          .cta-ghost,
+          .card-today,
+          .btn-round,
+          .btn-send,
+          .segment,
+          .ios-row,
+          :disabled
+        )
+    ):where([class*='bg-'], [class*='gradient-']):hover {
+    opacity: 1;
+    filter: brightness(0.94);
+  }
+}
+
+/* Bosish holati — hover'DAN KEYIN (bir xil spetsifikatsiya, keyingi manba). */
+.tappable:active {
+  opacity: 0.55;
+  filter: none;
+}
+.tappable-scale:active {
+  transform: scale(0.96);
+  opacity: 0.55;
+  filter: none;
 }
 .btn-lift:active {
   transform: scale(0.97);
   opacity: 0.9;
+  filter: none;
 }
 
 /* ═══ CTA JUFTLIGI (hero / yakuniy chaqiruv) ═══════════════════════════
@@ -440,6 +551,19 @@ select:-webkit-autofill {
 .segment:active {
   transform: scale(0.96);
 }
+@media (hover: hover) and (pointer: fine) {
+  /* Tanlanmagan segment — oq kapsulaning bir qadam oldingi ko'rinishi */
+  .segment:not(.segment-active):hover {
+    background: rgba(255, 255, 255, 0.55);
+  }
+  /* Tanlangan segment — bosishning ma'nosi yo'q, shuning uchun javob
+     PICHIRLAB beriladi: kapsula soyasi bir oz chuqurlashadi (rang o'zgarmaydi). */
+  .segment.segment-active:hover {
+    box-shadow:
+      0 5px 12px rgba(0, 0, 0, 0.16),
+      0 3px 1px rgba(0, 0, 0, 0.04);
+  }
+}
 .segment-active {
   background: #ffffff;
   font-weight: 600;
@@ -454,6 +578,11 @@ select:-webkit-autofill {
   border-radius: 0.625rem;
   border: none;
   transition: background-color var(--dur-micro) var(--ease-ios);
+}
+@media (hover: hover) and (pointer: fine) {
+  .ios-search:hover {
+    background: rgba(118, 118, 128, 0.16);
+  }
 }
 .ios-search:focus-within {
   background: rgba(118, 118, 128, 0.08);
@@ -802,6 +931,13 @@ select:-webkit-autofill {
     0 1px 2px rgba(0, 0, 0, 0.04);
   transition: box-shadow 0.2s var(--ease-ios);
 }
+@media (hover: hover) and (pointer: fine) {
+  .composer-field:hover {
+    box-shadow:
+      0 0 0 0.5px rgba(60, 60, 67, 0.34),
+      0 1px 3px rgba(0, 0, 0, 0.06);
+  }
+}
 .composer-field:focus-within {
   box-shadow:
     0 0 0 1.5px rgba(10, 132, 255, 0.55),
@@ -827,7 +963,14 @@ select:-webkit-autofill {
   animation: sendPop 0.26s cubic-bezier(0.34, 1.42, 0.64, 1) both;
   transition:
     transform 0.16s var(--ease-ios),
+    box-shadow 0.2s var(--ease-ios),
     filter 0.16s var(--ease-ios);
+}
+@media (hover: hover) and (pointer: fine) {
+  .btn-send:not(:disabled):hover {
+    filter: brightness(1.08);
+    box-shadow: 0 3px 12px -2px rgba(0, 80, 190, 0.5);
+  }
 }
 .btn-send:active {
   transform: scale(0.86);
@@ -846,8 +989,10 @@ select:-webkit-autofill {
     color 0.18s var(--ease-ios),
     transform 0.16s var(--ease-ios);
 }
-.btn-round:hover {
-  background: rgba(60, 60, 67, 0.06);
+@media (hover: hover) and (pointer: fine) {
+  .btn-round:hover {
+    background: rgba(60, 60, 67, 0.06);
+  }
 }
 .btn-round:active {
   background: rgba(60, 60, 67, 0.12);
@@ -1215,6 +1360,17 @@ select:-webkit-autofill {
    ustuvor) — maydon fokusda jonlanmay qolardi. */
 .ai-aura-idle {
   --ai-glow: 0.14;
+}
+
+/* Kursor ustida — fokusdan bir qadam past: hoshiya to'liq yonadi, nur
+   ozgina ko'tariladi. Fokus qoidasi PASTDA turadi (bir xil spetsifikatsiya,
+   keyingi manba) — ya'ni fokus doim ustun. */
+@media (hover: hover) and (pointer: fine) {
+  .ai-aura:hover {
+    --ai-speed: 7s;
+    --ai-glow: 0.22;
+    --ai-ring-opacity: 1;
+  }
 }
 
 /* Fokus / faol holat — nur jonlanadi (nozik, bachkana emas) */

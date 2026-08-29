@@ -192,6 +192,7 @@ export const Select = forwardRef<HTMLSelectElement, SelectProps>(
             className={cn(
               'h-12 w-full cursor-pointer rounded-ios-md bg-white px-4 pr-10 text-left text-body text-brand-900',
               'border border-slate-200 transition-[border-color,box-shadow] duration-150 ease-ios',
+              'enabled:hover:border-slate-300',
               'focus:outline-none input-focus',
               'disabled:cursor-not-allowed disabled:opacity-40',
               error && 'border-rose-400',

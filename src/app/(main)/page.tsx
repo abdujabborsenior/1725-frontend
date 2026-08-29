@@ -111,10 +111,13 @@ function MoreLink({ href, children }: { href: string; children: React.ReactNode 
   return (
     <Link
       href={href}
-      className="tappable inline-flex shrink-0 items-center gap-0.5 text-callout font-medium text-accent-700"
+      className="tappable group inline-flex shrink-0 items-center gap-0.5 text-callout font-medium text-accent-700 transition-colors duration-150 hover:text-accent-800"
     >
       {children}
-      <ChevronRight className="h-[13px] w-[13px]" strokeWidth={3} />
+      <ChevronRight
+        className="h-[13px] w-[13px] transition-transform duration-200 ease-ios group-hover:translate-x-0.5 motion-reduce:transition-none"
+        strokeWidth={3}
+      />
     </Link>
   );
 }
@@ -200,7 +203,7 @@ export default function LandingPage() {
               {/* Ikki ustunli maketda sarlavha o'zi tabiiy o'raladi */}
               G‘oyadan{' '}
               <br className="lg:hidden" />
-              biznes loyihagacha.
+              biznes loyihagacha
             </h1>
 
             <p className="mx-auto mt-5 max-w-xl text-title-3 font-normal leading-snug text-slate-500 md:mt-6 lg:mx-0">
@@ -303,7 +306,7 @@ export default function LandingPage() {
             Startap nima? Startapper kim?
           </h2>
           <p className="mt-3 text-callout text-slate-500">
-            Keling, soddagina qilib tushuntiramiz — ortiqcha atamalarsiz, hayotiy tilda.
+            Keling, soddagina qilib tushuntiramiz — ortiqcha atamalarsiz, hayotiy tilda
           </p>
         </Reveal>
 
@@ -341,8 +344,8 @@ export default function LandingPage() {
           <Doubts />
         </Reveal>
         <Reveal className="mx-auto max-w-2xl text-center">
-          <p className="text-title-3 font-semibold text-brand-900">Bittasi ham emas.</p>
-          <p className="mt-1 text-subhead text-slate-500">Shuning uchun eng to‘g‘ri kun — bugun.</p>
+          <p className="text-title-3 font-semibold text-brand-900">Bittasi ham emas</p>
+          <p className="mt-1 text-subhead text-slate-500">Shuning uchun eng to‘g‘ri kun — bugun</p>
         </Reveal>
       </LazySection>
 

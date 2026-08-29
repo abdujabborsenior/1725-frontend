@@ -44,7 +44,7 @@ export function AuthBrandPanel() {
         {/* Sarlavha + xususiyatlar */}
         <div className="max-w-md">
           <h2 className="text-[2.25rem] font-semibold leading-[1.1] tracking-[-0.03em] text-white xl:text-[2.75rem]">
-            G‘oyadan startapgacha — bitta platformada.
+            G‘oyadan startapgacha — bitta platformada
           </h2>
           <p className="mt-4 text-callout leading-relaxed text-slate-400">
             O‘zbekiston yoshlari uchun muammolar, yechimlar va startaplar ekotizimi. Bilim

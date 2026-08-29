@@ -149,7 +149,7 @@ export function PricingClient({ initialPlans }: { initialPlans: BillingPlan[] | 
         </div>
       ) : visible.length === 0 ? (
         <p className="rounded-ios-2xl bg-white px-6 py-14 text-center text-subhead text-slate-500">
-          Tariflar hozircha mavjud emas.
+          Tariflar hozircha mavjud emas
         </p>
       ) : (
         <div className="grid items-stretch gap-5 md:grid-cols-3">
@@ -201,7 +201,7 @@ export function PricingClient({ initialPlans }: { initialPlans: BillingPlan[] | 
             {providersLabel(status?.providers ?? [])} orqali to‘lov
           </p>
           <p className="mt-0.5 text-footnote text-slate-500">
-            Karta ma’lumotlari saytimizda saqlanmaydi.
+            Karta ma’lumotlari saytimizda saqlanmaydi
           </p>
         </div>
 
@@ -239,7 +239,7 @@ export function PricingClient({ initialPlans }: { initialPlans: BillingPlan[] | 
       {token && (
         <p className="text-center text-footnote text-slate-500">
           To‘lovlar tarixi va joriy obuna —{' '}
-          <Link href="/billing" className="font-semibold text-accent-700">
+          <Link href="/billing" className="font-semibold text-accent-700 underline-offset-2 transition-colors hover:text-accent-800 hover:underline">
             Obunam
           </Link>{' '}
           bo‘limida.

@@ -62,7 +62,7 @@ export function PollsClient({ initialPolls }: { initialPolls: Poll[] | null }) {
         <EmptyState
           icon={<Vote />}
           title="Hozircha tanlovlar yo‘q"
-          description="Superadmin tez orada startaplar tanlovini boshlaydi."
+          description="Superadmin tez orada startaplar tanlovini boshlaydi"
         />
       )}
     </div>

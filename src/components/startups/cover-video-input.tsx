@@ -111,7 +111,7 @@ export function CoverVideoInput({
             className={cn(
               'inline-flex items-center gap-1.5 rounded-md px-2.5 py-1.5 text-footnote font-semibold transition-all',
               mode === m
-                ? 'bg-white text-brand-900 shadow-segment'
+                ? 'bg-white text-brand-900 shadow-segment hover:shadow-card-hover'
                 : 'text-slate-500 active:bg-fill-tertiary hover:text-brand-900',
             )}
           >
@@ -125,7 +125,7 @@ export function CoverVideoInput({
           type="button"
           onClick={() => fileRef.current?.click()}
           disabled={loading}
-          className="flex aspect-video w-full flex-col items-center justify-center gap-2 rounded-ios-md border-2 border-dashed border-slate-300 bg-surface-soft transition-all active:bg-fill-tertiary disabled:opacity-60"
+          className="flex aspect-video w-full flex-col items-center justify-center gap-2 rounded-ios-md border-2 border-dashed border-slate-300 bg-surface-soft transition-all enabled:hover:border-slate-400 enabled:hover:bg-fill-quaternary active:bg-fill-tertiary disabled:opacity-60"
         >
           {loading ? (
             <Spinner className="h-6 w-6 animate-spin text-accent-500" />

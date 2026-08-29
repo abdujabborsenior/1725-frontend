@@ -68,7 +68,10 @@ export function GroupCard({ group, className }: { group: PublicGroup; className?
           disabled={loading}
           className={cn(
             'tappable flex h-8 shrink-0 items-center justify-center rounded-full px-4 text-footnote font-semibold',
-            isMember ? 'bg-fill-tertiary text-accent-700' : 'bg-accent-600 text-white',
+            'transition-[background-color,box-shadow] duration-150 ease-ios',
+            isMember
+              ? 'bg-fill-tertiary text-accent-700 enabled:hover:bg-fill-secondary'
+              : 'bg-accent-600 text-white enabled:hover:bg-accent-700 enabled:hover:shadow-[0_6px_18px_-10px_rgba(0,113,227,0.7)]',
           )}
         >
           {loading ? (

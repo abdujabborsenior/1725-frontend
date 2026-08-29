@@ -54,7 +54,7 @@ function DealflowInner() {
 
       <PageHeader
         title="Loyihalar lentasi"
-        subtitle="Kriteriyangizga mos loyihalar — moslik bali bo'yicha tartiblangan."
+        subtitle="Kriteriyangizga mos loyihalar — moslik bali bo'yicha tartiblangan"
       />
 
       <div className="flex flex-wrap gap-2">

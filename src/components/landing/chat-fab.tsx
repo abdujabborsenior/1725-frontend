@@ -20,7 +20,7 @@ export function ChatFab() {
       aria-label="Suhbatni boshlash"
       className="group fixed right-4 z-40 bottom-[calc(4.75rem+env(safe-area-inset-bottom))] md:bottom-8 md:right-8 motion-safe:animate-pop-in"
     >
-      <span className="relative flex h-14 w-14 items-center justify-center rounded-full bg-accent-600 text-white shadow-lift transition-transform duration-150 ease-ios group-active:scale-95">
+      <span className="relative flex h-14 w-14 items-center justify-center rounded-full bg-accent-600 text-white shadow-lift transition-[background-color,box-shadow,transform] duration-150 ease-ios group-hover:bg-accent-700 group-hover:shadow-glow-accent group-active:scale-95">
         <MessageCircleFill className="h-[26px] w-[26px]" />
       </span>
     </Link>

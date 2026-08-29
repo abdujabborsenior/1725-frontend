@@ -125,6 +125,46 @@ Pufaklar: chiquvchi `bubble-out` (#007AFF) + `bubble-tail-out`, kiruvchi
 yuqoriga strelka (`ArrowUp`, h-8 w-8). Composer kapsulasi oq, header/footer
 `.material-bar`. Kontekst menyu `.material-menu`.
 
+### 2.9 Hover — kursorli qurilma uchun TIZIM (2026-08-29)
+> Qoida: **kursor ostidagi har bir boshqaruv javob berishi shart** — "o'lik"
+> element qolmaydi. Lekin hover FAQAT kursorli qurilmada: sensorli ekranda
+> bosilgan tugma hover holatida "yopishib" qolmaydi.
+
+- **Tailwind**: `future.hoverOnlyWhenSupported: true` (tailwind.config) — barcha
+  `hover:` utilitalari avtomatik `@media (hover:hover) and (pointer:fine)` ichiga
+  tushadi. Qo'lda yozilgan CSS hover qoidalari ham SHU media ichida bo'ladi.
+- **Zaxira qatlam** (`globals.css`, `.tappable` / `.tappable-scale` / `.btn-lift`):
+  foni bor boshqaruv → `filter: brightness(0.94)` (maketga ta'sir qilmaydi,
+  soya/chegara bilan to'qnashmaydi, gradientda ham to'g'ri); fonsiz boshqaruv →
+  `opacity: .68` (iOS "plain button"). Element o'zining `hover:` utilitasini yoki
+  o'z hover qoidasi bor tizim klassini (`.cta-fill/.cta-ghost/.card-today/
+  .btn-round/.btn-send/.segment/.ios-row`) e'lon qilgan bo'lsa — zaxira O'CHADI
+  (ikki karra effekt yo'q). Guard'lar `:where()` ichida: spetsifikatsiya (0,2,0)
+  bo'lib qoladi va `:active` (bosish) hover'dan ustun turaveradi.
+- **Tuned holatlar**: `Button` variantlari (`enabled:hover:` — o'chirilgan tugma
+  kursorda "tirik" ko'rinmaydi), FilterChip, GroupCard tugmasi, nav bandlari,
+  menyu/ro'yxat qatorlari (`hover:bg-fill-quaternary`), forma maydonlari
+  (`enabled:hover:border-slate-300`), `.ios-search`, `.ai-aura` (fokusdan bir
+  qadam past), `.composer-field`, MoreLink (rang + chevron 3px siljiydi).
+- **Ko'tarilish (lift) hamon TAQIQ** — foni to'qlashadi/soya chuqurlashadi.
+  Tanlangan holat (segment-active, joriy sahifa, faol tab) — javob PICHIRLAB
+  beriladi (soya bir qadam chuqur), rang o'zgarmaydi.
+- **Tekshirish**: `hover-audit.js` naqshi — CDP `CSS.forcePseudoState` bilan
+  element + ichki daraxt + 5 pog'ona ota hover holatiga qo'yilib computed style
+  imzosi solishtiriladi (⚠️ `DOM.describeNode` `parentId` BERMAYDI — ota
+  `Runtime.callFunctionOn`+`DOM.requestNode` bilan olinadi). Headless Chrome'da
+  kursorni emulyatsiya qilish uchun `--blink-settings=primaryHoverType=2,
+  availableHoverTypes=2,primaryPointerType=4,availablePointerTypes=4` SHART.
+
+### 2.10 Punktuatsiya — display matn (2026-08-29)
+- **Sarlavha, subtitle, karta sarlavhasi, bo'sh holat matni, tugma/chip yorlig'i,
+  ro'yxat qatori — BIR JUMLA bo'lsa yakuniy nuqta QO'YILMAYDI.**
+  ("Bittasi ham emas" · "Shuning uchun eng to'g'ri kun — bugun")
+- **Ko'p jumlali izoh/paragraf** — punktuatsiya saqlanadi (aks holda oxirgi
+  jumla "kesilgan" bo'lib ko'rinadi). Forma hint'lari ham to'liq jumla sifatida
+  nuqtali qoladi.
+- Savol belgisi va ellipsis (`...`) bu qoidaga kirmaydi.
+
 ## 3. Taqiqlar (qisqa ro'yxat)
 ❌ Gradient fon/matn/avatar (brend logosidan tashqari) · ❌ glow soyalar ·
 ❌ hover-lift · ❌ `font-black` · ❌ KATTA HARFLI eyebrow-pill'lar (faqat

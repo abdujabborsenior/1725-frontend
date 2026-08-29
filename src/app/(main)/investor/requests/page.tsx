@@ -57,7 +57,7 @@ export default function InvestorRequestsPage() {
 
       <PageHeader
         title="Yuborilgan so'rovlar"
-        subtitle="Asoschi qabul qilsa, suhbat avtomatik ochiladi."
+        subtitle="Asoschi qabul qilsa, suhbat avtomatik ochiladi"
       />
 
       {isLoading && (
@@ -71,7 +71,7 @@ export default function InvestorRequestsPage() {
         <EmptyState
           icon={<Send />}
           title="Hali so'rov yubormagansiz"
-          description="Lentadan yoqqan loyihani tanlab, asoschiga qisqa xabar yozing."
+          description="Lentadan yoqqan loyihani tanlab, asoschiga qisqa xabar yozing"
         />
       )}
 

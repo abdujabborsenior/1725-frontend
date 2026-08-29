@@ -164,6 +164,10 @@ const systemTeal = {
 
 const config: Config = {
   content: ['./src/**/*.{ts,tsx}'],
+  /* `hover:` utilitalari FAQAT kursorli qurilmada qo'llanadi (@media (hover:hover)).
+     Sensorli ekranda bosilgan element hover holatida "yopishib" qolmaydi — bu
+     iOS charter qoidasi, endi butun kod bazasi uchun bir joyda kafolatlangan. */
+  future: { hoverOnlyWhenSupported: true },
   theme: {
     extend: {
       colors: {

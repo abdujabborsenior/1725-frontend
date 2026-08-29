@@ -25,7 +25,8 @@ export function Switch({ checked, onChange, disabled, className, ...rest }: Swit
       onClick={() => onChange(!checked)}
       className={cn(
         'group relative inline-flex h-[31px] w-[51px] shrink-0 items-center rounded-full p-0.5',
-        'transition-colors duration-250 ease-ios focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-accent-500/25',
+        'transition-[background-color,filter] duration-250 ease-ios focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-accent-500/25',
+        'enabled:hover:brightness-95',
         checked ? 'bg-emerald-400' : 'bg-[rgba(120,120,128,0.16)]',
         disabled && 'opacity-40',
         className,

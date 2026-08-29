@@ -13,7 +13,7 @@ export default function NotFound() {
         </p>
         <h1 className="mt-3 text-title-2 font-semibold text-brand-900">Sahifa topilmadi</h1>
         <p className="mt-2 text-callout leading-relaxed text-slate-500">
-          Qidirayotgan sahifangiz mavjud emas yoki ko&apos;chirilgan bo&apos;lishi mumkin.
+          Qidirayotgan sahifangiz mavjud emas yoki ko&apos;chirilgan bo&apos;lishi mumkin
         </p>
 
         <div className="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row sm:gap-4">

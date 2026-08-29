@@ -199,12 +199,14 @@ export function ConversationList({ activeId }: { activeId?: string }) {
                 key={t.id}
                 onClick={() => selectFilter(t.id)}
                 className={cn(
-                  'relative flex flex-1 items-center justify-center gap-1.5 rounded-xl px-2 py-1.5 text-caption-1 font-bold transition-colors',
+                  'group relative flex flex-1 items-center justify-center gap-1.5 rounded-xl px-2 py-1.5 text-caption-1 font-bold transition-colors',
                   active ? 'text-brand-900' : 'text-slate-600 hover:text-brand-800',
                 )}
               >
                 {active && (
-                  <span className="absolute inset-0 rounded-[7px] bg-white shadow-segment" />
+                  /* Tanlangan tab — bosishning ma'nosi yo'q, javob pichirlab
+                     beriladi: kapsula soyasi bir oz chuqurlashadi. */
+                  <span className="absolute inset-0 rounded-[7px] bg-white shadow-segment transition-shadow duration-150 group-hover:shadow-card-hover" />
                 )}
                 <span className="relative z-10 whitespace-nowrap">{t.label}</span>
                 {count > 0 && (
@@ -264,7 +266,7 @@ function ConversationRow({ c, active }: { c: Conversation; active: boolean }) {
       href={`/messages/${c.id}`}
       className={cn(
         'flex items-center gap-3 rounded-2xl p-2.5 transition-colors active:scale-[0.99]',
-        active ? 'bg-accent-50' : 'hover:bg-surface-soft',
+        active ? 'bg-accent-50 hover:bg-accent-100' : 'hover:bg-surface-soft',
       )}
     >
       {/* Guruh ham, shaxs ham bir naqshda: rasm yoki nom bo'yicha barqaror iOS
@@ -302,7 +304,7 @@ function EmptyState({ filter, hasAny }: { filter: Filter; hasAny: boolean }) {
         <MessageSquarePlus className="mx-auto mb-2 h-9 w-9 text-slate-300" />
         <p className="text-callout font-semibold text-brand-900">Shaxsiy suhbatlar yo‘q</p>
         <p className="mt-1 text-subhead text-slate-500">
-          Hamjamiyatdan odam toping va suhbat boshlang.
+          Hamjamiyatdan odam toping va suhbat boshlang
         </p>
         <Link href="/discover" className="tappable mt-3 inline-block text-subhead font-medium text-accent-700">
           Odamlarni topish
@@ -315,7 +317,7 @@ function EmptyState({ filter, hasAny }: { filter: Filter; hasAny: boolean }) {
       <div className="px-4 py-16 text-center">
         <UsersRound className="mx-auto mb-2 h-9 w-9 text-slate-300" />
         <p className="text-callout font-semibold text-brand-900">Guruhlar yo‘q</p>
-        <p className="mt-1 text-subhead text-slate-500">Hamjamiyat guruhlariga qo&apos;shiling.</p>
+        <p className="mt-1 text-subhead text-slate-500">Hamjamiyat guruhlariga qo&apos;shiling</p>
         <Link href="/discover" className="tappable mt-3 inline-block text-subhead font-medium text-accent-700">
           Guruhlarni topish
         </Link>
@@ -326,7 +328,7 @@ function EmptyState({ filter, hasAny }: { filter: Filter; hasAny: boolean }) {
     <div className="px-4 py-16 text-center">
       <MessageSquarePlus className="mx-auto mb-2 h-9 w-9 text-slate-300" />
       <p className="text-callout font-semibold text-brand-900">{hasAny ? 'Bu yerda hech narsa yo‘q' : 'Hali suhbatlar yo‘q'}</p>
-      <p className="mt-1 text-subhead text-slate-500">Hamjamiyatdan odam toping va suhbat boshlang.</p>
+      <p className="mt-1 text-subhead text-slate-500">Hamjamiyatdan odam toping va suhbat boshlang</p>
       <Link href="/discover" className="tappable mt-3 inline-block text-subhead font-medium text-accent-700">Odamlarni topish</Link>
     </div>
   );

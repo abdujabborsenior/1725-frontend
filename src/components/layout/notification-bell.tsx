@@ -121,8 +121,8 @@ export function NotificationBell() {
                     key={n.id}
                     onClick={() => openNotification(n)}
                     className={cn(
-                      'hairline-b flex w-full items-start gap-3 px-4 py-3 text-left transition-colors duration-150 active:bg-fill-tertiary',
-                      !n.isRead && 'bg-accent-50/50',
+                      'hairline-b flex w-full items-start gap-3 px-4 py-3 text-left transition-colors duration-150 hover:bg-fill-quaternary active:bg-fill-tertiary',
+                      !n.isRead && 'bg-accent-50/50 hover:bg-accent-50',
                     )}
                   >
                     <span
@@ -161,7 +161,7 @@ export function NotificationBell() {
           <Link
             href="/notifications"
             onClick={() => setOpen(false)}
-            className="hairline-t block px-4 py-3 text-center text-subhead font-medium text-accent-700 transition-colors duration-150 active:bg-fill-tertiary"
+            className="hairline-t block px-4 py-3 text-center text-subhead font-medium text-accent-700 transition-colors duration-150 hover:bg-fill-quaternary active:bg-fill-tertiary"
           >
             Barchasini ko&apos;rish
           </Link>

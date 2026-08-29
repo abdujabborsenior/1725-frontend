@@ -90,7 +90,7 @@ export function DevicePermissions() {
                 <button
                   onClick={() => void request(key)}
                   disabled={busy !== null}
-                  className="shrink-0 rounded-full bg-fill-tertiary px-3.5 py-1.5 text-footnote font-semibold text-accent-700 transition-colors active:bg-fill disabled:opacity-60"
+                  className="shrink-0 rounded-full bg-fill-tertiary px-3.5 py-1.5 text-footnote font-semibold text-accent-700 transition-colors enabled:hover:bg-fill-secondary active:bg-fill disabled:opacity-60"
                 >
                   {busy === key ? <Spinner className="h-3.5 w-3.5 animate-spin" /> : "So'rash"}
                 </button>

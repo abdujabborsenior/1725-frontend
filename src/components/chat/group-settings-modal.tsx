@@ -30,7 +30,7 @@ function Toggle({ on, onClick }: { on: boolean; onClick: () => void }) {
       aria-checked={on}
       onClick={onClick}
       className={cn(
-        'relative flex h-6 w-11 shrink-0 items-center rounded-full px-0.5 transition-colors',
+        'relative flex h-6 w-11 shrink-0 items-center rounded-full px-0.5 transition-[background-color,filter] hover:brightness-95',
         on ? 'bg-rose-500' : 'bg-slate-300',
       )}
     >

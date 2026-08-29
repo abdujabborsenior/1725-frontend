@@ -36,7 +36,7 @@ export default function CreateStartupPage() {
 
       <PageHeader
         title="Startap joylash"
-        subtitle="Faqat nom va tavsif majburiy — qolganini keyin ham to'ldirishingiz mumkin."
+        subtitle="Faqat nom va tavsif majburiy — qolganini keyin ham to'ldirishingiz mumkin"
       />
 
       <StartupForm />

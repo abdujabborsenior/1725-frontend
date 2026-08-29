@@ -15,7 +15,7 @@ export function FormulaExplainer({ formula }: { formula: LeaderboardFormula }) {
     <div className="rounded-ios-lg bg-surface-soft">
       <button
         onClick={() => setOpen((v) => !v)}
-        className="flex w-full items-center gap-2.5 px-4 py-3 text-left"
+        className="flex w-full items-center gap-2.5 px-4 py-3 text-left transition-colors duration-150 hover:bg-fill-quaternary active:bg-fill-tertiary"
       >
         <Info className="h-4 w-4 shrink-0 text-iris-500" />
         <span className="flex-1 text-subhead font-semibold text-brand-900">

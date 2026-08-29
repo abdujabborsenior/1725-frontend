@@ -72,7 +72,7 @@ export function BillingClient() {
     <div className="space-y-7">
       <PageHeader
         title="Obunam"
-        subtitle="Joriy tarif, limitlar va to‘lovlar tarixi."
+        subtitle="Joriy tarif, limitlar va to‘lovlar tarixi"
         action={
           <Link href="/pricing">
             <Button size="sm" variant="secondary">
@@ -165,7 +165,7 @@ export function BillingClient() {
           <div className="ios-list">
             <div className="ios-row">
               <span className="flex-1 text-body text-slate-500">
-                Hali to‘lov qilinmagan.
+                Hali to‘lov qilinmagan
               </span>
             </div>
           </div>

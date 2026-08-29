@@ -92,7 +92,7 @@ export function PaymentSheet({
                 'transition-[box-shadow,transform] duration-200 ease-ios active:scale-[0.99]',
                 active
                   ? 'ring-2 ring-accent-500'
-                  : 'ring-1 ring-slate-900/[0.07]',
+                  : 'ring-1 ring-slate-900/[0.07] hover:ring-slate-900/[0.16]',
               )}
             >
               {/*
