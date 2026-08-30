@@ -120,7 +120,7 @@ export function AiWelcome({
               onClick={() => onPick(example)}
               style={{ '--ai-delay': `${0.34 + i * 0.06}s` } as CSSProperties}
               className={cn(
-                'ai-focus-in tappable group flex items-start gap-2.5 rounded-ios-lg bg-white px-4 py-3 text-left shadow-card transition-shadow duration-250 ease-ios hover:shadow-card-hover sm:py-3.5',
+                'ai-focus-in tappable group flex items-start gap-2.5 rounded-ios-lg bg-white px-4 py-3 text-left shadow-card transition-shadow duration-250 ease-ios hover:shadow-[0_14px_32px_-18px_rgba(0,40,90,0.3),inset_0_0_0_1px_rgba(0,122,255,0.14)] sm:py-3.5',
                 // Mobil ekranda faqat ikkitasi: qolgani composer ostiga
                 // tushib "yarim kesilgan" bo'lib ko'rinardi.
                 i > 1 && 'hidden sm:flex',
@@ -129,7 +129,7 @@ export function AiWelcome({
               <span className="min-w-0 flex-1 text-subhead leading-snug text-slate-600">
                 {example}
               </span>
-              <ArrowUpRight className="mt-0.5 h-4 w-4 shrink-0 text-slate-300 transition-colors duration-150 group-hover:text-accent-600" />
+              <ArrowUpRight className="mt-0.5 h-4 w-4 shrink-0 text-slate-400 transition-all duration-200 ease-ios group-hover:-translate-y-0.5 group-hover:translate-x-0.5 group-hover:text-accent-600" />
             </button>
           ))}
         </div>

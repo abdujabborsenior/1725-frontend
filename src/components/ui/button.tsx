@@ -14,25 +14,35 @@ interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
 /* iOS tugma uslublari (UIButton.Configuration):
    filled · gray · bordered · plain · destructive.
    iOS'da tugma bosilganda KO'TARILMAYDI — foni to'qlashadi va bir oz kichrayadi.
-   Kursorli qurilmada har bir variant O'Z hover holatiga ega (rang variantga mos
-   tanlangan; `hoverOnlyWhenSupported` tufayli sensorli ekranda umuman yoqilmaydi):
-   to'ldirilgan tugma to'qlashadi va ostida rangdosh yumshoq nur paydo bo'ladi —
-   ko'tarilish YO'Q, ya'ni maket sakramaydi. */
+
+   HOVER TILI ("Yorug'lik", 2026-08-30): kursor ostida tugma XIRALASHMAYDI va
+   qorayib ketmaydi — u YORISHADI:
+     · to'ldirilgan (blue/red) — sirt bo'ylab bir marta specular yorug'lik
+       yuguradi (`hv-sheen`) + ostida rangdosh nur; fon rangi O'ZGARMAYDI,
+       chunki uni ochsak oq yorliq AA kontrastdan chiqib ketadi;
+     · kulrang/fonsiz/hoshiyali — kulrangdan KULRANGGA o'tish o'rniga brend
+       tinti ko'tariladi (accent-50 + accent-700 yorliq), ya'ni javob rangli;
+   ko'tarilish YO'Q — maket sakramaydi. Sensorli ekranda hover umuman
+   yoqilmaydi (`hoverOnlyWhenSupported`). */
 const variants = {
   // Filled — asosiy harakat (tinted fill, oq yorliq)
   primary:
-    'bg-accent-600 text-white enabled:hover:bg-accent-700 enabled:hover:shadow-[0_8px_22px_-12px_rgba(0,113,227,0.65)] active:bg-accent-700',
+    'hv-sheen bg-accent-600 text-white enabled:hover:shadow-[0_10px_26px_-12px_rgba(0,113,227,0.75)] active:bg-accent-700',
   accent:
-    'bg-accent-600 text-white enabled:hover:bg-accent-700 enabled:hover:shadow-[0_8px_22px_-12px_rgba(0,113,227,0.65)] active:bg-accent-700',
-  // Gray — ikkilamchi (system fill)
-  secondary: 'bg-fill-tertiary text-brand-900 enabled:hover:bg-fill-secondary active:bg-fill',
-  // Bordered — oq sirt + hairline
+    'hv-sheen bg-accent-600 text-white enabled:hover:shadow-[0_10px_26px_-12px_rgba(0,113,227,0.75)] active:bg-accent-700',
+  // Gray — ikkilamchi (system fill), hover'da brend tintiga o'tadi
+  secondary:
+    'bg-fill-tertiary text-brand-900 enabled:hover:bg-accent-50 enabled:hover:text-accent-700 active:bg-accent-100',
+  // Bordered — oq sirt + hairline; hover'da hoshiya "rangga kiradi"
   outline:
-    'bg-white text-brand-900 border border-slate-200 enabled:hover:border-slate-300 enabled:hover:bg-slate-50 active:bg-slate-100',
-  // Plain — fonsiz, neytral yorliq
-  ghost: 'text-slate-600 enabled:hover:bg-fill-quaternary enabled:hover:text-brand-900 active:bg-fill-tertiary active:text-brand-900',
+    'bg-white text-brand-900 border border-slate-200 enabled:hover:border-accent-200 enabled:hover:bg-accent-50 enabled:hover:text-accent-700 active:bg-accent-100',
+  // Plain — fonsiz yorliq; hover'da tint plate
+  ghost:
+    'text-slate-600 enabled:hover:bg-accent-50 enabled:hover:text-accent-700 active:bg-accent-100 active:text-accent-700',
   // Destructive — iOS qizil, yumshoq fon
-  danger: 'bg-rose-50 text-rose-600 enabled:hover:bg-rose-100 active:bg-rose-100',
+  // (sheen YO'Q: oq sirt ustida oq yorug'lik ko'rinmaydi — javob nur bilan)
+  danger:
+    'bg-rose-50 text-rose-600 enabled:hover:bg-rose-100 enabled:hover:shadow-[0_10px_26px_-14px_rgba(229,39,27,0.45)] active:bg-rose-100',
 };
 
 /* Balandliklar iOS tegish maydonlariga bog'langan: 34 / 44 / 50 / 54pt. */

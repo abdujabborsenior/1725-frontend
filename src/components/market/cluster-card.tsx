@@ -32,10 +32,10 @@ export function ClusterCard({ cluster }: { cluster: MarketCluster }) {
 
         <div className="min-w-0 flex-1">
           <div className="flex items-start justify-between gap-2">
-            <h3 className="min-w-0 text-title-3 font-semibold text-brand-900">
+            <h3 className="card-title min-w-0 text-title-3 font-semibold text-brand-900">
               {cluster.label}
             </h3>
-            <ArrowUpRight className="mt-1 h-4 w-4 shrink-0 text-slate-300 transition-colors group-hover:text-accent-600" />
+            <ArrowUpRight className="mt-1 h-4 w-4 shrink-0 text-slate-400 transition-colors group-hover:text-accent-600" />
           </div>
 
           {cluster.summary && (

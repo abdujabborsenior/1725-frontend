@@ -25,7 +25,7 @@ export function StartupMiniCard({
     <Link
       href={`/startups/${startup.slug}`}
       className={cn(
-        'group flex items-center gap-3 rounded-ios-md bg-fill-tertiary p-3 transition-colors hover:bg-fill',
+        'group flex items-center gap-3 rounded-ios-md bg-fill-tertiary p-3 transition-colors hover:bg-accent-50',
         className,
       )}
     >
@@ -62,7 +62,7 @@ export function StartupMiniCard({
         </span>
       </span>
 
-      <ArrowUpRight className="h-4 w-4 shrink-0 text-slate-300 transition-colors group-hover:text-accent-600" />
+      <ArrowUpRight className="h-4 w-4 shrink-0 text-slate-400 transition-colors group-hover:text-accent-600" />
     </Link>
   );
 }

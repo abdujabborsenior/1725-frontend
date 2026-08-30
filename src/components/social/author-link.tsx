@@ -39,7 +39,7 @@ export function AuthorLink({
   );
 
   return href ? (
-    <Link href={href} className="group transition-opacity hover:opacity-80">
+    <Link href={href} className="group hv-avatar">
       {inner}
     </Link>
   ) : (

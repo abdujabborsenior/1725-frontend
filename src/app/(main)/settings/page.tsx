@@ -238,7 +238,7 @@ export default function SettingsPage() {
               rightIcon={
                 usernameChanged && usernameValid ? (
                   checkingUsername ? (
-                    <Spinner className="h-4 w-4 animate-spin text-slate-300" />
+                    <Spinner className="h-4 w-4 animate-spin text-slate-400" />
                   ) : availability?.available ? (
                     <Check className="h-4 w-4 text-accent-600" />
                   ) : (

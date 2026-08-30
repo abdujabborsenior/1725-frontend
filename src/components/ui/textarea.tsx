@@ -26,7 +26,7 @@ export const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(
             <span
               className={cn(
                 'shrink-0 text-caption-1 tabular-nums',
-                count.current > count.max * 0.96 ? 'text-rose-600' : 'text-slate-400',
+                count.current > count.max * 0.96 ? 'text-rose-600' : 'text-slate-500',
               )}
             >
               {count.current} / {count.max}

@@ -3,16 +3,21 @@
 import { useEffect, useState } from 'react';
 import { cn } from '@/lib/utils';
 
-/* iOS system ranglari — TEKIS (gradientsiz), Kontaktlar/Xabarlar ilovasidagidek. */
+/* iOS system ranglari — TEKIS (gradientsiz), Kontaktlar/Xabarlar ilovasidagidek.
+   MUHIM: bu yerda system ranglarning YORQIN (500) darajasi emas, palitraning
+   AA-xavfsiz darajasi ishlatiladi. Sabab o'lchov bilan aniqlandi: oq
+   initsiallar #34C759 (yashil) ustida 2.2:1, #FF9500 (to'q sariq) ustida
+   2.2:1 chiqardi — ya'ni suhbatni kim bilan olib borayotganingizni
+   bildiruvchi harflar amalda o'qilmasdi. Hozirgi to'plamda eng pasti 4.5:1. */
 const TINTS = [
-  'bg-[#007AFF]', // systemBlue
-  'bg-[#5856D6]', // systemIndigo
-  'bg-[#34C759]', // systemGreen
-  'bg-[#FF9500]', // systemOrange
-  'bg-[#FF2D55]', // systemPink
-  'bg-[#AF52DE]', // systemPurple
-  'bg-[#30B0C7]', // systemTeal
-  'bg-[#A2845E]', // systemBrown
+  'bg-[#0071E3]', // systemBlue   4.70:1
+  'bg-[#4B49C4]', // systemIndigo 6.89:1
+  'bg-[#1D7333]', // systemGreen  5.91:1
+  'bg-[#A85E00]', // systemOrange 4.92:1
+  'bg-[#E5271B]', // systemRed    4.53:1
+  'bg-[#8331AC]', // systemPurple 7.00:1
+  'bg-[#1B7B8D]', // systemTeal   4.92:1
+  'bg-[#7F6545]', // systemBrown  5.45:1
 ];
 
 function hashString(s: string): number {
@@ -72,7 +77,7 @@ export function Avatar({
       >
         {/* Rasm yuklanguncha rangli fon + initsiallar turadi (Telegram uslubi) */}
         {(!showImg || !loaded) && (
-          <span className="font-medium tracking-tight text-white" style={{ fontSize }}>
+          <span className="font-semibold tracking-tight text-white" style={{ fontSize }}>
             {initials(name ?? '')}
           </span>
         )}

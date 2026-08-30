@@ -125,7 +125,7 @@ export default function VerifyEmailPage() {
             <button
               onClick={handleResend}
               disabled={!canResend || resendLoading}
-              className="flex items-center justify-center gap-2 w-full text-subhead text-slate-500 hover:text-brand-900 disabled:opacity-40 disabled:cursor-not-allowed transition-colors py-2"
+              className="flex items-center justify-center gap-2 w-full text-subhead text-slate-500 hover:text-accent-700 disabled:opacity-40 disabled:cursor-not-allowed transition-colors py-2"
             >
               <RefreshCw className={`h-4 w-4 ${resendLoading ? 'animate-spin' : ''}`} />
               {canResend
@@ -136,7 +136,7 @@ export default function VerifyEmailPage() {
 
           <button
             onClick={() => { clearAuth(); router.push('/login'); }}
-            className="mt-4 text-caption-1 text-slate-500 hover:text-brand-900 transition-colors"
+            className="mt-4 text-caption-1 text-slate-500 transition-colors hover:text-accent-700"
           >
             Boshqa email bilan kirish
           </button>

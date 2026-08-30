@@ -147,7 +147,7 @@ export function AiLauncher() {
                   <span
                     ref={ghostRef}
                     aria-hidden
-                    className="no-scrollbar pointer-events-none absolute inset-y-0 left-3 right-1 flex items-center overflow-hidden whitespace-nowrap text-body text-slate-400"
+                    className="no-scrollbar pointer-events-none absolute inset-y-0 left-3 right-1 flex items-center overflow-hidden whitespace-nowrap text-body text-slate-500"
                   >
                     {typed}
                     <i className="ai-caret shrink-0" />
@@ -182,7 +182,7 @@ export function AiLauncher() {
                   type="button"
                   onClick={() => go(q)}
                   aria-label={`So‘rash: ${q}`}
-                  className="tappable shrink-0 rounded-full bg-fill-tertiary px-3 py-1.5 text-footnote text-slate-600 transition-colors duration-150 ease-ios hover:text-brand-900"
+                  className="tappable shrink-0 rounded-full bg-fill-tertiary px-3 py-1.5 text-footnote text-slate-600 transition-colors duration-150 ease-ios hover:bg-accent-50 hover:text-accent-700"
                 >
                   {label}
                 </button>

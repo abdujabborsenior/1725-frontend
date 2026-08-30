@@ -220,7 +220,7 @@ export function ReadinessPanel({ startupId }: { startupId: string }) {
       {/* Tekshiruvlar */}
       {data.findings.length > 0 && (
         <div className="rounded-ios-lg bg-white p-4">
-          <h3 className="text-footnote font-semibold uppercase tracking-wide text-slate-400">
+          <h3 className="text-footnote font-semibold uppercase tracking-wide text-slate-500">
             Tekshiruvlar
           </h3>
           <ul className="mt-3 space-y-2.5">

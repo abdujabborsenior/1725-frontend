@@ -137,7 +137,7 @@ export function SearchPalette() {
                 <button
                   key={href}
                   onClick={() => go(href)}
-                  className="flex w-full items-center gap-3 rounded-ios px-3 py-2.5 text-left transition-colors duration-150 hover:bg-fill-quaternary active:bg-fill-tertiary"
+                  className="flex w-full items-center gap-3 rounded-ios px-3 py-2.5 text-left hv-row"
                 >
                   <Icon className="h-[19px] w-[19px] text-accent-600" />
                   <span className="flex-1 text-body text-brand-900">{label}</span>
@@ -156,7 +156,7 @@ export function SearchPalette() {
                     <button
                       key={u.id}
                       onClick={() => go(u.username ? `/u/${u.username}` : `/u/${u.id}`)}
-                      className="flex w-full items-center gap-3 rounded-ios px-3 py-2 text-left transition-colors duration-150 hover:bg-fill-quaternary active:bg-fill-tertiary"
+                      className="flex w-full items-center gap-3 rounded-ios px-3 py-2 text-left hv-row"
                     >
                       <Avatar src={u.avatarUrl} name={u.fullName} size={34} />
                       <span className="min-w-0 flex-1">
@@ -167,7 +167,7 @@ export function SearchPalette() {
                           {u.headline ?? ''}
                         </span>
                       </span>
-                      <ChevronRight className="h-[15px] w-[15px] shrink-0 text-slate-300" strokeWidth={3} />
+                      <ChevronRight className="ios-chevron h-[15px] w-[15px] shrink-0 text-slate-300" strokeWidth={3} />
                     </button>
                   ))}
                 </div>
@@ -179,7 +179,7 @@ export function SearchPalette() {
                     <button
                       key={s.id}
                       onClick={() => go(`/startups/${s.slug}`)}
-                      className="flex w-full items-center gap-3 rounded-ios px-3 py-2 text-left transition-colors duration-150 hover:bg-fill-quaternary active:bg-fill-tertiary"
+                      className="flex w-full items-center gap-3 rounded-ios px-3 py-2 text-left hv-row"
                     >
                       <span className="flex h-[34px] w-[34px] shrink-0 items-center justify-center overflow-hidden rounded-[9px] bg-slate-100">
                         {s.logoUrl ? (
@@ -195,7 +195,7 @@ export function SearchPalette() {
                           <span className="block truncate text-footnote text-slate-500">{s.tagline}</span>
                         )}
                       </span>
-                      <ChevronRight className="h-[15px] w-[15px] shrink-0 text-slate-300" strokeWidth={3} />
+                      <ChevronRight className="ios-chevron h-[15px] w-[15px] shrink-0 text-slate-300" strokeWidth={3} />
                     </button>
                   ))}
                 </div>
@@ -207,7 +207,7 @@ export function SearchPalette() {
                     <button
                       key={p.id}
                       onClick={() => go(`/problems/${p.id}`)}
-                      className="flex w-full items-center gap-3 rounded-ios px-3 py-2 text-left transition-colors duration-150 hover:bg-fill-quaternary active:bg-fill-tertiary"
+                      className="flex w-full items-center gap-3 rounded-ios px-3 py-2 text-left hv-row"
                     >
                       <span className="flex h-[34px] w-[34px] shrink-0 items-center justify-center rounded-[9px] bg-amber-500 text-white">
                         <FileText className="h-[18px] w-[18px]" />
@@ -216,7 +216,7 @@ export function SearchPalette() {
                         <span className="block truncate text-body text-brand-900">{p.title}</span>
                         <span className="block truncate text-footnote text-slate-500">{p.description}</span>
                       </span>
-                      <ChevronRight className="h-[15px] w-[15px] shrink-0 text-slate-300" strokeWidth={3} />
+                      <ChevronRight className="ios-chevron h-[15px] w-[15px] shrink-0 text-slate-300" strokeWidth={3} />
                     </button>
                   ))}
                 </div>

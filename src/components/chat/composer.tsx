@@ -388,7 +388,7 @@ export function Composer({
             </span>
             <span className="absolute -bottom-2 left-1/2 -translate-x-1/2 rounded-full bg-white px-2.5 py-0.5 text-caption-1 font-semibold tabular-nums text-brand-900 shadow-card">{mmss}</span>
           </div>
-          <p className="text-footnote text-slate-400">Dumaloq video yozilmoqda…</p>
+          <p className="text-footnote text-slate-500">Dumaloq video yozilmoqda…</p>
           <div className="flex items-center gap-5">
             <button onClick={rec.cancel} title="Bekor qilish" className="tappable flex h-12 w-12 items-center justify-center rounded-full bg-white/10 text-white"><Trash2 className="h-5 w-5" /></button>
             <button onClick={finishRecording} disabled={uploading} title="Yuborish" className="tappable-scale tappable flex h-16 w-16 items-center justify-center rounded-full bg-accent-500 text-white">
@@ -467,7 +467,7 @@ export function Composer({
                   <div className="material-menu absolute bottom-12 left-0 z-20 w-56 origin-bottom-left animate-scale-in rounded-ios-lg p-1 shadow-modal ring-1 ring-black/[0.06]">
                     <button
                       onClick={() => pickFrom(galleryRef)}
-                      className="flex w-full items-center gap-3 rounded-[9px] px-2.5 py-2 text-left transition-colors duration-150 hover:bg-fill-quaternary active:bg-fill-tertiary"
+                      className="flex w-full items-center gap-3 rounded-[9px] px-2.5 py-2 text-left hv-row"
                     >
                       <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-[9px] bg-accent-500 text-white">
                         <Images className="h-[18px] w-[18px]" />
@@ -482,7 +482,7 @@ export function Composer({
                     {/* Kamera — faqat sensorli qurilmalarda (desktop'da capture ishlamaydi) */}
                     <button
                       onClick={() => pickFrom(cameraRef)}
-                      className="hidden w-full items-center gap-3 rounded-[9px] px-2.5 py-2 text-left transition-colors duration-150 hover:bg-fill-quaternary active:bg-fill-tertiary [@media(pointer:coarse)]:flex"
+                      className="hidden w-full items-center gap-3 rounded-[9px] px-2.5 py-2 text-left hv-row [@media(pointer:coarse)]:flex"
                     >
                       <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-[9px] bg-iris-500 text-white">
                         <Camera className="h-[18px] w-[18px]" />
@@ -494,9 +494,9 @@ export function Composer({
                     </button>
                     <button
                       onClick={() => pickFrom(fileRef)}
-                      className="flex w-full items-center gap-3 rounded-[9px] px-2.5 py-2 text-left transition-colors duration-150 hover:bg-fill-quaternary active:bg-fill-tertiary"
+                      className="flex w-full items-center gap-3 rounded-[9px] px-2.5 py-2 text-left hv-row"
                     >
-                      <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-[9px] bg-slate-400 text-white">
+                      <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-[9px] bg-iris-500 text-white">
                         <FileText className="h-[18px] w-[18px]" />
                       </span>
                       <span className="min-w-0">

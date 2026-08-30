@@ -38,7 +38,7 @@ export default function NotificationByIdPage() {
 
   return (
     <div className="flex justify-center py-32">
-      <Spinner className="h-6 w-6 animate-spin text-slate-300" />
+      <Spinner className="h-6 w-6 animate-spin text-slate-400" />
     </div>
   );
 }

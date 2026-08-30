@@ -177,14 +177,14 @@ function ContextMenu({
       >
         <button
           onClick={() => { onReply(); onClose(); }}
-          className="flex w-full items-center gap-2.5 rounded-[9px] px-3 py-2 text-body text-brand-900 transition-colors duration-150 hover:bg-fill-quaternary active:bg-fill-tertiary"
+          className="flex w-full items-center gap-2.5 rounded-[9px] px-3 py-2 text-body text-brand-900 hv-row"
         >
           <Reply className="h-[18px] w-[18px] text-slate-500" /> Javob berish
         </button>
         {canEdit && (
           <button
             onClick={() => { onEdit(); onClose(); }}
-            className="flex w-full items-center gap-2.5 rounded-[9px] px-3 py-2 text-body text-brand-900 transition-colors duration-150 hover:bg-fill-quaternary active:bg-fill-tertiary"
+            className="flex w-full items-center gap-2.5 rounded-[9px] px-3 py-2 text-body text-brand-900 hv-row"
           >
             <Pencil className="h-[18px] w-[18px] text-slate-500" /> Tahrirlash
           </button>
@@ -192,7 +192,7 @@ function ContextMenu({
         {hasText && (
           <button
             onClick={() => { onCopy(); onClose(); }}
-            className="flex w-full items-center gap-2.5 rounded-[9px] px-3 py-2 text-body text-brand-900 transition-colors duration-150 hover:bg-fill-quaternary active:bg-fill-tertiary"
+            className="flex w-full items-center gap-2.5 rounded-[9px] px-3 py-2 text-body text-brand-900 hv-row"
           >
             <Copy className="h-[18px] w-[18px] text-slate-500" /> Nusxa olish
           </button>
@@ -309,7 +309,7 @@ export function MessageBubble({
       className={cn(
         'bubble-meta',
         onlyMedia && 'bubble-meta-over',
-        mine && !onlyMedia ? 'text-white/75' : onlyMedia ? '' : 'text-slate-400',
+        mine && !onlyMedia ? 'text-white/85' : onlyMedia ? '' : 'text-slate-500',
       )}
     >
       {edited && <span className="italic">tahrirlangan</span>}
@@ -329,7 +329,7 @@ export function MessageBubble({
       {!mine && isGroup ? (
         showAvatar ? (
           message.sender ? (
-            <Link href={profileHref(message.sender)} className="shrink-0 transition-opacity hover:opacity-80">
+            <Link href={profileHref(message.sender)} className="hv-avatar shrink-0">
               <Avatar src={message.sender.avatarUrl} name={message.sender.fullName} size={28} />
             </Link>
           ) : (
@@ -392,7 +392,7 @@ export function MessageBubble({
               href={profileHref(message.sender)}
               onClick={(e) => e.stopPropagation()}
               draggable={false}
-              className="mb-0.5 block text-footnote font-semibold text-accent-700 underline-offset-2 transition-colors hover:text-accent-800 hover:underline"
+              className="mb-0.5 block text-footnote font-semibold text-accent-700 hv-link transition-colors hover:text-accent-800"
             >
               {message.sender.fullName}
             </Link>

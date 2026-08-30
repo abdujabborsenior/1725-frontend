@@ -567,7 +567,7 @@ export default function LandingPage() {
 function EmptyBox({ icon: Icon, title }: { icon: React.ElementType; title: string }) {
   return (
     <div className="rounded-ios-xl bg-white py-16 text-center">
-      <Icon className="mx-auto mb-3 h-10 w-10 text-slate-300" />
+      <Icon className="mx-auto mb-3 h-10 w-10 text-accent-300" />
       <p className="text-callout font-medium text-brand-900">{title}</p>
     </div>
   );

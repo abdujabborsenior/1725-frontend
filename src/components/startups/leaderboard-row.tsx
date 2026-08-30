@@ -17,7 +17,7 @@ export function LeaderboardRow({ entry }: { entry: LeaderboardEntry }) {
   return (
     <Link
       href={`/startups/${entry.slug}`}
-      className="group flex items-center gap-3 rounded-ios-2xl bg-white p-3 transition-all duration-200 hover:shadow-card sm:gap-4 sm:p-4"
+      className="group flex items-center gap-3 rounded-ios-2xl bg-white p-3 transition-all duration-200 hover:shadow-[0_12px_30px_-16px_rgba(0,40,90,0.28),inset_0_0_0_1px_rgba(0,122,255,0.14)] sm:gap-4 sm:p-4"
     >
       {/* O'rin + harakat */}
       <div className="flex w-9 flex-col items-center gap-1 shrink-0">

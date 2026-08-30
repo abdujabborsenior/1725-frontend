@@ -139,7 +139,7 @@ export default function IntroRequestsPage() {
                           type="button"
                           onClick={() => respond({ id: intro.id, accept: false })}
                           disabled={isPending}
-                          className="tappable inline-flex h-10 items-center justify-center rounded-ios-md bg-fill-tertiary px-4 text-subhead font-medium text-slate-600 disabled:opacity-50"
+                          className="tappable inline-flex h-10 items-center justify-center rounded-ios-md bg-fill-tertiary px-4 text-subhead font-medium text-slate-600 transition-colors hover:bg-accent-50 hover:text-accent-700 disabled:opacity-50"
                         >
                           Rad etish
                         </button>
@@ -149,7 +149,7 @@ export default function IntroRequestsPage() {
                     {intro.status === 'accepted' && intro.conversationId && (
                       <Link
                         href={`/messages/${intro.conversationId}`}
-                        className="tappable mt-3.5 inline-flex h-10 items-center gap-2 rounded-ios-md bg-fill-tertiary px-4 text-subhead font-medium text-brand-900"
+                        className="tappable mt-3.5 inline-flex h-10 items-center gap-2 rounded-ios-md bg-fill-tertiary px-4 text-subhead font-medium text-brand-900 transition-colors hover:bg-accent-50 hover:text-accent-700"
                       >
                         <MessageCircle className="h-4 w-4" />
                         Suhbatni ochish

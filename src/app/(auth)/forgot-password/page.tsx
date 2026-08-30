@@ -75,7 +75,7 @@ export default function ForgotPasswordPage() {
 
           <Link
             href="/login"
-            className="mt-6 flex items-center justify-center gap-1.5 text-subhead text-slate-500 hover:text-brand-900 transition-colors"
+            className="mt-6 flex items-center justify-center gap-1.5 text-subhead text-slate-500 transition-colors hover:text-accent-700"
           >
             <ChevronLeft className="h-4 w-4" strokeWidth={3} /> Kirishga qaytish
           </Link>

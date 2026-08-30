@@ -119,7 +119,7 @@ export default function ResetPasswordPage() {
             <button
               onClick={handleResend}
               disabled={!canResend}
-              className="flex items-center justify-center gap-2 w-full text-subhead text-slate-500 hover:text-brand-900 disabled:opacity-40 disabled:cursor-not-allowed transition-colors py-1"
+              className="flex items-center justify-center gap-2 w-full text-subhead text-slate-500 hover:text-accent-700 disabled:opacity-40 disabled:cursor-not-allowed transition-colors py-1"
             >
               <RefreshCw className="h-4 w-4" />
               {canResend ? 'Kodni qayta yuborish' : `Qayta yuborish (${resendCountdown}s)`}
@@ -128,7 +128,7 @@ export default function ResetPasswordPage() {
 
           <Link
             href="/login"
-            className="mt-5 flex items-center justify-center gap-1.5 text-subhead text-slate-500 hover:text-brand-900 transition-colors"
+            className="mt-5 flex items-center justify-center gap-1.5 text-subhead text-slate-500 transition-colors hover:text-accent-700"
           >
             <ArrowLeft className="h-4 w-4" /> Kirishga qaytish
           </Link>

@@ -121,7 +121,7 @@ export function NotificationBell() {
                     key={n.id}
                     onClick={() => openNotification(n)}
                     className={cn(
-                      'hairline-b flex w-full items-start gap-3 px-4 py-3 text-left transition-colors duration-150 hover:bg-fill-quaternary active:bg-fill-tertiary',
+                      'hairline-b flex w-full items-start gap-3 px-4 py-3 text-left hv-row',
                       !n.isRead && 'bg-accent-50/50 hover:bg-accent-50',
                     )}
                   >
@@ -152,7 +152,7 @@ export function NotificationBell() {
               })
             ) : (
               <div className="py-12 text-center">
-                <Bell className="mx-auto mb-2 h-8 w-8 text-slate-300" />
+                <Bell className="mx-auto mb-2 h-8 w-8 text-accent-300" />
                 <p className="text-subhead text-slate-500">Bildirishnomalar yo&apos;q</p>
               </div>
             )}
@@ -161,7 +161,7 @@ export function NotificationBell() {
           <Link
             href="/notifications"
             onClick={() => setOpen(false)}
-            className="hairline-t block px-4 py-3 text-center text-subhead font-medium text-accent-700 transition-colors duration-150 hover:bg-fill-quaternary active:bg-fill-tertiary"
+            className="hairline-t block px-4 py-3 text-center text-subhead font-medium text-accent-700 hv-row"
           >
             Barchasini ko&apos;rish
           </Link>

@@ -77,7 +77,7 @@ function ChatLink({ mobile }: { mobile?: boolean }) {
       href="/messages"
       aria-label="Suhbatlar"
       className={cn(
-        'tappable relative flex h-9 w-9 items-center justify-center rounded-full',
+        'tappable hv-pop relative flex h-9 w-9 items-center justify-center rounded-full',
         active ? 'text-accent-600' : 'text-slate-600',
       )}
     >
@@ -127,7 +127,7 @@ export function Navbar() {
           joyga qarab `AdaptiveNav` bilan o'zi moslashadi. */}
       <div className="mx-auto flex h-[52px] max-w-7xl items-center gap-3 px-4 2xl:max-w-[1400px]">
         {/* Logo */}
-        <Link href="/" className="tappable flex shrink-0 items-center gap-2">
+        <Link href="/" className="hv-logo tappable flex shrink-0 items-center gap-2">
           <LogoMark className="h-[30px] w-[30px]" />
           <span className="text-title-3 font-semibold tracking-tight text-brand-900">
             MYMarkaz
@@ -155,7 +155,7 @@ export function Navbar() {
             {/* "Qidirish" so'zi keng ekranda — tor desktopda ikonka + ⌘K
                 o'zi tushunarli va navigatsiyaga joy bo'shatadi. */}
             <span className="hidden text-subhead 2xl:inline">Qidirish</span>
-            <kbd className="rounded-md bg-white/70 px-1.5 py-0.5 text-caption-2 font-medium text-slate-500 2xl:ml-2">
+            <kbd className="rounded-md bg-white px-1.5 py-0.5 text-caption-2 font-medium text-slate-600 2xl:ml-2">
               ⌘K
             </kbd>
           </button>
@@ -163,7 +163,7 @@ export function Navbar() {
           {/* Joylash CTA — guest ham ko'radi (bosganda register orqali qaytadi) */}
           <Link
             href="/startups/create"
-            className="tappable ml-1 flex h-9 items-center gap-1 rounded-full bg-accent-600 pl-3 pr-4 text-subhead font-semibold text-white active:bg-accent-700"
+            className="hv-sheen tappable ml-1 flex h-9 items-center gap-1 rounded-full bg-accent-600 pl-3 pr-4 text-subhead font-semibold text-white hover:shadow-[0_10px_24px_-12px_rgba(0,113,227,0.8)] active:bg-accent-700"
           >
             <Plus className="h-4 w-4" strokeWidth={2.6} /> Startap
           </Link>
@@ -172,13 +172,13 @@ export function Navbar() {
             <>
               <ChatLink />
               <NotificationBell />
-              <Link href="/profile" aria-label="Profil" className="tappable ml-0.5 shrink-0">
+              <Link href="/profile" aria-label="Profil" className="hv-avatar ml-0.5 shrink-0">
                 <Avatar src={user?.avatarUrl} name={user?.fullName} size={30} />
               </Link>
               <button
                 onClick={handleLogout}
                 aria-label="Chiqish"
-                className="tappable flex h-9 w-9 items-center justify-center rounded-full text-slate-400"
+                className="tappable hv-pop flex h-9 w-9 items-center justify-center rounded-full text-slate-500 hover:bg-rose-50 hover:text-rose-600"
               >
                 <LogOut className="h-[19px] w-[19px]" />
               </button>
@@ -193,7 +193,7 @@ export function Navbar() {
               </Link>
               <Link
                 href="/register"
-                className="tappable flex h-9 shrink-0 items-center whitespace-nowrap rounded-full bg-fill-tertiary px-4 text-subhead font-semibold text-brand-900 active:bg-fill"
+                className="tappable flex h-9 shrink-0 items-center whitespace-nowrap rounded-full bg-accent-50 px-4 text-subhead font-semibold text-accent-700 hover:bg-accent-100 active:bg-accent-200"
               >
                 Ro&apos;yxatdan o&apos;tish
               </Link>
@@ -206,7 +206,7 @@ export function Navbar() {
           <button
             onClick={openSearchPalette}
             aria-label="Qidirish"
-            className="tappable flex h-9 w-9 items-center justify-center rounded-full text-slate-600"
+            className="tappable hv-pop flex h-9 w-9 items-center justify-center rounded-full text-slate-600"
           >
             <Search className="h-[21px] w-[21px]" />
           </button>
@@ -216,7 +216,7 @@ export function Navbar() {
             onClick={() => setMenuOpen((p) => !p)}
             aria-label="Menyu"
             aria-expanded={menuOpen}
-            className="tappable flex h-9 w-9 items-center justify-center rounded-full text-brand-900"
+            className="tappable hv-pop flex h-9 w-9 items-center justify-center rounded-full text-brand-900"
           >
             {menuOpen ? <X className="h-[22px] w-[22px]" /> : <Menu className="h-[22px] w-[22px]" />}
           </button>

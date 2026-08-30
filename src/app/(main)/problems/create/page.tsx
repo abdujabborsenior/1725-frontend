@@ -142,7 +142,7 @@ export default function CreateProblemPage() {
                   'cursor-pointer px-3 py-1.5 rounded-lg text-caption-1 font-medium border transition-all duration-150',
                   selected
                     ? 'bg-brand-900 border-brand-900 text-white'
-                    : 'bg-white border-slate-200 text-slate-600 hover:border-slate-300 hover:text-brand-900',
+                    : 'bg-white border-slate-200 text-slate-600 hover:border-accent-200 hover:bg-accent-50 hover:text-accent-700',
                 )}>
                   <input type="radio" value={cat} className="sr-only" {...register('category')} />
                   {cat}
@@ -168,7 +168,7 @@ export default function CreateProblemPage() {
           </label>
           <div className="flex gap-2">
             <button type="button" onClick={() => imgFileRef.current?.click()} disabled={uploadingImg || imageUrls.length >= 5}
-              className="h-11 px-4 flex items-center gap-2 rounded-lg border-2 border-dashed border-slate-300 text-subhead font-medium text-slate-500 hover:text-accent-700 disabled:opacity-50 transition-all shrink-0">
+              className="h-11 px-4 flex items-center gap-2 rounded-lg border-2 border-dashed border-slate-300 text-subhead font-medium text-slate-500 transition-all hover:border-accent-300 hover:bg-accent-50 hover:text-accent-700 disabled:opacity-50 shrink-0">
               {uploadingImg ? <Spinner className="h-4 w-4 animate-spin" /> : <UploadCloud className="h-4 w-4" />} Rasm yuklash
             </button>
             <div className="relative flex-1">
@@ -179,7 +179,7 @@ export default function CreateProblemPage() {
                 className={cn(FIELD_SURFACE, FIELD_SIZE.md, 'pl-10 pr-3')} />
             </div>
             <button type="button" onClick={() => addUrl('image')} aria-label="Rasm qo'shish"
-              className="tappable h-12 w-12 flex items-center justify-center rounded-ios-md bg-fill-tertiary text-accent-700 shrink-0">
+              className="tappable hv-pop h-12 w-12 flex items-center justify-center rounded-ios-md bg-accent-50 text-accent-700 shrink-0 hover:bg-accent-100">
               <Plus className="h-4 w-4" />
             </button>
           </div>
@@ -190,7 +190,7 @@ export default function CreateProblemPage() {
                   {/* eslint-disable-next-line @next/next/no-img-element */}
                   <img src={u} alt="" className="h-full w-full object-cover" />
                   <button type="button" onClick={() => setImageUrls(arr => arr.filter(x => x !== u))}
-                    className="absolute top-1 right-1 h-5 w-5 flex items-center justify-center rounded bg-white/90 text-rose-600 opacity-0 group-hover:opacity-100 transition-opacity">
+                    className="absolute top-1 right-1 h-5 w-5 flex items-center justify-center rounded bg-white/90 text-rose-600 opacity-0 transition-opacity focus-visible:opacity-100 group-hover:opacity-100">
                     <X className="h-3 w-3" />
                   </button>
                 </div>
@@ -208,7 +208,7 @@ export default function CreateProblemPage() {
           </label>
           <div className="flex gap-2">
             <button type="button" onClick={() => vidFileRef.current?.click()} disabled={uploadingVid || videoUrls.length >= 3}
-              className="h-11 px-4 flex items-center gap-2 rounded-lg border-2 border-dashed border-slate-300 text-subhead font-medium text-slate-500 hover:text-accent-700 disabled:opacity-50 transition-all shrink-0">
+              className="h-11 px-4 flex items-center gap-2 rounded-lg border-2 border-dashed border-slate-300 text-subhead font-medium text-slate-500 transition-all hover:border-accent-300 hover:bg-accent-50 hover:text-accent-700 disabled:opacity-50 shrink-0">
               {uploadingVid ? <Spinner className="h-4 w-4 animate-spin" /> : <UploadCloud className="h-4 w-4" />} Video yuklash
             </button>
             <div className="relative flex-1">
@@ -219,7 +219,7 @@ export default function CreateProblemPage() {
                 className={cn(FIELD_SURFACE, FIELD_SIZE.md, 'pl-10 pr-3')} />
             </div>
             <button type="button" onClick={() => addUrl('video')} aria-label="Video qo'shish"
-              className="tappable h-12 w-12 flex items-center justify-center rounded-ios-md bg-fill-tertiary text-accent-700 shrink-0">
+              className="tappable hv-pop h-12 w-12 flex items-center justify-center rounded-ios-md bg-accent-50 text-accent-700 shrink-0 hover:bg-accent-100">
               <Plus className="h-4 w-4" />
             </button>
           </div>
@@ -229,7 +229,7 @@ export default function CreateProblemPage() {
                 <div key={u} className="flex items-center gap-2 rounded-full bg-fill-tertiary px-3 py-1.5 text-caption-1 text-slate-700">
                   <Video className="h-3.5 w-3.5 text-slate-400 flex-shrink-0" />
                   <span className="truncate flex-1">{u.split('/').pop()}</span>
-                  <button type="button" onClick={() => setVideoUrls(arr => arr.filter(x => x !== u))} className="text-slate-400 hover:text-rose-600">
+                  <button type="button" onClick={() => setVideoUrls(arr => arr.filter(x => x !== u))} className="text-slate-500 transition-colors hover:text-rose-600">
                     <X className="h-3.5 w-3.5" />
                   </button>
                 </div>

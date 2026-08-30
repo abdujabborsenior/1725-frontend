@@ -118,7 +118,7 @@ export function PollCard({ poll: initial }: { poll: Poll }) {
               <Lock className="h-3 w-3" /> Yakunlandi
             </span>
           ) : (
-            <span className="inline-flex items-center gap-1.5 rounded-full bg-emerald-50 px-2.5 py-1 text-caption-1 font-medium text-emerald-600">
+            <span className="inline-flex items-center gap-1.5 rounded-full bg-emerald-50 px-2.5 py-1 text-caption-1 font-medium text-emerald-700">
               <span className="h-1.5 w-1.5 rounded-full bg-emerald-500" />
               Jonli
             </span>
@@ -201,7 +201,7 @@ function OptionRow({
         'group/row relative px-3.5 py-3 transition-colors duration-150 sm:px-4',
         !first && 'hairline-t',
         voted && 'bg-accent-50',
-        !closed && 'cursor-pointer hover:bg-fill-quaternary active:bg-fill-tertiary',
+        !closed && 'cursor-pointer hover:bg-accent-50/60 active:bg-accent-50',
       )}
     >
       <div className="flex items-center gap-3">
@@ -264,7 +264,7 @@ function OptionRow({
               <Link
                 href={`/startups/${s.slug}`}
                 onClick={(e) => e.stopPropagation()}
-                className="tappable -my-2 inline-flex shrink-0 items-center gap-0.5 py-2 text-caption-1 font-medium text-accent-600"
+                className="tappable -my-2 inline-flex shrink-0 items-center gap-0.5 py-2 text-caption-1 font-medium text-accent-700"
               >
                 Batafsil <ChevronRight className="h-3 w-3" strokeWidth={3} />
               </Link>
@@ -279,11 +279,11 @@ function OptionRow({
               <span
                 className={cn(
                   'text-title-1 font-semibold tabular-nums',
-                  accent ? 'text-brand-900' : 'text-slate-400',
+                  accent ? 'text-brand-900' : 'text-slate-500',
                 )}
               >
                 {pct}
-                <span className="text-subhead font-semibold text-slate-400">%</span>
+                <span className="text-subhead font-semibold text-slate-500">%</span>
               </span>
               <span className="mt-1 flex items-center gap-1 text-caption-1 tabular-nums text-slate-500">
                 {voted && (

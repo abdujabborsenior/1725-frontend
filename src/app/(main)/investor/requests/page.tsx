@@ -128,7 +128,7 @@ export default function InvestorRequestsPage() {
                       type="button"
                       onClick={() => withdraw(intro.id)}
                       disabled={isPending}
-                      className="tappable inline-flex h-9 items-center rounded-ios-md bg-fill-tertiary px-3.5 text-footnote font-medium text-slate-600 disabled:opacity-50"
+                      className="tappable inline-flex h-9 items-center rounded-ios-md bg-fill-tertiary px-3.5 text-footnote font-medium text-slate-600 transition-colors hover:bg-accent-50 hover:text-accent-700 disabled:opacity-50"
                     >
                       Qaytarib olish
                     </button>

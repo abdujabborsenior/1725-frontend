@@ -102,7 +102,7 @@ export function MediaPermissionPrimer() {
           <button
             onClick={allow}
             disabled={busy}
-            className="tappable inline-flex h-11 flex-1 items-center justify-center gap-2 rounded-full bg-accent-500 text-body font-medium text-white active:bg-accent-600 disabled:opacity-40"
+            className="tappable inline-flex h-11 flex-1 items-center justify-center gap-2 rounded-full bg-accent-600 text-body font-medium text-white active:bg-accent-700 disabled:opacity-40"
           >
             {busy ? <Spinner className="h-4 w-4 animate-spin" /> : 'Ruxsat berish'}
           </button>

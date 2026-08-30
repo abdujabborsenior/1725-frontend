@@ -99,7 +99,7 @@ export function ProblemShareModal({ open, onClose, problemId, problemTitle }: Pr
 
         {typeof navigator !== 'undefined' && 'share' in navigator && (
           <button onClick={nativeShare}
-            className="flex w-full items-center justify-center gap-2 rounded-ios-md bg-fill-tertiary py-2.5 text-subhead font-semibold text-accent-700 hover:bg-fill">
+            className="flex w-full items-center justify-center gap-2 rounded-ios-md bg-accent-50 py-2.5 text-subhead font-semibold text-accent-700 hover:bg-accent-100">
             <Share2 className="h-4 w-4" /> Boshqa ilovalar orqali ulashish
           </button>
         )}
@@ -122,7 +122,7 @@ export function ProblemShareModal({ open, onClose, problemId, problemTitle }: Pr
                 filtered.map((c) => {
                   const sent = sentTo.has(c.id);
                   return (
-                    <div key={c.id} className="flex items-center gap-3 rounded-ios-md px-2 py-2 hover:bg-surface-soft">
+                    <div key={c.id} className="hv-row flex items-center gap-3 rounded-ios-md px-2 py-2">
                       {c.type === 'group' && !c.avatarUrl ? (
                         <span className="flex h-9 w-9 items-center justify-center rounded-full bg-iris-500 text-white"><Hash className="h-4 w-4" /></span>
                       ) : (

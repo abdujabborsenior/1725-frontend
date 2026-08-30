@@ -19,7 +19,7 @@ export function FormulaExplainer({ formula }: { formula: LeaderboardFormula }) {
       <button
         onClick={() => setOpen((v) => !v)}
         aria-expanded={open}
-        className="flex w-full items-center gap-2.5 px-4 py-3.5 text-left transition-colors duration-150 hover:bg-fill-quaternary active:bg-fill-tertiary"
+        className="flex w-full items-center gap-2.5 px-4 py-3.5 text-left hv-row"
       >
         <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-accent-50 text-accent-600">
           <Info className="h-4 w-4" />

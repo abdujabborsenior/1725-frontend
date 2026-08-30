@@ -242,7 +242,9 @@ export const Select = forwardRef<HTMLSelectElement, SelectProps>(
                     onClick={() => choose(String(o.value))}
                     className={cn(
                       'flex min-h-[38px] cursor-pointer items-center justify-between gap-2 rounded-[9px] px-3 text-body transition-colors duration-150',
-                      i === active ? 'bg-fill-tertiary text-brand-900' : 'text-brand-900',
+                      // Kursor/klaviatura ostidagi variant — kulrang emas,
+                      // brend tinti (tanlangan variantning "Check"i bilan bir tilda).
+                      i === active ? 'bg-accent-50 text-accent-700' : 'text-brand-900',
                       isSelected && 'font-medium',
                     )}
                   >

@@ -226,7 +226,7 @@ export default function RegisterPage() {
               <button
                 onClick={() => setUserType(null)}
                 aria-label="Orqaga"
-                className="tappable h-9 w-9 rounded-full bg-fill-tertiary flex items-center justify-center text-accent-700 flex-shrink-0"
+                className="tappable hv-pop h-9 w-9 rounded-full bg-accent-50 flex items-center justify-center text-accent-700 flex-shrink-0 hover:bg-accent-100"
               >
                 <ChevronLeft className="h-4 w-4" />
               </button>
@@ -251,7 +251,7 @@ export default function RegisterPage() {
                 <button
                   key={id}
                   onClick={() => setUserType(id)}
-                  className="w-full flex items-center gap-4 p-4 rounded-ios-lg bg-fill-tertiary transition-colors hover:bg-fill text-left group"
+                  className="w-full flex items-center gap-4 p-4 rounded-ios-lg bg-fill-tertiary transition-colors hover:bg-accent-50 text-left group"
                 >
                   <span className="h-11 w-11 rounded-xl bg-brand-50 border border-brand-200 flex items-center justify-center flex-shrink-0 group-hover:bg-accent-100 group-hover:border-accent-300 transition-colors">
                     <Icon className="h-5 w-5 text-brand-900 group-hover:text-accent-700 transition-colors" />
@@ -260,7 +260,7 @@ export default function RegisterPage() {
                     <span className="block text-subhead font-semibold text-brand-900">{label}</span>
                     <span className="block text-caption-1 text-slate-500 mt-0.5">{desc}</span>
                   </span>
-                  <ChevronRight className="h-4 w-4 text-slate-300" strokeWidth={3} />
+                  <ChevronRight className="ios-chevron h-4 w-4 text-slate-300" strokeWidth={3} />
                 </button>
               ))}
               <Footer />

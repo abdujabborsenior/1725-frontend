@@ -34,7 +34,7 @@ export function AuthBrandPanel() {
     <div className="brand-surface hidden lg:flex lg:w-[46%] xl:w-[42%]">
       <div className="flex w-full flex-col justify-between p-10 xl:p-14">
         {/* Logo */}
-        <Link href="/" className="tappable inline-flex items-center gap-2.5 self-start">
+        <Link href="/" className="hv-logo tappable inline-flex items-center gap-2.5 self-start">
           <span className="flex h-10 w-10 items-center justify-center rounded-[11px] bg-white">
             <LogoMark className="h-7 w-7" />
           </span>

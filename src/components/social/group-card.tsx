@@ -53,7 +53,7 @@ export function GroupCard({ group, className }: { group: PublicGroup; className?
           </span>
         )}
         <div className="min-w-0 flex-1">
-          <h3 className="truncate text-callout font-semibold text-brand-900">{group.title}</h3>
+          <h3 className="card-title truncate text-callout font-semibold text-brand-900">{group.title}</h3>
           {group.username && (
             <p className="truncate text-footnote text-accent-700">@{group.username}</p>
           )}
@@ -70,7 +70,7 @@ export function GroupCard({ group, className }: { group: PublicGroup; className?
             'tappable flex h-8 shrink-0 items-center justify-center rounded-full px-4 text-footnote font-semibold',
             'transition-[background-color,box-shadow] duration-150 ease-ios',
             isMember
-              ? 'bg-fill-tertiary text-accent-700 enabled:hover:bg-fill-secondary'
+              ? 'bg-accent-50 text-accent-700 enabled:hover:bg-accent-100'
               : 'bg-accent-600 text-white enabled:hover:bg-accent-700 enabled:hover:shadow-[0_6px_18px_-10px_rgba(0,113,227,0.7)]',
           )}
         >

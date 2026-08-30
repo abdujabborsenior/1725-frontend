@@ -58,7 +58,7 @@ export const SearchField = forwardRef<HTMLInputElement, SearchFieldProps>(
             aria-label="Tozalash"
             className={cn(
               'tappable absolute right-3 flex h-6 w-6 items-center justify-center rounded-full',
-              'text-slate-400 transition-colors duration-150 hover:text-slate-600',
+              'text-slate-500 transition-colors duration-150 hover:text-accent-700',
             )}
           >
             <CloseCircleFill className="h-[19px] w-[19px]" />

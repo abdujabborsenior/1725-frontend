@@ -26,7 +26,7 @@ export function AiMatchCard({ match, index }: { match: AiMatch; index: number })
       href={`/startups/${startup.slug || startup.id}`}
       style={{ '--ai-delay': `${0.08 + index * 0.07}s` } as CSSProperties}
       className={cn(
-        'ai-focus-in tappable group relative flex items-start gap-3.5 rounded-ios-xl bg-white p-4 transition-shadow duration-250 ease-ios hover:shadow-card',
+        'ai-focus-in tappable group relative flex items-start gap-3.5 rounded-ios-xl bg-white p-4 transition-shadow duration-250 ease-ios hover:shadow-[0_14px_32px_-18px_rgba(0,40,90,0.3),inset_0_0_0_1px_rgba(0,122,255,0.14)]',
         top && 'ring-1 ring-accent-500/25',
       )}
     >
@@ -64,7 +64,7 @@ export function AiMatchCard({ match, index }: { match: AiMatch; index: number })
       </div>
 
       <ChevronRight
-        className="mt-3 h-4 w-4 shrink-0 text-slate-300 transition-transform duration-250 ease-ios group-hover:translate-x-0.5 group-hover:text-accent-600"
+        className="mt-3 h-4 w-4 shrink-0 text-slate-400 transition-all duration-250 ease-ios group-hover:translate-x-1 group-hover:text-accent-600"
         strokeWidth={2.5}
       />
     </Link>

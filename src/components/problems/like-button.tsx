@@ -56,9 +56,13 @@ export function ProblemLikeButton({
       className={cn(
         'tappable inline-flex items-center rounded-full font-medium transition-colors duration-150 ease-ios',
         sm ? 'h-8 gap-1.5 px-3.5 text-footnote' : 'h-10 gap-2 px-4 text-subhead',
+        // Bosilgan holat — to'ldirilgan brend kapsulasi + rangdosh nur.
+        // Bosilmagani KULRANG PLOMBA emas (kartada 3 tadan takrorlanadi va
+        // sahifani kulrang qilib ko'rsatardi), oq sirt + hairline: tinch,
+        // lekin kursorda brend tintiga kiradi va chiroq "yonadi".
         liked
-          ? 'bg-accent-600 text-white hover:bg-accent-700'
-          : 'bg-fill-tertiary text-slate-600 hover:bg-fill-secondary hover:text-brand-900',
+          ? 'hv-sheen bg-accent-600 text-white shadow-[0_4px_12px_-5px_rgba(0,113,227,0.6)] hover:shadow-[0_8px_18px_-6px_rgba(0,113,227,0.8)]'
+          : 'hv-bulb bg-white text-slate-600 ring-1 ring-slate-200 hover:bg-accent-50 hover:text-accent-700 hover:ring-accent-200',
         className,
       )}
     >

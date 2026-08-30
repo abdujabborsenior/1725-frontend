@@ -83,7 +83,7 @@ export function ReportDialog({ open, onClose, targetType, targetId }: ReportDial
                 'flex w-full items-center gap-3 rounded-ios-md border px-3.5 py-2.5 text-left text-subhead font-medium transition-all',
                 reason === r
                   ? 'border-accent-500 bg-accent-50 text-accent-800'
-                  : 'border-slate-200 text-slate-700 hover:border-slate-300 active:bg-fill-tertiary',
+                  : 'border-slate-200 text-slate-700 hover:border-accent-200 hover:bg-accent-50 hover:text-accent-700 active:bg-accent-100',
               )}
             >
               <span
@@ -111,7 +111,7 @@ export function ReportDialog({ open, onClose, targetType, targetId }: ReportDial
             placeholder="Muammoni qisqacha tasvirlab bering..."
             className={cn(FIELD_SURFACE, 'resize-none px-4 py-3')}
           />
-          <p className="mt-1 text-right text-caption-1 text-slate-400">{details.length}/300</p>
+          <p className="mt-1 text-right text-caption-1 text-slate-500">{details.length}/300</p>
         </div>
 
         <div className="flex justify-end gap-2.5 pt-1">
@@ -185,7 +185,7 @@ export function ReportButton({
         <button
           onClick={trigger}
           className={cn(
-            'inline-flex items-center gap-1.5 text-footnote font-semibold text-slate-500 transition-colors hover:text-rose-600',
+            'inline-flex items-center gap-1.5 text-footnote font-semibold text-slate-600 transition-colors hover:text-rose-600',
             className,
           )}
         >

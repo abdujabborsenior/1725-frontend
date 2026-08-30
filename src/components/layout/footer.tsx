@@ -67,7 +67,7 @@ export function Footer() {
         <div className="grid grid-cols-2 gap-x-6 gap-y-10 lg:grid-cols-12 lg:gap-x-8">
           {/* Brend */}
           <div className="col-span-2 lg:col-span-3">
-            <Link href="/" className="tappable inline-flex items-center gap-2.5">
+            <Link href="/" className="hv-logo tappable inline-flex items-center gap-2.5">
               <span className="flex h-9 w-9 items-center justify-center rounded-[10px] bg-white">
                 <LogoMark className="h-6 w-6" />
               </span>

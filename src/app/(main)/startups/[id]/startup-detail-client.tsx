@@ -187,7 +187,7 @@ export function StartupDetailClient({ initialStartup }: { initialStartup: Startu
             <BookmarkButton startup={startup} />
             <button
               onClick={handleShare}
-              className="tappable inline-flex h-9 items-center gap-1.5 rounded-full bg-fill-tertiary px-3.5 text-subhead font-medium text-slate-600"
+              className="tappable inline-flex h-9 items-center gap-1.5 rounded-full bg-fill-tertiary px-3.5 text-subhead font-medium text-slate-600 transition-colors hover:bg-accent-50 hover:text-accent-700"
             >
               {copied ? (
                 <Check className="h-[17px] w-[17px] text-accent-600" strokeWidth={2.6} />
@@ -198,14 +198,14 @@ export function StartupDetailClient({ initialStartup }: { initialStartup: Startu
             </button>
             <button
               onClick={() => setReportOpen(true)}
-              className="tappable inline-flex h-9 items-center gap-1.5 rounded-full bg-fill-tertiary px-3.5 text-subhead font-medium text-slate-600"
+              className="tappable inline-flex h-9 items-center gap-1.5 rounded-full bg-fill-tertiary px-3.5 text-subhead font-medium text-slate-600 transition-colors hover:bg-accent-50 hover:text-accent-700"
             >
               <Flag className="h-[17px] w-[17px]" /> Shikoyat
             </button>
             {isOwner && (
               <Link
                 href={`/startups/${startup.id}/edit`}
-                className="tappable inline-flex h-9 items-center gap-1.5 rounded-full bg-fill-tertiary px-3.5 text-subhead font-medium text-slate-600"
+                className="tappable inline-flex h-9 items-center gap-1.5 rounded-full bg-fill-tertiary px-3.5 text-subhead font-medium text-slate-600 transition-colors hover:bg-accent-50 hover:text-accent-700"
               >
                 <PencilLine className="h-[17px] w-[17px]" /> Tahrirlash
               </Link>
@@ -283,7 +283,7 @@ export function StartupDetailClient({ initialStartup }: { initialStartup: Startu
                   // eslint-disable-next-line @next/next/no-img-element
                   <img src={p.iconUrl} alt="" className="h-8 w-8 rounded-[8px] object-cover" />
                 ) : (
-                  <span className="flex h-8 w-8 items-center justify-center rounded-[8px] bg-fill-tertiary text-footnote font-semibold text-slate-500">
+                  <span className="flex h-8 w-8 items-center justify-center rounded-[8px] bg-accent-50 text-footnote font-semibold text-accent-700">
                     {(p.label || p.url).charAt(0).toUpperCase()}
                   </span>
                 )}
@@ -293,7 +293,7 @@ export function StartupDetailClient({ initialStartup }: { initialStartup: Startu
                   </span>
                   <span className="block truncate text-footnote text-slate-500">{p.url}</span>
                 </span>
-                <ChevronRight className="h-[15px] w-[15px] shrink-0 text-slate-300" strokeWidth={3} />
+                <ChevronRight className="ios-chevron h-[15px] w-[15px] shrink-0 text-slate-300" strokeWidth={3} />
               </a>
             ))}
           </div>

@@ -35,7 +35,7 @@ function RankMark({ rank }: { rank: number }) {
     );
   }
   return (
-    <span className="flex h-9 w-9 shrink-0 items-center justify-center text-subhead font-bold text-slate-400">
+    <span className="flex h-9 w-9 shrink-0 items-center justify-center text-subhead font-bold text-slate-500">
       {rank}
     </span>
   );
@@ -47,7 +47,7 @@ function FounderRow({ entry }: { entry: FounderEntry }) {
     <div className="flex items-center gap-3 rounded-ios-2xl bg-white p-3.5 transition-all hover:shadow-card-hover sm:gap-4 sm:p-4">
       <RankMark rank={entry.rank} />
 
-      <Link href={profileHref} className="shrink-0 transition-opacity hover:opacity-80">
+      <Link href={profileHref} className="hv-avatar shrink-0">
         <Avatar src={entry.avatarUrl} name={entry.fullName} size={44} />
       </Link>
 
@@ -55,7 +55,7 @@ function FounderRow({ entry }: { entry: FounderEntry }) {
         <div className="flex flex-wrap items-center gap-x-2 gap-y-0.5">
           <Link
             href={profileHref}
-            className="truncate text-subhead font-bold text-brand-900 hover:underline"
+            className="truncate text-subhead font-bold text-brand-900 hv-link"
           >
             {entry.fullName}
           </Link>
@@ -122,8 +122,8 @@ export function FoundersBoard() {
   if (entries.length === 0) {
     return (
       <div className="rounded-ios-2xl bg-white py-20 text-center">
-        <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-ios-lg bg-slate-100">
-          <Rocket className="h-8 w-8 text-slate-400" />
+        <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-ios-lg bg-accent-50">
+          <Rocket className="h-8 w-8 text-accent-500" />
         </div>
         <p className="font-semibold text-brand-900">Hozircha asoschilar yo&apos;q</p>
         <p className="mt-1 text-subhead text-slate-500">

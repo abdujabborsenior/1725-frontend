@@ -31,7 +31,7 @@ export function UserListItem({ user, onClick, className, showFollow = true }: Pr
         className,
       )}
     >
-      <Link href={href} onClick={onClick} className="shrink-0 transition-opacity hover:opacity-80">
+      <Link href={href} onClick={onClick} className="hv-avatar shrink-0">
         <Avatar src={user.avatarUrl} name={user.fullName} size={44} />
       </Link>
       <Link href={href} onClick={onClick} className="group/name min-w-0 flex-1">

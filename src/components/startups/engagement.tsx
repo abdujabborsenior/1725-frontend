@@ -73,7 +73,7 @@ export function LikeButton({
           'text-footnote font-medium tabular-nums transition-colors duration-150 ease-ios',
           liked
             ? 'bg-rose-50 text-rose-600 hover:bg-rose-100'
-            : 'text-slate-500 hover:bg-fill-quaternary hover:text-rose-600',
+            : 'hv-heart text-slate-500 hover:bg-rose-50 hover:text-rose-600',
         )}
       >
         {liked ? (
@@ -97,7 +97,7 @@ export function LikeButton({
         'tappable inline-flex h-9 items-center gap-1.5 rounded-full px-3.5 text-subhead font-medium tabular-nums transition-colors duration-150 ease-ios',
         liked
           ? 'bg-rose-50 text-rose-600 hover:bg-rose-100'
-          : 'bg-fill-tertiary text-slate-600 hover:bg-fill-secondary hover:text-rose-600',
+          : 'hv-heart bg-fill-tertiary text-slate-600 hover:bg-rose-50 hover:text-rose-600',
       )}
     >
       {liked ? (
@@ -171,7 +171,7 @@ export function BookmarkButton({
         'tappable inline-flex h-9 w-9 items-center justify-center rounded-full transition-colors duration-150 ease-ios',
         saved
           ? 'bg-accent-50 text-accent-600'
-          : 'bg-fill-tertiary text-slate-600 hover:bg-fill-secondary hover:text-accent-600',
+          : 'bg-fill-tertiary text-slate-600 hover:bg-accent-50 hover:text-accent-700',
       )}
     >
       {saved ? (

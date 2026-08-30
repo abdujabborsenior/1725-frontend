@@ -37,7 +37,7 @@ export function FollowListModal({ open, onClose, userId, mode }: Props) {
           ))
         ) : (
           <div className="py-12 text-center">
-            <Users className="mx-auto mb-2 h-7 w-7 text-slate-300" />
+            <span className="mx-auto mb-3 flex h-12 w-12 items-center justify-center rounded-ios-lg bg-accent-50 text-accent-500"><Users className="h-6 w-6" /></span>
             <p className="text-subhead text-slate-500">
               {mode === 'followers' ? 'Hali obunachilar yo‘q' : 'Hali hech kimga obuna bo‘lmagan'}
             </p>

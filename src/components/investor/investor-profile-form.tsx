@@ -41,7 +41,7 @@ function Chip({
         'tappable rounded-full px-3.5 py-1.5 text-footnote font-medium transition-colors duration-150',
         active
           ? 'bg-accent-600 text-white'
-          : 'bg-fill-tertiary text-slate-600 hover:bg-fill-secondary',
+          : 'bg-fill-tertiary text-slate-600 hover:bg-accent-50 hover:text-accent-700',
       )}
     >
       {children}
@@ -168,7 +168,7 @@ export function InvestorProfileForm({ initial }: { initial?: InvestorProfile | n
                 'tappable rounded-ios-md px-3.5 py-3 text-left transition-colors duration-150',
                 kind === k
                   ? 'bg-accent-600 text-white'
-                  : 'bg-white text-brand-900 hover:bg-fill-tertiary',
+                  : 'bg-white text-brand-900 hover:bg-accent-50 hover:text-accent-700',
               )}
             >
               <span className="block text-subhead font-medium">
@@ -177,7 +177,7 @@ export function InvestorProfileForm({ initial }: { initial?: InvestorProfile | n
               <span
                 className={cn(
                   'mt-0.5 block text-caption-1',
-                  kind === k ? 'text-white/80' : 'text-slate-500',
+                  kind === k ? 'text-white/95' : 'text-slate-500',
                 )}
               >
                 {INVESTOR_KIND_HINT[k]}

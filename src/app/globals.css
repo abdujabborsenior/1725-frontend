@@ -99,6 +99,21 @@
   --dur-micro: 150ms;
   --dur-base: 250ms;
   --dur-sheet: 420ms;
+
+  /* ── Hover tili ("Yorug'lik") ────────────────────────────────────────
+     Hover HECH QACHON xiralashtirmaydi: sirt yorishadi, brend tinti
+     ko'tariladi, ink to'qlashadi. Butun mahsulot shu tokenlardan oladi —
+     tint bir joydan o'zgarsa, hamma joyda birdek o'zgaradi. */
+  --dur-hover: 200ms;
+  --hv-tint: rgba(0, 122, 255, 0.09);
+  --hv-tint-strong: rgba(0, 122, 255, 0.16);
+  --hv-tint-ink: #0059b3; /* accent-700 — tint ustida AA */
+  --hv-ink: #1d1d1f;
+  --hv-rail: #007aff;
+  --hv-shadow:
+    0 10px 24px -14px rgba(0, 0, 0, 0.38), 0 2px 6px -3px rgba(0, 0, 0, 0.14);
+  --hv-shadow-tint:
+    0 10px 26px -14px rgba(0, 113, 227, 0.55), 0 2px 6px -3px rgba(0, 113, 227, 0.2);
 }
 
 * {
@@ -295,8 +310,31 @@ select:-webkit-autofill {
   background: var(--ios-gray6);
 }
 @media (hover: hover) and (pointer: fine) {
+  /* Kulrang yuvindi EMAS — brend tinti: qatorlar sahifadagi boshqa kulrang
+     sirtlardan ajralib turadi va hover "o'chgan" emas, "yongan" bo'ladi. */
   .ios-row:hover {
-    background: #f7f7fa;
+    background: rgba(0, 122, 255, 0.06);
+  }
+  /* Oshkor qilish chevroni qatordagi harakatga qo'shiladi: rangga kiradi
+     va yo'nalish bo'yicha siljiydi (iOS'da qator "tegishga tayyor"). */
+  .ios-row:hover .ios-chevron,
+  .hv-row:hover .ios-chevron {
+    color: var(--hv-tint-ink);
+    transform: translateX(2px);
+  }
+}
+.ios-chevron {
+  transition:
+    color var(--dur-hover) var(--ease-ios),
+    transform var(--dur-hover) var(--ease-ios);
+}
+@media (prefers-reduced-motion: reduce) {
+  .ios-chevron {
+    transition: none;
+  }
+  .ios-row:hover .ios-chevron,
+  .hv-row:hover .ios-chevron {
+    transform: none;
   }
 }
 /* Bo'lim sarlavhasi — iOS'da KATTA HARF, kichik, ikkilamchi */
@@ -329,25 +367,22 @@ select:-webkit-autofill {
     background-color var(--dur-micro) var(--ease-ios);
 }
 
-/* ═══ HOVER — TIZIMLI ZAXIRA (faqat kursorli qurilma) ══════════════════
-   QOIDA: kursor ostidagi HAR BIR boshqaruv javob berishi shart — "o'lik"
-   element qolmaydi. `.tappable` butun mahsulotdagi boshqaruvlarni belgilab
-   turgani uchun hover ham shu YAGONA seam'da beriladi:
-     · foni bor boshqaruv (to'ldirilgan yoki tint tugma) — foni to'qlashadi
-       (`brightness`): maketga ta'sir qilmaydi, mavjud soya/chegara bilan
-       to'qnashmaydi va gradient sirtlarda ham to'g'ri ishlaydi;
-     · fonsiz boshqaruv (matn/ikonka) — iOS "plain button" kabi xiralashadi.
-   Komponent O'ZINING `hover:` utilitasini e'lon qilgan bo'lsa — bu zaxira
-   o'chadi (ikki karra effekt yo'q), ya'ni aniq sozlangan rang doim ustun.
-   Guard'lar `:where()` ichida — spetsifikatsiya (0,2,0) bo'lib qoladi va
-   quyidagi `:active` (bosish holati) hover'dan ustun turaveradi. */
-/* Zaxiradan CHIQARILADIGANLAR: hover'ni o'zi boshqaradigan elementlar —
-   Tailwind `hover:` utilitasi yozilganlar va o'z hover qoidasi bor tizim
-   klasslari (CTA, karta, bar tugmasi, yuborish, segment, ro'yxat qatori).
-   Aks holda ikki effekt ustma-ust tushardi (masalan CTA hero tugmasi
-   accent-700 ga o'tib, yana brightness bilan qorayib ketardi). */
+/* ═══ HOVER TILI — "YORUG'LIK" (faqat kursorli qurilma) ════════════════
+   QOIDA: hover HECH QACHON xiralashtirmaydi. Eski zaxira `opacity: .68` va
+   `filter: brightness(.94)` bilan ishlar edi — kursor ostida boshqaruv
+   XIRALASHIB qolardi (o'chgan, arzon ko'rinish). Yangi tamoyil teskari:
+   kursor ostida sirt YORISHADI, brend tinti ko'tariladi, ink to'qlashadi.
+
+   Uch pog'onali zaxira (spetsifikatsiya `:where()` bilan 0 da ushlanadi —
+   komponentning O'Z `hover:` utilitasi yoki tizim klassi doim ustun):
+     1) fonsiz boshqaruv        → ink to'qlashadi
+     2) + radiusi bor           → orqasida BREND TINTI plate bo'lib chiqadi
+                                  (kulrang yuvindi emas — mahsulot rangi)
+     3) foni bor (to'ldirilgan) → yumshoq nur + bir qadam yorishish
+   `:active` shu blokdan KEYIN turadi va doim ustun qoladi. */
 @media (hover: hover) and (pointer: fine) {
-  .tappable:where(
+  /* 1 — ink to'qlashadi */
+  :where(.tappable, .btn-lift, .tappable-scale):where(
       :not(
           [class*='hover:'],
           .cta-fill,
@@ -357,38 +392,17 @@ select:-webkit-autofill {
           .btn-send,
           .segment,
           .ios-row,
-          :disabled
-        )
-    ):hover,
-  .btn-lift:where(
-      :not(
-          [class*='hover:'],
-          .cta-fill,
-          .cta-ghost,
-          .card-today,
-          .btn-round,
-          .btn-send,
-          .segment,
-          .ios-row,
-          :disabled
-        )
-    ):hover,
-  .tappable-scale:where(
-      :not(
-          [class*='hover:'],
-          .cta-fill,
-          .cta-ghost,
-          .card-today,
-          .btn-round,
-          .btn-send,
-          .segment,
-          .ios-row,
+          .hv-row,
+          .hv-pop,
+          .hv-tile,
           :disabled
         )
     ):hover {
-    opacity: 0.68;
+    color: var(--hv-ink);
   }
-  .tappable:where(
+
+  /* 2 — fonsiz, lekin radiusi bor: brend tinti plate */
+  :where(.tappable, .btn-lift, .tappable-scale):where(
       :not(
           [class*='hover:'],
           .cta-fill,
@@ -398,10 +412,17 @@ select:-webkit-autofill {
           .btn-send,
           .segment,
           .ios-row,
+          .hv-row,
+          .hv-pop,
+          .hv-tile,
           :disabled
         )
-    ):where([class*='bg-'], [class*='gradient-']):hover,
-  .btn-lift:where(
+    ):where([class*='rounded']):where(:not([class*='bg-'], [class*='gradient-'])):hover {
+    background-color: var(--hv-tint);
+  }
+
+  /* 3 — foni bor: nur + yorishish (qorayish YO'Q) */
+  :where(.tappable, .btn-lift, .tappable-scale):where(
       :not(
           [class*='hover:'],
           .cta-fill,
@@ -411,31 +432,345 @@ select:-webkit-autofill {
           .btn-send,
           .segment,
           .ios-row,
-          :disabled
-        )
-    ):where([class*='bg-'], [class*='gradient-']):hover,
-  .tappable-scale:where(
-      :not(
-          [class*='hover:'],
-          .cta-fill,
-          .cta-ghost,
-          .card-today,
-          .btn-round,
-          .btn-send,
-          .segment,
-          .ios-row,
+          .hv-row,
+          .hv-pop,
+          .hv-tile,
           :disabled
         )
     ):where([class*='bg-'], [class*='gradient-']):hover {
-    opacity: 1;
-    filter: brightness(0.94);
+    filter: brightness(1.03);
+    box-shadow: var(--hv-shadow);
   }
 }
 
-/* Bosish holati — hover'DAN KEYIN (bir xil spetsifikatsiya, keyingi manba). */
+/* ── Hover primitivlari — komponentlarda ATAYLAB qo'llanadi ──────────
+   Bular "oddiy hover"ning o'rnini bosadi: har biri ma'no tashiydi va
+   loyihaning yagona tint oilasida qoladi (kulrang yuvindi yo'q). */
+
+/* `.hv-row` — ro'yxat / menyu qatori.
+   Kulrang fon o'rniga: brend tinti + chap qirradan o'sib chiqadigan
+   ingichka RELS (kursor qayerdaligini ushlab turadi) + ink to'qlashadi. */
+:where(.hv-row) {
+  position: relative;
+  transition:
+    background-color var(--dur-hover) var(--ease-ios),
+    color var(--dur-hover) var(--ease-ios);
+}
+.hv-row::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 50%;
+  width: 3px;
+  height: 0;
+  transform: translateY(-50%);
+  border-radius: 0 3px 3px 0;
+  background: var(--hv-rail);
+  transition: height var(--dur-hover) var(--ease-ios);
+  pointer-events: none;
+}
+@media (hover: hover) and (pointer: fine) {
+  .hv-row:hover {
+    background-color: var(--hv-tint);
+    color: var(--hv-ink);
+  }
+  .hv-row:hover::before {
+    height: 56%;
+  }
+}
+.hv-row:active {
+  background-color: var(--hv-tint-strong);
+}
+
+/* `.hv-pop` — ikonka yoki matnli ixcham boshqaruv.
+   Orqasida tint plate ko'tariladi, glyph bir qadam kattaradi (iOS'ning
+   toolbar tugmasi hissi). Xiralashish yo'q. */
+:where(.hv-pop) {
+  position: relative;
+  transition:
+    background-color var(--dur-hover) var(--ease-ios),
+    color var(--dur-hover) var(--ease-ios);
+}
+:where(.hv-pop) > svg {
+  transition: transform var(--dur-hover) var(--ease-ios);
+}
+@media (hover: hover) and (pointer: fine) {
+  .hv-pop:hover {
+    background-color: var(--hv-tint);
+    color: var(--hv-tint-ink);
+  }
+  .hv-pop:hover > svg {
+    transform: scale(1.09);
+  }
+}
+
+/* `.hv-tile` — kvadrat/kartochka shaklidagi bosiladigan blok (ilova
+   ikonkasi, statistika katagi). Sirt ko'tariladi: tint + yumshoq nur. */
+:where(.hv-tile) {
+  transition:
+    background-color var(--dur-hover) var(--ease-ios),
+    box-shadow var(--dur-hover) var(--ease-ios),
+    color var(--dur-hover) var(--ease-ios);
+}
+@media (hover: hover) and (pointer: fine) {
+  .hv-tile:hover {
+    background-color: var(--hv-tint);
+    box-shadow: var(--hv-shadow-tint);
+  }
+}
+
+/* `.hv-sheen` — sirt bo'ylab BIR MARTA o'tadigan yorug'lik (specular).
+   Mahsulotning imzo harakati: "hover = yorug'lik keldi". Cheksiz emas —
+   bir marta, 0.9s, faqat kursor kirganda. */
+:where(.hv-sheen) {
+  position: relative;
+  overflow: hidden;
+}
+.hv-sheen::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: linear-gradient(
+    105deg,
+    transparent 38%,
+    rgba(255, 255, 255, 0.34) 50%,
+    transparent 62%
+  );
+  transform: translateX(-130%);
+  opacity: 0;
+}
+@media (hover: hover) and (pointer: fine) {
+  .hv-sheen:not(:disabled):hover::after {
+    animation: hvSheen 0.9s var(--ease-ios);
+  }
+}
+@keyframes hvSheen {
+  0% {
+    transform: translateX(-130%);
+    opacity: 0;
+  }
+  18% {
+    opacity: 1;
+  }
+  100% {
+    transform: translateX(130%);
+    opacity: 0;
+  }
+}
+
+/* `.hv-bulb` — "Foydali" tugmasi: chiroq belgisi kursorda bir qadam
+   kattaradi (yoqishga taklif). */
+:where(.hv-bulb) > svg {
+  transition: transform var(--dur-hover) var(--ease-ios);
+}
+@media (hover: hover) and (pointer: fine) {
+  .hv-bulb:hover > svg {
+    transform: scale(1.12);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .hv-bulb:hover > svg {
+    transform: none;
+  }
+}
+
+/* `.hv-heart` — "yoqtirish" tugmasi: bosishdan OLDIN yurak bir qadam
+   kattaradi (issiqlik ishorasi). Bosilgandan keyingi `heart-pop` bilan
+   bir tilda, lekin undan tinchroq. */
+:where(.hv-heart) > svg {
+  transition: transform var(--dur-hover) var(--ease-ios);
+}
+@media (hover: hover) and (pointer: fine) {
+  .hv-heart:hover > svg {
+    transform: scale(1.14);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .hv-heart:hover > svg {
+    transform: none;
+  }
+}
+
+/* `.hv-avatar` — avatar havolasi.
+   Ilgari `hover:opacity-80` edi — odam rasmi XIRALASHIB, "o'chgan" ko'rinardi.
+   Endi teskari: avatar bir qadam yaqinlashadi va atrofida brend halqasi
+   yonadi (iOS'dagi "tanlangan kontakt" ishorasi). */
+:where(.hv-avatar) {
+  display: inline-flex;
+  border-radius: 9999px;
+  transition:
+    transform var(--dur-hover) var(--ease-ios),
+    box-shadow var(--dur-hover) var(--ease-ios);
+}
+@media (hover: hover) and (pointer: fine) {
+  .hv-avatar:hover {
+    transform: scale(1.06);
+    box-shadow: 0 0 0 3px rgba(0, 122, 255, 0.2);
+  }
+}
+.hv-avatar:active {
+  transform: scale(0.98);
+}
+
+/* `.hv-media` — bosiladigan rasm/muqova.
+   Xiralashtirish o'rniga: rasm ichkarida sekin kattaradi va ustiga yumshoq
+   yorug'lik tushadi (kontent YO'QOLMAYDI, aksincha yaqinlashadi). */
+:where(.hv-media) {
+  overflow: hidden;
+  transition: box-shadow var(--dur-hover) var(--ease-ios);
+}
+:where(.hv-media) img,
+:where(.hv-media) video {
+  transition: transform 0.7s var(--ease-ios);
+}
+@media (hover: hover) and (pointer: fine) {
+  .hv-media:hover {
+    box-shadow: var(--hv-shadow);
+  }
+  .hv-media:hover img,
+  .hv-media:hover video {
+    transform: scale(1.04);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :where(.hv-avatar),
+  :where(.hv-media) img,
+  :where(.hv-media) video {
+    transition: none;
+  }
+  .hv-avatar:hover,
+  .hv-media:hover img,
+  .hv-media:hover video {
+    transform: none;
+  }
+}
+
+/* `.hv-link` — matnli havola.
+   `hover:underline` bir zumda paydo bo'ladigan chiziq edi (brauzer standarti,
+   "ishlangan" his bermaydi). Endi chiziq chapdan o'ngga O'SIB chiqadi va
+   havolaning o'z rangida bo'ladi — mayda, lekin sifat farqi shu detallarda. */
+:where(.hv-link) {
+  position: relative;
+  text-decoration: none;
+}
+.hv-link::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -1px;
+  height: 1.5px;
+  border-radius: 1px;
+  background: currentColor;
+  opacity: 0.85;
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform var(--dur-hover) var(--ease-ios);
+  pointer-events: none;
+}
+@media (hover: hover) and (pointer: fine) {
+  .hv-link:hover::after {
+    transform: scaleX(1);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .hv-link::after {
+    transition: none;
+  }
+}
+
+/* `.nav-pill` — navigatsiyaning suzuvchi kapsulasi (signature).
+   Faol band ostida turadi; kursor boshqa bandga kirsa O'SHA yerga sirpanib
+   boradi va kursor chiqishi bilan qaytadi. Ya'ni faol holat ham, hover ham
+   bitta jonli element bilan aytiladi — takroriy kulrang fon kerak emas. */
+.nav-pill {
+  position: absolute;
+  left: 0;
+  top: 50%;
+  height: 32px;
+  border-radius: 9999px;
+  background: rgba(0, 122, 255, 0.14);
+  box-shadow: inset 0 0 0 1px rgba(0, 122, 255, 0.18);
+  opacity: 0;
+  pointer-events: none;
+  transition:
+    transform 0.38s var(--ease-ios),
+    width 0.38s var(--ease-ios),
+    opacity 0.22s var(--ease-ios),
+    background-color 0.22s var(--ease-ios),
+    box-shadow 0.22s var(--ease-ios);
+}
+.nav-pill-on {
+  opacity: 1;
+}
+/* Kursor boshqa bandda — kapsula "oldindan ko'rsatish" rejimida: yengilroq
+   tint, ichki hoshiya yo'q (faol holat bilan chalkashmasin). */
+.nav-pill-preview {
+  background: rgba(0, 122, 255, 0.08);
+  box-shadow: none;
+}
+/* Kursor faol bandning O'ZIDA — kapsula bir qadam to'qlashadi. */
+.nav-pill-hot {
+  background: rgba(0, 122, 255, 0.2);
+  box-shadow: inset 0 0 0 1px rgba(0, 122, 255, 0.24);
+}
+
+/* `.hv-logo` — brend belgisi: kursor ostida belgi bir qadam yaqinlashadi
+   (yozuv qimirlamaydi — sarlavha "sakramaydi"). */
+:where(.hv-logo) svg {
+  transition: transform var(--dur-hover) var(--ease-ios);
+}
+@media (hover: hover) and (pointer: fine) {
+  .hv-logo:hover svg {
+    transform: scale(1.07);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .hv-logo:hover svg {
+    transform: none;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .nav-pill {
+    transition: opacity 0.15s linear;
+  }
+}
+
+/* `.hv-arrow` — havola ichidagi strelka/chevron: kursorda yo'nalish beradi. */
+:where(.hv-arrow) {
+  transition: transform var(--dur-hover) var(--ease-ios);
+}
+@media (hover: hover) and (pointer: fine) {
+  :where(a, button):hover > .hv-arrow,
+  :where(a, button):hover .hv-arrow {
+    transform: translateX(3px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hv-row::before,
+  :where(.hv-pop) > svg,
+  :where(.hv-arrow) {
+    transition: none;
+  }
+  .hv-sheen:not(:disabled):hover::after {
+    animation: none;
+  }
+}
+
+
+/* Bosish holati — hover'DAN KEYIN (bir xil spetsifikatsiya, keyingi manba).
+   Bosishда xiralashish iOS'ning O'Z tili (plain button), lekin FONI BOR
+   tugma shaffoflashsa arzon ko'rinadi — u o'rniga bir qadam to'qlashadi. */
 .tappable:active {
   opacity: 0.55;
   filter: none;
+}
+.tappable:where([class*='bg-'], [class*='gradient-']):active {
+  opacity: 1;
+  filter: brightness(0.93);
 }
 .tappable-scale:active {
   transform: scale(0.96);
@@ -771,7 +1106,8 @@ select:-webkit-autofill {
 @media (hover: hover) and (pointer: fine) {
   /* Tanlanmagan segment — oq kapsulaning bir qadam oldingi ko'rinishi */
   .segment:not(.segment-active):hover {
-    background: rgba(255, 255, 255, 0.55);
+    background: rgba(255, 255, 255, 0.6);
+    color: var(--hv-tint-ink);
   }
   /* Tanlangan segment — bosishning ma'nosi yo'q, shuning uchun javob
      PICHIRLAB beriladi: kapsula soyasi bir oz chuqurlashadi (rang o'zgarmaydi). */
@@ -784,8 +1120,11 @@ select:-webkit-autofill {
 .segment-active {
   background: #ffffff;
   font-weight: 600;
+  /* Tanlangan band BREND rangida: kulrang trek ustida qaysi biri
+     tanlanganini rang ham aytadi (faqat oq kapsula emas). */
+  color: var(--hv-tint-ink);
   box-shadow:
-    0 3px 8px rgba(0, 0, 0, 0.12),
+    0 3px 8px rgba(0, 66, 140, 0.16),
     0 3px 1px rgba(0, 0, 0, 0.04);
 }
 
@@ -798,7 +1137,8 @@ select:-webkit-autofill {
 }
 @media (hover: hover) and (pointer: fine) {
   .ios-search:hover {
-    background: rgba(118, 118, 128, 0.16);
+    background: rgba(0, 122, 255, 0.08);
+    color: var(--hv-tint-ink);
   }
 }
 .ios-search:focus-within {
@@ -992,7 +1332,9 @@ select:-webkit-autofill {
   padding-right: 4px;
   font-size: 11px;
   line-height: 1.2;
-  color: var(--ios-label-tertiary, #a1a1a6);
+  /* Tertiary (#a1a1a6) kanvas ustida 2.3:1 — amalda o'qilmasdi.
+     systemGray (#8e8e93) ikkilamchi bo'lib qoladi, lekin ko'rinadi. */
+  color: #8e8e93;
   animation: statusIn 0.3s var(--ease-ios) both;
 }
 @keyframes statusIn {
@@ -1267,10 +1609,20 @@ select:-webkit-autofill {
 @media (hover: hover) {
   .card-today:hover {
     transform: scale(1.015) translateZ(0);
+    /* Soyaga BREND halqasi qo'shildi: karta shunchaki ko'tarilmaydi, u
+       "yonadi" — hover tili butun mahsulotda bir xil (yorug'lik). */
     box-shadow:
-      0 18px 44px -14px rgba(0, 0, 0, 0.16),
-      0 4px 12px rgba(0, 0, 0, 0.05);
+      0 18px 44px -14px rgba(0, 40, 90, 0.18),
+      0 4px 12px rgba(0, 0, 0, 0.05),
+      inset 0 0 0 1px rgba(0, 122, 255, 0.14);
   }
+  /* Karta sarlavhasi havola kabi tintga kiradi — "bu karta bosiladi". */
+  .card-today:hover .card-title {
+    color: var(--hv-tint-ink);
+  }
+}
+.card-title {
+  transition: color var(--dur-hover) var(--ease-ios);
 }
 .card-today:active {
   transform: scale(0.977);

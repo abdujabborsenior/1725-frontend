@@ -129,7 +129,7 @@ export default function ProfilePage() {
   if (!user) return null;
 
   const details = [
-    user.age != null && { icon: User, tint: 'bg-slate-400', label: 'Yosh', value: String(user.age) },
+    user.age != null && { icon: User, tint: 'bg-iris-500', label: 'Yosh', value: String(user.age) },
     user.region && { icon: MapPin, tint: 'bg-emerald-400', label: 'Viloyat', value: user.region },
     user.district && { icon: MapPin, tint: 'bg-emerald-400', label: 'Tuman', value: user.district },
     user.school && { icon: School, tint: 'bg-iris-500', label: 'Maktab', value: user.school },
@@ -148,7 +148,7 @@ export default function ProfilePage() {
         <Link
           href="/settings"
           aria-label="Sozlamalar"
-          className="tappable mt-1 flex h-10 w-10 items-center justify-center rounded-full bg-fill-tertiary text-slate-600"
+          className="tappable hv-pop mt-1 flex h-10 w-10 items-center justify-center rounded-full bg-accent-50 text-accent-600 hover:bg-accent-100"
         >
           <Settings className="h-[21px] w-[21px]" />
         </Link>
@@ -291,7 +291,7 @@ export default function ProfilePage() {
                   </span>
                 </span>
                 <ProblemStatusPill status={p.status} className="shrink-0" />
-                <ChevronRight className="h-[15px] w-[15px] shrink-0 text-slate-300" strokeWidth={3} />
+                <ChevronRight className="ios-chevron h-[15px] w-[15px] shrink-0 text-slate-300" strokeWidth={3} />
               </Link>
             ))}
           </div>
@@ -338,7 +338,7 @@ export default function ProfilePage() {
                 <Wallet className="h-[17px] w-[17px]" />
               </span>
               <span className="flex-1 text-body text-brand-900">Obunam</span>
-              <ChevronRight className="h-[15px] w-[15px] shrink-0 text-slate-300" strokeWidth={3} />
+              <ChevronRight className="ios-chevron h-[15px] w-[15px] shrink-0 text-slate-300" strokeWidth={3} />
             </Link>
           )}
           {/* Bog'lanish so'rovlari — faqat kelgan bo'lsa ko'rinadi */}
@@ -353,7 +353,7 @@ export default function ProfilePage() {
               <span className="rounded-full bg-accent-600 px-2 py-0.5 text-caption-2 font-semibold text-white">
                 {pendingIntros?.count}
               </span>
-              <ChevronRight className="h-[15px] w-[15px] shrink-0 text-slate-300" strokeWidth={3} />
+              <ChevronRight className="ios-chevron h-[15px] w-[15px] shrink-0 text-slate-300" strokeWidth={3} />
             </Link>
           )}
           {/* Investor kabineti — profil ochgan foydalanuvchilarga */}
@@ -368,7 +368,7 @@ export default function ProfilePage() {
                   {investorMe.newMatches}
                 </span>
               )}
-              <ChevronRight className="h-[15px] w-[15px] shrink-0 text-slate-300" strokeWidth={3} />
+              <ChevronRight className="ios-chevron h-[15px] w-[15px] shrink-0 text-slate-300" strokeWidth={3} />
             </Link>
           )}
           <Link href="/settings" className="ios-row">
@@ -376,7 +376,7 @@ export default function ProfilePage() {
               <Settings className="h-[17px] w-[17px]" />
             </span>
             <span className="flex-1 text-body text-brand-900">Sozlamalar</span>
-            <ChevronRight className="h-[15px] w-[15px] shrink-0 text-slate-300" strokeWidth={3} />
+            <ChevronRight className="ios-chevron h-[15px] w-[15px] shrink-0 text-slate-300" strokeWidth={3} />
           </Link>
           <button onClick={handleLogout} className="ios-row w-full text-left">
             <span className="flex h-[29px] w-[29px] shrink-0 items-center justify-center rounded-[7px] bg-amber-500 text-white">

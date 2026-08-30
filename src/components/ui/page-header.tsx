@@ -52,9 +52,15 @@ export function FilterChip({
       aria-pressed={active}
       className={cn(
         'tappable inline-flex shrink-0 items-center gap-1.5 whitespace-nowrap rounded-full px-3.5 py-1.5 text-subhead font-medium transition-colors duration-150 ease-ios',
+        // Tanlangan chip — to'ldirilgan brend kapsulasi + rangdosh nur;
+        // tanlanmagani hover'da KULRANGDAN kulrangga emas, tintga o'tadi.
+        // Tanlangan chip — to'ldirilgan brend kapsulasi. Tanlanmagani esa
+        // KULRANG PLOMBA emas, oq sirt + hairline: sahifada 10-15 chip yonma-yon
+        // turganda kulrang plombalar butun ekranni "kulrang" qilib ko'rsatardi;
+        // oq kapsulalar tinch turadi va tanlangani yaqqol ajraladi.
         active
-          ? 'bg-accent-600 text-white hover:bg-accent-700'
-          : 'bg-fill-tertiary text-slate-600 hover:bg-fill-secondary hover:text-brand-900',
+          ? 'hv-sheen bg-accent-600 text-white shadow-[0_4px_12px_-4px_rgba(0,113,227,0.5)] hover:shadow-[0_8px_20px_-8px_rgba(0,113,227,0.8)]'
+          : 'bg-white text-slate-600 ring-1 ring-slate-200 hover:bg-accent-50 hover:text-accent-700 hover:ring-accent-200',
         className,
       )}
     >
@@ -80,7 +86,9 @@ export function EmptyState({
   return (
     <div className={cn('rounded-ios-2xl bg-white px-6 py-16 text-center', className)}>
       {icon && (
-        <div className="mx-auto mb-3 flex h-12 w-12 items-center justify-center text-slate-300 [&>svg]:h-full [&>svg]:w-full">
+        /* Kulrang (slate-300) belgi "yarim o'chgan" ko'rinardi — endi brend
+           tintidagi yumshoq kvadrat: bo'sh holat ham mahsulotning bir qismi. */
+        <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-ios-lg bg-accent-50 text-accent-500 [&>svg]:h-7 [&>svg]:w-7">
           {icon}
         </div>
       )}

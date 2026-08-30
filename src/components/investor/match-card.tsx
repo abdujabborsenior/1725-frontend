@@ -85,7 +85,7 @@ export function MatchCard({ item }: { item: DealflowItem }) {
             {tone.label}
             {item.readiness && (
               <>
-                <span className="text-slate-300"> · </span>
+                <span className="text-slate-400"> · </span>
                 <span className={GRADE_TONE[item.readiness.grade]}>
                   {GRADE_LABEL[item.readiness.grade]} ({item.readiness.score})
                 </span>

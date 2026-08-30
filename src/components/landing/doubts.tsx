@@ -48,7 +48,7 @@ export function Doubts() {
                 onClick={() => setOpen(active ? null : i)}
                 aria-expanded={active}
                 aria-controls={panelId}
-                className="flex w-full items-center justify-between gap-4 px-5 py-4 text-left transition-colors duration-150 hover:bg-fill-quaternary active:bg-fill-tertiary md:px-6"
+                className="flex w-full items-center justify-between gap-4 px-5 py-4 text-left hv-row md:px-6"
               >
                 <span className="text-callout font-semibold text-brand-900 md:text-title-3">
                   {d.q}

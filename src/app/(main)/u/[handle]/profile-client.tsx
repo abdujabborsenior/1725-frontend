@@ -89,7 +89,7 @@ export function ProfileClient({ initialProfile }: { initialProfile: PublicProfil
   if (isError || !profile) {
     return (
       <div className="py-28 text-center">
-        <UserX className="mx-auto mb-3 h-10 w-10 text-slate-300" />
+        <UserX className="mx-auto mb-3 h-10 w-10 text-accent-300" />
         <p className="text-title-3 font-bold text-brand-900">Foydalanuvchi topilmadi</p>
         <p className="mt-1 text-subhead text-slate-500">Bunday username mavjud emas yoki hisob faol emas</p>
       </div>
@@ -182,7 +182,7 @@ export function ProfileClient({ initialProfile }: { initialProfile: PublicProfil
               <div className="mt-3 flex flex-wrap gap-2">
                 {profile.links.map((l) => (
                   <a key={l} href={l} target="_blank" rel="noreferrer"
-                    className="tappable inline-flex items-center gap-1 rounded-full bg-fill-tertiary px-3 py-1.5 text-footnote font-medium text-accent-700">
+                    className="tappable inline-flex items-center gap-1 rounded-full bg-accent-50 px-3 py-1.5 text-footnote font-medium text-accent-700 transition-colors hover:bg-accent-100">
                     <LinkIcon className="h-3 w-3" /> {l.replace(/^https?:\/\//, '').slice(0, 28)}
                   </a>
                 ))}
@@ -192,12 +192,12 @@ export function ProfileClient({ initialProfile }: { initialProfile: PublicProfil
             {/* Counts */}
             <div className="mt-4 flex flex-wrap items-center gap-x-6 gap-y-3">
               <button onClick={() => setListMode('followers')} className="tappable group text-left">
-                <span className="text-title-3 font-semibold tabular-nums text-brand-900">{followers.toLocaleString('uz')}</span>
-                <span className="ml-1 text-subhead text-slate-500">obunachi</span>
+                <span className="text-title-3 font-semibold tabular-nums text-brand-900 transition-colors duration-200 group-hover:text-accent-700">{followers.toLocaleString('uz')}</span>
+                <span className="ml-1 text-subhead text-slate-500 transition-colors duration-200 group-hover:text-accent-700">obunachi</span>
               </button>
               <button onClick={() => setListMode('following')} className="tappable group text-left">
-                <span className="text-title-3 font-semibold tabular-nums text-brand-900">{profile.followingCount.toLocaleString('uz')}</span>
-                <span className="ml-1 text-subhead text-slate-500">obuna</span>
+                <span className="text-title-3 font-semibold tabular-nums text-brand-900 transition-colors duration-200 group-hover:text-accent-700">{profile.followingCount.toLocaleString('uz')}</span>
+                <span className="ml-1 text-subhead text-slate-500 transition-colors duration-200 group-hover:text-accent-700">obuna</span>
               </button>
               {/* Asoschiga ovoz — toggle (o'z profilida faqat hisob) */}
               {profile.isFounder && (

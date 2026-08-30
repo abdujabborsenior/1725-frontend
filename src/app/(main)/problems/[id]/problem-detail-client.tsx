@@ -23,6 +23,7 @@ import { SolutionHelpfulButton } from '@/components/solutions/helpful-button';
 import { PROBLEM_STATUS_META } from '@/lib/constants';
 import { Avatar } from '@/components/ui/avatar';
 import { cn } from '@/lib/utils';
+import { categoryTint } from '@/lib/category-tint';
 import { ProblemLikeButton } from '@/components/problems/like-button';
 import { ProblemShareModal } from '@/components/problems/share-modal';
 import { ReportButton } from '@/components/reports/report-dialog';
@@ -58,7 +59,7 @@ function CommentItem({
       <div className="flex-1 min-w-0">
         <div className="flex items-center gap-2 mb-1">
           {comment.author?.username ? (
-            <Link href={`/u/${comment.author.username}`} className="text-subhead font-semibold text-brand-900 hover:underline">
+            <Link href={`/u/${comment.author.username}`} className="text-subhead font-semibold text-brand-900 hv-link">
               {comment.author.fullName}
             </Link>
           ) : (
@@ -87,7 +88,7 @@ function CommentItem({
           onClick={() => remove()}
           disabled={isPending}
           aria-label="Izohni o'chirish"
-          className="h-7 w-7 flex items-center justify-center rounded-lg text-slate-400 hover:text-rose-600 hover:bg-rose-50 opacity-0 group-hover:opacity-100 transition-all flex-shrink-0"
+          className="h-7 w-7 flex items-center justify-center rounded-lg text-slate-400 hover:text-rose-600 hover:bg-rose-50 opacity-0 transition-all focus-visible:opacity-100 group-hover:opacity-100 flex-shrink-0"
         >
           <Trash2 className="h-3.5 w-3.5" />
         </button>
@@ -227,7 +228,7 @@ function SolutionForm({
         <h3 className="text-callout font-semibold text-brand-900 flex items-center gap-2">
           <CheckCircle2 className="h-4 w-4 text-accent-600" /> Yechim taqdim etish
         </h3>
-        <button onClick={onClose} aria-label="Yopish" className="text-slate-400 hover:text-brand-900 transition-colors">
+        <button onClick={onClose} aria-label="Yopish" className="text-slate-500 transition-colors hover:text-accent-700">
           <X className="h-4 w-4" />
         </button>
       </div>
@@ -395,7 +396,12 @@ export function ProblemDetailClient({ initialProblem }: { initialProblem: Proble
         <div className="relative mb-5 flex flex-wrap items-center gap-3">
           <ProblemStatusPill status={problem.status} />
           {problem.category && (
-            <span className="rounded-full bg-fill-tertiary px-2.5 py-1 text-caption-1 font-medium text-slate-500">
+            <span
+              className={cn(
+                'rounded-full px-2.5 py-1 text-caption-1 font-medium',
+                categoryTint(problem.category).chip,
+              )}
+            >
               {problem.category}
             </span>
           )}
@@ -419,7 +425,7 @@ export function ProblemDetailClient({ initialProblem }: { initialProblem: Proble
           <div className="mt-5 grid grid-cols-2 md:grid-cols-3 gap-3">
             {problem.imageUrls.map((url, i) => (
               <a key={i} href={url} target="_blank" rel="noopener noreferrer"
-                className="aspect-video overflow-hidden rounded-ios-md bg-fill-tertiary transition-opacity hover:opacity-90">
+                className="hv-media aspect-video rounded-ios-md bg-fill-tertiary">
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img src={url} alt="Muammo rasmi" className="w-full h-full object-cover"
                   onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }} />
@@ -446,7 +452,7 @@ export function ProblemDetailClient({ initialProblem }: { initialProblem: Proble
           />
           <button
             onClick={() => setShareOpen(true)}
-            className="tappable inline-flex h-10 items-center gap-2 rounded-full bg-fill-tertiary px-4 text-subhead font-semibold text-accent-700"
+            className="tappable inline-flex h-10 items-center gap-2 rounded-full bg-accent-50 px-4 text-subhead font-semibold text-accent-700 transition-colors hover:bg-accent-100"
           >
             <Share2 className="h-4 w-4" /> Ulashish
           </button>
@@ -461,7 +467,7 @@ export function ProblemDetailClient({ initialProblem }: { initialProblem: Proble
               <Avatar src={problem.submittedBy.avatarUrl} name={problem.submittedBy.fullName} size={32} />
               <span className="text-subhead text-slate-500">
                 {problem.submittedBy.username ? (
-                  <Link href={`/u/${problem.submittedBy.username}`} className="font-semibold text-brand-900 hover:underline">
+                  <Link href={`/u/${problem.submittedBy.username}`} className="font-semibold text-brand-900 hv-link">
                     {problem.submittedBy.fullName}
                   </Link>
                 ) : (
@@ -535,7 +541,7 @@ export function ProblemDetailClient({ initialProblem }: { initialProblem: Proble
                 Izoh yozish uchun{' '}
                 <Link
                   href={`/register?next=${encodeURIComponent(`/problems/${id}`)}`}
-                  className="font-semibold text-accent-700 hover:underline"
+                  className="font-semibold text-accent-700 hv-link"
                 >
                   ro&apos;yxatdan o&apos;ting
                 </Link>
@@ -545,7 +551,7 @@ export function ProblemDetailClient({ initialProblem }: { initialProblem: Proble
 
             {comments.length === 0 ? (
               <div className="text-center py-12">
-                <MessageSquare className="h-10 w-10 text-slate-300 mx-auto mb-3" />
+                <MessageSquare className="h-10 w-10 text-accent-300 mx-auto mb-3" />
                 <p className="text-slate-500 text-subhead">Hali izoh yo&apos;q</p>
               </div>
             ) : (
@@ -563,7 +569,7 @@ export function ProblemDetailClient({ initialProblem }: { initialProblem: Proble
           <div className="space-y-4">
             {solutions.length === 0 ? (
               <div className="text-center py-12">
-                <CheckCircle2 className="h-10 w-10 text-slate-300 mx-auto mb-3" />
+                <CheckCircle2 className="h-10 w-10 text-accent-300 mx-auto mb-3" />
                 <p className="text-slate-500 text-subhead">Hali yechim yo&apos;q — birinchi bo&apos;ling!</p>
               </div>
             ) : solutions.map((s: Solution) => (
@@ -573,7 +579,7 @@ export function ProblemDetailClient({ initialProblem }: { initialProblem: Proble
                     <Avatar src={s.submittedBy?.avatarUrl} name={s.submittedBy?.fullName ?? s.fullName} size={32} />
                     <div>
                       {s.submittedBy?.username ? (
-                        <Link href={`/u/${s.submittedBy.username}`} className="text-subhead font-semibold text-brand-900 hover:underline">
+                        <Link href={`/u/${s.submittedBy.username}`} className="text-subhead font-semibold text-brand-900 hv-link">
                           {s.submittedBy?.fullName ?? s.fullName}
                         </Link>
                       ) : (
@@ -599,13 +605,13 @@ export function ProblemDetailClient({ initialProblem }: { initialProblem: Proble
                   <div className="flex flex-wrap gap-2 mt-3">
                     {s.presentationUrl && (
                       <a href={s.presentationUrl} target="_blank" rel="noopener noreferrer"
-                        className="flex items-center gap-1 text-caption-1 text-accent-700 hover:underline">
+                        className="flex items-center gap-1 text-caption-1 text-accent-700 hv-link">
                         <FileText className="h-3 w-3" /> Taqdimot
                       </a>
                     )}
                     {s.videoUrl && (
                       <a href={s.videoUrl} target="_blank" rel="noopener noreferrer"
-                        className="flex items-center gap-1 text-caption-1 text-violet-700 hover:underline">
+                        className="flex items-center gap-1 text-caption-1 text-violet-700 hv-link">
                         <Video className="h-3 w-3" /> Video
                       </a>
                     )}

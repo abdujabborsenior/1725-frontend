@@ -6,6 +6,7 @@ import { timeAgo } from '@/lib/date';
 import { ProblemStatusPill } from '@/components/ui/badge';
 import { ProblemLikeButton } from '@/components/problems/like-button';
 import { cn } from '@/lib/utils';
+import { categoryTint } from '@/lib/category-tint';
 import type { Problem } from '@/types';
 
 /**
@@ -29,7 +30,14 @@ export function ProblemCard({ problem, compact = false }: { problem: Problem; co
       <div className="mb-3 flex items-center justify-between gap-3">
         <ProblemStatusPill status={problem.status} />
         {problem.category && (
-          <span className="truncate rounded-full bg-fill-tertiary px-2.5 py-1 text-caption-1 font-medium text-slate-500">
+          <span
+            className={cn(
+              /* Soha rangi — startap kartasi bilan BIR XIL manba: bitta
+                 kategoriya butun mahsulotda bitta rangda ko'rinadi. */
+              'truncate rounded-full px-2.5 py-1 text-caption-1 font-medium',
+              categoryTint(problem.category).chip,
+            )}
+          >
             {problem.category}
           </span>
         )}
@@ -37,7 +45,7 @@ export function ProblemCard({ problem, compact = false }: { problem: Problem; co
 
       <h3
         className={cn(
-          'mb-1.5 line-clamp-2 font-semibold leading-snug text-brand-900',
+          'card-title mb-1.5 line-clamp-2 font-semibold leading-snug text-brand-900',
           compact ? 'text-callout' : 'text-title-3',
         )}
       >
@@ -104,7 +112,7 @@ export function ProblemCard({ problem, compact = false }: { problem: Problem; co
           <span className="whitespace-nowrap">
             {timeAgo(problem.createdAt)}
           </span>
-          <ChevronRight className="h-3 w-3 text-slate-300" strokeWidth={3} />
+          <ChevronRight className="ios-chevron h-3 w-3 text-slate-300" strokeWidth={3} />
         </div>
       </div>
     </article>

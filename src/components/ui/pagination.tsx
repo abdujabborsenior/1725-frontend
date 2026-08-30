@@ -18,7 +18,7 @@ export function Pagination({ page, totalPages, onChange }: PaginationProps) {
   const pages = Array.from({ length: windowSize }, (_, i) => start + i);
 
   const arrow =
-    'flex h-9 w-9 items-center justify-center rounded-ios text-slate-600 transition-colors duration-150 ease-ios enabled:hover:bg-white/70 active:bg-fill disabled:opacity-30';
+    'hv-pop flex h-9 w-9 items-center justify-center rounded-ios text-slate-600 enabled:hover:bg-white enabled:hover:text-accent-700 active:bg-fill disabled:opacity-30';
 
   return (
     <div className="flex justify-center pt-2">
@@ -38,9 +38,11 @@ export function Pagination({ page, totalPages, onChange }: PaginationProps) {
             aria-current={p === page ? 'page' : undefined}
             className={cn(
               'flex h-9 min-w-9 items-center justify-center rounded-ios px-2.5 text-subhead tabular-nums transition-all duration-150 ease-ios active:scale-95',
+              // Joriy sahifa — brend kapsulasi (oq/kulrang emas): qayerdaligi
+              // bir qarashda ko'rinadi.
               p === page
-                ? 'bg-white font-semibold text-brand-900 shadow-segment hover:shadow-card-hover'
-                : 'font-medium text-slate-600 hover:bg-white/70',
+                ? 'hv-sheen bg-accent-600 font-semibold text-white shadow-[0_4px_12px_-4px_rgba(0,113,227,0.55)] hover:shadow-[0_8px_18px_-6px_rgba(0,113,227,0.7)]'
+                : 'font-medium text-slate-600 hover:bg-white hover:text-accent-700',
             )}
           >
             {p}

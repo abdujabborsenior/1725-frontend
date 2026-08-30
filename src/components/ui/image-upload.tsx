@@ -76,7 +76,7 @@ export function ImageUpload({
           <button
             type="button"
             onClick={() => onChange(null)}
-            className="absolute top-2 right-2 h-8 w-8 flex items-center justify-center rounded-ios bg-white/90 backdrop-blur text-slate-600 hover:text-rose-600 shadow-card opacity-0 group-hover:opacity-100 transition-opacity"
+            className="absolute top-2 right-2 h-8 w-8 flex items-center justify-center rounded-ios bg-white/90 backdrop-blur text-slate-600 hover:text-rose-600 shadow-card opacity-0 transition-opacity focus-visible:opacity-100 group-hover:opacity-100"
             aria-label="O'chirish"
           >
             <X className="h-4 w-4" />

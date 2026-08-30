@@ -140,7 +140,7 @@ export const DETAIL_TONE: Record<MatchDetailKey, string> = {
   partial: 'text-amber-600',
   open: 'text-slate-500',
   none: 'text-rose-500',
-  unknown: 'text-slate-400',
+  unknown: 'text-slate-500',
 };
 
 /* ── Tayyorlik tahlili ────────────────────────────────────────── */

@@ -66,7 +66,7 @@ export default function NotificationsPage() {
         action={
           <button
             onClick={markAll}
-            className="tappable inline-flex h-9 items-center gap-1.5 rounded-full bg-fill-tertiary px-3.5 text-subhead font-medium text-slate-600"
+            className="tappable inline-flex h-9 items-center gap-1.5 rounded-full bg-fill-tertiary px-3.5 text-subhead font-medium text-slate-600 transition-colors hover:bg-accent-50 hover:text-accent-700"
           >
             <CheckCheck className="h-4 w-4" /> O&apos;qildim
           </button>

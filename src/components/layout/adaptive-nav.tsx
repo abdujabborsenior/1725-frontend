@@ -20,6 +20,12 @@ import { cn } from '@/lib/utils';
 const useIsoLayoutEffect =
   typeof window === 'undefined' ? useEffect : useLayoutEffect;
 
+interface PillRect {
+  left: number;
+  width: number;
+  on: boolean;
+}
+
 export interface NavItem {
   href: string;
   label: string;
@@ -54,6 +60,24 @@ export function AdaptiveNav({
   // Server va birinchi render: hammasi ko'rinadi (hidratsiya mos bo'lsin),
   // so'ng bo'yashdan oldin haqiqiy o'lchov bo'yicha qisqartiriladi.
   const [visibleCount, setVisibleCount] = useState(items.length);
+  /* Suzuvchi kapsula (signature): kursor qaysi bandda bo'lsa o'sha yerga
+     SIRPANIB boradi, kursor chiqsa faol bandga qaytadi. Shu bilan faol
+     holat ham, hover ham bitta jonli element bilan aytiladi — kulrang
+     yuvindi ham, "o'lik" band ham qolmaydi. */
+  const [hovered, setHovered] = useState<number | null>(null);
+  const [pill, setPill] = useState<PillRect>({ left: 0, width: 0, on: false });
+  // `ready` bo'lgunicha faol band O'Z fonini ko'rsatadi (SSR/birinchi bo'yash
+  // uchun) va kapsula animatsiyasiz joylashadi — chetdan "uchib kelmaydi".
+  const [ready, setReady] = useState(false);
+
+  const visible = items.slice(0, visibleCount);
+  const hidden = items.slice(visibleCount);
+
+  // Kapsula manzili: ko'rinadigan bandlar, keyin (bo'lsa) «•••» tugmasi.
+  let activeIndex = visible.findIndex((item) => isActive(pathname, item.href));
+  if (activeIndex < 0 && hidden.some((item) => isActive(pathname, item.href))) {
+    activeIndex = visible.length;
+  }
 
   const measure = useCallback(() => {
     const nav = navRef.current;
@@ -92,6 +116,40 @@ export function AdaptiveNav({
     setVisibleCount(Math.max(fits, ends.length > 0 ? 1 : 0));
   }, []);
 
+  const syncPill = useCallback(
+    (activeIndex: number, hoverIndex: number | null) => {
+      const nav = navRef.current;
+      if (!nav) return;
+      const nodes = nav.querySelectorAll<HTMLElement>('[data-nav-item]');
+      const index = hoverIndex ?? activeIndex;
+      const node = index >= 0 ? nodes[index] : undefined;
+      if (!node) {
+        setPill((prev) => (prev.on ? { ...prev, on: false } : prev));
+        return;
+      }
+      /* `offsetLeft` EMAS: «•••» tugmasi o'zining `relative` o'ramida turadi,
+         ya'ni uning offsetParent'i nav emas — kapsula noto'g'ri joyga tushardi.
+         Ekran koordinatalari farqi offsetParent'ga umuman bog'liq emas. */
+      const navBox = nav.getBoundingClientRect();
+      const box = node.getBoundingClientRect();
+      const next = {
+        left: Math.round(box.left - navBox.left),
+        width: Math.round(box.width),
+        on: true,
+      };
+      setPill((prev) =>
+        prev.left === next.left && prev.width === next.width && prev.on
+          ? prev
+          : next,
+      );
+      setReady(true);
+    },
+    [],
+  );
+
+  const syncPillRef = useRef(() => {});
+  syncPillRef.current = () => syncPill(activeIndex, hovered);
+
   useIsoLayoutEffect(() => {
     measure();
 
@@ -104,7 +162,12 @@ export function AdaptiveNav({
     let frame = 0;
     const observer = new ResizeObserver(() => {
       cancelAnimationFrame(frame);
-      frame = requestAnimationFrame(measure);
+      frame = requestAnimationFrame(() => {
+        measure();
+        // Kenglik o'zgarganda bandlar siljiydi — kapsula ular bilan birga
+        // ko'chishi kerak (aks holda eski joyda "osilib" qoladi).
+        syncPillRef.current();
+      });
     });
     observer.observe(nav);
     // Ota konteyner — joy hisobi undan olinadi (logo/amallar o'zgarishi ham
@@ -126,21 +189,45 @@ export function AdaptiveNav({
     measure();
   }, [pathname, measure]);
 
-  const visible = items.slice(0, visibleCount);
-  const hidden = items.slice(visibleCount);
+  // Kapsula har bir tegishli o'zgarishda qayta joylashadi (bo'yashdan oldin).
+  useIsoLayoutEffect(() => {
+    syncPill(activeIndex, hovered);
+  }, [syncPill, activeIndex, hovered, visibleCount]);
 
   return (
     <nav
       ref={navRef}
+      onPointerLeave={() => setHovered(null)}
       className={cn(
         'relative ml-2 hidden min-w-0 flex-1 items-center gap-0.5 xl:flex',
         className,
       )}
     >
-      {visible.map((item) => (
-        <NavLink key={item.href} item={item} pathname={pathname} />
+      <NavPill
+        rect={pill}
+        ready={ready}
+        preview={hovered !== null && hovered !== activeIndex}
+        hot={hovered !== null && hovered === activeIndex}
+      />
+      {visible.map((item, index) => (
+        <NavLink
+          key={item.href}
+          item={item}
+          pathname={pathname}
+          index={index}
+          onHover={setHovered}
+          ownBackground={!ready}
+        />
       ))}
-      {hidden.length > 0 && <OverflowMenu items={hidden} pathname={pathname} />}
+      {hidden.length > 0 && (
+        <OverflowMenu
+          items={hidden}
+          pathname={pathname}
+          index={visible.length}
+          onHover={setHovered}
+          ownBackground={!ready}
+        />
+      )}
 
       {/*
         Ko'rinmas o'lchov qatlami — TO'LIQ ro'yxat + «•••» tugmasi shakli.
@@ -220,29 +307,81 @@ function isActive(pathname: string, href: string): boolean {
  * Band uslubi — ko'rinadigan bandda ham, o'lchov qatlamida ham AYNAN bir xil
  * bo'lishi shart, aks holda o'lchov haqiqatdan chetlashadi.
  */
-function navItemClass(active: boolean, hasIcon: boolean): string {
+function navItemClass(
+  active: boolean,
+  hasIcon: boolean,
+  ownBackground = true,
+): string {
   return cn(
-    'whitespace-nowrap rounded-full py-1.5 text-subhead transition-colors duration-150 ease-ios',
+    // `relative` — suzuvchi kapsula absolyut joylashgan, yorliq undan
+    // YUQORIDA bo'yalishi kerak.
+    'relative whitespace-nowrap rounded-full py-1.5 text-subhead transition-colors duration-200 ease-ios',
     hasIcon ? 'flex items-center gap-1.5 pl-2 pr-2.5' : 'px-2.5',
-    // Faol band — brend tinti (kulrang emas): navigatsiyada foydalanuvchi
-    // qayerdaligi bir qarashda ko'rinishi kerak, kulrang fon esa qolgan
-    // kulrang sirtlardan ajralmasdi.
+    // Faol band — brend tinti (kulrang emas). Fonni odatda suzuvchi kapsula
+    // beradi; `ownBackground` faqat kapsula o'lchanmagunicha (SSR/birinchi
+    // bo'yash) yoqiladi — shunda faol holat bir zum ham yo'qolmaydi.
     active
-      ? 'bg-accent-50 font-semibold text-accent-700 hover:bg-accent-100'
-      : 'font-medium text-slate-500 hover:bg-fill-quaternary hover:text-brand-900',
+      ? cn('font-semibold text-accent-700', ownBackground && 'bg-accent-50')
+      : 'font-medium text-slate-500 hover:text-brand-900',
   );
 }
 
 const MORE_BUTTON_CLASS =
-  'tappable flex h-8 shrink-0 items-center justify-center rounded-full px-2 text-slate-500 transition-colors duration-150 ease-ios hover:text-brand-900';
+  'tappable relative flex h-8 shrink-0 items-center justify-center rounded-full px-2 text-slate-500 transition-colors duration-200 ease-ios hover:text-brand-900';
 
-function NavLink({ item, pathname }: { item: NavItem; pathname: string }) {
+/** Suzuvchi kapsula — faol/hover holatining YAGONA vizual tashuvchisi. */
+function NavPill({
+  rect,
+  ready,
+  preview,
+  hot,
+}: {
+  rect: PillRect;
+  ready: boolean;
+  preview: boolean;
+  /** Kursor AYNAN faol bandda — kapsula bir qadam to'qlashadi (javobsiz qolmaydi). */
+  hot: boolean;
+}) {
+  return (
+    <span
+      aria-hidden
+      className={cn(
+        'nav-pill',
+        rect.on && ready && 'nav-pill-on',
+        preview && 'nav-pill-preview',
+        hot && 'nav-pill-hot',
+      )}
+      style={{
+        transform: `translate3d(${rect.left}px, -50%, 0)`,
+        width: rect.width,
+      }}
+    />
+  );
+}
+
+function NavLink({
+  item,
+  pathname,
+  index,
+  onHover,
+  ownBackground,
+}: {
+  item: NavItem;
+  pathname: string;
+  index: number;
+  onHover: (index: number | null) => void;
+  ownBackground: boolean;
+}) {
   const active = isActive(pathname, item.href);
   return (
     <Link
       href={item.href}
+      data-nav-item
       aria-current={active ? 'page' : undefined}
-      className={navItemClass(active, !!item.icon)}
+      onPointerEnter={() => onHover(index)}
+      onFocus={() => onHover(index)}
+      onBlur={() => onHover(null)}
+      className={navItemClass(active, !!item.icon, ownBackground)}
     >
       {item.icon}
       <span>{item.label}</span>
@@ -254,9 +393,15 @@ function NavLink({ item, pathname }: { item: NavItem; pathname: string }) {
 function OverflowMenu({
   items,
   pathname,
+  index,
+  onHover,
+  ownBackground,
 }: {
   items: NavItem[];
   pathname: string;
+  index: number;
+  onHover: (index: number | null) => void;
+  ownBackground: boolean;
 }) {
   const [open, setOpen] = useState(false);
   const wrapRef = useRef<HTMLDivElement>(null);
@@ -291,15 +436,22 @@ function OverflowMenu({
       <button
         ref={buttonRef}
         type="button"
+        data-nav-item
         onClick={() => setOpen((o) => !o)}
+        onPointerEnter={() => onHover(index)}
+        onFocus={() => onHover(index)}
+        onBlur={() => onHover(null)}
         aria-label="Yana"
         aria-haspopup="menu"
         aria-expanded={open}
         className={cn(
           MORE_BUTTON_CLASS,
           // Menyu ichida faol sahifa bo'lsa tugma ham faol ko'rinadi —
-          // foydalanuvchi qayerdaligini yo'qotmasin.
-          (open || activeInside) && 'bg-accent-50 text-accent-700',
+          // foydalanuvchi qayerdaligini yo'qotmasin. Fonni suzuvchi kapsula
+          // beradi; menyu OCHIQ bo'lsa esa o'z tinti (kapsula boshqa bandga
+          // ketib qolishi mumkin).
+          (open || activeInside) && 'text-accent-700',
+          (open || (activeInside && ownBackground)) && 'bg-accent-50',
         )}
       >
         <MoreHorizontal className="h-[18px] w-[18px]" />
@@ -321,10 +473,10 @@ function OverflowMenu({
                 aria-current={active ? 'page' : undefined}
                 onClick={() => setOpen(false)}
                 className={cn(
-                  'flex items-center gap-2.5 px-4 py-2.5 text-body transition-colors duration-150',
+                  'hv-row flex items-center gap-2.5 px-4 py-2.5 text-body',
                   active
                     ? 'bg-accent-50 font-semibold text-accent-700'
-                    : 'text-brand-900 hover:bg-fill-tertiary/60',
+                    : 'text-brand-900',
                 )}
               >
                 {item.icon}

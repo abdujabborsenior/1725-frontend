@@ -104,11 +104,11 @@ export default function InvestorPage() {
                       {data?.newMatches}
                     </span>
                   )}
-                  <ChevronRight className="h-4 w-4 text-slate-300" strokeWidth={2.5} />
+                  <ChevronRight className="ios-chevron h-4 w-4 text-slate-300" strokeWidth={2.5} />
                 </Link>
                 <Link href="/investor/dealflow?saved=1" className="ios-row hairline-t">
-                  <span className="flex h-8 w-8 items-center justify-center rounded-ios-sm bg-fill-tertiary">
-                    <Bookmark className="h-[18px] w-[18px] text-slate-600" />
+                  <span className="flex h-8 w-8 items-center justify-center rounded-ios-sm bg-accent-50">
+                    <Bookmark className="h-[18px] w-[18px] text-accent-600" />
                   </span>
                   <span className="min-w-0 flex-1 text-body text-brand-900">
                     Saqlanganlar
@@ -116,16 +116,16 @@ export default function InvestorPage() {
                   <span className="text-footnote tabular-nums text-slate-500">
                     {data?.savedCount ?? 0}
                   </span>
-                  <ChevronRight className="h-4 w-4 text-slate-300" strokeWidth={2.5} />
+                  <ChevronRight className="ios-chevron h-4 w-4 text-slate-300" strokeWidth={2.5} />
                 </Link>
                 <Link href="/investor/requests" className="ios-row hairline-t">
-                  <span className="flex h-8 w-8 items-center justify-center rounded-ios-sm bg-fill-tertiary">
-                    <Send className="h-[18px] w-[18px] text-slate-600" />
+                  <span className="flex h-8 w-8 items-center justify-center rounded-ios-sm bg-accent-50">
+                    <Send className="h-[18px] w-[18px] text-accent-600" />
                   </span>
                   <span className="min-w-0 flex-1 text-body text-brand-900">
                     Yuborilgan so&apos;rovlar
                   </span>
-                  <ChevronRight className="h-4 w-4 text-slate-300" strokeWidth={2.5} />
+                  <ChevronRight className="ios-chevron h-4 w-4 text-slate-300" strokeWidth={2.5} />
                 </Link>
               </div>
             </section>

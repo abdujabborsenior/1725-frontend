@@ -164,7 +164,7 @@ function ChipToggle({
         'tappable rounded-ios-md px-3.5 py-2.5 text-left transition-colors duration-150',
         active
           ? 'bg-accent-600 text-white'
-          : 'bg-fill-tertiary text-brand-900 hover:bg-fill-secondary',
+          : 'bg-fill-tertiary text-brand-900 hover:bg-accent-50 hover:text-accent-700',
       )}
     >
       <span className="block text-subhead font-medium">{label}</span>
@@ -230,7 +230,7 @@ export function InvestorFields({
         <span className="min-w-0 flex-1">
           <span className="block text-body text-brand-900">
             Investorlar uchun{' '}
-            <span className="text-slate-400">(ixtiyoriy)</span>
+            <span className="text-slate-500">(ixtiyoriy)</span>
           </span>
           <span className="mt-0.5 block text-footnote text-slate-500">
             Loyihangiz bosqichi va ko&apos;rsatkichlarini kiritsangiz,

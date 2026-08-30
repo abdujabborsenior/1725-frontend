@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useMemo, useState, type CSSProperties } from 'react';
+import { useEffect, useMemo, useState, type CSSProperties, type ReactNode } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
@@ -181,7 +181,7 @@ export function ConversationList({ activeId }: { activeId?: string }) {
               type="button"
               onClick={() => setQuery('')}
               aria-label="Tozalash"
-              className="tappable absolute right-2.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-fill text-white"
+              className="tappable absolute right-2.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-slate-400 text-white transition-colors hover:bg-accent-500"
             >
               <X className="h-3 w-3" strokeWidth={3} />
             </button>
@@ -214,7 +214,7 @@ export function ConversationList({ activeId }: { activeId?: string }) {
                   <span
                     className={cn(
                       'relative z-10 flex h-4 min-w-[16px] items-center justify-center rounded-full px-1 text-caption-2 font-bold',
-                      active ? 'bg-accent-700 text-white' : 'bg-slate-300/70 text-slate-600',
+                      active ? 'bg-accent-700 text-white' : 'bg-accent-100 text-accent-700',
                     )}
                   >
                     {count > 99 ? '99+' : count}
@@ -247,7 +247,7 @@ export function ConversationList({ activeId }: { activeId?: string }) {
           ))
         ) : query ? (
           <div className="px-4 py-16 text-center">
-            <Search className="mx-auto mb-2 h-8 w-8 text-slate-300" />
+            <ChatGlyph icon={<Search className="h-6 w-6" />} />
             <p className="text-subhead font-semibold text-brand-900">Hech narsa topilmadi</p>
             <p className="mt-1 text-caption-1 text-slate-500">
               «{query}» bo‘yicha suhbat yo‘q.
@@ -261,13 +261,26 @@ export function ConversationList({ activeId }: { activeId?: string }) {
   );
 }
 
+/**
+ * Bo'sh holat belgisi. Ilgari `text-slate-300` (#D1D1D6) ikonka edi — oq
+ * sirtda kontrasti 1.5:1, ya'ni amalda KO'RINMASDI. Endi domen rangidagi
+ * yumshoq kvadrat: bo'sh holat ham mahsulotning bir qismidek ko'rinadi.
+ */
+function ChatGlyph({ icon }: { icon: ReactNode }) {
+  return (
+    <span className="mx-auto mb-3 flex h-12 w-12 items-center justify-center rounded-ios-lg bg-emerald-50 text-emerald-600">
+      {icon}
+    </span>
+  );
+}
+
 function ConversationRow({ c, active }: { c: Conversation; active: boolean }) {
   return (
     <Link
       href={`/messages/${c.id}`}
       className={cn(
         'flex items-center gap-3 rounded-2xl p-2.5 transition-colors active:scale-[0.99]',
-        active ? 'bg-accent-50 hover:bg-accent-100' : 'hover:bg-surface-soft',
+        active ? 'bg-accent-50 hover:bg-accent-100' : 'hover:bg-accent-50/60',
       )}
     >
       {/* Guruh ham, shaxs ham bir naqshda: rasm yoki nom bo'yicha barqaror iOS
@@ -277,7 +290,7 @@ function ConversationRow({ c, active }: { c: Conversation; active: boolean }) {
         <div className="flex items-center justify-between gap-2">
           <p className="truncate text-body font-semibold text-brand-900">{c.title}</p>
           {c.lastMessageAt && (
-            <span className="shrink-0 text-footnote text-slate-400">
+            <span className="shrink-0 text-footnote text-slate-500">
               {timeAgoShort(c.lastMessageAt)}
             </span>
           )}
@@ -302,7 +315,7 @@ function EmptyState({ filter, hasAny }: { filter: Filter; hasAny: boolean }) {
   if (filter === 'direct') {
     return (
       <div className="px-4 py-16 text-center">
-        <MessageSquarePlus className="mx-auto mb-2 h-9 w-9 text-slate-300" />
+        <ChatGlyph icon={<MessageSquarePlus className="h-6 w-6" />} />
         <p className="text-callout font-semibold text-brand-900">Shaxsiy suhbatlar yo‘q</p>
         <p className="mt-1 text-subhead text-slate-500">
           Hamjamiyatdan odam toping va suhbat boshlang
@@ -316,7 +329,7 @@ function EmptyState({ filter, hasAny }: { filter: Filter; hasAny: boolean }) {
   if (filter === 'group') {
     return (
       <div className="px-4 py-16 text-center">
-        <UsersRound className="mx-auto mb-2 h-9 w-9 text-slate-300" />
+        <ChatGlyph icon={<UsersRound className="h-6 w-6" />} />
         <p className="text-callout font-semibold text-brand-900">Guruhlar yo‘q</p>
         <p className="mt-1 text-subhead text-slate-500">Hamjamiyat guruhlariga qo&apos;shiling</p>
         <Link href="/discover" className="tappable mt-3 inline-block text-subhead font-medium text-accent-700">
@@ -327,7 +340,7 @@ function EmptyState({ filter, hasAny }: { filter: Filter; hasAny: boolean }) {
   }
   return (
     <div className="px-4 py-16 text-center">
-      <MessageSquarePlus className="mx-auto mb-2 h-9 w-9 text-slate-300" />
+      <ChatGlyph icon={<MessageSquarePlus className="h-6 w-6" />} />
       <p className="text-callout font-semibold text-brand-900">{hasAny ? 'Bu yerda hech narsa yo‘q' : 'Hali suhbatlar yo‘q'}</p>
       <p className="mt-1 text-subhead text-slate-500">Hamjamiyatdan odam toping va suhbat boshlang</p>
       <Link href="/discover" className="tappable mt-3 inline-block text-subhead font-medium text-accent-700">Odamlarni topish</Link>

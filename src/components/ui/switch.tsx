@@ -25,8 +25,12 @@ export function Switch({ checked, onChange, disabled, className, ...rest }: Swit
       onClick={() => onChange(!checked)}
       className={cn(
         'group relative inline-flex h-[31px] w-[51px] shrink-0 items-center rounded-full p-0.5',
-        'transition-[background-color,filter] duration-250 ease-ios focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-accent-500/25',
-        'enabled:hover:brightness-95',
+        'transition-[background-color,box-shadow] duration-250 ease-ios focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-accent-500/25',
+        // Hover'da XIRALASHISH yo'q (avval `brightness-95` edi) — o'rniga
+        // holatga mos yumshoq halqa: "tegishga tayyor" degan ishora.
+        checked
+          ? 'enabled:hover:shadow-[0_0_0_5px_rgba(52,199,89,0.18)]'
+          : 'enabled:hover:shadow-[0_0_0_5px_rgba(0,122,255,0.14)]',
         checked ? 'bg-emerald-400' : 'bg-[rgba(120,120,128,0.16)]',
         disabled && 'opacity-40',
         className,

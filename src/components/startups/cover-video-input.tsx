@@ -113,7 +113,7 @@ export function CoverVideoInput({
               'inline-flex items-center gap-1.5 rounded-md px-2.5 py-1.5 text-footnote font-semibold transition-all',
               mode === m
                 ? 'bg-white text-brand-900 shadow-segment hover:shadow-card-hover'
-                : 'text-slate-500 active:bg-fill-tertiary hover:text-brand-900',
+                : 'text-slate-500 hover:bg-accent-50 hover:text-accent-700 active:bg-accent-100',
             )}
           >
             <Icon className="h-3.5 w-3.5" /> {label}
@@ -126,7 +126,7 @@ export function CoverVideoInput({
           type="button"
           onClick={() => fileRef.current?.click()}
           disabled={loading}
-          className="flex aspect-video w-full flex-col items-center justify-center gap-2 rounded-ios-md border-2 border-dashed border-slate-300 bg-surface-soft transition-all enabled:hover:border-slate-400 enabled:hover:bg-fill-quaternary active:bg-fill-tertiary disabled:opacity-60"
+          className="flex aspect-video w-full flex-col items-center justify-center gap-2 rounded-ios-md border-2 border-dashed border-slate-300 bg-surface-soft transition-all enabled:hover:border-accent-300 enabled:hover:bg-accent-50 active:bg-accent-100 disabled:opacity-60"
         >
           {loading ? (
             <Spinner className="h-6 w-6 animate-spin text-accent-500" />
@@ -157,7 +157,7 @@ export function CoverVideoInput({
           <button
             type="button"
             onClick={applyLink}
-            className="h-11 shrink-0 rounded-ios-lg bg-white px-4 text-footnote font-semibold text-slate-600 transition-all hover:border-slate-300 hover:text-brand-900"
+            className="h-11 shrink-0 rounded-ios-lg bg-white px-4 text-footnote font-semibold text-slate-600 transition-all hover:bg-accent-50 hover:text-accent-700"
           >
             Qo&apos;shish
           </button>

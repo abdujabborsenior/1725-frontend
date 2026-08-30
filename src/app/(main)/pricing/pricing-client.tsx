@@ -192,7 +192,7 @@ export function PricingClient({ initialPlans }: { initialPlans: BillingPlan[] | 
                 </span>
               ))
             ) : (
-              <span className="flex h-8 w-8 items-center justify-center rounded-[9px] bg-fill-tertiary text-slate-500 [&>svg]:h-[18px] [&>svg]:w-[18px]">
+              <span className="flex h-8 w-8 items-center justify-center rounded-[9px] bg-accent-50 text-accent-600 [&>svg]:h-[18px] [&>svg]:w-[18px]">
                 <Wallet />
               </span>
             )}
@@ -218,7 +218,7 @@ export function PricingClient({ initialPlans }: { initialPlans: BillingPlan[] | 
           },
         ].map((item) => (
           <div key={item.title} className="rounded-ios-xl bg-white p-4">
-            <span className="mb-2.5 flex h-8 w-8 items-center justify-center rounded-[9px] bg-fill-tertiary text-slate-500 [&>svg]:h-[18px] [&>svg]:w-[18px]">
+            <span className="mb-2.5 flex h-8 w-8 items-center justify-center rounded-[9px] bg-accent-50 text-accent-600 [&>svg]:h-[18px] [&>svg]:w-[18px]">
               {item.icon}
             </span>
             <p className="text-subhead font-semibold text-brand-900">{item.title}</p>
@@ -239,7 +239,7 @@ export function PricingClient({ initialPlans }: { initialPlans: BillingPlan[] | 
       {token && (
         <p className="text-center text-footnote text-slate-500">
           To‘lovlar tarixi va joriy obuna —{' '}
-          <Link href="/billing" className="font-semibold text-accent-700 underline-offset-2 transition-colors hover:text-accent-800 hover:underline">
+          <Link href="/billing" className="font-semibold text-accent-700 hv-link transition-colors hover:text-accent-800">
             Obunam
           </Link>{' '}
           bo‘limida.

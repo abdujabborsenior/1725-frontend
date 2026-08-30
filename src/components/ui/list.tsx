@@ -102,7 +102,7 @@ export function ListRow({
       )}
       {accessory}
       {interactive && !accessory && (
-        <ChevronRight className="h-[15px] w-[15px] shrink-0 text-slate-300" strokeWidth={3} />
+        <ChevronRight className="ios-chevron h-[15px] w-[15px] shrink-0 text-slate-300" strokeWidth={3} />
       )}
     </>
   );

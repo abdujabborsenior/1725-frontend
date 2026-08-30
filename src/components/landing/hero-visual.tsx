@@ -82,7 +82,7 @@ export function HeroVisual() {
           <span className="inline-flex items-center gap-1.5 text-caption-1 text-slate-500">
             <Eye className="h-[15px] w-[15px]" /> 1 240
           </span>
-          <span className="inline-flex items-center gap-1.5 text-caption-1 font-medium text-emerald-600">
+          <span className="inline-flex items-center gap-1.5 text-caption-1 font-medium text-emerald-700">
             <TrendingUp className="h-[15px] w-[15px]" /> 3-o‘rin
           </span>
         </div>
@@ -93,7 +93,7 @@ export function HeroVisual() {
         className="hero-enter absolute left-0 top-0 z-20 w-[53%] rounded-ios-xl bg-white p-3.5 shadow-lift ring-1 ring-black/[0.04] sm:-left-5 sm:w-[232px]"
         style={{ '--enter-delay': '0.2s' } as CSSProperties}
       >
-        <span className="flex items-center gap-1.5 text-caption-1 font-medium text-amber-600">
+        <span className="flex items-center gap-1.5 text-caption-1 font-medium text-amber-700">
           <span className="h-1.5 w-1.5 rounded-full bg-amber-500" /> Muammo
         </span>
         <p className="mt-1.5 text-subhead leading-snug text-brand-900">

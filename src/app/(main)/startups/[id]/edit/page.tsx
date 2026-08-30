@@ -71,7 +71,7 @@ export default function EditStartupPage() {
     <div className="max-w-2xl mx-auto space-y-6">
       <button
         onClick={() => router.back()}
-        className="flex items-center gap-2 text-subhead text-slate-500 hover:text-brand-900 transition-colors group"
+        className="flex items-center gap-2 text-subhead text-slate-500 transition-colors hover:text-accent-700 group"
       >
         <ArrowLeft className="h-4 w-4 transition-transform" />
         Orqaga

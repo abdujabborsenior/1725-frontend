@@ -89,7 +89,7 @@ export function Reviews({ startup }: { startup: Startup }) {
             <span className="text-large-title font-semibold tabular-nums text-brand-900">
               {startup.ratingCount > 0 ? startup.ratingAvg.toFixed(1) : '—'}
             </span>
-            <span className="text-title-3 font-semibold text-slate-400">/{RATING_MAX}</span>
+            <span className="text-title-3 font-semibold text-slate-500">/{RATING_MAX}</span>
           </div>
           <p className="mt-1 text-footnote text-slate-500">
             {startup.ratingCount.toLocaleString('uz')} ta ovoz
@@ -188,7 +188,7 @@ export function Reviews({ startup }: { startup: Startup }) {
           ))}
         </div>
       ) : (
-        <p className="text-subhead text-slate-400 text-center py-6">Hali sharhlar yo&apos;q</p>
+        <p className="py-6 text-center text-subhead text-slate-500">Hali sharhlar yo&apos;q</p>
       )}
 
       {!isLoading && items.length > 0 && (

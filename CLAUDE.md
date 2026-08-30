@@ -169,36 +169,96 @@ Pufaklar: chiquvchi `bubble-out` (#007AFF) + `bubble-tail-out`, kiruvchi
 yuqoriga strelka (`ArrowUp`, h-8 w-8). Composer kapsulasi oq, header/footer
 `.material-bar`. Kontekst menyu `.material-menu`.
 
-### 2.9 Hover — kursorli qurilma uchun TIZIM (2026-08-29)
-> Qoida: **kursor ostidagi har bir boshqaruv javob berishi shart** — "o'lik"
-> element qolmaydi. Lekin hover FAQAT kursorli qurilmada: sensorli ekranda
-> bosilgan tugma hover holatida "yopishib" qolmaydi.
+### 2.9 Hover — "YORUG'LIK" tili (2026-08-30 — TO'LIQ QAYTA YOZILDI)
+> **Bosh qoida: hover HECH QACHON xiralashtirmaydi.** Kursor ostida sirt
+> YORISHADI, brend tinti ko'tariladi, ink to'qlashadi. Eski (2026-08-29)
+> zaxira `opacity: .68` / `filter: brightness(.94)` bilan ishlar edi — u
+> boshqaruvni "o'chirib" qo'yardi va butun mahsulotga arzon ko'rinish berardi.
+> Ikkinchi qoida o'z kuchida: kursor ostidagi HAR BIR boshqaruv javob berishi
+> shart, lekin hover FAQAT kursorli qurilmada (sensorli ekranda "yopishmaydi").
 
-- **Tailwind**: `future.hoverOnlyWhenSupported: true` (tailwind.config) — barcha
-  `hover:` utilitalari avtomatik `@media (hover:hover) and (pointer:fine)` ichiga
-  tushadi. Qo'lda yozilgan CSS hover qoidalari ham SHU media ichida bo'ladi.
-- **Zaxira qatlam** (`globals.css`, `.tappable` / `.tappable-scale` / `.btn-lift`):
-  foni bor boshqaruv → `filter: brightness(0.94)` (maketga ta'sir qilmaydi,
-  soya/chegara bilan to'qnashmaydi, gradientda ham to'g'ri); fonsiz boshqaruv →
-  `opacity: .68` (iOS "plain button"). Element o'zining `hover:` utilitasini yoki
-  o'z hover qoidasi bor tizim klassini (`.cta-fill/.cta-ghost/.card-today/
-  .btn-round/.btn-send/.segment/.ios-row`) e'lon qilgan bo'lsa — zaxira O'CHADI
-  (ikki karra effekt yo'q). Guard'lar `:where()` ichida: spetsifikatsiya (0,2,0)
-  bo'lib qoladi va `:active` (bosish) hover'dan ustun turaveradi.
-- **Tuned holatlar**: `Button` variantlari (`enabled:hover:` — o'chirilgan tugma
-  kursorda "tirik" ko'rinmaydi), FilterChip, GroupCard tugmasi, nav bandlari,
-  menyu/ro'yxat qatorlari (`hover:bg-fill-quaternary`), forma maydonlari
-  (`enabled:hover:border-slate-300`), `.ios-search`, `.ai-aura` (fokusdan bir
-  qadam past), `.composer-field`, MoreLink (rang + chevron 3px siljiydi).
-- **Ko'tarilish (lift) hamon TAQIQ** — foni to'qlashadi/soya chuqurlashadi.
-  Tanlangan holat (segment-active, joriy sahifa, faol tab) — javob PICHIRLAB
-  beriladi (soya bir qadam chuqur), rang o'zgarmaydi.
-- **Tekshirish**: `hover-audit.js` naqshi — CDP `CSS.forcePseudoState` bilan
-  element + ichki daraxt + 5 pog'ona ota hover holatiga qo'yilib computed style
-  imzosi solishtiriladi (⚠️ `DOM.describeNode` `parentId` BERMAYDI — ota
-  `Runtime.callFunctionOn`+`DOM.requestNode` bilan olinadi). Headless Chrome'da
-  kursorni emulyatsiya qilish uchun `--blink-settings=primaryHoverType=2,
+**Zaxira qatlam** (`globals.css`, `.tappable`/`.tappable-scale`/`.btn-lift`,
+hammasi `:where()` ichida → spetsifikatsiya past, `:active` doim ustun):
+1. fonsiz boshqaruv → ink `--hv-ink` ga to'qlashadi;
+2. + radiusi bor → orqasida **brend tinti plate** (`--hv-tint`) — kulrang emas;
+3. foni bor (`bg-*`/`gradient-*`) → yumshoq nur (`--hv-shadow`) + `brightness(1.03)`
+   (QORAYTIRISH TAQIQ: to'ldirilgan tugma fonini ochirish ham mumkin emas —
+   oq yorliq AA kontrastdan chiqib ketadi, shuning uchun javob NUR bilan beriladi).
+
+**Primitivlar** (komponentlarda ataylab qo'llanadi, har biri ma'no tashiydi):
+
+| Klass | Qayerda | Nima qiladi |
+|---|---|---|
+| `.hv-row` | menyu/ro'yxat qatori | tint fon + chap qirradan o'sib chiqadigan 3px accent RELS + ink to'qlashadi |
+| `.hv-pop` | ikonka/ixcham boshqaruv | tint plate + glyph 1.09× kattaradi |
+| `.hv-tile` | kvadrat bosiladigan blok | tint + rangdosh nur |
+| `.hv-sheen` | to'ldirilgan CTA, faol chip | sirt bo'ylab BIR MARTA specular yorug'lik (0.9s) |
+| `.hv-link` | matnli havola | pastki chiziq chapdan o'ngga O'SIB chiqadi (`hover:underline` TAQIQ) |
+| `.hv-avatar` | avatar havolasi | 1.06× + brend halqasi (`hover:opacity-*` TAQIQ) |
+| `.hv-media` | bosiladigan rasm/muqova | rasm 1.04× + soya (xiralashtirish TAQIQ) |
+| `.hv-arrow` | havoladagi strelka | 3px o'ngga siljiydi |
+| `.hv-heart` / `.hv-bulb` | yoqtirish / "Foydali" | belgi 1.12–1.14× (bosishdan oldingi issiqlik ishorasi) |
+| `.hv-logo` | brend belgisi | belgi 1.07× (yozuv qimirlamaydi) |
+| `.ios-chevron` | oshkor qilish chevroni | qator hover'ida rangga kiradi + 2px siljiydi |
+| `.nav-pill` | navigatsiya (signature) | faol band ostidagi kapsula kursor bandiga SIRPANIB boradi, kursor chiqsa qaytadi |
+
+- **`.card-today`** (karta): ko'tarilish + soyaga **brend halqasi** qo'shildi va
+  `.card-title` hover'da tint rangiga kiradi ("bu karta bosiladi").
+- **Ko'tarilish (lift) hamon TAQIQ** — nur/tint/halqa bilan javob beriladi
+  (istisno: `.podium-card` — o'zining metal tili bor).
+- Har bir primitiv `prefers-reduced-motion: reduce` da harakatini o'chiradi.
+- **Tekshirish**: `hover-audit.mjs` (scratchpad) — HAQIQIY sichqoncha bilan
+  (`Input.dispatchMouseEvent`), chunki **`CSS.forcePseudoState` `getComputedStyle`
+  natijasiga ta'sir QILMAYDI** va React'ning `onPointerEnter`'ini ham ishga
+  tushirmaydi. Element + 5 pog'ona ota + aka-uka + ichki daraxt + `::before/::after`
+  imzosi solishtiriladi; natija **DIM 0 · DEAD 0** bo'lishi shart.
+  Headless Chrome'da kursor emulyatsiyasi uchun `--blink-settings=primaryHoverType=2,
   availableHoverTypes=2,primaryPointerType=4,availablePointerTypes=4` SHART.
+
+### 2.9.1 Kulrang siyosati (2026-08-30)
+Kulrang — **neytral/inert** ma'nosi. U QAYERDA QOLADI va qayerda YO'Q:
+
+- ✅ **Qoladi**: ikkilamchi matn (`slate-500`), hairline/ajratkich, sahifa foni
+  (`surface-soft`), skeleton va rasm zaxira sirti, progress treki, `disabled`,
+  neytral status chipi ("So'ralmagan"), segmented control TREKI, iOS'ning
+  kanonik kulrang ikonka kvadrati (masalan Sozlamalar tishli g'ildiragi).
+- ❌ **Qolmaydi** (brend tinti yoki semantik rang bilan almashtiriladi):
+  1. **holat/identifikatsiya** — faol nav bandi, joriy sahifa, tanlangan variant,
+     tanlangan segment yorlig'i (`--hv-tint-ink`), joriy sahifalash raqami;
+  2. **hover** — kulrangdan kulrangga o'tish TAQIQ (`hover:bg-fill-*`,
+     `hover:text-brand-900` naqshlari olib tashlandi);
+  3. **brend/semantik ikonka konteyneri** — `bg-accent-50 + text-accent-600`;
+  4. **bo'sh holat belgisi** — `slate-300` "yarim o'chgan" ko'rinardi → tinted
+     kvadrat (`EmptyState`) yoki `accent-300`;
+  5. **kategoriya chipi** — `lib/category-tint.ts` (YAGONA manba: startap va
+     muammo kartalari bitta sohani bitta rangda ko'rsatadi);
+  6. **takrorlanuvchi chip/tugma** (filtrlar, "Foydali") — kulrang plomba
+     o'rniga **oq sirt + hairline**: 10-15 dona yonma-yon turganda kulrang
+     plombalar butun ekranni kulrang qilib ko'rsatardi.
+
+### 2.9.2 Kontrast — O'LCHOV bilan (2026-08-30, MAJBURIY)
+"Kulrang chiroyli ko'rinadi" degan tuyg'u yetarli emas — kontrast **o'lchanadi**.
+Qoida: oddiy matn ≥ **4.5:1**, katta matn (≥24px yoki ≥18.7px bold) ≥ **3:1**;
+fon ALFA aralashmasi bilan hisoblanadi (`bg-white/70` kulrang maydon ustida —
+oq emas).
+
+Amaliy chegaralar (palitradan, oq sirtda tekshirilgan):
+- **oq matn rangli fonda** — `accent-500` (#007AFF) atigi **4.02:1**, ya'ni
+  YETMAYDI. To'ldirilgan tugma/badge/avatar → kamida `*-600`
+  (accent-600 4.70 · emerald-700 · amber-700 · rose-600).
+- **kulrang matn** — `slate-400` (#8E8E93) faqat DEKORATIV ikonka uchun; matn
+  (11px vaqt, izoh, hisoblagich, placeholder) hech qachon `slate-400` emas →
+  `slate-500`; kulrang sirt (`surface-soft`, `fill-*`) ustida esa `slate-600`.
+- **`slate-300`** — faqat iOS disclosure chevron (`.ios-chevron`) va hairline.
+  Bo'sh holat belgisi, spinner, affordans strelkasi uchun MUMKIN EMAS.
+
+Tekshirish: **`scripts/contrast-audit.js`** — bog'liqliksiz brauzer snippeti
+(DevTools konsoliga joylashtiriladi yoki CDP/puppeteer'da `evaluate` bilan
+yuritiladi); har marshrutda barcha matnli elementlarni o'lchaydi. Yangi ekran
+qo'shilganda shu audit yuritiladi.
+**Ma'lum yolg'on pozitivlar**: (1) faol kapsulasi AKA-UKA element bo'lgan
+segmented control; (2) `paint-order: stroke` halo bilan chizilgan SVG yorliq —
+auditor bularning haqiqiy fonini ko'ra olmaydi.
 
 ### 2.10 Punktuatsiya — display matn (2026-08-29)
 - **Sarlavha, subtitle, karta sarlavhasi, bo'sh holat matni, tugma/chip yorlig'i,
@@ -214,6 +274,11 @@ yuqoriga strelka (`ArrowUp`, h-8 w-8). Composer kapsulasi oq, header/footer
 ❌ hover-lift · ❌ `font-black` · ❌ KATTA HARFLI eyebrow-pill'lar (faqat
 `.ios-section-header` yoki kichik tint eyebrow) · ❌ `border` bilan karta ·
 ❌ px-based `text-[..px]` · ❌ emoji-ikonka · ❌ lucide-react.
+
+**Hover taqiqlari (2026-08-30):** ❌ `hover:opacity-*` · ❌ `hover:brightness-<1`
+· ❌ `hover:underline` (o'rniga `.hv-link`) · ❌ kulrangdan kulrangga hover
+(`hover:bg-fill-*`, `hover:text-brand-900`) · ❌ hover'da to'ldirilgan tugma
+fonini ochirish (AA buziladi — javob NUR bilan) · ❌ javobsiz ("o'lik") boshqaruv.
 
 ## 3.1 CSS spetsifikatsiya qoidasi (⚠️ ikki marta tishlagan tuzoq)
 `globals.css` dagi komponent klasslari `@tailwind utilities` DAN KEYIN keladi va

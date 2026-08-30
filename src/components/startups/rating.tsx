@@ -99,7 +99,7 @@ export function RatingInput({
       <span
         className={cn(
           'min-w-[3.5rem] text-subhead font-semibold tabular-nums',
-          active ? 'text-brand-900' : 'text-slate-400',
+          active ? 'text-brand-900' : 'text-slate-500',
         )}
         aria-live="polite"
       >
