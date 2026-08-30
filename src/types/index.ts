@@ -446,6 +446,8 @@ export interface LinkMetadata {
   source: 'appstore' | 'playstore' | 'telegram' | 'website' | 'none';
   title: string | null;
   tagline: string | null;
+  /** Manbaning O'Z to'liq tavsifi (AI qayta yozmaydi — asl matn). */
+  description: string | null;
   cover: ImportedImage | null;
   logo: ImportedImage | null;
 }

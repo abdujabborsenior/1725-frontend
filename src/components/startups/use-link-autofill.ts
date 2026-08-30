@@ -13,7 +13,7 @@ export type AutofillState =
   | { status: 'empty'; type: PlatformType }
   | null;
 
-export type FilledField = 'logo' | 'cover' | 'title' | 'tagline';
+export type FilledField = 'logo' | 'cover' | 'title' | 'tagline' | 'description';
 
 /** Avtomatik to'ldirish nimani o'zgartirishi mumkinligi (bo'sh maydonlar). */
 export interface AutofillTargets {
@@ -21,6 +21,7 @@ export interface AutofillTargets {
   cover: string | null;
   title: string;
   tagline: string;
+  description: string;
 }
 
 export interface AutofillHandlers {
@@ -28,6 +29,7 @@ export interface AutofillHandlers {
   setCover: (url: string) => void;
   setTitle: (value: string) => void;
   setTagline: (value: string) => void;
+  setDescription: (value: string) => void;
 }
 
 /** Havola yozib bo'lingunicha kutish — har harfda so'rov yuborilmasin. */
@@ -44,11 +46,12 @@ const DEBOUNCE_MS = 900;
 const requestedUrls = new Set<string>();
 
 /**
- * **Havoladan avtomatik muqova va logo.**
+ * **Havoladan avtomatik logo, muqova, nom va tavsif.**
  *
  * Foydalanuvchi havola yozadi (sayt / App Store / Play Store / Telegram) — biz
- * o'sha manzildan loyihaning logotipi va muqovasini topib, forманing BO'SH
- * maydonlarini to'ldiramiz.
+ * o'sha manzildan loyihaning logotipi, muqovasi, nomi va TAVSIFINI topib,
+ * formaning BO'SH maydonlarini to'ldiramiz. Tavsif manbaning o'z matni —
+ * AI qayta yozmaydi (tez, bepul va o'ylab topilgan gap bo'lmaydi).
  *
  * Ikki qat'iy qoida:
  *  1. **Foydalanuvchi yozganini hech qachon bosib ketmaymiz** — to'ldirilgan
@@ -97,6 +100,12 @@ export function useLinkAutofill(
       h.setTagline(meta.tagline);
       filled.push('tagline');
     }
+    // To'liq tavsif — do'kon/sayt egasi yozgan matn. Foydalanuvchi uni
+    // tahrirlaydi; biz faqat bo'sh maydonga qo'yamiz.
+    if (meta.description && !t.description.trim()) {
+      h.setDescription(meta.description);
+      filled.push('description');
+    }
     return filled;
   }, []);
 
@@ -104,7 +113,15 @@ export function useLinkAutofill(
     async (type: PlatformType, url: string) => {
       const t = targetsRef.current;
       // Hamma narsa allaqachon to'ldirilgan bo'lsa — so'rovning ma'nosi yo'q.
-      if (t.logo && t.cover && t.title.trim() && t.tagline.trim()) return;
+      if (
+        t.logo &&
+        t.cover &&
+        t.title.trim() &&
+        t.tagline.trim() &&
+        t.description.trim()
+      ) {
+        return;
+      }
 
       requestedUrls.add(url);
       const id = ++requestId.current;
@@ -114,6 +131,7 @@ export function useLinkAutofill(
         const meta = await startupsApi.linkMetadata(url, {
           cover: !t.cover,
           logo: !t.logo,
+          description: !t.description.trim(),
         });
         if (id !== requestId.current) return; // eskirgan javob
         const filled = apply(meta);

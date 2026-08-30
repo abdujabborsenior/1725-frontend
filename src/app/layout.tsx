@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from 'next';
 import './globals.css';
 import { Providers } from '@/components/layout/providers';
+import { TrafficBeacon } from '@/components/analytics/traffic-beacon';
 import { API_URL } from '@/lib/constants';
 
 // API alohida origin (portda) — birinchi fetch'gacha ulanish tayyor tursin
@@ -31,6 +32,8 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       </head>
       <body className="font-sans">
         <Providers>{children}</Providers>
+        {/* Tashrif signali — tashqi skriptsiz, o'z serverimizga (analytics) */}
+        <TrafficBeacon />
       </body>
     </html>
   );

@@ -444,12 +444,16 @@ export const startupsApi = {
    * Telegram, sayt). `needCover`/`needLogo` — maydon allaqachon to'ldirilgan
    * bo'lsa `false`: server o'sha rasmni bekorga yuklab olmaydi.
    */
-  linkMetadata: (url: string, need: { cover: boolean; logo: boolean }) =>
+  linkMetadata: (
+    url: string,
+    need: { cover: boolean; logo: boolean; description: boolean },
+  ) =>
     unwrap<LinkMetadata>(
       api.post('/startups/link-metadata', {
         url,
         needCover: need.cover,
         needLogo: need.logo,
+        needDescription: need.description,
       }),
     ),
 

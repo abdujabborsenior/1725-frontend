@@ -181,8 +181,8 @@ export function StartupForm({ initial }: { initial?: Startup }) {
   const selectedCategory = watch('category');
 
   /**
-   * Havoladan avtomatik logo/muqova. Faqat BO'SH maydonlarni to'ldiradi —
-   * foydalanuvchi kiritganiga tegmaydi.
+   * Havoladan avtomatik logo/muqova/nom/tavsif. Faqat BO'SH maydonlarni
+   * to'ldiradi — foydalanuvchi kiritganiga tegmaydi.
    */
   const autofill = useLinkAutofill(
     links,
@@ -191,12 +191,14 @@ export function StartupForm({ initial }: { initial?: Startup }) {
       cover: coverUrl,
       title: watch('title') ?? '',
       tagline: watch('tagline') ?? '',
+      description: watch('description') ?? '',
     },
     {
       setLogo: setLogoUrl,
       setCover: setCoverUrl,
       setTitle: (v) => setValue('title', v, { shouldValidate: true }),
       setTagline: (v) => setValue('tagline', v, { shouldValidate: true }),
+      setDescription: (v) => setValue('description', v, { shouldValidate: true }),
     },
   );
 

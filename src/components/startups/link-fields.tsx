@@ -87,6 +87,7 @@ function describeFilled(filled: string[]): string {
     cover: 'muqova',
     title: 'nom',
     tagline: 'qisqa tavsif',
+    description: 'tavsif',
   };
   const parts = filled.map((f) => names[f] ?? f);
   if (parts.length === 1) return parts[0];
@@ -173,7 +174,7 @@ export function LinkFields({
             Havola noto&apos;g&apos;ri ko&apos;rinyapti — masalan: mysite.uz
           </span>
         ) : autofill?.status === 'loading' ? (
-          <>Havoladan logo va muqova qidirilmoqda…</>
+          <>Havoladan ma&apos;lumot qidirilmoqda…</>
         ) : autofill?.status === 'done' ? (
           <span className="text-accent-600">
             {describeFilled(autofill.filled)} havoladan olindi — xohlasangiz
@@ -181,8 +182,8 @@ export function LinkFields({
           </span>
         ) : (
           <>
-            Kerakli qatorni to&apos;ldiring — logo va muqova havoladan
-            avtomatik olinadi. «https://» yozish shart emas.
+            Kerakli qatorni to&apos;ldiring — logo, muqova, nom va tavsif
+            havoladan avtomatik olinadi. «https://» yozish shart emas.
           </>
         )}
       </p>
