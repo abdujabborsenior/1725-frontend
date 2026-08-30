@@ -83,7 +83,7 @@ export default function LoginPage() {
               <div className="flex justify-end">
                 <Link
                   href="/forgot-password"
-                  className="tappable -mr-1 rounded-full px-1 py-0.5 text-caption-1 font-medium text-accent-600 transition-colors hover:text-accent-700"
+                  className="tappable -mr-1.5 inline-flex min-h-[32px] items-center rounded-full px-1.5 text-subhead font-medium text-accent-600 transition-colors hover:text-accent-700"
                 >
                   Parolni unutdingizmi?
                 </Link>

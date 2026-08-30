@@ -46,7 +46,7 @@ export function AuthBrandPanel() {
           <h2 className="text-[2.25rem] font-semibold leading-[1.1] tracking-[-0.03em] text-white xl:text-[2.75rem]">
             G‘oyadan startapgacha — bitta platformada
           </h2>
-          <p className="mt-4 text-callout leading-relaxed text-white/60">
+          <p className="mt-4 text-callout leading-relaxed text-white/75">
             O‘zbekiston yoshlari uchun muammolar, yechimlar va startaplar ekotizimi. Bilim
             almashing, jamoa quring va g‘oyangizni hayotga tatbiq eting.
           </p>
@@ -63,15 +63,15 @@ export function AuthBrandPanel() {
                   <Icon className="h-5 w-5" />
                 </span>
                 <div>
-                  <p className="text-subhead font-semibold text-white">{title}</p>
-                  <p className="text-footnote text-white/55">{text}</p>
+                  <p className="text-callout font-semibold text-white">{title}</p>
+                  <p className="mt-0.5 text-subhead leading-snug text-white/70">{text}</p>
                 </div>
               </div>
             ))}
           </div>
         </div>
 
-        <p className="text-footnote text-white/45">Ma‘lumotlaringiz xavfsiz himoyalangan</p>
+        <p className="text-subhead text-white/65">Ma‘lumotlaringiz xavfsiz himoyalangan</p>
       </div>
     </div>
   );

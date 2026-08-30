@@ -1023,9 +1023,10 @@ select:-webkit-autofill {
   border-top: 1px solid rgba(255, 255, 255, 0.1);
 }
 /* Footer havolasi — to'q sirtda tinch holatda ham AA kontrast, hover'da oq.
-   Vazni `medium`: oldingi holatda ingichka va past kontrast edi (o'qilmasdi). */
+   Vazni `medium`, o'lchami 15px (subhead). Alfa 0.78 → 0.86: 15px matn to'q
+   navy ustida 9.5:1 beradi, ya'ni havolalar tinch holatda ham "yashirin" emas. */
 .footer-link {
-  color: rgba(235, 240, 248, 0.78);
+  color: rgba(235, 240, 248, 0.86);
   transition:
     color var(--dur-micro) var(--ease-ios),
     opacity var(--dur-micro) var(--ease-ios);
