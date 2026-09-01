@@ -64,7 +64,7 @@ export function ProfileClient({ initialProfile }: { initialProfile: PublicProfil
     return (
       <div className="mx-auto max-w-4xl" aria-hidden>
         <div className="skeleton mb-4 h-8 w-24 rounded-xl" />
-        <div className="overflow-hidden rounded-ios-2xl bg-white shadow-card">
+        <div className="overflow-hidden rounded-ios-2xl bg-white surface-window">
           <div className="skeleton h-40 md:h-52" />
           <div className="px-5 pb-6 md:px-8">
             <div className="-mt-12 flex items-end gap-4 md:-mt-16">
@@ -105,12 +105,22 @@ export function ProfileClient({ initialProfile }: { initialProfile: PublicProfil
     <div className="mx-auto max-w-4xl">
       <BackButton label="Ortga" className="mb-4" fallbackHref="/discover" />
       {/* Cover + header */}
-      <div className="overflow-hidden rounded-ios-2xl bg-white shadow-card">
-        <div className="relative h-40 bg-slate-100 md:h-52">
+      {/*
+        RAMKA (2026-08-31): karta `shadow-card` (0 1px 2px / 4%) bilan
+        chizilardi va muqova yo'lagi `bg-slate-100` — ya'ni #F2F2F7, sahifa
+        fonining AYNAN o'zi — edi. Natijada muqova sahifaga qo'shilib ketib,
+        kartaning boshi umuman ko'rinmasdi. Endi: `surface-window` (hairline
+        halqa + ko'tarilish) + `cover-empty` (brend tintidagi sirt) +
+        muqova/oq tana chegarasida doimiy hairline.
+      */}
+      <div className="overflow-hidden rounded-ios-2xl bg-white surface-window">
+        <div className="cover-empty relative h-40 md:h-52">
           {profile.coverUrl && (
             // eslint-disable-next-line @next/next/no-img-element
             <img src={profile.coverUrl} alt="" fetchPriority="high" decoding="async" className="h-full w-full object-cover" />
           )}
+          {/* Muqova ↔ tana chegarasi: rasm oq/och bo'lsa ham o'qiladi */}
+          <span aria-hidden className="absolute inset-x-0 bottom-0 h-px bg-black/[0.08]" />
         </div>
 
         <div className="relative z-10 px-5 pb-6 md:px-8">

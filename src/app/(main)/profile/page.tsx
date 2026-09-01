@@ -30,6 +30,7 @@ import {
   getErrorMessage,
 } from '@/lib/api';
 import { useAuthStore } from '@/store/auth.store';
+import { navigateAfterAuthChange } from '@/lib/auth-navigation';
 import type { Solution } from '@/types';
 import { Button } from '@/components/ui/button';
 import { Modal } from '@/components/ui/modal';
@@ -109,7 +110,9 @@ export default function ProfilePage() {
     }
     clearAuth();
     toast.success('Tizimdan chiqdingiz');
-    router.push('/login');
+    // Router Cache'ni bekor qilamiz — kirgan davrida keshlangan himoyalangan
+    // sahifalar chiqqandan keyin ham ko'rinib qolmasin.
+    navigateAfterAuthChange('/login');
   }
 
   async function handleDeleteAccount() {
@@ -118,7 +121,7 @@ export default function ProfilePage() {
       await authApi.deleteAccount();
       clearAuth();
       toast.success("Hisob o'chirishga yuborildi. 30 kun ichida qayta tiklash mumkin.");
-      router.push('/login');
+      navigateAfterAuthChange('/login');
     } catch (err) {
       toast.error(getErrorMessage(err));
     } finally {

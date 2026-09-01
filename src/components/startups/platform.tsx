@@ -102,7 +102,13 @@ export function StoreButton({
       rel="noopener noreferrer"
       onClick={onClickCapture}
       className={cn(
-        'tappable inline-flex items-center gap-2.5 rounded-ios-md px-4 py-2.5 font-semibold',
+        // `hover:` klasslari badgeClass ICHIDA (PLATFORM_META) — ular badge'ni
+        // globals.css'dagi hover ZAXIRASIDAN chiqaradi va javobni ataylab
+        // beradi. Zaxira "ink to'qlashadi" qoidasi bu yerda matnni ko'rinmas
+        // qilardi: yorliq `text-white`, ink esa #1D1D1F (2026-08-31 bugi).
+        // `hv-sheen` — to'ldirilgan CTA bo'ylab bir marta yuguruvchi specular
+        // yorug'lik (Apple do'kon badge'ining o'z tili).
+        'tappable hv-sheen inline-flex items-center gap-2.5 rounded-ios-md px-4 py-2.5 font-semibold',
         meta.badgeClass,
         className,
       )}

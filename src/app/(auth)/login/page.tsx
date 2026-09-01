@@ -13,6 +13,7 @@ import { Input } from '@/components/ui/input';
 import { PasswordField } from '@/components/ui/password-field';
 import { AuthCard } from '@/components/auth/auth-shell';
 import { consumeNext } from '@/components/auth/next-capture';
+import { navigateAfterAuthChange } from '@/lib/auth-navigation';
 import { AuthedRedirect } from '@/components/auth/authed-redirect';
 import toast from 'react-hot-toast';
 
@@ -31,8 +32,10 @@ export default function LoginPage() {
     useForm<FormData>({ resolver: zodResolver(schema) });
 
   // ?next= ni (auth) layout'dagi NextCapture saqlaydi — bu yerda faqat o'qiymiz.
+  // Navigatsiya `navigateAfterAuthChange` orqali: u avval Router Cache'ni
+  // bekor qiladi (mehmon davrida keshlangan redirect'lar qolib ketmasin).
   function redirectAfterAuth() {
-    router.push(consumeNext() ?? '/problems');
+    navigateAfterAuthChange(consumeNext() ?? '/problems');
   }
 
   async function onSubmit(data: FormData) {

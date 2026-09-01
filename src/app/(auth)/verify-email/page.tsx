@@ -10,6 +10,7 @@ import { Button } from '@/components/ui/button';
 import { OtpInput } from '@/components/ui/otp-input';
 import { AuthMobileLogo } from '@/components/auth/auth-shell';
 import { consumeNext } from '@/components/auth/next-capture';
+import { navigateAfterAuthChange } from '@/lib/auth-navigation';
 import toast from 'react-hot-toast';
 
 export default function VerifyEmailPage() {
@@ -46,7 +47,7 @@ export default function VerifyEmailPage() {
         setAuth(res.accessToken, res.refreshToken, res.user);
         const next = consumeNext();
         toast.success(`Xush kelibsiz, ${res.user.fullName}!`);
-        setTimeout(() => router.push(next ?? '/problems'), 1200);
+        setTimeout(() => navigateAfterAuthChange(next ?? '/problems'), 1200);
       } else {
         toast.success('Email tasdiqlandi!');
         setTimeout(() => router.push('/login'), 1500);

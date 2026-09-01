@@ -170,7 +170,8 @@ export const PLATFORM_META: Record<PlatformType, PlatformMeta> = {
     cta: 'Google Play',
     storeKicker: 'GET IT ON',
     storeName: 'Google Play',
-    badgeClass: 'bg-brand-900 text-white active:bg-brand-800',
+    badgeClass:
+      'bg-brand-900 text-white hover:bg-brand-800 hover:shadow-lift active:bg-brand-800',
     chipClass: 'bg-emerald-50 text-emerald-600',
   },
   ios: {
@@ -178,7 +179,8 @@ export const PLATFORM_META: Record<PlatformType, PlatformMeta> = {
     cta: 'App Store',
     storeKicker: 'Download on the',
     storeName: 'App Store',
-    badgeClass: 'bg-brand-900 text-white active:bg-brand-800',
+    badgeClass:
+      'bg-brand-900 text-white hover:bg-brand-800 hover:shadow-lift active:bg-brand-800',
     chipClass: 'bg-slate-100 text-slate-600',
   },
   website: {
@@ -186,7 +188,8 @@ export const PLATFORM_META: Record<PlatformType, PlatformMeta> = {
     cta: 'Saytga o\'tish',
     storeKicker: 'Ochish',
     storeName: 'Veb-sayt',
-    badgeClass: 'bg-accent-600 text-white active:bg-accent-700',
+    badgeClass:
+      'bg-accent-600 text-white hover:bg-accent-700 hover:shadow-glow-accent active:bg-accent-700',
     chipClass: 'bg-accent-50 text-accent-700',
   },
   telegram_bot: {
@@ -194,7 +197,8 @@ export const PLATFORM_META: Record<PlatformType, PlatformMeta> = {
     cta: 'Telegramda ochish',
     storeKicker: 'Ochish',
     storeName: 'Telegram',
-    badgeClass: 'bg-[#229ED9] text-white active:bg-[#1B8AC0]',
+    badgeClass:
+      'bg-[#229ED9] text-white hover:bg-[#1E93CC] hover:shadow-lift active:bg-[#1B8AC0]',
     chipClass: 'bg-cyan-50 text-cyan-700',
   },
   other: {
@@ -202,7 +206,8 @@ export const PLATFORM_META: Record<PlatformType, PlatformMeta> = {
     cta: 'Havolani ochish',
     storeKicker: 'Ochish',
     storeName: 'Havola',
-    badgeClass: 'bg-iris-500 text-white active:bg-iris-600',
+    badgeClass:
+      'bg-iris-500 text-white hover:bg-iris-600 hover:shadow-glow-iris active:bg-iris-600',
     chipClass: 'bg-violet-50 text-violet-700',
   },
 };

@@ -275,6 +275,40 @@ select:-webkit-autofill {
   transform-origin: top;
 }
 
+/* ═══ SIRT RAMKASI — oq karta kulrang sahifadan AJRALSIN ══════════════
+   `shadow-card` (0 1px 2px / 4%) #F2F2F7 fonda amalda ko'rinmaydi. Katta,
+   "deraza" xarakteridagi sirtlar (chat oynasi, profil kartasi) uchun aniq
+   qirra kerak: 1px hairline halqa + haqiqiy ko'tarilish soyasi.
+   Kichik kartalarga TARQATILMAYDI — u yerda `shadow-card` ataylab tinch. */
+:root {
+  --window-shadow:
+    0 0 0 1px rgba(0, 0, 0, 0.07),
+    0 12px 32px -14px rgba(15, 23, 42, 0.28),
+    0 2px 8px -4px rgba(15, 23, 42, 0.12);
+}
+.surface-window {
+  box-shadow: var(--window-shadow);
+}
+/* `md:` varianti — Tailwind CUSTOM klass uchun variant yaratmaydi, shuning
+   uchun chegara shu yerda (chat mobilda full-bleed: ramka kerak emas). */
+@media (min-width: 768px) {
+  .surface-window-md {
+    box-shadow: var(--window-shadow);
+  }
+}
+
+/* Muqova zaxirasi — foydalanuvchida muqova rasmi YO'Q holat.
+   Ilgari `bg-slate-100` edi, ya'ni #F2F2F7 — sahifa fonining AYNAN o'zi:
+   muqova yo'lagi ko'rinmasdi va karta "boshi yo'q" bo'lib turardi
+   (2026-08-31 shikoyati). Endi brend tintidagi sirt: sahifadan aniq
+   ajraladi, lekin ustidagi avatar/ism bilan raqobatlashmaydi. */
+.cover-empty {
+  background:
+    radial-gradient(120% 150% at 14% 0%, rgba(0, 122, 255, 0.20) 0%, transparent 62%),
+    radial-gradient(100% 130% at 100% 0%, rgba(88, 86, 214, 0.16) 0%, transparent 58%),
+    linear-gradient(180deg, #e8f0fd 0%, #dbe4f3 100%);
+}
+
 /* ═══ INSET GROUPED LIST (iOS Settings uslubi) ═════════════════════════ */
 .ios-list {
   background: #ffffff;
@@ -297,14 +331,35 @@ select:-webkit-autofill {
   transform-origin: top;
   pointer-events: none;
 }
-:where(.ios-row) {
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-  min-height: 44px; /* iOS minimal tegish maydoni */
-  padding: 0.6875rem 1rem;
-  background: #ffffff;
-  transition: background-color var(--dur-micro) var(--ease-ios);
+/* Qator TANASI `@layer components` ichida — bu ATAYLAB.
+   ILDIZ SABAB (2026-08-31): `:where(.ios-row)` spetsifikatsiyasi 0 bo'lgani
+   uchun Tailwind preflight'ning ELEMENT selektori (0,0,1) uni bosib ketardi:
+     button, input, select, textarea { padding: 0; font-size: 100%; ... }
+     button { background-color: transparent; }
+   Natijada `<button class="ios-row">` (Chiqish, Hisobni o'chirish, ListRow'ning
+   onClick varianti, bildirishnoma qatorlari) padding'siz va SHAFFOF chiqardi —
+   matni qo'shni `<a>` qatoridan aynan 16px chapga sirg'algan holda.
+   `:where()` ni ko'proq spetsifikatsiya bilan almashtirish esa Tailwind
+   utilitalarini (`py-3`, `bg-accent-50/50`) sindirardi, chunki bu fayl
+   `@tailwind utilities` DAN KEYIN keladi.
+   `@layer components` ikkala talabni ham bajaradi: qoida preflight'dan KEYIN,
+   utilitalardan OLDIN joylashadi → preflight'ni yengadi, utilitalarga yon
+   beradi. Shu sababli bu yerda `:where()` KERAK EMAS.
+   Qoida: preflight qayta tiklaydigan xossani (padding/background/font/color)
+   beruvchi komponent klassi HAR DOIM shu qatlamda yoziladi. */
+@layer components {
+  .ios-row {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    min-height: 44px; /* iOS minimal tegish maydoni */
+    padding: 0.6875rem 1rem;
+    background: #ffffff;
+    transition: background-color var(--dur-micro) var(--ease-ios);
+    /* Tugma varianti `<a>` bilan bir xil ko'rinsin (preflight `text-align`ni
+       tegmaydi, lekin brauzer `button`ga `center` beradi) */
+    text-align: inherit;
+  }
 }
 .ios-row:active {
   background: var(--ios-gray6);
@@ -375,7 +430,10 @@ select:-webkit-autofill {
 
    Uch pog'onali zaxira (spetsifikatsiya `:where()` bilan 0 da ushlanadi —
    komponentning O'Z `hover:` utilitasi yoki tizim klassi doim ustun):
-     1) fonsiz boshqaruv        → ink to'qlashadi
+     1) fonsiz boshqaruv        → ink to'qlashadi (FONI BOR boshqaruvga
+                                  TEGMAYDI: `text-white` yorliqli to'ldirilgan
+                                  tugmada ink to'q bo'lib matn KO'RINMAY qolardi
+                                  — App Store / Google Play badge'lari, 2026-08-31)
      2) + radiusi bor           → orqasida BREND TINTI plate bo'lib chiqadi
                                   (kulrang yuvindi emas — mahsulot rangi)
      3) foni bor (to'ldirilgan) → yumshoq nur + bir qadam yorishish
@@ -397,7 +455,7 @@ select:-webkit-autofill {
           .hv-tile,
           :disabled
         )
-    ):hover {
+    ):where(:not([class*='bg-'], [class*='gradient-'])):hover {
     color: var(--hv-ink);
   }
 
@@ -1200,9 +1258,14 @@ select:-webkit-autofill {
    tashlanmaydi, lekin sirt "hech kimniki emas" bo'lib qolmaydi. */
 :where(.chat-canvas) {
   position: relative;
+  /* Pastki to'xtash nuqtasi ILGARI aynan #F2F2F7 — ya'ni sahifa fonining
+     O'ZI edi. Natijada chat oynasining o'ng yarmi sahifadan umuman
+     ajralmasdi (2026-08-31 shikoyati). Endi kanvas bir qadam chuqurroq va
+     salqinroq: derazaning ichi sahifadan farq qiladi va OQ kiruvchi pufak
+     ham kanvasdan aniqroq ko'tariladi. */
   background:
-    radial-gradient(115% 55% at 50% 0%, rgba(10, 132, 255, 0.05), transparent 60%),
-    linear-gradient(180deg, #f7f8fb 0%, #f2f2f7 100%);
+    radial-gradient(115% 55% at 50% 0%, rgba(10, 132, 255, 0.06), transparent 60%),
+    linear-gradient(180deg, #f6f8fc 0%, #e9edf6 100%);
 }
 .chat-canvas::before {
   content: '';
@@ -1222,7 +1285,7 @@ select:-webkit-autofill {
   height: 18px;
   z-index: 4;
   pointer-events: none;
-  background: linear-gradient(180deg, #f7f8fb, rgba(247, 248, 251, 0));
+  background: linear-gradient(180deg, #f6f8fc, rgba(246, 248, 252, 0));
 }
 
 /* ── Pufaklar ──────────────────────────────────────────────────────

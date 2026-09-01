@@ -1,9 +1,9 @@
 'use client';
 
 import { useEffect, useRef } from 'react';
-import { useRouter } from 'next/navigation';
 import { useAuthStore } from '@/store/auth.store';
 import { consumeNext } from '@/components/auth/next-capture';
+import { navigateAfterAuthChange } from '@/lib/auth-navigation';
 
 /**
  * Login/Register sahifalari uchun: foydalanuvchi ALLAQACHON kirgan bo'lsa
@@ -17,7 +17,6 @@ import { consumeNext } from '@/components/auth/next-capture';
  * (masalan login formasi o'z push'i) bilan RAQOBATLASHMAYDI.
  */
 export function AuthedRedirect() {
-  const router = useRouter();
   const hasHydrated = useAuthStore((s) => s.hasHydrated);
   const done = useRef(false);
 
@@ -25,9 +24,13 @@ export function AuthedRedirect() {
     if (!hasHydrated || done.current) return;
     done.current = true;
     if (useAuthStore.getState().token) {
-      router.replace(consumeNext() ?? '/');
+      // To'liq yuklash bilan (`navigateAfterAuthChange`) — chunki bu yerga
+      // tushishning O'ZI ko'pincha mehmon davrida keshlangan redirect
+      // sababli bo'ladi. Soft `router.replace` ishlatilsa maqsad sahifasi
+      // ham o'sha keshdan redirect qaytarib, ping-pong hosil bo'lardi.
+      navigateAfterAuthChange(consumeNext() ?? '/');
     }
-  }, [hasHydrated, router]);
+  }, [hasHydrated]);
 
   return null;
 }

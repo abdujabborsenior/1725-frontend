@@ -81,9 +81,40 @@ function externalOrigin(request: NextRequest): string {
   return `${proto}://${host}`; // lokal dev — o'zi to'g'ri
 }
 
+/**
+ * So'rov spekulyativ PREFETCH'mi?
+ *
+ * Prefetch'ga redirect qaytarish xavfli: javob mijoz keshiga yozilib qoladi
+ * va keyinchalik foydalanuvchi holati o'zgargach (masalan kirgach) ESKI
+ * qaror qayta ijro etiladi.
+ *
+ * ⚠️ QAMROV (o'lchab tekshirilgan, 2026-08-31): brauzerning O'Z spekulyativ
+ * prefetch'i (`purpose` / `x-purpose` / `x-moz`) bu qorovulga TUSHADI va
+ * redirect qilinmaydi. Next'ning `<Link>` prefetch'i esa `Next-Router-Prefetch: 1`
+ * yuborsa ham, ishlatilayotgan Next versiyasi bu sarlavhani middleware'ga
+ * BERMAYDI (curl bilan tasdiqlangan: `purpose: prefetch` → 200,
+ * `Next-Router-Prefetch: 1` → 307). Shuning uchun Next Router Cache'ining
+ * zaharlanishi bu yerda EMAS, `lib/auth-navigation.ts` da — auth holati
+ * o'zgarganda to'liq yuklash bilan — yopiladi. Sarlavha ro'yxatда qoldirilgan:
+ * kelajak versiyada uzatilsa, himoya o'zidan-o'zi kuchga kiradi.
+ */
+function isPrefetch(request: NextRequest): boolean {
+  return (
+    request.headers.get('next-router-prefetch') === '1' ||
+    request.headers.get('purpose') === 'prefetch' ||
+    request.headers.get('x-purpose') === 'prefetch' ||
+    request.headers.get('x-moz') === 'prefetch'
+  );
+}
+
 export function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
   const token = request.cookies.get('sh_token')?.value;
+
+  // Spekulyativ prefetch — redirect qilmaymiz (keshga yozilib qolmasin).
+  // Sahifalarning o'z klient qorovullari (`hasHydrated && !token`) mehmonni
+  // baribir to'g'ri joyga yuboradi, faqat haqiqiy bosishda.
+  if (isPrefetch(request)) return NextResponse.next();
 
   const isPublic = PUBLIC_PATHS.some((p) => pathname.startsWith(p));
   const isProtected =

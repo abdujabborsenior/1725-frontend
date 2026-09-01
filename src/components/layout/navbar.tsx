@@ -9,6 +9,7 @@ import { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { cn } from '@/lib/utils';
 import { useAuthStore } from '@/store/auth.store';
+import { navigateAfterAuthChange } from '@/lib/auth-navigation';
 import { authApi, chatApi } from '@/lib/api';
 import { Avatar } from '@/components/ui/avatar';
 import { NotificationBell } from '@/components/layout/notification-bell';
@@ -108,7 +109,7 @@ export function Navbar() {
     }
     clearAuth();
     toast.success('Tizimdan chiqdingiz');
-    router.push('/login');
+    navigateAfterAuthChange('/login');
   }
 
   const links = NAV_LINKS.filter((l) => !l.authOnly || token);
