@@ -45,6 +45,29 @@ const NEUTRAL_TINT = {
   cover: 'bg-gradient-to-br from-slate-300 to-slate-400',
 };
 
+/**
+ * O'sha slotlarning TO'Q sirt uchun ochartirilgan variantlari (Yechim AI
+ * Studio). Tungi fonda iOS 500 ranglari o'qilmaydi — bular yoritilgan,
+ * lekin AYNAN o'sha tasnif oilasiga tegishli: bir soha butun mahsulotda
+ * bir xil "rang shaxsiyati"ni saqlaydi.
+ */
+const TINTS_DARK = [
+  '#4DA3FF',
+  '#9A97FF',
+  '#4FE07C',
+  '#FFB84D',
+  '#FF6B8A',
+  '#C58BF0',
+  '#5CC8F5',
+  '#4FCFE0',
+] as const;
+
+/** To'q sirt uchun kategoriya rangi (hex). Kategoriyasiz — neytral ko'k. */
+export function categoryTintDark(category?: string | null): string {
+  const key = category?.trim();
+  return key ? TINTS_DARK[slotFor(key)] : '#7F8DA9';
+}
+
 export function categoryTint(category?: string | null): {
   chip: string;
   bar: string;

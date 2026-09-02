@@ -1,8 +1,7 @@
 import { Suspense } from 'react';
 import type { Metadata } from 'next';
 
-import { AiConsole } from '@/components/ai/ai-console';
-import { YechimMark } from '@/components/ai/yechim-mark';
+import { AiWorkspace } from '@/components/ai/ai-workspace';
 
 export const metadata: Metadata = {
   title: 'Yechim AI — muammoingizga yechim topadi',
@@ -11,29 +10,13 @@ export const metadata: Metadata = {
 };
 
 /**
- * Yechim AI sahifasi.
- *
- * Sarlavha server komponentida (SSR bilan darhol keladi — LCP matn),
- * interaktiv qism esa `AiConsole` klientida. `useSearchParams` ishlatilgani
- * uchun Suspense chegarasi majburiy (Next 14 app router).
- *
- * Maket: sahifa ekran balandligiga qamalgan (layout `h-dvh`) — sarlavha
- * tepada qotadi, konsol qolgan bo'shliqni to'liq egallaydi.
+ * Yechim AI sahifasi — butun ekran Studio'ga beriladi.
+ * `useSearchParams` ishlatilgani uchun Suspense chegarasi majburiy (Next 14).
  */
 export default function AiPage() {
   return (
-    <>
-      {/* Sahifa yorlig'i ATAYLAB kichik: qahramon — konsolning o'zi.
-          Katta sarlavha bo'sh holatning ichida (mark bilan birga) turadi,
-          shuning uchun bu yerda faqat "qayerdaman?" javobi bo'lishi kerak. */}
-      <header className="mb-1 flex shrink-0 items-center gap-2">
-        <YechimMark size={20} className="ai-open-mark" />
-        <h1 className="text-subhead font-semibold tracking-tight text-slate-500">Yechim AI</h1>
-      </header>
-
-      <Suspense fallback={null}>
-        <AiConsole />
-      </Suspense>
-    </>
+    <Suspense fallback={null}>
+      <AiWorkspace />
+    </Suspense>
   );
 }

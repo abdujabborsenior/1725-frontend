@@ -557,6 +557,9 @@ export interface AiRelatedProblem {
 
 export interface AiSolveResult {
   queryId: string;
+  /** Savol tushgan suhbat (yangi bo'lsa — endi ochilgani) */
+  conversationId: string;
+  conversationTitle: string;
   question: string;
   answer: string;
   matches: AiMatch[];
@@ -567,6 +570,38 @@ export interface AiSolveResult {
   noSolution: boolean;
   draft: AiDraft | null;
   cached: boolean;
+}
+
+/** Tarix ro'yxatidagi suhbat (yengil shakl — javoblarsiz) */
+export interface AiConversationSummary {
+  id: string;
+  title: string;
+  turnCount: number;
+  lastMessageAt: string;
+}
+
+/** Suhbatdagi bitta savol-javob (tarixdan tiklangan) */
+export interface AiConversationTurn {
+  queryId: string;
+  question: string;
+  createdAt: string;
+  source: 'text' | 'voice';
+  feedback: 'up' | 'down' | null;
+  answer: string;
+  matches: AiMatch[];
+  relatedProblems: AiRelatedProblem[];
+  steps: string[];
+  noSolution: boolean;
+  draft: AiDraft | null;
+  publishedProblemId: string | null;
+}
+
+export interface AiConversationDetail {
+  id: string;
+  title: string;
+  createdAt: string;
+  lastMessageAt: string;
+  turns: AiConversationTurn[];
 }
 
 /* ── Obuna / to'lov (Payme) ───────────────────────────────────── */

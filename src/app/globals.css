@@ -96,6 +96,8 @@
 
   /* iOS interfeys egri chizig'i va davomiyliklari */
   --ease-ios: cubic-bezier(0.32, 0.72, 0, 1);
+  /* Ozgina "otilib" qaytadigan egri — element paydo bo'lganda (spring) */
+  --ease-ios-spring: cubic-bezier(0.34, 1.32, 0.64, 1);
   --dur-micro: 150ms;
   --dur-base: 250ms;
   --dur-sheet: 420ms;
@@ -1886,49 +1888,267 @@ select:-webkit-autofill {
   animation: sparkFloat 0.85s var(--ease-ios) both;
 }
 
-/* ═══ YECHIM AI — "Intelligence" qatlami ══════════════════════════════
-   AI mahsulotning yagona "aqlli" yuzasi. Uning vizual tili qolgan iOS
-   sirtlaridan ATAYLAB ajraladi (foydalanuvchi bir qarashda "bu — aqlli
-   qism" ekanini bilsin), lekin intizom saqlanadi:
-     · ranglar — Apple system spektri (blue → indigo → purple → pink),
-       boshqa hech qayerga tarqalmaydi;
-     · harakat — MAQSADLI: har animatsiya biror holatni bildiradi
-       (o'ylayapti / topildi / yangi kontent keldi), dekor uchun emas;
-     · sirtlar — oq va tinch; farq faqat NUR (aura/halo) bilan beriladi.
+/* ═══ YECHIM AI — "Studio" qatlami ════════════════════════════════════
+   AI — sayt sahifasi emas, ALOHIDA XONA. Butun mahsulot oq va tinch
+   (iOS), Studio esa chuqur tungi sirt: foydalanuvchi bir qadamda "aqlli
+   qismga kirdim" degan hissiyotni oladi va e'tibor faqat javobga qaraydi.
 
-   Signature: `.ai-reveal` — javob matni bo'ylab yorug'lik yugurib matnni
-   "ochib" chiqadi. Haqiqiy token-streaming emas (server javobi butun
-   keladi), lekin fikr tug'ilishining his-tuyg'usini beradi — va DOM
-   bir marta yoziladi, ya'ni CLS 0. */
+   Nega aynan bu rang: to'q kok — MYMarkaz belgisining o'z rangi
+   (#0A192F → #74ABD8). Ya'ni tungi sirt tashqaridan olingan "trend" emas,
+   brendning o'zidan chiqadi.
 
-/* Burchakni animatsiya qilish uchun (conic gradientni aylantirish).
-   Qo'llab-quvvatlanmasa — gradient statik qoladi (xavfsiz degradatsiya). */
+   Intizom (charter §2.7 — bachkanalik yo'q):
+     · Harakat MA'NO tashiydi: qidiryapti / topdi / yangi javob keldi.
+       Bezak uchun cheksiz animatsiya YO'Q — aurora bundan mustasno,
+       u fon (o'ta sekin, kontrastsiz) va e'tiborni tortmaydi.
+     · Rang oilasi tor: ko'k → indigo (+ bitta "topildi" yashili).
+       Kamalak yo'q.
+     · Sirtlar tekis; ierarxiya NUR va hairline bilan beriladi, chegara
+       va soya bilan emas.
+   ─────────────────────────────────────────────────────────────────── */
+
+/* Konus gradientni aylantirish uchun (qo'llab-quvvatlanmasa — statik). */
 @property --ai-angle {
   syntax: '<angle>';
   initial-value: 0deg;
   inherits: false;
 }
 
-:root {
-  /* Spektr ATAYLAB tor: ko'k → indigo → bitta yumshoq binafsha nuqta.
-     Pushti/magenta OLIB TASHLANDI — u "kamalak" (vibe-code) hidini berardi
-     va mahsulotning yagona tint oilasidan chiqib ketardi. */
-  --ai-1: #0a84ff; /* systemBlue */
-  --ai-2: #3f7bf5; /* ko'k → indigo o'tishi */
-  --ai-3: #5856d6; /* systemIndigo */
-  --ai-4: #7b62e0; /* yumshoq binafsha — tor "issiq" nuqta */
-  /* Ko'k → indigo asosiy; siyoh va pushti faqat "issiq" nuqta sifatida
-     (spektr aylanganda tor yoy) — hoshiya jiddiy qoladi, kamalak emas. */
-  --ai-spectrum: conic-gradient(
-    from var(--ai-angle),
-    var(--ai-1),
-    var(--ai-2) 30%,
-    var(--ai-3) 52%,
-    var(--ai-4) 62%,
-    var(--ai-3) 72%,
-    var(--ai-2) 88%,
-    var(--ai-1)
+.yz {
+  /* Sirtlar */
+  --yz-void: #070c18;
+  --yz-panel: #0c1322;
+  --yz-raise: rgba(255, 255, 255, 0.055);
+  --yz-raise-2: rgba(255, 255, 255, 0.09);
+  --yz-line: rgba(255, 255, 255, 0.08);
+  --yz-line-2: rgba(255, 255, 255, 0.16);
+  /* Matn (kontrast tungi sirtda o'lchangan — hammasi AA dan yuqori) */
+  --yz-ink: #edf2fb; /* 17:1 */
+  --yz-ink-2: #a7b4cc; /* 9.0:1 */
+  --yz-ink-3: #7f8da9; /* 5.6:1 */
+  /* Urg'u */
+  --yz-blue: #4da3ff;
+  --yz-indigo: #9a97ff;
+  --yz-mint: #3ddcb0;
+  --ai-angle: 0deg;
+
+  position: relative;
+  isolation: isolate;
+  background: var(--yz-void);
+  color: var(--yz-ink);
+}
+
+/* Aurora — uchta qatlam, uch xil davr bilan suriladi. Hech qachon
+   takrorlanish sezilmaydi (davrlar tub sonlarga yaqin), lekin harakat
+   shu qadar sekinki, o'qishga xalaqit bermaydi. */
+.yz::before {
+  content: '';
+  position: absolute;
+  inset: -25%;
+  z-index: -2;
+  pointer-events: none;
+  background:
+    radial-gradient(38% 42% at 14% 8%, rgba(30, 91, 255, 0.42), transparent 70%),
+    radial-gradient(34% 38% at 86% 4%, rgba(108, 75, 245, 0.38), transparent 72%),
+    radial-gradient(50% 40% at 50% 104%, rgba(20, 86, 210, 0.34), transparent 68%);
+  animation: yzDrift 46s ease-in-out infinite alternate;
+}
+/* Vinyetka — chetlar to'qlashadi, markaz (kontent) yorug' qoladi. */
+.yz::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background: radial-gradient(
+    120% 90% at 50% 0%,
+    transparent 38%,
+    rgba(3, 6, 14, 0.82) 100%
   );
+}
+
+@keyframes yzDrift {
+  0% {
+    transform: translate3d(-2%, -1%, 0) scale(1);
+  }
+  50% {
+    transform: translate3d(2%, 2%, 0) scale(1.06);
+  }
+  100% {
+    transform: translate3d(-1%, 1.5%, 0) scale(1.02);
+  }
+}
+
+/* Bosh sahifadagi tor band (~150px): Studio gradientlari bunday balandlikda
+   kadrdan chiqib ketadi — shuning uchun yassi va kengroq variant. */
+.yz-band::before {
+  inset: -60% -10%;
+  background:
+    radial-gradient(30% 120% at 10% 50%, rgba(30, 91, 255, 0.5), transparent 72%),
+    radial-gradient(26% 110% at 62% 40%, rgba(108, 75, 245, 0.34), transparent 74%),
+    radial-gradient(34% 130% at 96% 60%, rgba(20, 86, 210, 0.42), transparent 70%);
+}
+.yz-band::after {
+  background: radial-gradient(
+    100% 140% at 50% 50%,
+    transparent 30%,
+    rgba(3, 6, 14, 0.6) 100%
+  );
+}
+
+/* Nozik don (grain) — "chop etilgan" sirt hissi. Sof CSS, so'rovsiz. */
+.yz-grain {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  opacity: 0.05;
+  mix-blend-mode: overlay;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+/* Kirish maydoni turgan zona ostidagi yumshoq nur — ekranning "og'irlik
+   markazi" pastda ekanini bildiradi va composer fonda yo'qolib ketmaydi. */
+.yz-horizon {
+  position: absolute;
+  inset: auto 0 0;
+  height: 220px;
+  z-index: -1;
+  pointer-events: none;
+  background: radial-gradient(
+    70% 100% at 50% 128%,
+    rgba(77, 163, 255, 0.22),
+    transparent 72%
+  );
+}
+
+/* ── Sirtlar ─────────────────────────────────────────────────────── */
+
+/* Panel — material (top bar, rail, menyu). Ota elementda backdrop-filter
+   YO'Q, shuning uchun blur haqiqatan ishlaydi. */
+.yz-panel {
+  background: rgba(10, 16, 28, 0.72);
+  backdrop-filter: blur(22px) saturate(150%);
+  -webkit-backdrop-filter: blur(22px) saturate(150%);
+}
+/* Suzuvchi menyu — o'qilishi blur'ga TAYANMAYDI (2026-08-19 darsi:
+   backdrop-filter'li ota ichida blur ishlamaydi). */
+.yz-menu {
+  background: #101a2c;
+  border: 1px solid var(--yz-line-2);
+  box-shadow: 0 24px 60px -16px rgba(0, 0, 0, 0.7);
+}
+
+/* Karta — tekis sirt + tepadan tushgan yorug'lik chizig'i. */
+.yz-card {
+  position: relative;
+  background: var(--yz-raise);
+  border: 1px solid var(--yz-line);
+  border-radius: 18px;
+}
+.yz-card::before {
+  content: '';
+  position: absolute;
+  inset: 0 12px auto;
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.22),
+    transparent
+  );
+}
+/* Bosiladigan karta: hover'da yoritiladi (XIRALASHMAYDI — §2.9). */
+@media (hover: hover) and (pointer: fine) {
+  .yz-card-tap:hover {
+    background: var(--yz-raise-2);
+    border-color: var(--yz-line-2);
+    transform: translateY(-2px);
+    box-shadow: 0 18px 44px -22px rgba(0, 0, 0, 0.9),
+      0 0 0 1px rgba(255, 255, 255, 0.04),
+      0 10px 40px -18px var(--yz-tint, rgba(77, 163, 255, 0.55));
+  }
+}
+.yz-card-tap {
+  transition: transform 0.25s var(--ease-ios), background 0.25s var(--ease-ios),
+    border-color 0.25s var(--ease-ios), box-shadow 0.25s var(--ease-ios);
+}
+.yz-card-tap:active {
+  transform: scale(0.985);
+}
+
+/* ── Kirish maydoni: "tirik" hoshiya ─────────────────────────────── */
+
+.ai-spectrum {
+  background: conic-gradient(
+    from var(--ai-angle),
+    #0a84ff,
+    #4da3ff 26%,
+    #7b7bf5 48%,
+    #9a97ff 60%,
+    #5b8dff 78%,
+    #0a84ff
+  );
+}
+
+:where(.yz-ring) {
+  position: relative;
+  border-radius: 26px;
+  background: rgba(255, 255, 255, 0.06);
+}
+/* Hoshiya — konus gradient "mask" bilan faqat 1.5px chekkada ko'rinadi */
+.yz-ring::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  padding: var(--yz-ring-w, 1.5px);
+  background: conic-gradient(
+    from var(--ai-angle),
+    #0a84ff,
+    #4da3ff 26%,
+    #7b7bf5 48%,
+    #9a97ff 60%,
+    #5b8dff 78%,
+    #0a84ff
+  );
+  opacity: var(--yz-ring-o, 0.5);
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  animation: aiAngle var(--yz-ring-speed, 16s) linear infinite;
+  transition: opacity 0.4s var(--ease-ios);
+  pointer-events: none;
+}
+/* Ostidagi nur — fokusda "yonadi" */
+.yz-ring::after {
+  content: '';
+  position: absolute;
+  inset: -14px;
+  z-index: -1;
+  border-radius: inherit;
+  background: radial-gradient(
+    60% 100% at 50% 50%,
+    rgba(77, 163, 255, 0.5),
+    transparent 70%
+  );
+  opacity: var(--yz-glow, 0.16);
+  filter: blur(16px);
+  transition: opacity 0.4s var(--ease-ios);
+  pointer-events: none;
+}
+.yz-ring:focus-within,
+.yz-ring[data-state='busy'] {
+  --yz-ring-o: 1;
+  --yz-ring-speed: 4s;
+  --yz-glow: 0.42;
+}
+@media (hover: hover) and (pointer: fine) {
+  .yz-ring:hover {
+    --yz-ring-o: 0.75;
+    --yz-glow: 0.26;
+  }
 }
 
 @keyframes aiAngle {
@@ -1937,226 +2157,14 @@ select:-webkit-autofill {
   }
 }
 
-/* ── AURA: aylanuvchi spektr hoshiya ────────────────────────────────
-   Ichi oq qoladi (mask-composite), ya'ni sirt tinch — faqat 1.5px
-   chegara "tirik". `data-state="thinking"` da tezlashadi va yorqinlashadi. */
-:where(.ai-aura) {
-  position: relative;
-  /* Oq sirt + deyarli sezilmas radial chuqurlik (4–5%): karta "tekis
-     qog'oz" emas, ichida yorug'lik bordek tuyuladi. Bu — Apple'ning
-     "material" hissi, gradient shovqini emas. */
-  background:
-    radial-gradient(120% 90% at 12% 0%, rgba(10, 132, 255, 0.05), transparent 60%),
-    radial-gradient(110% 90% at 100% 100%, rgba(88, 86, 214, 0.05), transparent 62%),
-    #fff;
-  isolation: isolate;
-}
-.ai-aura::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  border-radius: inherit;
-  padding: var(--ai-ring, 1.5px);
-  background: var(--ai-spectrum);
-  opacity: var(--ai-ring-opacity, 0.85);
-  -webkit-mask:
-    linear-gradient(#000 0 0) content-box,
-    linear-gradient(#000 0 0);
-  -webkit-mask-composite: xor;
-  mask:
-    linear-gradient(#000 0 0) content-box,
-    linear-gradient(#000 0 0);
-  mask-composite: exclude;
-  animation: aiAngle var(--ai-speed, 14s) linear infinite;
-  transition:
-    opacity 0.5s var(--ease-ios),
-    filter 0.5s var(--ease-ios);
-  pointer-events: none;
-}
-/* Tashqi yumshoq nur — sirtdan "chiqib turadi", lekin juda past opacity */
-.ai-aura::after {
-  content: '';
-  position: absolute;
-  inset: -1px;
-  z-index: -1;
-  border-radius: inherit;
-  background: var(--ai-spectrum);
-  filter: blur(18px);
-  opacity: var(--ai-glow, 0);
-  transition: opacity 0.6s var(--ease-ios);
-  animation: aiAngle var(--ai-speed, 14s) linear infinite;
-  pointer-events: none;
-}
-/* Tinch holatdagi nur — landing kirish maydoni uchun (sirtdan ko'tarilib
-   turadi). ⚠️ Bu ATAYLAB klass: qiymat `style={{'--ai-glow'}}` bilan inline
-   berilsa, fokusdagi `--ai-glow: 0.3` uni HECH QACHON bosa olmaydi (inline
-   ustuvor) — maydon fokusda jonlanmay qolardi. */
-.ai-aura-idle {
-  --ai-glow: 0.14;
-}
+/* ── Belgi (orb) animatsiyalari ──────────────────────────────────── */
 
-/* Kursor ustida — fokusdan bir qadam past: hoshiya to'liq yonadi, nur
-   ozgina ko'tariladi. Fokus qoidasi PASTDA turadi (bir xil spetsifikatsiya,
-   keyingi manba) — ya'ni fokus doim ustun. */
-@media (hover: hover) and (pointer: fine) {
-  .ai-aura:hover {
-    --ai-speed: 7s;
-    --ai-glow: 0.22;
-    --ai-ring-opacity: 1;
-  }
+.ai-orbit {
+  animation: aiOrbit var(--ai-orbit-dur, 2.4s) linear infinite;
 }
-
-/* Fokus / faol holat — nur jonlanadi (nozik, bachkana emas) */
-.ai-aura:focus-within,
-.ai-aura[data-state='thinking'] {
-  --ai-speed: 3.2s;
-  --ai-glow: 0.3;
-  --ai-ring-opacity: 1;
+.ai-orbit-back {
+  animation: aiOrbitBack var(--ai-orbit-dur, 3.6s) linear infinite;
 }
-.ai-aura[data-state='thinking'] {
-  --ai-ring: 2px;
-}
-
-/* Aura sirtining RINGSIZ varianti — karta/panel uchun.
-   Qoida: bitta ekranda faqat BITTA "tirik" hoshiya bo'ladi (diqqat
-   markazi bitta). Konteyner `.ai-surface` bilan tinch qoladi, hoshiya
-   esa asosiy harakat elementiga (kirish maydoni) beriladi. */
-.ai-surface {
-  background:
-    radial-gradient(120% 90% at 12% 0%, rgba(10, 132, 255, 0.05), transparent 60%),
-    radial-gradient(110% 90% at 100% 100%, rgba(88, 86, 214, 0.05), transparent 62%),
-    #fff;
-}
-
-/* ── SIGNATURE: javob matnining yorug'lik bilan ochilishi ───────────
-   Mask chapdan o'ngga suriladi: matn "yozilib" chiqqanday ko'rinadi. */
-@keyframes aiReveal {
-  from {
-    -webkit-mask-position: 100% 0;
-    mask-position: 100% 0;
-  }
-  to {
-    -webkit-mask-position: 0 0;
-    mask-position: 0 0;
-  }
-}
-.ai-reveal {
-  -webkit-mask-image: linear-gradient(
-    90deg,
-    #000 0 30%,
-    rgba(0, 0, 0, 0.55) 42%,
-    rgba(0, 0, 0, 0.06) 50%,
-    transparent 56%
-  );
-  mask-image: linear-gradient(
-    90deg,
-    #000 0 30%,
-    rgba(0, 0, 0, 0.55) 42%,
-    rgba(0, 0, 0, 0.06) 50%,
-    transparent 56%
-  );
-  -webkit-mask-size: 260% 100%;
-  mask-size: 260% 100%;
-  -webkit-mask-repeat: no-repeat;
-  mask-repeat: no-repeat;
-  animation: aiReveal var(--ai-reveal-dur, 0.9s) var(--ease-ios) both;
-  animation-delay: var(--ai-delay, 0s);
-}
-
-/* ── Kontent bloklarining ketma-ket "materializatsiyasi" ───────────
-   Blur → sharp: natija "fokusga keladi" (AI aniqlik topgani hissi). */
-@keyframes aiFocusIn {
-  from {
-    opacity: 0;
-    transform: translateY(10px) scale(0.985);
-    filter: blur(6px);
-  }
-  to {
-    opacity: 1;
-    transform: none;
-    filter: blur(0);
-  }
-}
-.ai-focus-in {
-  animation: aiFocusIn 0.55s var(--ease-ios) both;
-  animation-delay: var(--ai-delay, 0s);
-}
-
-/* ── Savol pufagi — spring bilan "uchib chiqadi" ───────────────────── */
-@keyframes aiAsk {
-  0% {
-    opacity: 0;
-    transform: translateY(14px) scale(0.9);
-  }
-  60% {
-    opacity: 1;
-    transform: translateY(-2px) scale(1.014);
-  }
-  100% {
-    opacity: 1;
-    transform: none;
-  }
-}
-.ai-ask {
-  animation: aiAsk 0.46s cubic-bezier(0.34, 1.35, 0.64, 1) both;
-}
-
-/* ── Skaner nuri: "loyihalar ko'rib chiqilmoqda" ───────────────────
-   Yuzasi bo'ylab yupqa yorug'lik pastga tushadi (thinking paytida). */
-@keyframes aiScan {
-  0% {
-    transform: translateY(-120%);
-    opacity: 0;
-  }
-  15%,
-  85% {
-    opacity: 1;
-  }
-  100% {
-    transform: translateY(320%);
-    opacity: 0;
-  }
-}
-:where(.ai-scan) {
-  position: relative;
-  overflow: hidden;
-}
-.ai-scan::after {
-  content: '';
-  position: absolute;
-  left: 0;
-  right: 0;
-  top: 0;
-  height: 34%;
-  background: linear-gradient(180deg, transparent, rgba(10, 132, 255, 0.13), transparent);
-  animation: aiScan 1.9s var(--ease-ios) infinite;
-  pointer-events: none;
-}
-
-/* ── Shimmer matn ("Yechim izlanmoqda…") ───────────────────────────── */
-@keyframes aiShimmer {
-  to {
-    background-position: 200% center;
-  }
-}
-.ai-shimmer {
-  background: linear-gradient(
-    90deg,
-    #8e8e93 0%,
-    #8e8e93 28%,
-    var(--ai-1) 42%,
-    var(--ai-3) 52%,
-    #8e8e93 66%,
-    #8e8e93 100%
-  );
-  background-size: 220% auto;
-  background-clip: text;
-  -webkit-background-clip: text;
-  color: transparent;
-  animation: aiShimmer 2.4s linear infinite;
-}
-
-/* ── Mark holatlari (SVG ichida) ───────────────────────────────────── */
 @keyframes aiOrbit {
   to {
     transform: rotate(360deg);
@@ -2167,35 +2175,51 @@ select:-webkit-autofill {
     transform: rotate(-360deg);
   }
 }
+/* Tinch nafas — belgi "tirik", lekin e'tiborni tortmaydi */
+.ai-breath {
+  animation: aiBreath 2.4s ease-in-out infinite;
+}
+.ai-breath-slow {
+  animation: aiBreath 6s ease-in-out infinite;
+}
 @keyframes aiBreath {
   0%,
   100% {
     transform: scale(1);
-    opacity: 1;
+    opacity: 0.92;
   }
   50% {
-    transform: scale(0.93);
-    opacity: 0.82;
+    transform: scale(1.09);
+    opacity: 1;
   }
+}
+/* Tarqaluvchi to'lqin — qidiruv maydoni kengaymoqda */
+.ai-pulse-ring {
+  animation: aiPulseRing 2.8s var(--ease-ios) infinite;
+  opacity: 0;
 }
 @keyframes aiPulseRing {
   0% {
-    transform: scale(0.7);
-    opacity: 0.5;
+    transform: scale(0.72);
+    opacity: 0.55;
   }
+  70%,
   100% {
-    transform: scale(1.35);
+    transform: scale(1.5);
     opacity: 0;
   }
 }
-/* Yechim topilgan lahza — uchqun bir marta "portlaydi" */
+/* "Topildi" — bir marta portlaydi va tinchiydi */
+.ai-found {
+  animation: aiFound 0.85s var(--ease-ios-spring) both;
+}
 @keyframes aiFound {
   0% {
-    transform: scale(0.72) rotate(-24deg);
-    opacity: 0.4;
+    transform: scale(0.3) rotate(-25deg);
+    opacity: 0;
   }
   55% {
-    transform: scale(1.16) rotate(6deg);
+    transform: scale(1.22) rotate(6deg);
     opacity: 1;
   }
   100% {
@@ -2203,126 +2227,23 @@ select:-webkit-autofill {
     opacity: 1;
   }
 }
-.ai-orbit {
-  animation: aiOrbit var(--ai-orbit-dur, 2.4s) linear infinite;
-  transform-origin: center;
-}
-.ai-orbit-back {
-  animation: aiOrbitBack var(--ai-orbit-dur, 3.6s) linear infinite;
-  transform-origin: center;
-}
-.ai-breath {
-  animation: aiBreath 1.6s var(--ease-ios) infinite;
-  transform-origin: center;
-}
-.ai-breath-slow {
-  animation: aiBreath 4.5s var(--ease-ios) infinite;
-  transform-origin: center;
-}
-.ai-pulse-ring {
-  animation: aiPulseRing 1.9s var(--ease-ios) infinite;
-  transform-origin: center;
-}
-.ai-found {
-  animation: aiFound 0.62s cubic-bezier(0.34, 1.4, 0.64, 1) both;
-  transform-origin: center;
-}
 
-/* ── Typewriter kursori (jonli placeholder) ────────────────────────── */
-@keyframes aiCaret {
-  0%,
-  45% {
-    opacity: 1;
-  }
-  55%,
-  100% {
-    opacity: 0;
-  }
-}
-.ai-caret {
+/* ── Javob materializatsiyasi ────────────────────────────────────── */
+
+/* Signature: javob SO'ZMA-SO'Z tug'iladi. Haqiqiy token-streaming emas
+   (server javobi butun keladi), lekin fikr shakllanayotgan hissini
+   beradi. DOM bir marta yoziladi → CLS 0, layout sakramaydi. */
+.yz-word {
   display: inline-block;
-  width: 1.5px;
-  height: 1.05em;
-  vertical-align: -0.16em;
-  margin-left: 1px;
-  background: var(--ai-1);
-  border-radius: 1px;
-  animation: aiCaret 1.05s steps(1, end) infinite;
+  white-space: pre-wrap;
+  animation: yzWord 0.52s var(--ease-ios) both;
+  animation-delay: calc(var(--i, 0) * 24ms);
 }
-
-/* ── Ovoz to'lqini (jonli amplituda) ──────────────────────────────── */
-.ai-bar {
-  width: 3px;
-  border-radius: 999px;
-  background: currentColor;
-  height: calc(4px + var(--amp, 0) * 24px);
-  transition: height 0.1s linear;
-}
-
-/* ── SIGNATURE: "Yechim yig'ilishi" (AI sahifasi ochilishi) ─────────
-   Mahsulot g'oyasining bir sekundlik vizual bayoni: platformaga sochilgan
-   loyihalar (nuqtalar) chetdan kelib MARKAZGA yig'iladi va o'sha yerda
-   uchqun — yechim — yonadi. Ya'ni animatsiya bezak emas, u AI nima
-   qilishini AYTADI. Bir marta o'ynaydi, keyin DOM'da hech narsa
-   qimirlamaydi (`forwards` + `pointer-events:none`).
-
-   Har nuqta o'z burchagi (--a), radiusi (--r) va navbatiga (--d) ega. */
-@keyframes aiGather {
-  0% {
-    transform: rotate(var(--a)) translateY(calc(-1 * var(--r))) rotate(calc(-1 * var(--a))) scale(1);
-    opacity: 0;
-  }
-  14% {
-    opacity: 1;
-  }
-  55% {
-    transform: rotate(var(--a)) translateY(calc(-0.42 * var(--r))) rotate(calc(-1 * var(--a))) scale(0.95);
-    opacity: 1;
-  }
-  100% {
-    transform: rotate(var(--a)) translateY(0) rotate(calc(-1 * var(--a))) scale(0.15);
-    opacity: 0;
-  }
-}
-.ai-gather {
-  position: absolute;
-  left: 50%;
-  top: 50%;
-  height: 8px;
-  width: 8px;
-  margin: -4px 0 0 -4px;
-  border-radius: 999px;
-  background: var(--c, var(--ai-1));
-  /* Zarraga yorug'lik: markazga yaqinlashganda "ichkariga so'riladi" */
-  box-shadow: 0 0 10px var(--c, var(--ai-1));
-  animation: aiGather 1.25s cubic-bezier(0.42, 0, 0.25, 1) both;
-  animation-delay: var(--d, 0s);
-  pointer-events: none;
-}
-
-/* ── Sahifa ochilish sekvensiyasi ─────────────────────────────────── */
-@keyframes aiOpenMark {
-  0% {
-    opacity: 0;
-    transform: scale(0.55) rotate(-40deg);
-  }
-  60% {
-    opacity: 1;
-    transform: scale(1.08) rotate(4deg);
-  }
-  100% {
-    opacity: 1;
-    transform: scale(1) rotate(0);
-  }
-}
-.ai-open-mark {
-  animation: aiOpenMark 0.72s cubic-bezier(0.34, 1.28, 0.64, 1) both;
-}
-@keyframes aiOpenText {
+@keyframes yzWord {
   from {
     opacity: 0;
-    transform: translateY(8px);
-    filter: blur(4px);
+    transform: translateY(0.32em);
+    filter: blur(5px);
   }
   to {
     opacity: 1;
@@ -2330,12 +2251,281 @@ select:-webkit-autofill {
     filter: blur(0);
   }
 }
-.ai-open-text {
-  animation: aiOpenText 0.55s var(--ease-ios) both;
-  animation-delay: var(--ai-delay, 0.1s);
+
+/* Blok materializatsiyasi — kartalar, ro'yxatlar */
+.yz-rise {
+  animation: yzRise 0.6s var(--ease-ios) both;
+  animation-delay: var(--d, 0s);
+}
+@keyframes yzRise {
+  from {
+    opacity: 0;
+    transform: translateY(14px) scale(0.985);
+    filter: blur(6px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+    filter: blur(0);
+  }
 }
 
+/* Savol kapsulasi — spring bilan chiqadi (siz yozdingiz → yuborildi) */
+.yz-ask {
+  animation: yzAsk 0.4s var(--ease-ios-spring) both;
+  transform-origin: 100% 50%;
+}
+@keyframes yzAsk {
+  from {
+    opacity: 0;
+    transform: translateY(8px) scale(0.94);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
 
+/* Bir martalik yorug'lik — CTA va "topildi" kartasi bo'ylab yuguradi */
+.yz-sheen {
+  position: relative;
+  overflow: hidden;
+}
+.yz-sheen::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    100deg,
+    transparent 30%,
+    rgba(255, 255, 255, 0.16) 48%,
+    transparent 66%
+  );
+  transform: translateX(-120%);
+  animation: yzSheen 1.5s var(--ease-ios) 0.35s both;
+  pointer-events: none;
+}
+@keyframes yzSheen {
+  to {
+    transform: translateX(120%);
+  }
+}
+
+/* ── Kutish: quvur (pipeline) ────────────────────────────────────── */
+
+/* Bosqichlar ustunini bog'lovchi chiziq — bo'ylab yorug'lik tushadi */
+.yz-thread {
+  position: relative;
+  background: var(--yz-line);
+  overflow: hidden;
+}
+.yz-thread::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    180deg,
+    transparent,
+    var(--yz-blue) 45%,
+    transparent
+  );
+  animation: yzThread 1.9s linear infinite;
+}
+@keyframes yzThread {
+  from {
+    transform: translateY(-100%);
+  }
+  to {
+    transform: translateY(100%);
+  }
+}
+
+/* Skelet ustidan skaner nuri — javob AYNAN shu joyda paydo bo'ladi */
+:where(.yz-scan) {
+  position: relative;
+  overflow: hidden;
+}
+.yz-scan::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    100deg,
+    transparent 34%,
+    rgba(77, 163, 255, 0.16) 50%,
+    transparent 66%
+  );
+  transform: translateX(-100%);
+  animation: yzScan 2.1s var(--ease-ios) infinite;
+  pointer-events: none;
+}
+@keyframes yzScan {
+  to {
+    transform: translateX(100%);
+  }
+}
+
+/* Shimmer matn — "o'ylayapti" bosqichi yozuvi */
+.yz-shimmer {
+  background: linear-gradient(
+    90deg,
+    var(--yz-ink-2) 30%,
+    #ffffff 48%,
+    var(--yz-indigo) 58%,
+    var(--yz-ink-2) 76%
+  );
+  background-size: 220% 100%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  animation: yzShimmer 2.4s linear infinite;
+}
+@keyframes yzShimmer {
+  from {
+    background-position: 120% 0;
+  }
+  to {
+    background-position: -120% 0;
+  }
+}
+
+/* ── Tarix (rail) qatorlari ──────────────────────────────────────── */
+
+.yz-row {
+  position: relative;
+  border-radius: 12px;
+  transition: background 0.2s var(--ease-ios), color 0.2s var(--ease-ios);
+}
+/* Faol qator: chap qirrada yonuvchi tayoqcha (navbardagi kapsulaning
+   vertikal aksi — bitta oilaga tegishli bo'lgan signature). */
+.yz-row::before {
+  content: '';
+  position: absolute;
+  left: -1px;
+  top: 50%;
+  width: 3px;
+  height: 0;
+  border-radius: 3px;
+  background: linear-gradient(180deg, var(--yz-blue), var(--yz-indigo));
+  box-shadow: 0 0 12px rgba(77, 163, 255, 0.75);
+  transform: translateY(-50%);
+  transition: height 0.32s var(--ease-ios);
+}
+.yz-row[aria-current='true'] {
+  background: rgba(77, 163, 255, 0.13);
+}
+.yz-row[aria-current='true']::before {
+  height: 56%;
+}
+@media (hover: hover) and (pointer: fine) {
+  .yz-row:hover {
+    background: rgba(255, 255, 255, 0.07);
+  }
+  .yz-row[aria-current='true']:hover {
+    background: rgba(77, 163, 255, 0.18);
+  }
+}
+
+/* Qatorlar ro'yxati sahnaga chiqishi (ketma-ket, juda qisqa) */
+.yz-stagger > * {
+  animation: yzRowIn 0.4s var(--ease-ios) both;
+  animation-delay: calc(var(--i, 0) * 26ms);
+}
+@keyframes yzRowIn {
+  from {
+    opacity: 0;
+    transform: translateX(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* Mobil tarix paneli — chapdan surilib chiqadi */
+.yz-drawer {
+  animation: yzDrawer 0.34s var(--ease-ios) both;
+}
+@keyframes yzDrawer {
+  from {
+    transform: translateX(-100%);
+  }
+  to {
+    transform: none;
+  }
+}
+
+/* ── Boshqaruvlar ────────────────────────────────────────────────── */
+
+.yz-btn {
+  transition: background 0.2s var(--ease-ios), color 0.2s var(--ease-ios),
+    transform 0.2s var(--ease-ios), box-shadow 0.2s var(--ease-ios);
+}
+.yz-btn:active {
+  transform: scale(0.92);
+}
+@media (hover: hover) and (pointer: fine) {
+  .yz-btn:hover {
+    background: rgba(255, 255, 255, 0.1);
+    color: var(--yz-ink);
+  }
+}
+/* Yuborish — gradientli, "tayyor" holatida spring bilan chiqadi */
+.yz-send {
+  background: linear-gradient(160deg, #4da3ff, #2f6bff 60%, #6d5cf6);
+  color: #fff;
+  box-shadow: 0 8px 22px -8px rgba(77, 163, 255, 0.85);
+  animation: yzPop 0.28s var(--ease-ios-spring) both;
+  transition: filter 0.2s var(--ease-ios), transform 0.2s var(--ease-ios);
+}
+.yz-send:active {
+  transform: scale(0.9);
+}
+@media (hover: hover) and (pointer: fine) {
+  .yz-send:hover {
+    filter: brightness(1.12);
+  }
+}
+@keyframes yzPop {
+  from {
+    opacity: 0;
+    transform: scale(0.5);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+/* Jonli to'lqin ustuni (ovoz yozish) */
+.yz-bar {
+  flex: 1 1 0;
+  min-width: 2px;
+  border-radius: 2px;
+  background: currentColor;
+  height: calc(6px + var(--amp, 0.1) * 22px);
+  transition: height 0.09s linear;
+}
+
+/* Mehmon/oq sirtdagi kichik belgi uchun tinch nur */
+.ai-caret {
+  display: inline-block;
+  width: 2px;
+  height: 1.05em;
+  margin-left: 1px;
+  background: var(--yz-blue, #0a84ff);
+  vertical-align: -0.16em;
+  animation: aiCaret 1.05s steps(1) infinite;
+}
+@keyframes aiCaret {
+  0%,
+  45% {
+    opacity: 1;
+  }
+  46%,
+  100% {
+    opacity: 0;
+  }
+}
 
 /* ═══ HARAKATNI KAMAYTIRISH ════════════════════════════════════════════ */
 @media (prefers-reduced-motion: reduce) {
@@ -2356,9 +2546,6 @@ select:-webkit-autofill {
   .animate-pulse-dot,
   .typing-dot,
   .rec-pulse::before,
-  .ai-aura::before,
-  .ai-aura::after,
-  .ai-scan::after,
   .ai-orbit,
   .ai-orbit-back,
   .ai-breath,
@@ -2366,52 +2553,61 @@ select:-webkit-autofill {
   .ai-pulse-ring,
   .ai-found,
   .ai-caret,
-  .ai-shimmer,
-  .ai-reveal,
-  .ai-focus-in,
-  .ai-ask,
-  .ai-open-mark,
-  .ai-open-text,
   .msg-pop,
   .row-in,
   .jump-btn,
   .btn-send,
   .bubble-status,
-  .bubble-pending::after,
-  .ai-gather {
+  .bubble-pending::after {
     animation: none !important;
   }
-  .ai-gather {
-    display: none;
+
+  /* ── Yechim AI (Studio) ─────────────────────────────────────────
+     Harakat butunlay to'xtaydi, LEKIN kontent 100% ko'rinadi:
+     opacity/blur/transform qoldig'i qolmasligi SHART. */
+  .yz::before,
+  .yz-ring::before,
+  .yz-ring::after,
+  .yz-scan::after,
+  .yz-sheen::after,
+  .yz-thread::after,
+  .yz-shimmer,
+  .yz-word,
+  .yz-rise,
+  .yz-ask,
+  .yz-send,
+  .yz-drawer,
+  .yz-stagger > * {
+    animation: none !important;
   }
-  .ai-shimmer {
-    color: #6e6e73;
-    background: none;
-    -webkit-background-clip: initial;
-    background-clip: initial;
-  }
-  /* Harakatsiz ham kontent to'liq ko'rinishi SHART (mask/opacity qoldiq yo'q) */
-  .ai-reveal {
-    -webkit-mask-image: none;
-    mask-image: none;
-  }
-  .ai-focus-in,
-  .ai-ask,
-  .ai-open-mark,
-  .ai-open-text,
-  .msg-pop,
-  .row-in,
-  .jump-btn,
-  .btn-send,
-  .bubble-status {
+  .yz-word,
+  .yz-rise,
+  .yz-ask,
+  .yz-send,
+  .yz-stagger > * {
     opacity: 1;
     transform: none;
     filter: none;
   }
-  .ai-scan::after,
-  .bubble-pending::after {
+  .yz-scan::after,
+  .yz-sheen::after,
+  .yz-thread::after,
+  .yz-grain {
     display: none;
   }
+  .yz-shimmer {
+    color: var(--yz-ink-2, #a7b4cc);
+    background: none;
+    -webkit-background-clip: initial;
+    background-clip: initial;
+  }
+  .yz-card-tap,
+  .yz-row,
+  .yz-row::before,
+  .yz-btn {
+    transition: none;
+  }
+
   .reveal,
   .acc-panel,
   .card-today,

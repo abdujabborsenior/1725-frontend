@@ -5,6 +5,8 @@ import axios, {
 } from 'axios';
 import { API_URL, STORAGE } from './constants';
 import type {
+  AiConversationDetail,
+  AiConversationSummary,
   AiDraft,
   AiSolveResult,
   AiStatus,
@@ -555,9 +557,33 @@ export const aiApi = {
   /** AI yoqilganmi + kunlik limitdan qanchasi qolgani (mehmon ham chaqira oladi) */
   status: () => unwrap<AiStatus>(api.get('/ai/status')),
 
-  /** Muammoni yuborish — mos loyihalar + javob + (kerak bo'lsa) qoralama */
-  solve: (question: string, source: 'text' | 'voice' = 'text') =>
-    unwrap<AiSolveResult>(api.post('/ai/solve', { question, source })),
+  /**
+   * Muammoni yuborish — mos loyihalar + javob + (kerak bo'lsa) qoralama.
+   * `conversationId` berilsa savol o'sha suhbatning DAVOMI bo'ladi: model
+   * oldingi navbatlarni ko'radi va "uni qanday ishlataman?" kabi savol
+   * kontekstsiz qolmaydi.
+   */
+  solve: (
+    question: string,
+    source: 'text' | 'voice' = 'text',
+    conversationId?: string,
+  ) =>
+    unwrap<AiSolveResult>(
+      api.post('/ai/solve', { question, source, conversationId }),
+    ),
+
+  /* ── Suhbatlar tarixi ─────────────────────────────────────── */
+
+  conversations: (params?: { limit?: number; before?: string }) =>
+    unwrap<{ data: AiConversationSummary[]; nextCursor: string | null }>(
+      api.get('/ai/conversations', { params }),
+    ),
+
+  conversation: (id: string) =>
+    unwrap<AiConversationDetail>(api.get(`/ai/conversations/${id}`)),
+
+  removeConversation: (id: string) =>
+    unwrap<{ message: string }>(api.delete(`/ai/conversations/${id}`)),
 
   /** Ovozli xabarni matnga o'girish (16kHz mono WAV — `wav-recorder.ts`) */
   transcribe: (blob: Blob) => {

@@ -15,26 +15,25 @@ const MAX_CHARS = 1200;
 
 /** Yozuv yuborilmaganda — sababi bo'yicha aniq maslahat (umumiy xato emas). */
 const FAILURE_HINT: Record<RecorderFailure, string> = {
-  empty: 'Yozuv olinmadi. Mikrofon tugmasini bosib, gapirib bo‘lgach to‘xtating.',
-  'too-short': 'Juda qisqa bo‘ldi — kamida bir gap aytib ko‘ring.',
+  empty: 'Yozuv olinmadi. Mikrofonni bosib, gapirib bo‘lgach to‘xtating.',
+  'too-short': 'Juda qisqa bo‘ldi — kamida bir gap ayting.',
   silent:
-    'Ovoz eshitilmadi. Mikrofon ochiqligini tekshiring va telefonga yaqinroq gapiring.',
+    'Ovoz eshitilmadi. Mikrofon ochiqligini tekshiring va yaqinroq gapiring.',
 };
 
 /**
- * AI kirish maydoni — iOS kapsula composer (chat composer bilan bir tilda).
+ * Studio kirish maydoni — "buyruq paneli".
  *
  * Ikki rejim:
  *  · **Matn** — o'sib boruvchi textarea; Enter yuboradi, Shift+Enter yangi qator.
  *  · **Ovoz** — mikrofon bosilganda jonli to'lqin bilan yozuv rejimi ochiladi;
- *    to'xtatilganda audio serverga o'giriladi va **matn maydoniga tushadi**
- *    (darhol yuborilmaydi — foydalanuvchi ko'rib, tuzatib yuborishi mumkin).
- *    Bu ataylab: nutq tanish 100% aniq emas, matnni tasdiqlash — hurmat.
+ *    to'xtatilganda audio matnga o'giriladi va **maydonga tushadi** (darhol
+ *    yuborilmaydi — nutq tanish 100% aniq emas, matnni tasdiqlash — hurmat).
  *
- * ⚠️ O'lcham intizomi: maydon **bir qator** balandligida turadi va faqat
- * YOZILGAN matn bilan o'sadi. Placeholder bo'yicha o'sish mumkin emas —
- * Chrome'da `scrollHeight` placeholder o'ralganini ham hisoblaydi, shu sababli
- * mobilda maydon ikki qator bo'lib ketardi (tugmalar esa mayda ko'rinardi).
+ * ⚠️ O'lcham intizomi: maydon bir qator balandligida turadi va faqat YOZILGAN
+ * matn bilan o'sadi. Placeholder bo'yicha o'sish mumkin emas — Chrome'da
+ * `scrollHeight` placeholder o'ralganini ham hisoblaydi (mobilda maydon ikki
+ * qator bo'lib ketardi).
  */
 export function AiComposer({
   onSubmit,
@@ -44,9 +43,9 @@ export function AiComposer({
 }: {
   onSubmit: (question: string, source: 'text' | 'voice') => void;
   /**
-   * Berilgan bo'lsa — foydalanuvchi kirmagan: mikrofon **umuman ochilmaydi**
-   * (ruxsat so'ralmaydi, ovoz yozilmaydi), o'rniga ro'yxatdan o'tishga
-   * yo'naltiriladi. Yozilgan matn yo'qolmasin deb u ham uzatiladi.
+   * Berilgan bo'lsa — foydalanuvchi kirmagan: mikrofon UMUMAN ochilmaydi
+   * (ruxsat bekorga so'ralmaydi), o'rniga ro'yxatdan o'tishga yo'naltiriladi.
+   * Yozilgan matn yo'qolmasin deb u ham uzatiladi.
    */
   onRequireAuth?: (question?: string) => void;
   disabled?: boolean;
@@ -61,7 +60,6 @@ export function AiComposer({
   const finishing = useRef(false);
   const recorder = useWavRecorder();
 
-  // Balandlikni FAQAT yozilgan matnga moslash (maks ~5 qator).
   useEffect(() => {
     const el = ref.current;
     if (!el) return;
@@ -75,7 +73,7 @@ export function AiComposer({
   }, [autoFocus]);
 
   // Mikrofon jim qolayotganini DARHOL ko'rsatamiz — foydalanuvchi 90 soniya
-  // gapirib bo'lib, oxirida "ovoz yo'q" degan xabarni ko'rmasin.
+  // gapirib bo'lib, oxirida "ovoz yo'q" xabarini ko'rmasin.
   useEffect(() => {
     if (!recorder.recording) {
       setHeard(false);
@@ -84,9 +82,10 @@ export function AiComposer({
     if (recorder.level > 0.02) setHeard(true);
   }, [recorder.level, recorder.recording]);
 
-  // Maksimal davomiylikda avtomatik to'xtash (fayl hajmi cheklangan qoladi)
   useEffect(() => {
-    if (recorder.recording && recorder.seconds >= MAX_SECONDS) void finishRecording();
+    if (recorder.recording && recorder.seconds >= MAX_SECONDS) {
+      void finishRecording();
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [recorder.recording, recorder.seconds]);
 
@@ -99,8 +98,6 @@ export function AiComposer({
   }
 
   async function startRecording() {
-    // Kirmagan foydalanuvchidan mikrofon ruxsatini so'ramaymiz — bu bekorga
-    // bezovta qilish bo'lardi (baribir yubora olmaydi).
     if (onRequireAuth) {
       onRequireAuth(value);
       return;
@@ -115,8 +112,7 @@ export function AiComposer({
     const res = await recorder.stop();
     finishing.current = false;
     // Jim / juda qisqa yozuv serverga UMUMAN yuborilmaydi: model bunday
-    // audioda matn "o'ylab topadi" (gallyutsinatsiya) — foydalanuvchi esa
-    // umuman aytmagan gapini ko'radi.
+    // audioda matn "o'ylab topadi" — foydalanuvchi aytmagan gapini ko'radi.
     if (!res.ok) {
       if (res.reason !== 'empty' || !recorder.error) {
         toast.error(FAILURE_HINT[res.reason]);
@@ -126,7 +122,9 @@ export function AiComposer({
     setTranscribing(true);
     try {
       const { text } = await aiApi.transcribe(res.result.blob);
-      setValue((prev) => (prev ? `${prev.trim()} ${text}` : text).slice(0, MAX_CHARS));
+      setValue((prev) =>
+        (prev ? `${prev.trim()} ${text}` : text).slice(0, MAX_CHARS),
+      );
       setFromVoice(true);
       ref.current?.focus();
     } catch (err) {
@@ -141,50 +139,51 @@ export function AiComposer({
   if (recorder.recording) {
     return (
       <div
-        className="ai-aura flex h-[52px] items-center gap-3 rounded-full px-2.5 shadow-card-hover"
-        data-state="thinking"
+        className="yz-ring flex h-[54px] items-center gap-3 px-2.5"
+        data-state="busy"
       >
         <button
           type="button"
           onClick={recorder.cancel}
           aria-label="Bekor qilish"
-          className="btn-round flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-fill-tertiary text-slate-500"
+          className="yz-btn flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-white/[0.07] text-[color:var(--yz-ink-2)]"
         >
           <X className="h-5 w-5" strokeWidth={2.5} />
         </button>
 
-        <span className="flex h-2 w-2 shrink-0 rounded-full bg-rose-500 motion-safe:animate-pulse" />
-        <span className="shrink-0 text-subhead font-medium tabular-nums text-brand-900">
+        <span className="flex h-2 w-2 shrink-0 rounded-full bg-rose-400 motion-safe:animate-pulse" />
+        <span className="shrink-0 text-subhead font-medium tabular-nums text-[color:var(--yz-ink)]">
           {formatTime(recorder.seconds)}
         </span>
 
-        {/* Ovoz kelmayotgani — yozuv davomida aytiladi (kech emas) */}
         {noSignal ? (
-          <p className="min-w-0 flex-1 truncate text-footnote text-rose-600">
+          <p className="min-w-0 flex-1 truncate text-footnote text-rose-300">
             Ovoz eshitilmayapti
           </p>
         ) : (
-        /* Jonli to'lqin — oxirgi amplituda bo'yicha */
-        <div className="flex h-7 min-w-0 flex-1 items-center gap-[3px] overflow-hidden text-accent-600">
-          {Array.from({ length: 22 }).map((_, i) => (
-            <span
-              key={i}
-              className="ai-bar"
-              style={
-                {
-                  '--amp': Math.max(0.06, recorder.level * (0.55 + Math.sin(i * 1.7) * 0.45)),
-                } as React.CSSProperties
-              }
-            />
-          ))}
-        </div>
+          <div className="flex h-7 min-w-0 flex-1 items-center gap-[3px] overflow-hidden text-[color:var(--yz-blue)]">
+            {Array.from({ length: 22 }).map((_, i) => (
+              <span
+                key={i}
+                className="yz-bar"
+                style={
+                  {
+                    '--amp': Math.max(
+                      0.06,
+                      recorder.level * (0.55 + Math.sin(i * 1.7) * 0.45),
+                    ),
+                  } as React.CSSProperties
+                }
+              />
+            ))}
+          </div>
         )}
 
         <button
           type="button"
           onClick={() => void finishRecording()}
           aria-label="Yozuvni tugatish"
-          className="tappable-scale flex h-10 w-10 shrink-0 items-center justify-center rounded-full text-accent-600"
+          className="yz-btn flex h-10 w-10 shrink-0 items-center justify-center rounded-full text-[color:var(--yz-blue)]"
         >
           <StopCircleFill className="h-8 w-8" />
         </button>
@@ -192,13 +191,13 @@ export function AiComposer({
     );
   }
 
-  /* ── Oddiy (matn) rejimi ─────────────────────────────────────── */
+  /* ── Matn rejimi ─────────────────────────────────────────────── */
   const canSend = value.trim().length >= 8 && !disabled;
 
   return (
     <div
-      className="ai-aura flex items-end gap-1.5 rounded-[26px] p-1.5 shadow-card-hover"
-      data-state={disabled ? 'thinking' : undefined}
+      className="yz-ring flex items-end gap-1.5 p-1.5"
+      data-state={disabled ? 'busy' : undefined}
     >
       <textarea
         ref={ref}
@@ -206,6 +205,7 @@ export function AiComposer({
         value={value}
         maxLength={MAX_CHARS}
         disabled={transcribing}
+        spellCheck={false}
         onChange={(e) => {
           setValue(e.target.value);
           if (fromVoice) setFromVoice(false);
@@ -216,11 +216,19 @@ export function AiComposer({
             submit();
           }
         }}
+        /* Javob kutilayotganda Enter jimgina e'tiborsiz qolmasin: holat
+           maydonning O'ZIDA aytiladi (yozishga ruxsat qoladi — foydalanuvchi
+           keyingi savolini tayyorlab turishi mumkin). */
         placeholder={
-          transcribing ? 'Ovoz matnga o‘girilmoqda…' : 'Muammoni yozing yoki ayting…'
+          transcribing
+            ? 'Ovoz matnga o‘girilmoqda…'
+            : disabled
+              ? 'Javob tayyorlanmoqda…'
+              : 'Muammoni yozing yoki ayting…'
         }
+        aria-busy={disabled || undefined}
         aria-label="Muammoingiz"
-        className="max-h-[132px] min-h-[40px] flex-1 resize-none bg-transparent px-3 py-2 text-body leading-snug text-brand-900 placeholder:overflow-hidden placeholder:text-ellipsis placeholder:whitespace-nowrap placeholder:text-slate-500 focus:outline-none disabled:opacity-60"
+        className="max-h-[132px] min-h-[40px] flex-1 resize-none bg-transparent px-3 py-2 text-body leading-snug text-[color:var(--yz-ink)] placeholder:overflow-hidden placeholder:text-ellipsis placeholder:whitespace-nowrap placeholder:text-[color:var(--yz-ink-3)] focus:outline-none disabled:opacity-60"
       />
 
       <button
@@ -228,7 +236,7 @@ export function AiComposer({
         onClick={() => void startRecording()}
         disabled={disabled || transcribing}
         aria-label="Ovozli xabar"
-        className="btn-round flex h-10 w-10 shrink-0 items-center justify-center rounded-full text-slate-500 disabled:opacity-40"
+        className="yz-btn flex h-10 w-10 shrink-0 items-center justify-center rounded-full text-[color:var(--yz-ink-2)] disabled:opacity-40"
       >
         {transcribing ? (
           <Spinner className="h-5 w-5 animate-spin" />
@@ -244,7 +252,7 @@ export function AiComposer({
           disabled={!canSend}
           aria-label="Yuborish"
           title={canSend ? 'Yuborish' : 'Kamida 8 ta belgi yozing'}
-          className="btn-send flex h-10 w-10 shrink-0 items-center justify-center rounded-full"
+          className="yz-send flex h-10 w-10 shrink-0 items-center justify-center rounded-full disabled:opacity-50"
         >
           <ArrowUp className="h-5 w-5" strokeWidth={3} />
         </button>

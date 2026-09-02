@@ -269,6 +269,37 @@ auditor bularning haqiqiy fonini ko'ra olmaydi.
   nuqtali qoladi.
 - Savol belgisi va ellipsis (`...`) bu qoidaga kirmaydi.
 
+### 2.11 Yechim AI — "Studio" (2026-09-02, TO'Q SIRT ISTISNOSI)
+
+`/ai` va bosh sahifadagi AI banneri butun mahsulotdagi YAGONA to'q sirt.
+Bu ataylab: AI — sahifa emas, **alohida xona**; oq va tinch mahsulotda bitta
+tungi blok ko'zni o'ziga tortadi va Studio'ga o'tish uzluksiz bo'ladi.
+
+- **Ildiz:** `.yz` (tokenlar shu yerda: `--yz-void/-panel/-ink/-ink-2/-ink-3/
+  -blue/-indigo/-mint`). To'q sirtdagi HAR bir matn shu tokenlardan olinadi —
+  `text-slate-*` ISHLATILMAYDI (kontrast buziladi).
+- **Fon:** `.yz::before` aurora (3 radial qatlam, 46s drift) + `.yz::after`
+  vinyetka + `.yz-grain`. Tor bannerda `.yz-band` varianti (Studio gradientlari
+  past balandlikda kadrdan chiqib ketadi).
+- **Sirtlar:** `.yz-card` (+`.yz-card-tap` — hover'da YORISHADI, ko'tarilish
+  2px), `.yz-panel` (material bar/rail), `.yz-menu` (noshaffof — blur'ga
+  tayanmaydi, §3.1 darsi).
+- **Kirish maydoni:** `.yz-ring` — konus gradient hoshiya, fokusda/`data-state="busy"`
+  da tezlashadi va nur kuchayadi. Ostida `.yz-horizon` (yumshoq nur).
+- **Motion (hammasi MA'NO tashiydi, `prefers-reduced-motion` da to'liq o'chadi):**
+  `.yz-word` — javob so'zma-so'z materializatsiya (kechikish 44 so'zda
+  cheklangan), `.yz-rise` — bloklar blur→fokus, `.yz-ask` — savol kapsulasi
+  spring, `.yz-thread`/`.yz-scan` — kutish, `.yz-sheen` — bir martalik
+  yorug'lik, `.yz-row` — tarixdagi faol qatorning yonuvchi tayoqchasi.
+  ⚠️ **Tarixdan ochilgan javob QAYTA yozilmaydi** (`animate=false`): eski
+  javobni "yozib berish" — soxta taassurot.
+- **Belgi:** `YechimOrb` (Studio, 34–92px) va `YechimMark` (kichik/oq sirt).
+  Uchtala holat: `idle` / `thinking` / `found`.
+- **Kategoriya rangi:** `categoryTintDark()` — oq sirtdagi `categoryTint()`
+  bilan BIR XIL slot (bitta soha butun mahsulotda bitta rang oilasi).
+- **Qoralama varag'i (`AiPublishSheet`) ATAYLAB OQ qoladi:** u platformaga
+  e'lon qilish oqimi, ya'ni Studio'dan chiqish nuqtasi.
+
 ## 3. Taqiqlar (qisqa ro'yxat)
 ❌ Gradient fon/matn/avatar (brend logosidan tashqari) · ❌ glow soyalar ·
 ❌ hover-lift · ❌ `font-black` · ❌ KATTA HARFLI eyebrow-pill'lar (faqat

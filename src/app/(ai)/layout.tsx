@@ -1,25 +1,20 @@
-import { Navbar } from '@/components/layout/navbar';
-import { BottomNav } from '@/components/layout/bottom-nav';
-
 /**
- * Yechim AI layouti — chat bilan bir xil tamoyil: sahifa O'ZI scroll
- * BO'LMAYDI, faqat suhbat oqimi scroll bo'ladi. Balandlik `100dvh`
- * (mobil brauzer paneli hisobga olinadi) → kirish maydoni doim ekran
- * pastida turadi va uning OSTIDA ortiqcha bo'sh joy qolmaydi.
+ * Yechim AI Studio qobig'i.
  *
- * Footer ATAYLAB yo'q: AI — sayt sahifasi emas, ilova ekrani (haqiqiy
- * AI mahsulotlarida ham konsol ostida sayt "podvali" bo'lmaydi).
- * Navbar ikkala o'lchamda ham qoladi — mobilda ortga qaytish yo'li
- * (pastki tab barда AI bandi yo'q).
+ * ATAYLAB sayt "chrome"isiz (navbar, footer, tab bar YO'Q): AI — sahifa
+ * emas, alohida ekran. Saytga qaytish yo'li Studio'ning o'z yuqori
+ * panelida turadi.
+ *
+ * Balandlik `100dvh` va sahifa O'ZI scroll bo'lmaydi (mobil brauzer
+ * paneli hisobga olinadi) → kirish maydoni doim ekran pastida, uning
+ * ostida ortiqcha bo'sh joy qolmaydi.
  */
 export default function AiLayout({ children }: { children: React.ReactNode }) {
   return (
-    <div className="relative flex h-dvh flex-col overflow-hidden bg-surface-soft">
-      <Navbar />
-      <main className="mx-auto flex min-h-0 w-full max-w-3xl flex-1 flex-col px-4 pt-3 md:px-6 md:pt-5">
-        {children}
-      </main>
-      <BottomNav />
+    <div className="yz flex h-dvh flex-col overflow-hidden">
+      {/* Nozik don — sirt "chop etilgan" his beradi (fayl/so'rov emas, CSS) */}
+      <span aria-hidden className="yz-grain" />
+      {children}
     </div>
   );
 }

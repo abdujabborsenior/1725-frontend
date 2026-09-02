@@ -3,8 +3,9 @@
 import Link from 'next/link';
 import type { CSSProperties } from 'react';
 
-import { ChevronRight, Star, Sparkles } from '@/components/icons';
+import { ChevronRight, Star } from '@/components/icons';
 import { StartupLogo } from '@/components/startups/startup-logo';
+import { categoryTintDark } from '@/lib/category-tint';
 import { cn } from '@/lib/utils';
 import type { AiMatch } from '@/types';
 
@@ -12,59 +13,83 @@ import type { AiMatch } from '@/types';
  * AI topgan loyiha — natija kartasi.
  *
  * Bu yerda ODDIY startap kartasi ATAYLAB ishlatilmaydi: javob oqimida
- * asosiy narsa katta muqova rasm emas, **nega aynan shu loyiha mos ekani**.
- * Shuning uchun: logotip + nom + AI izohi, va eng mos variant birinchi
- * o'rinda nozik "Eng mos" tamg'asi bilan ajratiladi (tanlov yuki kamayadi —
- * foydalanuvchi qaysi biridan boshlashni biladi).
+ * asosiy narsa katta muqova emas, **nega aynan shu loyiha mos ekani**.
+ * Shuning uchun: logotip + nom + AI izohi. Eng mos variant birinchi
+ * o'rinda va uning chekkasida nozik nur bor — tanlov yuki kamayadi.
+ *
+ * Rang tasodifiy emas: kategoriya rangi (butun mahsulot bo'ylab yagona
+ * manba) hover nuriga va nom ostidagi chipга beriladi.
  */
-export function AiMatchCard({ match, index }: { match: AiMatch; index: number }) {
+export function AiMatchCard({
+  match,
+  index,
+  animate,
+}: {
+  match: AiMatch;
+  index: number;
+  animate: boolean;
+}) {
   const { startup, reason } = match;
   const top = index === 0;
+  const tint = categoryTintDark(startup.category);
 
   return (
     <Link
       href={`/startups/${startup.slug || startup.id}`}
-      style={{ '--ai-delay': `${0.08 + index * 0.07}s` } as CSSProperties}
+      style={
+        {
+          '--d': `${0.1 + index * 0.07}s`,
+          '--yz-tint': `${tint}80`,
+        } as CSSProperties
+      }
       className={cn(
-        'ai-focus-in tappable group relative flex items-start gap-3.5 rounded-ios-xl bg-white p-4 transition-shadow duration-250 ease-ios hover:shadow-[0_14px_32px_-18px_rgba(0,40,90,0.3),inset_0_0_0_1px_rgba(0,122,255,0.14)]',
-        top && 'ring-1 ring-accent-500/25',
+        'yz-card yz-card-tap group flex items-start gap-3.5 p-4',
+        animate && 'yz-rise',
+        top && 'shadow-[inset_0_0_0_1px_rgba(77,163,255,0.28)]',
       )}
     >
       <StartupLogo
         src={startup.logoUrl}
         title={startup.title}
-        size={48}
+        size={46}
         className="mt-0.5 shrink-0"
       />
 
       <div className="min-w-0 flex-1">
         <div className="flex flex-wrap items-center gap-x-2 gap-y-1">
-          <p className="min-w-0 truncate text-callout font-semibold text-brand-900">
+          <p className="min-w-0 truncate text-callout font-semibold text-[color:var(--yz-ink)]">
             {startup.title}
           </p>
           {top && (
-            <span className="flex shrink-0 items-center gap-1 rounded-full bg-accent-50 px-2 py-0.5 text-caption-2 font-semibold text-accent-700">
-              <Sparkles className="h-3 w-3" /> Eng mos
+            <span className="shrink-0 rounded-full bg-[color:var(--yz-blue)]/18 px-2 py-0.5 text-caption-2 font-semibold text-[color:var(--yz-blue)]">
+              Eng mos
             </span>
           )}
           {startup.ratingCount > 0 && (
-            <span className="flex shrink-0 items-center gap-0.5 text-caption-1 tabular-nums text-slate-500">
-              <Star className="h-3 w-3 text-amber-500" />
+            <span className="flex shrink-0 items-center gap-0.5 text-caption-1 tabular-nums text-[color:var(--yz-ink-3)]">
+              <Star className="h-3 w-3 text-amber-400" />
               {startup.ratingAvg.toFixed(1)}
             </span>
           )}
         </div>
 
         {reason && (
-          <p className="mt-1 text-subhead leading-snug text-slate-600">{reason}</p>
+          <p className="mt-1 text-subhead leading-snug text-[color:var(--yz-ink-2)]">
+            {reason}
+          </p>
         )}
         {startup.category && (
-          <p className="mt-1.5 text-caption-1 text-slate-500">{startup.category}</p>
+          <span
+            className="mt-2 inline-block text-caption-1 font-medium"
+            style={{ color: tint }}
+          >
+            {startup.category}
+          </span>
         )}
       </div>
 
       <ChevronRight
-        className="mt-3 h-4 w-4 shrink-0 text-slate-400 transition-all duration-250 ease-ios group-hover:translate-x-1 group-hover:text-accent-600"
+        className="mt-3 h-4 w-4 shrink-0 text-[color:var(--yz-ink-3)] transition-transform duration-250 ease-ios group-hover:translate-x-1"
         strokeWidth={2.5}
       />
     </Link>

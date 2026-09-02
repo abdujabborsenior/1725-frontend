@@ -137,9 +137,8 @@ export function AiPublishSheet({ open, onClose, draft, queryId }: Props) {
         <div className="flex items-start gap-2.5">
           <YechimMark size={22} state="found" className="mt-0.5 shrink-0" />
           <p className="text-subhead leading-relaxed text-slate-500">
-            Matnni Yechim AI tayyorladi — imlo va uslub to‘g‘rilandi. Xohlagancha
-            o‘zgartiring, keyin joylang. E’lon qilingach muammo hammaga ko‘rinadi
-            va profilingizdagi “Muammolarim”da saqlanadi.
+            Matnni Yechim AI tayyorladi. Xohlagancha o‘zgartiring — joylagach
+            muammo hammaga ko‘rinadi
           </p>
         </div>
 
@@ -186,7 +185,7 @@ export function AiPublishSheet({ open, onClose, draft, queryId }: Props) {
             loading={polishing}
             disabled={saving || !title.trim() || !description.trim()}
           >
-            <Sparkles className="h-[18px] w-[18px]" /> Qaytadan sayqallash
+            <Sparkles className="h-[18px] w-[18px]" /> Qayta sayqallash
           </Button>
         </div>
       </div>
