@@ -21,6 +21,7 @@ import { ProblemStatusPill } from '@/components/ui/badge';
 import { Segmented } from '@/components/ui/segmented';
 import { SolutionHelpfulButton } from '@/components/solutions/helpful-button';
 import { PROBLEM_STATUS_META } from '@/lib/constants';
+import { VerifiedBadge } from '@/components/social/verified-badge';
 import { Avatar } from '@/components/ui/avatar';
 import { cn } from '@/lib/utils';
 import { categoryTint } from '@/lib/category-tint';
@@ -67,6 +68,7 @@ function CommentItem({
               {comment.author?.fullName ?? 'Foydalanuvchi'}
             </span>
           )}
+          {comment.author?.isVerified && <VerifiedBadge size={14} />}
           <span className="text-caption-2 text-slate-500">
             {timeAgo(comment.createdAt)}
           </span>
@@ -472,6 +474,9 @@ export function ProblemDetailClient({ initialProblem }: { initialProblem: Proble
                   </Link>
                 ) : (
                   <span className="font-semibold text-brand-900">{problem.submittedBy.fullName}</span>
+                )}
+                {problem.submittedBy.isVerified && (
+                  <VerifiedBadge size={14} className="mx-1" />
                 )}{' '}tomonidan
               </span>
             </div>
@@ -578,13 +583,16 @@ export function ProblemDetailClient({ initialProblem }: { initialProblem: Proble
                   <div className="flex items-center gap-2.5">
                     <Avatar src={s.submittedBy?.avatarUrl} name={s.submittedBy?.fullName ?? s.fullName} size={32} />
                     <div>
-                      {s.submittedBy?.username ? (
-                        <Link href={`/u/${s.submittedBy.username}`} className="text-subhead font-semibold text-brand-900 hv-link">
-                          {s.submittedBy?.fullName ?? s.fullName}
-                        </Link>
-                      ) : (
-                        <p className="text-subhead font-semibold text-brand-900">{s.submittedBy?.fullName ?? s.fullName}</p>
-                      )}
+                      <span className="flex items-center gap-1">
+                        {s.submittedBy?.username ? (
+                          <Link href={`/u/${s.submittedBy.username}`} className="text-subhead font-semibold text-brand-900 hv-link">
+                            {s.submittedBy?.fullName ?? s.fullName}
+                          </Link>
+                        ) : (
+                          <span className="text-subhead font-semibold text-brand-900">{s.submittedBy?.fullName ?? s.fullName}</span>
+                        )}
+                        {s.submittedBy?.isVerified && <VerifiedBadge size={14} />}
+                      </span>
                       <p className="text-caption-2 text-slate-500">
                         {timeAgo(s.createdAt)}
                       </p>

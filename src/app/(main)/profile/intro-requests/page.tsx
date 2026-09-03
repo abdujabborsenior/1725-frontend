@@ -12,6 +12,7 @@ import { EmptyState, PageHeader } from '@/components/ui/page-header';
 import { Pagination } from '@/components/ui/pagination';
 import { ListRowSkeleton } from '@/components/ui/skeleton';
 import { Avatar } from '@/components/ui/avatar';
+import { VerifiedBadge } from '@/components/social/verified-badge';
 import { INTRO_STATUS_LABEL, INTRO_STATUS_TONE } from '@/lib/venture';
 import { timeAgo } from '@/lib/date';
 import { cn } from '@/lib/utils';
@@ -103,8 +104,11 @@ export default function IntroRequestsPage() {
                   <div className="min-w-0 flex-1">
                     <div className="flex items-start justify-between gap-3">
                       <div className="min-w-0">
-                        <p className="truncate text-body font-medium text-brand-900">
-                          {intro.investor?.fullName ?? 'Investor'}
+                        <p className="flex min-w-0 items-center gap-1 text-body font-medium text-brand-900">
+                          <span className="truncate">
+                            {intro.investor?.fullName ?? 'Investor'}
+                          </span>
+                          {intro.investor?.isVerified && <VerifiedBadge size={14} />}
                         </p>
                         <p className="mt-0.5 text-caption-1 text-slate-500">
                           {intro.startup?.title ?? 'Loyiha'} ·{' '}

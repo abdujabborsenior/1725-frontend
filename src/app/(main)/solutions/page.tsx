@@ -9,6 +9,7 @@ import { useAuthStore } from '@/store/auth.store';
 import type { Solution } from '@/types';
 import { Pagination } from '@/components/ui/pagination';
 import { EmptyState, PageHeader } from '@/components/ui/page-header';
+import { VerifiedBadge } from '@/components/social/verified-badge';
 import { StartupMiniCard } from '@/components/startups/startup-mini-card';
 import { timeAgo } from '@/lib/date';
 
@@ -65,8 +66,11 @@ function SolutionCard({ solution }: { solution: Solution }) {
       )}
 
       <div className="mt-auto flex items-center justify-between text-footnote text-slate-500">
-        <span className="max-w-[140px] truncate text-slate-600">
-          {solution.submittedBy?.fullName ?? solution.fullName}
+        <span className="flex min-w-0 items-center gap-1 text-slate-600">
+          <span className="max-w-[140px] truncate">
+            {solution.submittedBy?.fullName ?? solution.fullName}
+          </span>
+          {solution.submittedBy?.isVerified && <VerifiedBadge size={13} />}
         </span>
         <span className="flex items-center gap-1 flex-shrink-0">
           <Clock className="h-3 w-3" />

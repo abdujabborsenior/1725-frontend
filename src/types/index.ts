@@ -59,6 +59,8 @@ export interface PaginatedResponse<T> {
 export type PublicAuthor = Pick<User, 'id' | 'fullName' | 'role'> & {
   username?: string | null;
   avatarUrl?: string | null;
+  /** Tasdiqlangan hisob — ism yonida galochka (faqat superadmin qo'yadi) */
+  isVerified?: boolean;
 };
 
 export interface User {
@@ -80,6 +82,9 @@ export interface User {
   isFounder?: boolean;
   founderSince?: string | null;
   founderVoteCount?: number;
+  /** Tasdiqlangan hisob — galochka (faqat superadmin qo'yadi/oladi) */
+  isVerified?: boolean;
+  verifiedAt?: string | null;
   age: number | null;
   region: string | null;
   district: string | null;
@@ -102,6 +107,8 @@ export interface PublicUserCard {
   isFollowedByMe: boolean;
   /** Asoschi (Founder) tamg'asi */
   isFounder?: boolean;
+  /** Tasdiqlangan hisob — galochka */
+  isVerified?: boolean;
 }
 
 export interface PublicProfile {
@@ -123,6 +130,8 @@ export interface PublicProfile {
   founderVoteCount: number;
   /** Joriy foydalanuvchi bu asoschiga ovoz berganmi */
   founderVotedByMe: boolean;
+  /** Tasdiqlangan hisob — galochka */
+  isVerified?: boolean;
   lastSeenAt: string | null;
   createdAt: string;
   isMe: boolean;
@@ -150,6 +159,8 @@ export interface ChatUserMini {
   username: string | null;
   fullName: string;
   avatarUrl: string | null;
+  /** Tasdiqlangan hisob — galochka */
+  isVerified?: boolean;
   lastSeenAt?: string | null;
 }
 
@@ -483,6 +494,7 @@ export type NotificationType =
   | 'solution_rejected'
   | 'new_follower'
   | 'founder_badge'
+  | 'account_verified'
   | 'new_message'
   | 'system';
 

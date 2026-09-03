@@ -24,6 +24,8 @@ export const NOTIFICATION_META: Record<
   solution_rejected: { icon: CloseCircleFill, color: 'bg-rose-500 text-white' },
   new_follower: { icon: UserPlus, color: 'bg-iris-500 text-white' },
   founder_badge: { icon: RocketFill, color: 'bg-accent-500 text-white' },
+  // Hisob tasdig'i — ism yonidagi galochkaning bildirishnomadagi aksi
+  account_verified: { icon: CheckCircleFill, color: 'bg-accent-600 text-white' },
   // iOS'da Xabarlar ilovasi yashil — bildirishnoma belgisi ham shunday
   new_message: { icon: MessageCircleFill, color: 'bg-emerald-400 text-white' },
   system: { icon: InfoFill, color: 'bg-slate-400 text-white' },

@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { createPortal } from 'react-dom';
 import { motion, AnimatePresence, useMotionValue, useTransform, animate } from 'framer-motion';
 import { Play, Pause, FileText, Reply, Download, Copy, Flag, Paperclip, Pencil } from '@/components/icons';
+import { VerifiedBadge } from '@/components/social/verified-badge';
 import { Avatar } from '@/components/ui/avatar';
 import { ReportDialog } from '@/components/reports/report-dialog';
 import { profileHref } from '@/components/social/user-list-item';
@@ -392,9 +393,10 @@ export function MessageBubble({
               href={profileHref(message.sender)}
               onClick={(e) => e.stopPropagation()}
               draggable={false}
-              className="mb-0.5 block text-footnote font-semibold text-accent-700 hv-link transition-colors hover:text-accent-800"
+              className="mb-0.5 flex items-center gap-1 text-footnote font-semibold text-accent-700 hv-link transition-colors hover:text-accent-800"
             >
               {message.sender.fullName}
+              {message.sender.isVerified && <VerifiedBadge size={13} />}
             </Link>
           )}
 

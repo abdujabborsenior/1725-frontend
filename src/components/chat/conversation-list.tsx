@@ -8,6 +8,7 @@ import { MessageSquarePlus, Users, UsersRound, ChevronLeft, Search, X } from '@/
 import { chatApi } from '@/lib/api';
 import { getSocket } from '@/lib/socket';
 import { useAuthStore } from '@/store/auth.store';
+import { VerifiedBadge } from '@/components/social/verified-badge';
 import { Avatar } from '@/components/ui/avatar';
 import { ConversationListSkeleton } from './chat-skeletons';
 import { CreateGroupModal } from './create-group-modal';
@@ -288,7 +289,10 @@ function ConversationRow({ c, active }: { c: Conversation; active: boolean }) {
       <Avatar src={c.avatarUrl} name={c.title} size={48} />
       <div className="min-w-0 flex-1">
         <div className="flex items-center justify-between gap-2">
-          <p className="truncate text-body font-semibold text-brand-900">{c.title}</p>
+          <p className="flex min-w-0 items-center gap-1 text-body font-semibold text-brand-900">
+            <span className="truncate">{c.title}</span>
+            {c.otherUser?.isVerified && <VerifiedBadge size={14} />}
+          </p>
           {c.lastMessageAt && (
             <span className="shrink-0 text-footnote text-slate-500">
               {timeAgoShort(c.lastMessageAt)}

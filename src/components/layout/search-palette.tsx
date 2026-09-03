@@ -9,6 +9,7 @@ import {
 } from '@/components/icons';
 import { startupsApi, problemsApi, usersApi } from '@/lib/api';
 import { Avatar } from '@/components/ui/avatar';
+import { VerifiedBadge } from '@/components/social/verified-badge';
 import { useDebounce } from '@/lib/use-debounce';
 
 const QUICK_LINKS = [
@@ -160,7 +161,10 @@ export function SearchPalette() {
                     >
                       <Avatar src={u.avatarUrl} name={u.fullName} size={34} />
                       <span className="min-w-0 flex-1">
-                        <span className="block truncate text-body text-brand-900">{u.fullName}</span>
+                        <span className="flex min-w-0 items-center gap-1">
+                          <span className="truncate text-body text-brand-900">{u.fullName}</span>
+                          {u.isVerified && <VerifiedBadge size={14} />}
+                        </span>
                         <span className="block truncate text-footnote text-slate-500">
                           {u.username ? `@${u.username}` : ''}
                           {u.username && u.headline ? ' · ' : ''}

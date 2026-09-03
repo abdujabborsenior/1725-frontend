@@ -13,6 +13,7 @@ import { Avatar } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import { BackButton } from '@/components/ui/back-button';
 import { FollowButton } from '@/components/social/follow-button';
+import { VerifiedBadge } from '@/components/social/verified-badge';
 import { FounderBadge } from '@/components/social/founder-badge';
 import { FounderVoteButton } from '@/components/social/founder-vote-button';
 import { ReportButton } from '@/components/reports/report-dialog';
@@ -160,7 +161,10 @@ export function ProfileClient({ initialProfile }: { initialProfile: PublicProfil
           {/* Identity */}
           <div className="mt-4">
             <div className="flex flex-wrap items-center gap-2">
-              <h1 className="text-title-1 font-bold tracking-tight text-brand-900">{profile.fullName}</h1>
+              <h1 className="flex items-center gap-1.5 text-title-1 font-bold tracking-tight text-brand-900">
+                {profile.fullName}
+                {profile.isVerified && <VerifiedBadge size={21} />}
+              </h1>
               <span className={cn('rounded-full px-2.5 py-1 text-caption-1 font-medium', ROLE_BADGE[profile.role])}>
                 {ROLE_LABEL[profile.role]}
               </span>

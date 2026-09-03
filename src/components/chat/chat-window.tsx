@@ -10,6 +10,7 @@ import {
 import { chatApi, getErrorMessage, type SendMessagePayload } from '@/lib/api';
 import { getSocket } from '@/lib/socket';
 import { useAuthStore } from '@/store/auth.store';
+import { VerifiedBadge } from '@/components/social/verified-badge';
 import { Avatar } from '@/components/ui/avatar';
 import { Modal } from '@/components/ui/modal';
 import { MessageBubble } from './message-bubble';
@@ -230,7 +231,15 @@ export function ChatWindow({ conversationId }: { conversationId: string }) {
       createdAt: new Date().toISOString(),
       editedAt: null,
       isDeleted: false,
-      sender: me ? { id: me.id, username: me.username, fullName: me.fullName, avatarUrl: me.avatarUrl } : null,
+      sender: me
+        ? {
+            id: me.id,
+            username: me.username,
+            fullName: me.fullName,
+            avatarUrl: me.avatarUrl,
+            isVerified: me.isVerified,
+          }
+        : null,
       replyTo: replyTo
         ? { id: replyTo.id, type: replyTo.type, content: replyTo.content, senderName: replyTo.sender?.fullName ?? null }
         : null,
@@ -322,7 +331,10 @@ export function ChatWindow({ conversationId }: { conversationId: string }) {
         )}
         {/* Guruhda — ma'lumot modali; shaxsiy suhbatda — suhbatdosh PROFILI */}
         <HeaderIdentity isGroup={isGroup} href={headerHref} onInfo={() => setInfoOpen(true)}>
-          <p className="truncate text-callout font-semibold text-brand-900">{conv.title}</p>
+          <p className="flex min-w-0 items-center gap-1 text-callout font-semibold text-brand-900">
+            <span className="truncate">{conv.title}</span>
+            {conv.otherUser?.isVerified && <VerifiedBadge size={15} />}
+          </p>
           <p className="truncate text-footnote text-slate-500">
             {typingUser ? <span className="text-accent-600">yozmoqda…</span>
               : isGroup ? <span className="flex items-center gap-1"><Users className="h-3 w-3" /> {conv.participantCount} a&apos;zo{conv.username ? <span> · @{conv.username}</span> : null}</span>

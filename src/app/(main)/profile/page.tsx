@@ -40,6 +40,7 @@ import { StartupCard } from '@/components/startups/startup-card';
 import { ListRowSkeleton } from '@/components/ui/skeleton';
 import { EmptyState } from '@/components/ui/page-header';
 import { ROLE_LABEL, ROLE_BADGE } from '@/lib/constants';
+import { VerifiedBadge } from '@/components/social/verified-badge';
 import { FounderBadge } from '@/components/social/founder-badge';
 import { timeAgo } from '@/lib/date';
 import { BILLING_ENABLED } from '@/lib/billing';
@@ -161,14 +162,19 @@ export default function ProfilePage() {
       <section className="rounded-ios-2xl bg-white px-6 pb-6 pt-8 text-center shadow-card">
         <Avatar src={user.avatarUrl} name={user.fullName} size={96} className="mx-auto" />
 
-        <h2 className="mt-4 text-title-1 font-semibold tracking-tight text-brand-900">
+        <h2 className="mt-4 flex items-center justify-center gap-1.5 text-title-1 font-semibold tracking-tight text-brand-900">
           {user.fullName}
+          {user.isVerified && <VerifiedBadge size={20} />}
         </h2>
 
         <div className="mt-1 flex flex-wrap items-center justify-center gap-x-2 gap-y-1 text-subhead text-slate-500">
           {user.username && <span>@{user.username}</span>}
           {user.isEmailVerified && (
-            <span className="inline-flex items-center gap-1 text-accent-600">
+            <span
+              title="Email tasdiqlangan"
+              aria-label="Email tasdiqlangan"
+              className="inline-flex items-center gap-1 text-accent-600"
+            >
               <CheckCircleFill className="h-4 w-4" />
             </span>
           )}

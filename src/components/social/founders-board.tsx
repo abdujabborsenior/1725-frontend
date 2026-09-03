@@ -9,6 +9,7 @@ import type { FounderEntry } from '@/types';
 import { Avatar } from '@/components/ui/avatar';
 import { Pagination } from '@/components/ui/pagination';
 import { FounderBadge } from './founder-badge';
+import { VerifiedBadge } from './verified-badge';
 import { FounderVoteButton } from './founder-vote-button';
 import { cn } from '@/lib/utils';
 
@@ -59,6 +60,7 @@ function FounderRow({ entry }: { entry: FounderEntry }) {
           >
             {entry.fullName}
           </Link>
+          {entry.isVerified && <VerifiedBadge size={15} />}
           <FounderBadge size="xs" />
         </div>
         <div className="mt-0.5 flex flex-wrap items-center gap-x-3 gap-y-0.5 text-footnote text-slate-500">

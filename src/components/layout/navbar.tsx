@@ -12,6 +12,7 @@ import { useAuthStore } from '@/store/auth.store';
 import { navigateAfterAuthChange } from '@/lib/auth-navigation';
 import { authApi, chatApi } from '@/lib/api';
 import { Avatar } from '@/components/ui/avatar';
+import { VerifiedBadge } from '@/components/social/verified-badge';
 import { NotificationBell } from '@/components/layout/notification-bell';
 import { SearchPalette, openSearchPalette } from '@/components/layout/search-palette';
 import { AdaptiveNav, type NavItem } from '@/components/layout/adaptive-nav';
@@ -275,8 +276,11 @@ export function Navbar() {
             <div className="ios-list mt-4">
               <Link href="/profile" className="ios-row" onClick={() => setMenuOpen(false)}>
                 <Avatar src={user?.avatarUrl} name={user?.fullName} size={28} />
-                <span className="flex-1 truncate text-body text-brand-900">
-                  {user?.username ? `@${user.username}` : 'Profil'}
+                <span className="flex min-w-0 flex-1 items-center gap-1 text-body text-brand-900">
+                  <span className="truncate">
+                    {user?.username ? `@${user.username}` : 'Profil'}
+                  </span>
+                  {user?.isVerified && <VerifiedBadge size={14} />}
                 </span>
               </Link>
               <button onClick={handleLogout} className="ios-row w-full text-left">
