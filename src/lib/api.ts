@@ -19,7 +19,9 @@ import type {
   BillingPlan,
   BillingStatusInfo,
   PaymentProvider,
+  Category,
   CategoryCount,
+  CategoryType,
   ChatMessage,
   Comment,
   Conversation,
@@ -979,4 +981,11 @@ export const marketApi = {
     unwrap<MarketCluster[]>(api.get('/market/clusters', { params: { limit } })),
   cluster: (slug: string) =>
     unwrap<MarketClusterDetail>(api.get(`/market/clusters/${slug}`)),
+};
+
+/* ══════════ Kategoriyalar (admin paneldan boshqariladi) ═══════ */
+
+export const categoriesApi = {
+  list: (type: CategoryType) =>
+    unwrap<Category[]>(api.get('/categories', { params: { type } })),
 };

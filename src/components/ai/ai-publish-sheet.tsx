@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { useQuery, useQueryClient } from '@tanstack/react-query';
+import { useQueryClient } from '@tanstack/react-query';
 import toast from 'react-hot-toast';
 
 import { Modal } from '@/components/ui/modal';
@@ -12,7 +12,8 @@ import { Select } from '@/components/ui/select';
 import { Button } from '@/components/ui/button';
 import { Sparkles } from '@/components/icons';
 import { YechimMark } from './yechim-mark';
-import { aiApi, getErrorMessage, startupsApi } from '@/lib/api';
+import { aiApi, getErrorMessage } from '@/lib/api';
+import { useCategoryOptions } from '@/lib/use-categories';
 import { useAuthStore } from '@/store/auth.store';
 import type { AiDraft } from '@/types';
 
@@ -51,20 +52,16 @@ export function AiPublishSheet({ open, onClose, draft, queryId }: Props) {
     setCategory(draft.category ?? '');
   }, [draft]);
 
-  const { data: categories } = useQuery({
-    queryKey: ['startup-categories'],
-    queryFn: () => startupsApi.categories(),
-    staleTime: 10 * 60_000,
-    enabled: open,
-  });
-
+  /*
+   * Bu yerda MUAMMO e'lon qilinadi — ro'yxat ham muammo kategoriyalari
+   * (ilgari startap kategoriyalari sanog'i olinardi: /problems/create bilan
+   * mos kelmasdi). `useCategoryOptions` AI tanlagan qiymatni ro'yxatда
+   * bo'lmasa ham saqlab qoladi.
+   */
+  const categoryNames = useCategoryOptions('problem', category);
   const categoryOptions = [
     { value: '', label: 'Kategoriyasiz' },
-    ...(categories ?? []).map((c) => ({ value: c.category, label: c.category })),
-    // AI tanlagan kategoriya ro'yxatda bo'lmasa ham yo'qolmasin
-    ...(category && !(categories ?? []).some((c) => c.category === category)
-      ? [{ value: category, label: category }]
-      : []),
+    ...categoryNames.map((name) => ({ value: name, label: name })),
   ];
 
   const titleOk = title.trim().length >= 10 && title.trim().length <= 300;

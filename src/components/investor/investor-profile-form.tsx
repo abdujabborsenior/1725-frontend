@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import toast from 'react-hot-toast';
 import { Button } from '@/components/ui/button';
@@ -8,7 +8,8 @@ import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Switch } from '@/components/ui/switch';
 import { investorsApi, getErrorMessage, type InvestorProfilePayload } from '@/lib/api';
-import { STARTUP_CATEGORIES, UZ_REGIONS } from '@/lib/constants';
+import { UZ_REGIONS } from '@/lib/constants';
+import { useCategoryNames } from '@/lib/use-categories';
 import { cn } from '@/lib/utils';
 import {
   INVESTOR_KIND_HINT,
@@ -90,6 +91,13 @@ export function InvestorProfileForm({ initial }: { initial?: InvestorProfile | n
   const [website, setWebsite] = useState(initial?.website ?? '');
   const [thesis, setThesis] = useState(initial?.thesis ?? '');
   const [categories, setCategories] = useState<string[]>(initial?.categories ?? []);
+  // Sohalar ro'yxati bazadan. Ilgari tanlangan, lekin ro'yxatдан chiqarilgan
+  // soha ham ko'rinadi — aks holda uni bekor qilib bo'lmasdi.
+  const categoryNames = useCategoryNames('startup');
+  const categoryOptions = useMemo(
+    () => [...categoryNames, ...categories.filter((c) => !categoryNames.includes(c))],
+    [categoryNames, categories],
+  );
   const [stages, setStages] = useState<StartupStage[]>(initial?.stages ?? []);
   const [regions, setRegions] = useState<string[]>(initial?.regions ?? []);
   const [offers, setOffers] = useState<VentureNeed[]>(initial?.offers ?? []);
@@ -226,7 +234,7 @@ export function InvestorProfileForm({ initial }: { initial?: InvestorProfile | n
           <div className="space-y-2">
             <span className="text-subhead font-medium text-slate-500">Sohalar</span>
             <div className="flex flex-wrap gap-2">
-              {STARTUP_CATEGORIES.map((c) => (
+              {categoryOptions.map((c) => (
                 <Chip
                   key={c}
                   active={categories.includes(c)}

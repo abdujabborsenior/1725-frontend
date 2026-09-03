@@ -122,6 +122,12 @@ export const UZ_REGIONS = [
 export const SCHOOL_GRADES = Array.from({ length: 11 }, (_, i) => i + 1);
 export const UNIVERSITY_COURSES = Array.from({ length: 6 }, (_, i) => i + 1);
 
+/**
+ * ⚠️ ZAXIRA ro'yxat. Haqiqiy kategoriyalar bazadan keladi va admin paneldan
+ * boshqariladi (`lib/use-categories.ts`) — bu yerdagi qiymatlar faqat server
+ * javob bermaganда forma bo'sh qolmasligi uchun. Yangi kategoriya kodga emas,
+ * admin panelga qo'shiladi.
+ */
 export const PROBLEM_CATEGORIES = [
   'Texnologiya',
   'Biznes',
@@ -130,6 +136,7 @@ export const PROBLEM_CATEGORIES = [
   "Sog'liqni saqlash",
   "Qishloq xo'jaligi",
   'Ekologiya',
+  'Sport',
   'Boshqa',
 ];
 
@@ -273,6 +280,7 @@ export const REPORT_TARGET_LABELS: Record<ReportTargetType, string> = {
   user: 'foydalanuvchi',
 };
 
+/** ⚠️ ZAXIRA ro'yxat — qarang: `PROBLEM_CATEGORIES` ustidagi izoh. */
 export const STARTUP_CATEGORIES = [
   'Texnologiya',
   'Fintex',
@@ -282,6 +290,7 @@ export const STARTUP_CATEGORIES = [
   'Logistika',
   'AI / ML',
   'O\'yinlar',
+  'Sport',
   'Ijtimoiy',
   'Boshqa',
 ];

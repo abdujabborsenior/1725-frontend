@@ -16,7 +16,7 @@ import { useAuthStore } from '@/store/auth.store';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
-import { PROBLEM_CATEGORIES } from '@/lib/constants';
+import { useCategoryNames } from '@/lib/use-categories';
 import { cn } from '@/lib/utils';
 import { FIELD_SIZE, FIELD_SURFACE } from '@/components/ui/field-styles';
 import toast from 'react-hot-toast';
@@ -38,6 +38,8 @@ export default function CreateProblemPage() {
   const { token, hasHydrated } = useAuthStore();
   const qc = useQueryClient();
 
+  // Kategoriyalar bazadan keladi (admin paneldan boshqariladi).
+  const categories = useCategoryNames('problem');
   const [imageUrls, setImageUrls] = useState<string[]>([]);
   const [videoUrls, setVideoUrls] = useState<string[]>([]);
   const [imageInput, setImageInput] = useState('');
@@ -135,7 +137,7 @@ export default function CreateProblemPage() {
             Kategoriya (ixtiyoriy)
           </label>
           <div className="flex flex-wrap gap-2">
-            {PROBLEM_CATEGORIES.map((cat) => {
+            {categories.map((cat) => {
               const selected = watch('category') === cat;
               return (
                 <label key={cat} className={cn(

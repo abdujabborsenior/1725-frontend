@@ -486,6 +486,18 @@ export interface CategoryCount {
   count: number;
 }
 
+/**
+ * Kategoriya — startap/muammo kategoriyalari admin paneldan boshqariladi
+ * (ilgari `constants.ts` dagi qattiq ro'yxat edi; u endi faqat zaxira).
+ */
+export type CategoryType = 'startup' | 'problem';
+
+export interface Category {
+  id: string;
+  type: CategoryType;
+  name: string;
+}
+
 /* ── Notifications ────────────────────────────────────────────── */
 export type NotificationType =
   | 'problem_approved'

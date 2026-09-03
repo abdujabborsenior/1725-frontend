@@ -30,7 +30,8 @@ import {
   investorFieldsToPayload,
   type InvestorFieldsValue,
 } from './investor-fields';
-import { STARTUP_CATEGORIES, UZ_REGIONS } from '@/lib/constants';
+import { UZ_REGIONS } from '@/lib/constants';
+import { useCategoryOptions } from '@/lib/use-categories';
 import { cn } from '@/lib/utils';
 import { FIELD_SIZE, FIELD_SURFACE } from '@/components/ui/field-styles';
 import toast from 'react-hot-toast';
@@ -179,6 +180,9 @@ export function StartupForm({ initial }: { initial?: Startup }) {
 
   const descLength = watch('description')?.length ?? 0;
   const selectedCategory = watch('category');
+  // Kategoriyalar bazadan (admin paneldan boshqariladi); tahrirda joriy
+  // qiymat ro'yxatда bo'lmasa ham ko'rinadi.
+  const categoryOptions = useCategoryOptions('startup', selectedCategory);
 
   /**
    * Havoladan avtomatik logo/muqova/nom/tavsif. Faqat BO'SH maydonlarni
@@ -232,7 +236,7 @@ export function StartupForm({ initial }: { initial?: Startup }) {
           <div className="flex flex-col gap-2">
             <span className="text-subhead font-medium text-slate-500">Kategoriya (ixtiyoriy)</span>
             <div className="flex flex-wrap gap-2">
-              {STARTUP_CATEGORIES.map((cat) => {
+              {categoryOptions.map((cat) => {
                 const selected = selectedCategory === cat;
                 return (
                   <button
