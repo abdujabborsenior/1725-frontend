@@ -1,5 +1,6 @@
 'use client';
 
+import { useTranslations } from 'next-intl';
 import { ChevronLeft, ChevronRight } from '@/components/icons';
 import { cn } from '@/lib/utils';
 
@@ -11,6 +12,7 @@ interface PaginationProps {
 
 /** iOS uslubidagi sahifalash — segment tanovi kabi yumshoq fill ustida. */
 export function Pagination({ page, totalPages, onChange }: PaginationProps) {
+  const t = useTranslations('ui.pagination');
   if (totalPages <= 1) return null;
 
   const windowSize = Math.min(totalPages, 5);
@@ -26,7 +28,7 @@ export function Pagination({ page, totalPages, onChange }: PaginationProps) {
         <button
           onClick={() => onChange(Math.max(1, page - 1))}
           disabled={page === 1}
-          aria-label="Oldingi sahifa"
+          aria-label={t('prev')}
           className={arrow}
         >
           <ChevronLeft className="h-4 w-4" />
@@ -51,7 +53,7 @@ export function Pagination({ page, totalPages, onChange }: PaginationProps) {
         <button
           onClick={() => onChange(Math.min(totalPages, page + 1))}
           disabled={page === totalPages}
-          aria-label="Keyingi sahifa"
+          aria-label={t('next')}
           className={arrow}
         >
           <ChevronRight className="h-4 w-4" />

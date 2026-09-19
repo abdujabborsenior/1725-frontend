@@ -1,11 +1,11 @@
 'use client';
 
-import Link from 'next/link';
-import { usePathname, useRouter } from 'next/navigation';
+import { Link, usePathname, useRouter } from '@/i18n/navigation';
 import { Plus, LogOut, Menu, X, Search, MessageCircle } from '@/components/icons';
 import { LogoMark } from '@/components/brand/logo-mark';
 import { YechimMark } from '@/components/ai/yechim-mark';
 import { useState } from 'react';
+import { useTranslations } from 'next-intl';
 import { useQuery } from '@tanstack/react-query';
 import { cn } from '@/lib/utils';
 import { useAuthStore } from '@/store/auth.store';
@@ -18,22 +18,25 @@ import { SearchPalette, openSearchPalette } from '@/components/layout/search-pal
 import { AdaptiveNav, type NavItem } from '@/components/layout/adaptive-nav';
 import toast from 'react-hot-toast';
 import { BILLING_ENABLED } from '@/lib/billing';
+import { LanguageList, LanguageMenuButton } from '@/components/i18n/language-switcher';
 
 // Asosiy navigatsiya. "Ovoz berish" ATAYLAB bu yerda emas — ikkilamchi
 // funksiya sifatida footer va bosh sahifaning quyi bo'limida qoladi.
-const NAV_LINKS: { href: string; label: string; authOnly?: boolean }[] = [
-  { href: '/startups', label: 'Startaplar' },
-  { href: '/leaderboard', label: 'Reyting' },
-  { href: '/problems', label: 'Muammolar' },
+type NavKey = 'startups' | 'leaderboard' | 'problems' | 'market' | 'solutions' | 'discover' | 'pricing';
+
+const NAV_LINKS: { href: string; key: NavKey; authOnly?: boolean }[] = [
+  { href: '/startups', key: 'startups' },
+  { href: '/leaderboard', key: 'leaderboard' },
+  { href: '/problems', key: 'problems' },
   // Bozor xaritasi — ommaviy: platformaning "nima uchun bu yerdaman"
   // savoliga eng kuchli javobi mehmonlarga ham ochiq turishi kerak.
-  { href: '/market', label: 'Bozor' },
+  { href: '/market', key: 'market' },
   // Shaxsiy sahifa — faqat kirgan foydalanuvchiga ko'rinadi
-  { href: '/solutions', label: 'Yechimlarim', authOnly: true },
-  { href: '/discover', label: 'Hamjamiyat' },
+  { href: '/solutions', key: 'solutions', authOnly: true },
+  { href: '/discover', key: 'discover' },
   // Obuna/to'lov bo'limi VAQTINCHA o'chiq: flag `false` bo'lganda band
   // massivga umuman qo'shilmaydi (navbarда ham, mobil menyuda ham yo'q).
-  ...(BILLING_ENABLED ? [{ href: '/pricing', label: 'Tariflar' }] : []),
+  ...(BILLING_ENABLED ? [{ href: '/pricing', key: 'pricing' as const }] : []),
 ];
 
 /** iOS badge — nav ikonkasi ustidagi qizil hisob (systemRed). */
@@ -52,6 +55,7 @@ function CountBadge({ count, floating }: { count: number; floating?: boolean }) 
 }
 
 function ChatLink({ mobile }: { mobile?: boolean }) {
+  const t = useTranslations('nav');
   const { token } = useAuthStore();
   const pathname = usePathname();
   const { data } = useQuery({
@@ -68,7 +72,7 @@ function ChatLink({ mobile }: { mobile?: boolean }) {
     return (
       <Link href="/messages" className="ios-row">
         <MessageCircle className="h-[22px] w-[22px] text-accent-600" />
-        <span className="flex-1 text-body text-brand-900">Suhbatlar</span>
+        <span className="flex-1 text-body text-brand-900">{t('messages')}</span>
         <CountBadge count={count} />
       </Link>
     );
@@ -77,7 +81,7 @@ function ChatLink({ mobile }: { mobile?: boolean }) {
   return (
     <Link
       href="/messages"
-      aria-label="Suhbatlar"
+      aria-label={t('messages')}
       className={cn(
         'tappable hv-pop relative flex h-9 w-9 items-center justify-center rounded-full',
         active ? 'text-accent-600' : 'text-slate-600',
@@ -90,6 +94,7 @@ function ChatLink({ mobile }: { mobile?: boolean }) {
 }
 
 export function Navbar() {
+  const t = useTranslations('nav');
   const pathname = usePathname();
   const router = useRouter();
   const { user, token, refreshToken, clearAuth } = useAuthStore();
@@ -109,7 +114,7 @@ export function Navbar() {
       /* ignore */
     }
     clearAuth();
-    toast.success('Tizimdan chiqdingiz');
+    toast.success(t('loggedOut'));
     navigateAfterAuthChange('/login');
   }
 
@@ -119,7 +124,7 @@ export function Navbar() {
   // bir qarashda ajralib tursin. Ro'yxatning boshida turadi.
   const navItems: NavItem[] = [
     { href: '/ai', label: 'Yechim AI', icon: <YechimMark size={18} /> },
-    ...links.map(({ href, label }) => ({ href, label })),
+    ...links.map(({ href, key }) => ({ href, label: t(`links.${key}`) })),
   ];
 
   return (
@@ -150,13 +155,13 @@ export function Navbar() {
         <div className="hidden items-center gap-1.5 xl:flex">
           <button
             onClick={openSearchPalette}
-            aria-label="Qidirish"
+            aria-label={t('search')}
             className="ios-search tappable flex h-9 items-center gap-2 px-3 text-slate-500"
           >
             <Search className="h-4 w-4" />
             {/* "Qidirish" so'zi keng ekranda — tor desktopda ikonka + ⌘K
                 o'zi tushunarli va navigatsiyaga joy bo'shatadi. */}
-            <span className="hidden text-subhead 2xl:inline">Qidirish</span>
+            <span className="hidden text-subhead 2xl:inline">{t('search')}</span>
             <kbd className="rounded-md bg-white px-1.5 py-0.5 text-caption-2 font-medium text-slate-600 2xl:ml-2">
               ⌘K
             </kbd>
@@ -167,19 +172,21 @@ export function Navbar() {
             href="/startups/create"
             className="hv-sheen tappable ml-1 flex h-9 items-center gap-1 rounded-full bg-accent-600 pl-3 pr-4 text-subhead font-semibold text-white hover:shadow-[0_10px_24px_-12px_rgba(0,113,227,0.8)] active:bg-accent-700"
           >
-            <Plus className="h-4 w-4" strokeWidth={2.6} /> Startap
+            <Plus className="h-4 w-4" strokeWidth={2.6} /> {t('addStartupShort')}
           </Link>
+
+          <LanguageMenuButton />
 
           {token ? (
             <>
               <ChatLink />
               <NotificationBell />
-              <Link href="/profile" aria-label="Profil" className="hv-avatar ml-0.5 shrink-0">
+              <Link href="/profile" aria-label={t('profile')} className="hv-avatar ml-0.5 shrink-0">
                 <Avatar src={user?.avatarUrl} name={user?.fullName} size={30} />
               </Link>
               <button
                 onClick={handleLogout}
-                aria-label="Chiqish"
+                aria-label={t('logout')}
                 className="tappable hv-pop flex h-9 w-9 items-center justify-center rounded-full text-slate-500 hover:bg-rose-50 hover:text-rose-600"
               >
                 <LogOut className="h-[19px] w-[19px]" />
@@ -191,13 +198,13 @@ export function Navbar() {
                 href="/login"
                 className="tappable px-3 py-1.5 text-subhead font-medium text-accent-700"
               >
-                Kirish
+                {t('login')}
               </Link>
               <Link
                 href="/register"
                 className="tappable flex h-9 shrink-0 items-center whitespace-nowrap rounded-full bg-accent-50 px-4 text-subhead font-semibold text-accent-700 hover:bg-accent-100 active:bg-accent-200"
               >
-                Ro&apos;yxatdan o&apos;tish
+                {t('register')}
               </Link>
             </>
           )}
@@ -207,7 +214,7 @@ export function Navbar() {
         <div className="flex items-center gap-0.5 xl:hidden">
           <button
             onClick={openSearchPalette}
-            aria-label="Qidirish"
+            aria-label={t('search')}
             className="tappable hv-pop flex h-9 w-9 items-center justify-center rounded-full text-slate-600"
           >
             <Search className="h-[21px] w-[21px]" />
@@ -216,7 +223,7 @@ export function Navbar() {
           {token && <NotificationBell />}
           <button
             onClick={() => setMenuOpen((p) => !p)}
-            aria-label="Menyu"
+            aria-label={t('menu')}
             aria-expanded={menuOpen}
             className="tappable hv-pop flex h-9 w-9 items-center justify-center rounded-full text-brand-900"
           >
@@ -234,7 +241,7 @@ export function Navbar() {
               <YechimMark size={22} />
               <span className="flex-1 text-body text-brand-900">Yechim AI</span>
             </Link>
-            {links.map(({ href, label }) => {
+            {links.map(({ href, key }) => {
               const active = pathname.startsWith(href);
               return (
                 <Link
@@ -251,7 +258,7 @@ export function Navbar() {
                       active ? 'font-semibold text-accent-700' : 'text-brand-900',
                     )}
                   >
-                    {label}
+                    {t(`links.${key}`)}
                   </span>
                   {active && <span className="h-1.5 w-1.5 rounded-full bg-accent-500" />}
                 </Link>
@@ -263,11 +270,11 @@ export function Navbar() {
             {/* Joylash CTA'lari — guest ham ko'radi (register orqali qaytadi) */}
             <Link href="/startups/create" className="ios-row">
               <Plus className="h-[21px] w-[21px] text-accent-600" strokeWidth={2.4} />
-              <span className="flex-1 text-body text-accent-700">Startap joylash</span>
+              <span className="flex-1 text-body text-accent-700">{t('addStartup')}</span>
             </Link>
             <Link href="/problems/create" className="ios-row">
               <Plus className="h-[21px] w-[21px] text-accent-600" strokeWidth={2.4} />
-              <span className="flex-1 text-body text-accent-700">Muammo qoldirish</span>
+              <span className="flex-1 text-body text-accent-700">{t('addProblem')}</span>
             </Link>
             {token && <ChatLink mobile />}
           </div>
@@ -278,25 +285,30 @@ export function Navbar() {
                 <Avatar src={user?.avatarUrl} name={user?.fullName} size={28} />
                 <span className="flex min-w-0 flex-1 items-center gap-1 text-body text-brand-900">
                   <span className="truncate">
-                    {user?.username ? `@${user.username}` : 'Profil'}
+                    {user?.username ? `@${user.username}` : t('profile')}
                   </span>
                   {user?.isVerified && <VerifiedBadge size={14} />}
                 </span>
               </Link>
               <button onClick={handleLogout} className="ios-row w-full text-left">
-                <span className="flex-1 text-body text-rose-600">Chiqish</span>
+                <span className="flex-1 text-body text-rose-600">{t('logout')}</span>
               </button>
             </div>
           ) : (
             <div className="ios-list mt-4" onClick={() => setMenuOpen(false)}>
               <Link href="/login" className="ios-row">
-                <span className="flex-1 text-body text-accent-700">Kirish</span>
+                <span className="flex-1 text-body text-accent-700">{t('login')}</span>
               </Link>
               <Link href="/register" className="ios-row">
-                <span className="flex-1 text-body text-accent-700">Ro&apos;yxatdan o&apos;tish</span>
+                <span className="flex-1 text-body text-accent-700">{t('register')}</span>
               </Link>
             </div>
           )}
+
+          {/* Til — mobil menyuda alohida guruh (desktopda navbar tugmasi) */}
+          <div className="mt-6">
+            <LanguageList onPicked={() => setMenuOpen(false)} />
+          </div>
         </div>
       )}
 

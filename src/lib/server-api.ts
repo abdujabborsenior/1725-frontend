@@ -1,3 +1,4 @@
+import { getLocale } from 'next-intl/server';
 import { API_URL } from './constants';
 
 /**
@@ -8,6 +9,8 @@ import { API_URL } from './constants';
  * Xavfsizlik / yuk siyosati:
  *  - `next.revalidate` — natija Next data-keshida saqlanadi: backend'ga har
  *    instansiya uchun ~30 s da bitta so'rov (100k trafikda ham yuk nol).
+ *    Kesh kaliti `Accept-Language` sarlavhasini ham o'z ichiga oladi — har
+ *    til o'z nusxasi bilan (kategoriya nomlari va h.k. aralashmaydi).
  *  - Timeout 3 s + har qanday xatoda `null` — backend yotsa ham sahifa
  *    bugungidek client-fetch rejimida ishlayveradi (fail-open).
  *  - Faqat PUBLIC endpointlar uchun (token yuborilmaydi); shaxsiylashtirilgan
@@ -18,9 +21,10 @@ export async function fetchInitial<T>(
   revalidate = 30,
 ): Promise<T | null> {
   try {
+    const locale = await getLocale();
     const res = await fetch(`${API_URL}${path}`, {
       next: { revalidate },
-      headers: { 'Accept-Language': 'uz' },
+      headers: { 'Accept-Language': locale },
       signal: AbortSignal.timeout(3000),
     });
     if (!res.ok) return null;

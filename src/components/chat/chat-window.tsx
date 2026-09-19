@@ -1,8 +1,8 @@
 'use client';
 
+import { Link, useRouter } from '@/i18n/navigation';
 import { Fragment, useCallback, useEffect, useRef, useState } from 'react';
-import Link from 'next/link';
-import { useRouter } from 'next/navigation';
+import { useTranslations } from 'next-intl';
 import { useQueryClient } from '@tanstack/react-query';
 import {
   ChevronLeft, Spinner, Users, MoreHorizontal, Info, LogOut, Settings, ArrowDown,
@@ -20,7 +20,9 @@ import { ChatEmptyState } from './chat-empty';
 import { GroupSettingsModal } from './group-settings-modal';
 import { profileHref } from '@/components/social/user-list-item';
 import { cn } from '@/lib/utils';
-import { timeAgo, dayLabel, sameDay } from '@/lib/date';
+import { sameDay, useDateFormat } from '@/lib/date';
+import { useFormatNumber } from '@/lib/format';
+import { useChatText } from './chat-text';
 import toast from 'react-hot-toast';
 import type { ChatMessage, Conversation } from '@/types';
 
@@ -40,10 +42,11 @@ function HeaderIdentity({
   onInfo: () => void;
   children: React.ReactNode;
 }) {
+  const t = useTranslations('chat.window');
   const cls = 'min-w-0 flex-1 rounded-lg px-1 py-0.5 text-left transition-colors hover:bg-slate-50';
   if (isGroup) {
     return (
-      <button onClick={onInfo} className={cn(cls, 'cursor-pointer')} aria-label="Guruh ma'lumoti">
+      <button onClick={onInfo} className={cn(cls, 'cursor-pointer')} aria-label={t('groupInfo')}>
         {children}
       </button>
     );
@@ -51,13 +54,17 @@ function HeaderIdentity({
   // Profil havolasi mavjud bo'lmasa — oddiy blok (bosilmaydi)
   if (!href || href === '#') return <div className="min-w-0 flex-1 px-1 py-0.5">{children}</div>;
   return (
-    <Link href={href} className={cls} aria-label="Profilni ochish">
+    <Link href={href} className={cls} aria-label={t('openProfile')}>
       {children}
     </Link>
   );
 }
 
 export function ChatWindow({ conversationId }: { conversationId: string }) {
+  const t = useTranslations('chat');
+  const { timeAgo, dayLabel } = useDateFormat();
+  const fmt = useFormatNumber();
+  const { typeLabel } = useChatText();
   const me = useAuthStore((s) => s.user);
   const router = useRouter();
   const qc = useQueryClient();
@@ -283,7 +290,7 @@ export function ChatWindow({ conversationId }: { conversationId: string }) {
       await chatApi.leaveGroup(conversationId);
       void qc.invalidateQueries({ queryKey: ['chat-conversations'] });
       void qc.invalidateQueries({ queryKey: ['chat-unread'] });
-      toast.success('Guruhdan chiqdingiz');
+      toast.success(t('window.leftGroup'));
       router.push('/messages');
     } catch (err) {
       toast.error(getErrorMessage(err));
@@ -297,7 +304,7 @@ export function ChatWindow({ conversationId }: { conversationId: string }) {
     if (loading) return <ChatOpeningSkeleton />;
     return (
       <div className="flex h-full w-full items-center justify-center text-subhead text-slate-500">
-        Suhbat topilmadi
+        {t('window.notFound')}
       </div>
     );
   }
@@ -316,14 +323,14 @@ export function ChatWindow({ conversationId }: { conversationId: string }) {
       <div className="material-bar hairline-b relative z-30 flex items-center gap-3 px-3 py-2.5">
         <button
           onClick={() => router.push('/messages')}
-          aria-label="Ortga"
-          title="Ortga"
+          aria-label={t('back')}
+          title={t('back')}
           className="btn-round flex h-9 w-9 shrink-0 items-center justify-center rounded-full text-accent-600"
         >
           <ChevronLeft className="h-[22px] w-[22px]" strokeWidth={3} />
         </button>
         {isGroup ? (
-          <button onClick={() => setInfoOpen(true)} aria-label="Guruh ma'lumoti" className="hv-avatar shrink-0">
+          <button onClick={() => setInfoOpen(true)} aria-label={t('window.groupInfo')} className="hv-avatar shrink-0">
             <Avatar src={conv.avatarUrl} name={conv.title} size={40} />
           </button>
         ) : (
@@ -336,10 +343,10 @@ export function ChatWindow({ conversationId }: { conversationId: string }) {
             {conv.otherUser?.isVerified && <VerifiedBadge size={15} />}
           </p>
           <p className="truncate text-footnote text-slate-500">
-            {typingUser ? <span className="text-accent-600">yozmoqda…</span>
-              : isGroup ? <span className="flex items-center gap-1"><Users className="h-3 w-3" /> {conv.participantCount} a&apos;zo{conv.username ? <span> · @{conv.username}</span> : null}</span>
-              : online ? <span className="text-accent-600">onlayn</span>
-              : conv.otherUser?.lastSeenAt ? `oxirgi faollik ${timeAgo(conv.otherUser.lastSeenAt)}` : ''}
+            {typingUser ? <span className="text-accent-600">{t('window.typing')}</span>
+              : isGroup ? <span className="flex items-center gap-1"><Users className="h-3 w-3" /> {t('window.members', { count: conv.participantCount, n: fmt(conv.participantCount) })}{conv.username ? <span> · @{conv.username}</span> : null}</span>
+              : online ? <span className="text-accent-600">{t('window.online')}</span>
+              : conv.otherUser?.lastSeenAt ? t('window.lastSeen', { time: timeAgo(conv.otherUser.lastSeenAt) }) : ''}
           </p>
         </HeaderIdentity>
 
@@ -348,7 +355,7 @@ export function ChatWindow({ conversationId }: { conversationId: string }) {
           <div className="relative shrink-0">
             <button
               onClick={() => setMenuOpen((v) => !v)}
-              aria-label="Menyu"
+              aria-label={t('window.menu')}
               className="btn-round flex h-9 w-9 items-center justify-center rounded-full text-accent-600"
             >
               <MoreHorizontal className="h-[22px] w-[22px]" />
@@ -360,16 +367,16 @@ export function ChatWindow({ conversationId }: { conversationId: string }) {
                     className="material-menu absolute right-0 top-11 z-50 w-60 max-w-[calc(100vw-1.5rem)] origin-top-right animate-scale-in overflow-hidden rounded-ios-lg p-1 shadow-modal ring-1 ring-black/[0.06]"
                   >
                     <button onClick={() => { setInfoOpen(true); setMenuOpen(false); }} className="flex w-full items-center gap-3 rounded-[9px] px-3 py-2.5 text-body text-brand-900 hv-row">
-                      <Info className="h-4 w-4 text-slate-400" /> Guruh ma&apos;lumoti
+                      <Info className="h-4 w-4 text-slate-400" /> {t('window.groupInfo')}
                     </button>
                     {canManageGroup && (
                       <button onClick={() => { setSettingsOpen(true); setMenuOpen(false); }} className="flex w-full items-center gap-3 rounded-[9px] px-3 py-2.5 text-body text-brand-900 hv-row">
-                        <Settings className="h-4 w-4 text-slate-400" /> Guruh sozlamalari
+                        <Settings className="h-4 w-4 text-slate-400" /> {t('window.groupSettings')}
                       </button>
                     )}
                     {!isOwner && (
                       <button onClick={() => { setLeaveOpen(true); setMenuOpen(false); }} className="flex w-full items-center gap-3 rounded-[9px] px-3 py-2.5 text-body text-rose-600 transition-colors duration-150 hover:bg-rose-50/60 active:bg-rose-50">
-                        <LogOut className="h-4 w-4" /> Guruhdan chiqish
+                        <LogOut className="h-4 w-4" /> {t('window.leaveGroup')}
                       </button>
                     )}
                   </div>
@@ -462,7 +469,7 @@ export function ChatWindow({ conversationId }: { conversationId: string }) {
         <button
           type="button"
           onClick={() => scrollToBottom(true)}
-          aria-label={newCount ? `${newCount} ta yangi xabar — pastga` : 'Pastga'}
+          aria-label={newCount ? t('window.jumpDownNew', { count: newCount }) : t('window.jumpDown')}
           className="jump-btn material-thick tappable-scale absolute bottom-3 right-3 z-20 flex h-11 w-11 items-center justify-center rounded-full text-accent-700 shadow-card-hover ring-1 ring-black/[0.04]"
         >
           <ArrowDown className="h-[19px] w-[19px]" strokeWidth={2.5} />
@@ -490,7 +497,7 @@ export function ChatWindow({ conversationId }: { conversationId: string }) {
       />
 
       {/* Group info */}
-      <Modal open={infoOpen} onClose={() => setInfoOpen(false)} title="Guruh ma'lumoti">
+      <Modal open={infoOpen} onClose={() => setInfoOpen(false)} title={t('window.groupInfo')}>
         <div className="space-y-4">
           <div className="flex items-center gap-3">
             <span className="shrink-0">
@@ -499,13 +506,13 @@ export function ChatWindow({ conversationId }: { conversationId: string }) {
             <div className="min-w-0">
               <p className="truncate text-title-3 font-bold text-brand-900">{conv.title}</p>
               {conv.username && <p className="text-subhead text-accent-700">@{conv.username}</p>}
-              <p className="flex items-center gap-1 text-caption-1 text-slate-500"><Users className="h-3 w-3" /> {conv.participantCount} a&apos;zo</p>
+              <p className="flex items-center gap-1 text-caption-1 text-slate-500"><Users className="h-3 w-3" /> {t('window.members', { count: conv.participantCount, n: fmt(conv.participantCount) })}</p>
             </div>
           </div>
           {conv.description && <p className="text-subhead leading-relaxed text-slate-600">{conv.description}</p>}
           {(conv.blockedMessageTypes ?? []).length > 0 && (
             <div className="rounded-2xl bg-rose-50 p-3 text-caption-1 text-rose-700">
-              Cheklovlar yoqilgan: {(conv.blockedMessageTypes ?? []).map((t) => RESTRICTION_LABEL[t] ?? t).join(', ')}
+              {t('window.restrictions', { list: (conv.blockedMessageTypes ?? []).map((type) => typeLabel(type)).join(', ') })}
             </div>
           )}
         </div>
@@ -522,15 +529,18 @@ export function ChatWindow({ conversationId }: { conversationId: string }) {
       )}
 
       {/* Leave confirm */}
-      <Modal open={leaveOpen} onClose={() => !leaving && setLeaveOpen(false)} title="Guruhdan chiqish">
+      <Modal open={leaveOpen} onClose={() => !leaving && setLeaveOpen(false)} title={t('window.leaveGroup')}>
         <div className="space-y-4">
           <p className="text-subhead text-slate-600">
-            <span className="font-semibold text-brand-900">{conv.title}</span> guruhidan chiqmoqchimisiz? Keyin uni qidiruvdan qayta topib qo&apos;shilishingiz mumkin.
+            {t.rich('window.leaveConfirm', {
+              title: conv.title ?? '',
+              b: (chunks) => <span className="font-semibold text-brand-900">{chunks}</span>,
+            })}
           </p>
           <div className="flex justify-end gap-3">
-            <button onClick={() => setLeaveOpen(false)} disabled={leaving} className="rounded-xl px-4 py-2 text-subhead font-semibold text-slate-600 hover:bg-surface-soft">Bekor</button>
+            <button onClick={() => setLeaveOpen(false)} disabled={leaving} className="rounded-xl px-4 py-2 text-subhead font-semibold text-slate-600 hover:bg-surface-soft">{t('window.leaveCancel')}</button>
             <button onClick={handleLeave} disabled={leaving} className="tappable flex items-center gap-2 rounded-xl bg-rose-500 px-4 py-2 text-subhead font-semibold text-white hover:bg-rose-600 disabled:opacity-60">
-              {leaving ? <Spinner className="h-4 w-4 animate-spin" /> : <LogOut className="h-4 w-4" />} Chiqish
+              {leaving ? <Spinner className="h-4 w-4 animate-spin" /> : <LogOut className="h-4 w-4" />} {t('window.leave')}
             </button>
           </div>
         </div>
@@ -538,7 +548,3 @@ export function ChatWindow({ conversationId }: { conversationId: string }) {
     </div>
   );
 }
-
-const RESTRICTION_LABEL: Record<string, string> = {
-  text: 'Matn', image: 'Rasm', video: 'Video', voice: 'Ovozli xabar', round_video: 'Video xabar',
-};

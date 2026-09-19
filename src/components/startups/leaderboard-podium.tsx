@@ -1,9 +1,12 @@
 'use client';
 
-import Link from 'next/link';
+import { useTranslations } from 'next-intl';
+import { Link } from '@/i18n/navigation';
 import { Eye, StarFill, Users } from '@/components/icons';
 import type { LeaderboardEntry } from '@/types';
 import { cn } from '@/lib/utils';
+import { useFormatNumber } from '@/lib/format';
+import { useCategoryLabel } from '@/lib/category-labels';
 import { MEDAL, RankMovement } from './leaderboard-bits';
 import { StartupLogo } from './startup-logo';
 
@@ -23,13 +26,20 @@ function PodiumCard({
   entry: LeaderboardEntry;
   elevated?: boolean;
 }) {
+  const t = useTranslations('leaderboard');
+  const fmt = useFormatNumber();
+  const catLabel = useCategoryLabel();
   const medal = MEDAL[entry.rank as 1 | 2 | 3];
   const MedalIcon = medal?.icon;
 
   return (
     <Link
       href={`/startups/${entry.slug}`}
-      aria-label={`${entry.rank}-o'rin: ${entry.title}, ball ${entry.score.toFixed(1)}`}
+      aria-label={t('podiumAria', {
+        rank: String(entry.rank),
+        title: entry.title,
+        score: entry.score.toFixed(1),
+      })}
       className={cn(
         'podium-card group relative flex flex-col items-center overflow-hidden rounded-ios-2xl bg-white text-center',
         medal?.cls,
@@ -54,7 +64,7 @@ function PodiumCard({
       {/* O'rin tamg'asi */}
       <span className="medal-badge absolute left-1/2 top-3 inline-flex h-7 -translate-x-1/2 items-center gap-1.5 rounded-full pl-2 pr-2.5 text-caption-1 font-bold">
         {MedalIcon && <MedalIcon className="h-3.5 w-3.5" />}
-        {entry.rank}-o&apos;rin
+        {t('place', { rank: String(entry.rank) })}
       </span>
 
       {/* Logotip — metal halqada */}
@@ -75,7 +85,7 @@ function PodiumCard({
       </h3>
       {entry.category && (
         <span className="mt-0.5 line-clamp-1 px-4 text-caption-1 font-medium text-slate-500">
-          {entry.category}
+          {catLabel(entry.category)}
         </span>
       )}
 
@@ -98,11 +108,11 @@ function PodiumCard({
 
       {/* Sanoqlar + o'rin harakati */}
       <div className="mt-4 flex w-full items-center justify-center gap-4 border-t border-slate-200/70 px-4 pt-3.5 text-caption-1 text-slate-600">
-        <span className="inline-flex items-center gap-1 tabular-nums" title="Baholaganlar">
-          <Users className="h-3.5 w-3.5 text-slate-400" /> {entry.leaderboardVotes}
+        <span className="inline-flex items-center gap-1 tabular-nums" title={t('raters')}>
+          <Users className="h-3.5 w-3.5 text-slate-400" /> {fmt(entry.leaderboardVotes)}
         </span>
-        <span className="inline-flex items-center gap-1 tabular-nums" title="Ko'rishlar">
-          <Eye className="h-3.5 w-3.5 text-slate-400" /> {entry.viewCount}
+        <span className="inline-flex items-center gap-1 tabular-nums" title={t('views')}>
+          <Eye className="h-3.5 w-3.5 text-slate-400" /> {fmt(entry.viewCount)}
         </span>
         <RankMovement delta={entry.rankDelta} />
       </div>

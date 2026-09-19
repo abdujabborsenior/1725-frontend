@@ -1,12 +1,14 @@
 'use client';
 
+import { useRouter } from '@/i18n/navigation';
 import { useState } from 'react';
-import { useRouter } from 'next/navigation';
+import { useTranslations } from 'next-intl';
 import { Users, Spinner, Hash } from '@/components/icons';
 import { chatApi, getErrorMessage } from '@/lib/api';
 import { useAuthStore } from '@/store/auth.store';
 import { Avatar } from '@/components/ui/avatar';
 import { cn } from '@/lib/utils';
+import { useFormatNumber } from '@/lib/format';
 import type { PublicGroup } from '@/types';
 import toast from 'react-hot-toast';
 
@@ -17,6 +19,8 @@ import toast from 'react-hot-toast';
  * direktiva: bio bilan adashtirardi).
  */
 export function GroupCard({ group, className }: { group: PublicGroup; className?: string }) {
+  const t = useTranslations('groupCard');
+  const fmt = useFormatNumber();
   const router = useRouter();
   const { token } = useAuthStore();
   const [loading, setLoading] = useState(false);
@@ -58,7 +62,8 @@ export function GroupCard({ group, className }: { group: PublicGroup; className?
             <p className="truncate text-footnote text-accent-700">@{group.username}</p>
           )}
           <p className="flex items-center gap-1 text-footnote text-slate-500">
-            <Users className="h-3.5 w-3.5" /> {group.participantCount} a&apos;zo
+            <Users className="h-3.5 w-3.5" />{' '}
+            {t('members', { count: group.participantCount, n: fmt(group.participantCount) })}
           </p>
         </div>
 
@@ -77,9 +82,9 @@ export function GroupCard({ group, className }: { group: PublicGroup; className?
           {loading ? (
             <Spinner className="h-4 w-4 animate-spin" />
           ) : isMember ? (
-            'Ochish'
+            t('open')
           ) : (
-            "Qo'shilish"
+            t('join')
           )}
         </button>
       </div>

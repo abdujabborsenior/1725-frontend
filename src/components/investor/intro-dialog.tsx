@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import { useTranslations } from 'next-intl';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import toast from 'react-hot-toast';
 import { Modal } from '@/components/ui/modal';
@@ -30,6 +31,8 @@ export function IntroDialog({
   startupId: string;
   startupTitle: string;
 }) {
+  const t = useTranslations('introDialog');
+  const tc = useTranslations('common');
   const qc = useQueryClient();
   const [message, setMessage] = useState('');
   const tooShort = message.trim().length < MIN_LENGTH;
@@ -47,32 +50,33 @@ export function IntroDialog({
   });
 
   return (
-    <Modal open={open} onClose={onClose} title="Bog'lanish so'rovi">
+    <Modal open={open} onClose={onClose} title={t('title')}>
       <div className="space-y-4">
         <p className="text-subhead text-slate-600">
-          <span className="font-medium text-brand-900">{startupTitle}</span>{' '}
-          asoschisiga so&apos;rov yuboriladi. U qabul qilsa — suhbat ochiladi
-          va bu xabar birinchi bo&apos;lib ko&apos;rinadi.
+          {t.rich('lead', {
+            title: startupTitle,
+            b: (chunks) => <span className="font-medium text-brand-900">{chunks}</span>,
+          })}
         </p>
 
         <Textarea
-          label="Xabaringiz"
+          label={t('messageLabel')}
           rows={5}
           maxLength={MAX_LENGTH}
-          placeholder="Nima uchun qiziqayotganingizni va nima taklif qilishingizni yozing. Aniq gap javob olish ehtimolini keskin oshiradi."
+          placeholder={t('placeholder')}
           value={message}
           onChange={(e) => setMessage(e.target.value)}
         />
 
         <p className="text-caption-1 text-slate-500">
           {tooShort
-            ? `Yana ${MIN_LENGTH - message.trim().length} ta belgi kerak`
+            ? t('charsNeeded', { count: MIN_LENGTH - message.trim().length })
             : `${message.trim().length} / ${MAX_LENGTH}`}
         </p>
 
         <div className="flex gap-2">
           <Button variant="secondary" className="flex-1" onClick={onClose} type="button">
-            Bekor qilish
+            {tc('cancel')}
           </Button>
           <Button
             className="flex-1"
@@ -81,7 +85,7 @@ export function IntroDialog({
             loading={isPending}
             type="button"
           >
-            Yuborish
+            {tc('send')}
           </Button>
         </div>
       </div>

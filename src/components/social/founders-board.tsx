@@ -1,7 +1,8 @@
 'use client';
 
+import { Link } from '@/i18n/navigation';
 import { useState } from 'react';
-import Link from 'next/link';
+import { useTranslations } from 'next-intl';
 import { useQuery, keepPreviousData } from '@tanstack/react-query';
 import { Crown, Rocket, Users } from '@/components/icons';
 import { usersApi } from '@/lib/api';
@@ -12,6 +13,7 @@ import { FounderBadge } from './founder-badge';
 import { VerifiedBadge } from './verified-badge';
 import { FounderVoteButton } from './founder-vote-button';
 import { cn } from '@/lib/utils';
+import { useFormatNumber } from '@/lib/format';
 
 const LIMIT = 20;
 
@@ -43,6 +45,8 @@ function RankMark({ rank }: { rank: number }) {
 }
 
 function FounderRow({ entry }: { entry: FounderEntry }) {
+  const t = useTranslations('leaderboard.founders');
+  const fmt = useFormatNumber();
   const profileHref = entry.username ? `/u/${entry.username}` : `/u/${entry.id}`;
   return (
     <div className="flex items-center gap-3 rounded-ios-2xl bg-white p-3.5 transition-all hover:shadow-card-hover sm:gap-4 sm:p-4">
@@ -66,10 +70,12 @@ function FounderRow({ entry }: { entry: FounderEntry }) {
         <div className="mt-0.5 flex flex-wrap items-center gap-x-3 gap-y-0.5 text-footnote text-slate-500">
           {entry.username && <span className="truncate">@{entry.username}</span>}
           <span className="inline-flex items-center gap-1">
-            <Rocket className="h-3 w-3" /> {entry.startupCount} startap
+            <Rocket className="h-3 w-3" />{' '}
+            {t('startups', { count: entry.startupCount, n: fmt(entry.startupCount) })}
           </span>
           <span className="hidden items-center gap-1 sm:inline-flex">
-            <Users className="h-3 w-3" /> {entry.followerCount.toLocaleString('uz')} obunachi
+            <Users className="h-3 w-3" />{' '}
+            {t('followers', { count: entry.followerCount, n: fmt(entry.followerCount) })}
           </span>
         </div>
       </div>
@@ -101,6 +107,7 @@ function FounderRowSkeleton() {
 
 /** Asoschilar liderbordi — ovozlar bo'yicha reyting (sahifalangan). */
 export function FoundersBoard() {
+  const t = useTranslations('leaderboard.founders');
   const [page, setPage] = useState(1);
 
   const { data, isLoading } = useQuery({
@@ -127,9 +134,9 @@ export function FoundersBoard() {
         <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-ios-lg bg-accent-50">
           <Rocket className="h-8 w-8 text-accent-500" />
         </div>
-        <p className="font-semibold text-brand-900">Hozircha asoschilar yo&apos;q</p>
+        <p className="font-semibold text-brand-900">{t('empty.title')}</p>
         <p className="mt-1 text-subhead text-slate-500">
-          Birinchi startap joylagan foydalanuvchi shu yerda paydo bo&apos;ladi
+          {t('empty.text')}
         </p>
       </div>
     );

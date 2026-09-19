@@ -1,9 +1,10 @@
 'use client';
 
 import { useState, type CSSProperties } from 'react';
+import { useTranslations } from 'next-intl';
 
 import { Check, Plus, Trash2, X } from '@/components/icons';
-import { dayLabel } from '@/lib/date';
+import { useDateFormat } from '@/lib/date';
 import { cn } from '@/lib/utils';
 import type { AiConversationSummary } from '@/types';
 
@@ -38,6 +39,9 @@ export function AiHistory({
   onDelete: (id: string) => void;
   onLoadMore: () => void;
 }) {
+  const t = useTranslations('ai');
+  const tc = useTranslations('common');
+  const { dayLabel } = useDateFormat();
   const [confirmId, setConfirmId] = useState<string | null>(null);
 
   return (
@@ -49,7 +53,7 @@ export function AiHistory({
           className="yz-card yz-card-tap flex h-11 w-full items-center justify-center gap-2 text-callout font-semibold text-[color:var(--yz-ink)]"
         >
           <Plus className="h-[18px] w-[18px]" strokeWidth={2.5} />
-          Yangi suhbat
+          {t('newChat')}
         </button>
       </div>
 
@@ -66,7 +70,7 @@ export function AiHistory({
           </div>
         ) : items.length === 0 ? (
           <p className="px-1 pt-6 text-center text-footnote leading-relaxed text-[color:var(--yz-ink-3)]">
-            Suhbatlaringiz shu yerda saqlanadi
+            {t('history.empty')}
           </p>
         ) : (
           <div className="yz-stagger space-y-0.5">
@@ -87,12 +91,12 @@ export function AiHistory({
                   {confirmId === c.id ? (
                     <div className="flex items-center gap-2 rounded-xl bg-rose-500/12 px-3 py-2">
                       <span className="min-w-0 flex-1 truncate text-footnote text-[color:var(--yz-ink-2)]">
-                        O‘chirilsinmi?
+                        {t('history.confirmDelete')}
                       </span>
                       <button
                         type="button"
                         onClick={() => setConfirmId(null)}
-                        aria-label="Bekor qilish"
+                        aria-label={tc('cancel')}
                         className="yz-btn flex h-8 w-8 items-center justify-center rounded-full text-[color:var(--yz-ink-2)]"
                       >
                         <X className="h-[17px] w-[17px]" strokeWidth={2.5} />
@@ -103,7 +107,7 @@ export function AiHistory({
                           setConfirmId(null);
                           onDelete(c.id);
                         }}
-                        aria-label="O‘chirish"
+                        aria-label={t('history.delete')}
                         className="yz-btn flex h-8 w-8 items-center justify-center rounded-full bg-rose-500/20 text-rose-300"
                       >
                         <Check className="h-[17px] w-[17px]" strokeWidth={2.5} />
@@ -129,7 +133,7 @@ export function AiHistory({
                             {c.title}
                           </span>
                           <span className="block text-caption-2 text-[color:var(--yz-ink-3)]">
-                            {c.turnCount} ta savol
+                            {t('history.questions', { count: c.turnCount })}
                           </span>
                         </span>
                       </button>
@@ -139,7 +143,7 @@ export function AiHistory({
                       <button
                         type="button"
                         onClick={() => setConfirmId(c.id)}
-                        aria-label={`“${c.title}” suhbatini o‘chirish`}
+                        aria-label={t('history.deleteChat', { title: c.title })}
                         className="yz-btn absolute right-1.5 top-1/2 flex h-8 w-8 -translate-y-1/2 items-center justify-center rounded-full text-[color:var(--yz-ink-3)] opacity-100 [@media(hover:hover)]:opacity-0 [@media(hover:hover)]:group-hover/row:opacity-100 [@media(hover:hover)]:focus-visible:opacity-100"
                       >
                         <Trash2 className="h-[17px] w-[17px]" />
@@ -156,7 +160,7 @@ export function AiHistory({
                 onClick={onLoadMore}
                 className="yz-btn mt-3 w-full rounded-xl py-2 text-footnote font-medium text-[color:var(--yz-ink-2)]"
               >
-                Oldingilarini ko‘rsatish
+                {t('history.loadMore')}
               </button>
             )}
           </div>

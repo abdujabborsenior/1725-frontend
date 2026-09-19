@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import { useFormatNumber } from '@/lib/format';
 import { useInViewOnce } from './reveal';
 
 /**
@@ -18,6 +19,7 @@ export function CountUp({
   className?: string;
   suffix?: string;
 }) {
+  const fmt = useFormatNumber();
   const { ref, inView } = useInViewOnce<HTMLSpanElement>('-40px');
   const [display, setDisplay] = useState(0);
 
@@ -38,7 +40,7 @@ export function CountUp({
 
   return (
     <span ref={ref} className={className}>
-      {value === undefined ? '—' : display.toLocaleString('uz')}
+      {value === undefined ? '—' : fmt(display)}
       {value !== undefined && suffix}
     </span>
   );

@@ -4,6 +4,8 @@ import axios, {
   type InternalAxiosRequestConfig,
 } from 'axios';
 import { API_URL, STORAGE } from './constants';
+import { DEFAULT_LOCALE, isAppLocale, localizePath } from '@/i18n/locales';
+import type { AppLocale } from '@/i18n/routing';
 import type {
   AiConversationDetail,
   AiConversationSummary,
@@ -71,7 +73,7 @@ import type {
 /* ── Axios instance ───────────────────────────────────────────── */
 export const api = axios.create({
   baseURL: API_URL,
-  headers: { 'Content-Type': 'application/json', 'Accept-Language': 'uz' },
+  headers: { 'Content-Type': 'application/json' },
   withCredentials: true,
 });
 
@@ -81,9 +83,22 @@ function getToken() {
     : null;
 }
 
+/**
+ * Interfeys tili — `<html lang>` dan (server uni URL segmentiga qarab yozadi).
+ * Backend xabarlari (xatolar, kategoriya nomlari, bildirishnomalar, AI javobi)
+ * shu tilda qaytadi. Til almashganda sahifa to'liq yuklanadi, ya'ni qiymat
+ * har doim joriy.
+ */
+export function currentLocale(): AppLocale {
+  if (typeof document === 'undefined') return DEFAULT_LOCALE;
+  const lang = document.documentElement.lang;
+  return isAppLocale(lang) ? lang : DEFAULT_LOCALE;
+}
+
 api.interceptors.request.use((config) => {
   const token = getToken();
   if (token) config.headers.Authorization = `Bearer ${token}`;
+  config.headers['Accept-Language'] = currentLocale();
   return config;
 });
 
@@ -115,7 +130,8 @@ function forceLogout() {
   localStorage.removeItem(STORAGE.user);
   clearAuthCookie();
 
-  if (window.location.pathname.startsWith('/login')) return;
+  const loginPath = localizePath(currentLocale(), '/login');
+  if (window.location.pathname.startsWith(loginPath)) return;
 
   // Loop-breaker: oxirgi 5 soniyada chiqarilgan bo'lsa, qayta navigatsiya qilmaymiz.
   try {
@@ -125,7 +141,7 @@ function forceLogout() {
   } catch {
     /* sessionStorage mavjud bo'lmasligi mumkin */
   }
-  window.location.replace('/login');
+  window.location.replace(loginPath);
 }
 
 let refreshPromise: Promise<string> | null = null;
@@ -199,20 +215,40 @@ async function unwrap<T>(p: Promise<AxiosResponse<ApiEnvelope<T>>>): Promise<T> 
   return res.data.data;
 }
 
-export function getErrorMessage(err: unknown, fallback = 'Xatolik yuz berdi'): string {
+/**
+ * Ikki umumiy xabar — React'dan tashqarida (bu modul hook ishlata olmaydi),
+ * shuning uchun uch tilda shu yerda. Qolgan barcha xato matnlari serverdan
+ * (foydalanuvchi tilida) yoki chaqiruvchining `t(...)` fallback'idan keladi.
+ */
+const ERROR_TEXT: Record<AppLocale, { generic: string; network: string }> = {
+  uz: {
+    generic: 'Xatolik yuz berdi',
+    network: 'Internet aloqasi yo‘q. Ulanishni tekshirib, qayta urinib ko‘ring.',
+  },
+  ru: {
+    generic: 'Произошла ошибка',
+    network: 'Нет подключения к интернету. Проверьте соединение и попробуйте снова.',
+  },
+  en: {
+    generic: 'Something went wrong',
+    network: 'No internet connection. Check your connection and try again.',
+  },
+};
+
+export function getErrorMessage(err: unknown, fallback?: string): string {
+  const texts = ERROR_TEXT[currentLocale()];
   const body = (err as AxiosError<ApiErrorBody>)?.response?.data;
   const message = body?.error?.message;
+  const safeFallback = fallback ?? texts.generic;
   if (!message) {
     // Tarmoq uzilishi — server javob bermagan (backend "xatolik" degani emas)
-    if ((err as AxiosError)?.code === 'ERR_NETWORK') {
-      return 'Internet aloqasi yo‘q. Ulanishni tekshirib, qayta urinib ko‘ring.';
-    }
-    return fallback;
+    if ((err as AxiosError)?.code === 'ERR_NETWORK') return texts.network;
+    return safeFallback;
   }
   // Ichki kod (masalan "AI_UPSTREAM") hech qachon ekranga chiqmasligi kerak:
   // backend uni tarjima qilishi shart, lekin bu — ikkinchi himoya qatlami
   // (eski server versiyasi yoki qoplanmagan modul bo'lsa ham).
-  return isRawErrorCode(message) ? fallback : message;
+  return isRawErrorCode(message) ? safeFallback : message;
 }
 
 /** FAQAT_KATTA_HARF_VA_PASTKI_CHIZIQ — odam uchun yozilmagan matn. */

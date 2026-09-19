@@ -38,9 +38,4 @@ export function fileAccept(base: 'media' | 'all'): string {
   return parts.join(',');
 }
 
-/** Foydalanuvchiga ko'rinadigan sabab */
-export const DISABLED_CHAT_REASON: Record<string, string> = {
-  voice: 'Ovozli xabarlar vaqtincha o‘chirilgan',
-  round_video: 'Video xabarlar vaqtincha o‘chirilgan',
-  video: 'Video yuborish vaqtincha o‘chirilgan',
-};
+/* Foydalanuvchiga ko'rinadigan sabab — lug'atda: `chat.disabled.<voice|round_video|video>`. */

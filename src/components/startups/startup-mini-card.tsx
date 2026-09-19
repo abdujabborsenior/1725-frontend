@@ -1,7 +1,11 @@
-import Link from 'next/link';
+'use client';
+
+import { Link } from '@/i18n/navigation';
 import { ArrowUpRight, Eye, Rocket } from '@/components/icons';
 import { RatingValue } from './rating';
 import { cn } from '@/lib/utils';
+import { useCategoryLabel } from '@/lib/category-labels';
+import { useFormatNumber } from '@/lib/format';
 import type { Startup } from '@/types';
 
 type MiniStartup = Pick<
@@ -21,6 +25,8 @@ export function StartupMiniCard({
   startup: MiniStartup;
   className?: string;
 }) {
+  const catLabel = useCategoryLabel();
+  const fmt = useFormatNumber();
   return (
     <Link
       href={`/startups/${startup.slug}`}
@@ -45,7 +51,7 @@ export function StartupMiniCard({
           </span>
           {startup.category && (
             <span className="hidden shrink-0 rounded-md bg-white px-1.5 py-0.5 text-caption-2 font-medium text-slate-500 ring-1 ring-inset ring-slate-200 sm:inline">
-              {startup.category}
+              {catLabel(startup.category)}
             </span>
           )}
         </span>
@@ -57,7 +63,7 @@ export function StartupMiniCard({
             <RatingValue value={startup.ratingAvg} size="xs" />
           )}
           <span className="flex items-center gap-1">
-            <Eye className="h-3 w-3" /> {startup.viewCount}
+            <Eye className="h-3 w-3" /> {fmt(startup.viewCount)}
           </span>
         </span>
       </span>

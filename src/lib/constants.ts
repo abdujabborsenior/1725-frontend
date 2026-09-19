@@ -21,15 +21,13 @@ export const STORAGE = {
   pendingEmail: 'sh_pending_email',
 } as const;
 
-/* ── Problem status ───────────────────────────────────────────── */
-export const PROBLEM_STATUS_LABEL: Record<ProblemStatus, string> = {
-  pending: 'Kutilmoqda',
-  open: 'Ochiq',
-  under_review: "Ko'rib chiqilmoqda",
-  resolved: 'Hal qilindi',
-  rejected: 'Rad etildi',
-};
+/*
+ * ⚠️ Yorliq MATNLARI bu faylda YO'Q — ular lug'atda (`messages/*.json`,
+ * asosan `labels.*`), chunki har tilda boshqacha. Bu yerda faqat
+ * tilga bog'liq bo'lmagan narsalar: qiymatlar, tartib, rang klasslari.
+ */
 
+/* ── Problem status ───────────────────────────────────────────── */
 export const PROBLEM_STATUS_BADGE: Record<ProblemStatus, string> = {
   pending:      'bg-amber-50 text-amber-700',
   open:         'bg-accent-50 text-accent-700',
@@ -45,37 +43,31 @@ export const PROBLEM_STATUS_BADGE: Record<ProblemStatus, string> = {
  */
 export const PROBLEM_STATUS_META: Record<
   ProblemStatus,
-  { label: string; dot: string; text: string; chip: string; bar: string; border: string }
+  { dot: string; text: string; chip: string; bar: string; border: string }
 > = {
   pending: {
-    label: 'Kutilmoqda', dot: 'bg-amber-500', text: 'text-amber-700',
+    dot: 'bg-amber-500', text: 'text-amber-700',
     chip: 'bg-amber-50 text-amber-700', bar: 'bg-amber-400', border: 'hover:border-amber-300',
   },
   open: {
-    label: 'Ochiq', dot: 'bg-accent-500', text: 'text-accent-700',
+    dot: 'bg-accent-500', text: 'text-accent-700',
     chip: 'bg-accent-50 text-accent-700', bar: 'bg-accent-500', border: 'hover:border-accent-300',
   },
   under_review: {
-    label: "Ko'rib chiqilmoqda", dot: 'bg-sky-500', text: 'text-sky-700',
+    dot: 'bg-sky-500', text: 'text-sky-700',
     chip: 'bg-sky-50 text-sky-700', bar: 'bg-sky-500', border: 'hover:border-sky-300',
   },
   resolved: {
-    label: 'Hal qilindi', dot: 'bg-violet-500', text: 'text-violet-700',
+    dot: 'bg-violet-500', text: 'text-violet-700',
     chip: 'bg-violet-50 text-violet-700', bar: 'bg-violet-500', border: 'hover:border-violet-300',
   },
   rejected: {
-    label: 'Rad etildi', dot: 'bg-rose-500', text: 'text-rose-700',
+    dot: 'bg-rose-500', text: 'text-rose-700',
     chip: 'bg-rose-50 text-rose-700', bar: 'bg-rose-500', border: 'hover:border-rose-300',
   },
 };
 
 /* ── Solution status ──────────────────────────────────────────── */
-export const SOLUTION_STATUS_LABEL: Record<SolutionStatus, string> = {
-  pending: 'Kutilmoqda',
-  accepted: 'Qabul qilingan',
-  rejected: 'Rad etilgan',
-};
-
 export const SOLUTION_STATUS_BADGE: Record<SolutionStatus, string> = {
   pending:  'bg-amber-50 text-amber-700',
   accepted: 'bg-accent-50 text-accent-700',
@@ -83,15 +75,6 @@ export const SOLUTION_STATUS_BADGE: Record<SolutionStatus, string> = {
 };
 
 /* ── Roles ────────────────────────────────────────────────────── */
-export const ROLE_LABEL: Record<UserRole, string> = {
-  superadmin: 'Superadmin',
-  analyzer: 'Analizator',
-  school_student: "Maktab o'quvchisi",
-  university_student: 'Talaba',
-  user: 'Foydalanuvchi',
-  investor: 'Investor',
-};
-
 export const ROLE_BADGE: Record<UserRole, string> = {
   superadmin:         'bg-violet-50 text-violet-700',
   analyzer:           'bg-cyan-50 text-cyan-700',
@@ -102,22 +85,34 @@ export const ROLE_BADGE: Record<UserRole, string> = {
 };
 
 /* ── Domain data ──────────────────────────────────────────────── */
+/**
+ * Viloyatlar: `value` — bazada saqlanadigan KANONIK qiymat (o'zbekcha,
+ * O'ZGARMAYDI — mavjud yozuvlar shu qiymat bilan), `key` — ko'rsatiladigan
+ * nom uchun lug'at kaliti (`regions.<key>`).
+ */
 export const UZ_REGIONS = [
-  'Andijon',
-  'Buxoro',
-  "Farg'ona",
-  'Jizzax',
-  'Namangan',
-  'Navoiy',
-  'Qashqadaryo',
-  "Qoraqalpog'iston",
-  'Samarqand',
-  'Sirdaryo',
-  'Surxondaryo',
-  'Toshkent viloyati',
-  'Toshkent shahri',
-  'Xorazm',
+  { value: 'Andijon', key: 'andijan' },
+  { value: 'Buxoro', key: 'bukhara' },
+  { value: "Farg'ona", key: 'fergana' },
+  { value: 'Jizzax', key: 'jizzakh' },
+  { value: 'Namangan', key: 'namangan' },
+  { value: 'Navoiy', key: 'navoi' },
+  { value: 'Qashqadaryo', key: 'kashkadarya' },
+  { value: "Qoraqalpog'iston", key: 'karakalpakstan' },
+  { value: 'Samarqand', key: 'samarkand' },
+  { value: 'Sirdaryo', key: 'syrdarya' },
+  { value: 'Surxondaryo', key: 'surkhandarya' },
+  { value: 'Toshkent viloyati', key: 'tashkentRegion' },
+  { value: 'Toshkent shahri', key: 'tashkentCity' },
+  { value: 'Xorazm', key: 'khorezm' },
 ] as const;
+
+export type RegionKey = (typeof UZ_REGIONS)[number]['key'];
+
+/** Bazadagi qiymat → lug'at kaliti (noma'lum qiymat — `null`, xom holda ko'rsatiladi). */
+export function regionKey(value: string | null | undefined): RegionKey | null {
+  return UZ_REGIONS.find((r) => r.value === value)?.key ?? null;
+}
 
 export const SCHOOL_GRADES = Array.from({ length: 11 }, (_, i) => i + 1);
 export const UNIVERSITY_COURSES = Array.from({ length: 6 }, (_, i) => i + 1);
@@ -141,12 +136,6 @@ export const PROBLEM_CATEGORIES = [
 ];
 
 /* ── Startups ─────────────────────────────────────────────────── */
-export const STARTUP_STATUS_LABEL: Record<StartupStatus, string> = {
-  draft: 'Qoralama',
-  published: "E'lon qilingan",
-  archived: 'Arxivlangan',
-};
-
 export const STARTUP_STATUS_BADGE: Record<StartupStatus, string> = {
   draft:     'bg-amber-50 text-amber-700',
   published: 'bg-accent-50 text-accent-700',
@@ -156,15 +145,10 @@ export const STARTUP_STATUS_BADGE: Record<StartupStatus, string> = {
 /**
  * Platforma turlari uchun meta — App Store / Play Store / sayt / Telegram
  * uslubidagi tugmalar va ranglar. Real do'kon ko'rinishini taqlid qiladi.
+ * Matnlar (qisqa nom, CTA, badge yuqori matni, do'kon nomi) — lug'atda:
+ * `labels.platform.<type>.{label,cta,kicker,store}`.
  */
 export interface PlatformMeta {
-  /** Qisqa nom (filtrlarda) */
-  label: string;
-  /** Do'kon/CTA tugmasi matni */
-  cta: string;
-  /** "Quyidagidan oling" yuqori matni (App Store / Play Store badge uslubi) */
-  storeKicker: string;
-  storeName: string;
   /** Tugma uchun rang sinflari (tailwind) */
   badgeClass: string;
   /** Filtr chip rangi */
@@ -173,46 +157,26 @@ export interface PlatformMeta {
 
 export const PLATFORM_META: Record<PlatformType, PlatformMeta> = {
   android: {
-    label: 'Android',
-    cta: 'Google Play',
-    storeKicker: 'GET IT ON',
-    storeName: 'Google Play',
     badgeClass:
       'bg-brand-900 text-white hover:bg-brand-800 hover:shadow-lift active:bg-brand-800',
     chipClass: 'bg-emerald-50 text-emerald-600',
   },
   ios: {
-    label: 'iOS',
-    cta: 'App Store',
-    storeKicker: 'Download on the',
-    storeName: 'App Store',
     badgeClass:
       'bg-brand-900 text-white hover:bg-brand-800 hover:shadow-lift active:bg-brand-800',
     chipClass: 'bg-slate-100 text-slate-600',
   },
   website: {
-    label: 'Veb-sayt',
-    cta: 'Saytga o\'tish',
-    storeKicker: 'Ochish',
-    storeName: 'Veb-sayt',
     badgeClass:
       'bg-accent-600 text-white hover:bg-accent-700 hover:shadow-glow-accent active:bg-accent-700',
     chipClass: 'bg-accent-50 text-accent-700',
   },
   telegram_bot: {
-    label: 'Telegram',
-    cta: 'Telegramda ochish',
-    storeKicker: 'Ochish',
-    storeName: 'Telegram',
     badgeClass:
       'bg-[#229ED9] text-white hover:bg-[#1E93CC] hover:shadow-lift active:bg-[#1B8AC0]',
     chipClass: 'bg-cyan-50 text-cyan-700',
   },
   other: {
-    label: 'Havola',
-    cta: 'Havolani ochish',
-    storeKicker: 'Ochish',
-    storeName: 'Havola',
     badgeClass:
       'bg-iris-500 text-white hover:bg-iris-600 hover:shadow-glow-iris active:bg-iris-600',
     chipClass: 'bg-violet-50 text-violet-700',
@@ -227,41 +191,19 @@ export const PLATFORM_ORDER: PlatformType[] = [
   'other',
 ];
 
-export const STARTUP_SORT_OPTIONS: { value: StartupSort; label: string }[] = [
-  { value: 'featured', label: 'Tavsiya etilgan' },
-  { value: 'top_rated', label: 'Eng yuqori baholangan' },
-  { value: 'newest', label: 'Eng yangi' },
-  { value: 'popular', label: 'Mashhur' },
-  { value: 'alphabetical', label: 'Alifbo bo\'yicha' },
+/** Saralash variantlari — yorliqlar `startups.sort.<value>` da. */
+export const STARTUP_SORT_OPTIONS: StartupSort[] = [
+  'featured',
+  'top_rated',
+  'newest',
+  'popular',
+  'alphabetical',
 ];
 
-export const LEADERBOARD_PERIOD_OPTIONS: {
-  value: LeaderboardPeriod;
-  label: string;
-}[] = [
-  { value: 'all', label: 'Barcha vaqt' },
-  { value: 'year', label: 'Bu yil' },
-  { value: 'month', label: 'Bu oy' },
-  { value: 'week', label: 'Bu hafta' },
-];
+/** Reyting davri — yorliqlar `leaderboard.period.<value>` da. */
+export const LEADERBOARD_PERIOD_OPTIONS: LeaderboardPeriod[] = ['all', 'year', 'month', 'week'];
 
-/* ── Shikoyat (report) sabablari ──────────────────────────────── */
-export const REPORT_REASON_LABELS: Record<ReportReason, string> = {
-  spam: 'Spam yoki reklama',
-  inappropriate: 'Nomaqbul kontent',
-  harassment: 'Tahqirlash / bezovta qilish',
-  hate_speech: 'Nafrat nutqi',
-  sexual_content: 'Jinsiy mazmunli kontent',
-  violence: "Zo'ravonlik",
-  misinformation: "Yolg'on ma'lumot",
-  scam: 'Firibgarlik / aldov',
-  copyright: 'Mualliflik huquqi buzilishi',
-  duplicate: 'Takroriy',
-  not_working: 'Ishlamaydi / buzilgan',
-  low_quality: 'Past sifatli / ahamiyatsiz',
-  offensive: 'Haqoratli',
-  other: 'Boshqa sabab',
-};
+/* ── Shikoyat (report) sabablari — yorliqlar `report.reason.<reason>` da ── */
 
 /** Har bir obyekt turi uchun ko'rsatiladigan sabablar (backend bilan mos) */
 export const REPORT_REASONS_BY_TYPE: Record<ReportTargetType, ReportReason[]> = {
@@ -270,14 +212,6 @@ export const REPORT_REASONS_BY_TYPE: Record<ReportTargetType, ReportReason[]> = 
   problem: ['spam', 'inappropriate', 'duplicate', 'misinformation', 'offensive', 'other'],
   solution: ['spam', 'inappropriate', 'copyright', 'low_quality', 'misinformation', 'offensive', 'other'],
   user: ['spam', 'harassment', 'hate_speech', 'sexual_content', 'violence', 'scam', 'offensive', 'other'],
-};
-
-export const REPORT_TARGET_LABELS: Record<ReportTargetType, string> = {
-  startup: 'startap',
-  message: 'xabar',
-  problem: 'muammo',
-  solution: 'yechim',
-  user: 'foydalanuvchi',
 };
 
 /** ⚠️ ZAXIRA ro'yxat — qarang: `PROBLEM_CATEGORIES` ustidagi izoh. */

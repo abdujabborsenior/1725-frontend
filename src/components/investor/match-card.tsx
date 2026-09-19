@@ -1,7 +1,8 @@
 'use client';
 
-import Link from 'next/link';
+import { Link } from '@/i18n/navigation';
 import { useState } from 'react';
+import { useLocale, useTranslations } from 'next-intl';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import toast from 'react-hot-toast';
 import {
@@ -14,14 +15,10 @@ import {
 } from '@/components/icons';
 import { investorsApi, getErrorMessage } from '@/lib/api';
 import { cn } from '@/lib/utils';
-import {
-  GRADE_LABEL,
-  GRADE_TONE,
-  NEED_LABEL,
-  STAGE_LABEL,
-  formatRange,
-  scoreTone,
-} from '@/lib/venture';
+import { GRADE_TONE, formatRange, scoreTone, stageMessageKey } from '@/lib/venture';
+import { useCategoryLabel } from '@/lib/category-labels';
+import { regionKey } from '@/lib/constants';
+import type { AppLocale } from '@/i18n/routing';
 import type { DealflowItem } from '@/types';
 import { FactorBreakdown, MatchScoreRing } from './match-score';
 import { IntroDialog } from './intro-dialog';
@@ -34,12 +31,18 @@ import { IntroDialog } from './intro-dialog';
  * shuning uchun eng ajratuvchi ma'lumot yuqorida turadi.
  */
 export function MatchCard({ item }: { item: DealflowItem }) {
+  const t = useTranslations('matchCard');
+  const tv = useTranslations('venture');
+  const tr = useTranslations('regions');
+  const locale = useLocale() as AppLocale;
+  const categoryLabel = useCategoryLabel();
   const qc = useQueryClient();
   const [open, setOpen] = useState(false);
   const [introOpen, setIntroOpen] = useState(false);
   const [saved, setSaved] = useState(item.saved);
   const s = item.startup;
   const tone = scoreTone(item.score);
+  const region = regionKey(s.region);
 
   const { mutate: toggleSave } = useMutation({
     mutationFn: () =>
@@ -76,18 +79,18 @@ export function MatchCard({ item }: { item: DealflowItem }) {
             </Link>
             {item.isNew && (
               <span className="mt-0.5 shrink-0 rounded-full bg-accent-600 px-2 py-0.5 text-caption-2 font-semibold text-white">
-                Yangi
+                {t('new')}
               </span>
             )}
           </div>
 
           <p className={cn('mt-0.5 text-footnote font-medium', tone.text)}>
-            {tone.label}
+            {tv(`score.${tone.level}`)}
             {item.readiness && (
               <>
                 <span className="text-slate-400"> · </span>
                 <span className={GRADE_TONE[item.readiness.grade]}>
-                  {GRADE_LABEL[item.readiness.grade]} ({item.readiness.score})
+                  {tv(`grade.${item.readiness.grade}`)} ({item.readiness.score})
                 </span>
               </>
             )}
@@ -100,12 +103,12 @@ export function MatchCard({ item }: { item: DealflowItem }) {
           )}
 
           <div className="mt-2.5 flex flex-wrap items-center gap-x-3 gap-y-1 text-caption-1 text-slate-500">
-            {s.stage && <span>{STAGE_LABEL[s.stage]}</span>}
-            {s.category && <span>{s.category}</span>}
+            {s.stage && <span>{tv(`stage.${stageMessageKey(s.stage)}`)}</span>}
+            {s.category && <span>{categoryLabel(s.category)}</span>}
             {s.region && (
               <span className="inline-flex items-center gap-1">
                 <MapPin className="h-3 w-3" />
-                {s.region}
+                {region ? tr(region) : s.region}
               </span>
             )}
           </div>
@@ -117,7 +120,7 @@ export function MatchCard({ item }: { item: DealflowItem }) {
                   key={n}
                   className="rounded-full bg-fill-tertiary px-2.5 py-0.5 text-caption-1 font-medium text-slate-600"
                 >
-                  {NEED_LABEL[n]}
+                  {tv(`need.${n}`)}
                 </span>
               ))}
             </div>
@@ -125,9 +128,9 @@ export function MatchCard({ item }: { item: DealflowItem }) {
 
           {s.isSeekingInvestment && (
             <p className="mt-2 text-footnote text-slate-600">
-              So&apos;rov:{' '}
+              {t('ask')}{' '}
               <span className="font-medium text-brand-900">
-                {formatRange(s.askAmountMin, s.askAmountMax)}
+                {formatRange(s.askAmountMin, s.askAmountMax, locale)}
               </span>
             </p>
           )}
@@ -142,7 +145,7 @@ export function MatchCard({ item }: { item: DealflowItem }) {
         className="hairline-t tappable flex w-full items-center justify-between px-4 py-2.5 text-left"
       >
         <span className="text-footnote font-medium text-accent-700">
-          Nega mos keldi?
+          {t('why')}
         </span>
         <ChevronDown
           className={cn(
@@ -166,12 +169,12 @@ export function MatchCard({ item }: { item: DealflowItem }) {
           className="tappable inline-flex h-10 flex-1 items-center justify-center gap-2 rounded-ios-md bg-accent-600 text-subhead font-semibold text-white"
         >
           <Send className="h-4 w-4" />
-          Bog&apos;lanish
+          {t('connect')}
         </button>
         <button
           type="button"
           onClick={() => toggleSave()}
-          aria-label={saved ? "Ro'yxatdan olib tashlash" : "Ro'yxatga saqlash"}
+          aria-label={saved ? t('unsave') : t('save')}
           aria-pressed={saved}
           className="tappable flex h-10 w-10 items-center justify-center rounded-ios-md bg-fill-tertiary text-slate-600"
         >
@@ -185,7 +188,7 @@ export function MatchCard({ item }: { item: DealflowItem }) {
           type="button"
           onClick={() => dismiss()}
           disabled={dismissing}
-          aria-label="Qiziq emas"
+          aria-label={t('dismiss')}
           className="tappable flex h-10 w-10 items-center justify-center rounded-ios-md bg-fill-tertiary text-slate-600 disabled:opacity-50"
         >
           <EyeOff className="h-[18px] w-[18px]" />

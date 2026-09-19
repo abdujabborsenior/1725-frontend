@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import { useLocale, useTranslations } from 'next-intl';
 import { useQuery } from '@tanstack/react-query';
 import {
   Copy, Check, Send, Share2, Spinner, MessageCircle, Hash, Search,
@@ -12,6 +13,8 @@ import { Avatar } from '@/components/ui/avatar';
 import { cn } from '@/lib/utils';
 import { FIELD_SIZE, FIELD_SURFACE } from '@/components/ui/field-styles';
 import { UserRowSkeleton } from '@/components/ui/skeleton';
+import { localizePath } from '@/i18n/locales';
+import type { AppLocale } from '@/i18n/routing';
 import toast from 'react-hot-toast';
 
 interface Props {
@@ -22,14 +25,21 @@ interface Props {
 }
 
 export function ProblemShareModal({ open, onClose, problemId, problemTitle }: Props) {
+  const t = useTranslations('share');
+  const tc = useTranslations('common');
+  const locale = useLocale() as AppLocale;
   const { token } = useAuthStore();
   const [copied, setCopied] = useState(false);
   const [q, setQ] = useState('');
   const [sentTo, setSentTo] = useState<Set<string>>(new Set());
   const [sendingId, setSendingId] = useState<string | null>(null);
 
+  // Havola joriy til bilan: ruscha sahifadan ulashilsa, qabul qiluvchi ham
+  // ruscha versiyani ochadi (`/ru/problems/...`); o'zbekcha — prefikssiz.
   const shareUrl =
-    typeof window !== 'undefined' ? `${window.location.origin}/problems/${problemId}` : '';
+    typeof window !== 'undefined'
+      ? `${window.location.origin}${localizePath(locale, `/problems/${problemId}`)}`
+      : '';
 
   const { data: conversations, isLoading } = useQuery({
     queryKey: ['chat-conversations'],
@@ -43,7 +53,7 @@ export function ProblemShareModal({ open, onClose, problemId, problemTitle }: Pr
       setCopied(true);
       setTimeout(() => setCopied(false), 1800);
     } catch {
-      toast.error('Nusxalab bo‘lmadi');
+      toast.error(t('copyFailed'));
     }
   }
 
@@ -62,10 +72,10 @@ export function ProblemShareModal({ open, onClose, problemId, problemTitle }: Pr
     try {
       await chatApi.send(id, {
         type: 'text',
-        content: `Muammo: ${problemTitle}\n${shareUrl}`,
+        content: t('chatMessage', { title: problemTitle, url: shareUrl }),
       });
       setSentTo((s) => new Set(s).add(id));
-      toast.success('Suhbatga yuborildi');
+      toast.success(t('sentToChat'));
     } catch (err) {
       toast.error(getErrorMessage(err));
     } finally {
@@ -78,29 +88,29 @@ export function ProblemShareModal({ open, onClose, problemId, problemTitle }: Pr
   );
 
   return (
-    <Modal open={open} onClose={onClose} title="Muammoni ulashish" className="max-w-md">
+    <Modal open={open} onClose={onClose} title={t('title')} className="max-w-md">
       <div className="space-y-4">
         {/* Link */}
         <div>
-          <p className="mb-1.5 text-footnote font-medium text-slate-500">Havola</p>
+          <p className="mb-1.5 text-footnote font-medium text-slate-500">{t('linkLabel')}</p>
           <div className="flex items-center gap-2 rounded-ios-md bg-fill-tertiary p-1.5 pl-3">
             <span className="flex-1 truncate text-subhead text-slate-600">{shareUrl}</span>
             <button onClick={copy}
               className={cn('flex h-9 shrink-0 items-center gap-1.5 rounded-ios px-3 text-footnote font-semibold transition-all',
                 copied ? 'bg-accent-700 text-white' : 'bg-brand-900 text-white hover:bg-brand-800')}>
               {copied ? <Check className="h-3.5 w-3.5" /> : <Copy className="h-3.5 w-3.5" />}
-              {copied ? 'Nusxalandi' : 'Nusxalash'}
+              {copied ? t('copied') : t('copy')}
             </button>
           </div>
           <p className="mt-1.5 text-caption-1 text-slate-500">
-            Havolani istalgan odamga yuboring — ro‘yxatdan o‘tgach aynan shu muammoga o‘tadi.
+            {t('linkHint')}
           </p>
         </div>
 
         {typeof navigator !== 'undefined' && 'share' in navigator && (
           <button onClick={nativeShare}
             className="flex w-full items-center justify-center gap-2 rounded-ios-md bg-accent-50 py-2.5 text-subhead font-semibold text-accent-700 hover:bg-accent-100">
-            <Share2 className="h-4 w-4" /> Boshqa ilovalar orqali ulashish
+            <Share2 className="h-4 w-4" /> {t('shareVia')}
           </button>
         )}
 
@@ -108,11 +118,11 @@ export function ProblemShareModal({ open, onClose, problemId, problemTitle }: Pr
         {token && (
           <div>
             <p className="mb-1.5 flex items-center gap-1.5 text-footnote font-medium text-slate-500">
-              <MessageCircle className="h-3.5 w-3.5" /> Suhbatga yuborish
+              <MessageCircle className="h-3.5 w-3.5" /> {t('sendToChat')}
             </p>
             <div className="relative mb-2">
               <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
-              <input value={q} onChange={(e) => setQ(e.target.value)} placeholder="Suhbat qidirish…"
+              <input value={q} onChange={(e) => setQ(e.target.value)} placeholder={t('searchPlaceholder')}
                 className={cn(FIELD_SURFACE, FIELD_SIZE.sm, 'pl-9 pr-3 text-subhead')} />
             </div>
             <div className="max-h-56 overflow-y-auto chat-scroll -mx-1">
@@ -133,13 +143,13 @@ export function ProblemShareModal({ open, onClose, problemId, problemTitle }: Pr
                         className={cn('flex h-8 items-center gap-1.5 rounded-ios px-3 text-footnote font-semibold transition-all',
                           sent ? 'bg-accent-50 text-accent-700' : 'bg-accent-700 text-white hover:bg-accent-800')}>
                         {sendingId === c.id ? <Spinner className="h-3.5 w-3.5 animate-spin" /> : sent ? <Check className="h-3.5 w-3.5" /> : <Send className="h-3.5 w-3.5" />}
-                        {sent ? 'Yuborildi' : 'Yuborish'}
+                        {sent ? t('sent') : tc('send')}
                       </button>
                     </div>
                   );
                 })
               ) : (
-                <p className="py-6 text-center text-subhead text-slate-500">Suhbatlar topilmadi</p>
+                <p className="py-6 text-center text-subhead text-slate-500">{t('noChats')}</p>
               )}
             </div>
           </div>

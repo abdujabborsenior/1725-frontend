@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import { useTranslations } from 'next-intl';
 import { Type, Image as ImageIcon, Video, Mic, Disc, ShieldAlert } from '@/components/icons';
 import { chatApi, getErrorMessage } from '@/lib/api';
 import { Modal } from '@/components/ui/modal';
@@ -8,16 +9,18 @@ import { GroupAvatarPicker } from './group-avatar-picker';
 import { cn } from '@/lib/utils';
 import type { Conversation, MessageType } from '@/types';
 import { isChatTypeDisabled } from '@/lib/chat-features';
+import { useChatText } from './chat-text';
 import toast from 'react-hot-toast';
 
 // Platforma darajasida vaqtincha o'chirilgan turlar bu ro'yxatda ko'rinmaydi —
 // ularni guruh sozlamasida cheklash ma'nosiz (allaqachon hech kim yubora olmaydi).
-const ALL_RESTRICTABLE: { type: MessageType; label: string; icon: typeof Type }[] = [
-  { type: 'text', label: 'Matn', icon: Type },
-  { type: 'image', label: 'Rasm', icon: ImageIcon },
-  { type: 'video', label: 'Video', icon: Video },
-  { type: 'voice', label: 'Ovozli xabar', icon: Mic },
-  { type: 'round_video', label: 'Video xabar', icon: Disc },
+// Yorliq — `chat.type.<type>` (joriy tilda).
+const ALL_RESTRICTABLE: { type: MessageType; icon: typeof Type }[] = [
+  { type: 'text', icon: Type },
+  { type: 'image', icon: ImageIcon },
+  { type: 'video', icon: Video },
+  { type: 'voice', icon: Mic },
+  { type: 'round_video', icon: Disc },
 ];
 
 const RESTRICTABLE = ALL_RESTRICTABLE.filter((r) => !isChatTypeDisabled(r.type));
@@ -52,6 +55,9 @@ export function GroupSettingsModal({
   conversation: Conversation;
   onUpdated: (conv: Conversation) => void;
 }) {
+  const t = useTranslations('chat');
+  const tc = useTranslations('common');
+  const { typeLabel } = useChatText();
   const [blocked, setBlocked] = useState<MessageType[]>(conversation.blockedMessageTypes ?? []);
   const [avatarUrl, setAvatarUrl] = useState<string | null>(conversation.avatarUrl ?? null);
   const [saving, setSaving] = useState(false);
@@ -79,7 +85,7 @@ export function GroupSettingsModal({
       }
       updated = await chatApi.setGroupRestrictions(conversation.id, blocked);
       onUpdated(updated);
-      toast.success('Guruh sozlamalari saqlandi');
+      toast.success(t('group.saved'));
       onClose();
     } catch (err) {
       toast.error(getErrorMessage(err));
@@ -89,7 +95,7 @@ export function GroupSettingsModal({
   }
 
   return (
-    <Modal open={open} onClose={onClose} title="Guruh sozlamalari">
+    <Modal open={open} onClose={onClose} title={t('window.groupSettings')}>
       <div className="space-y-4">
         {/* Guruh avatari */}
         <div className="flex flex-col items-center gap-1 border-b border-slate-100 pb-4">
@@ -99,13 +105,12 @@ export function GroupSettingsModal({
         <div className="flex items-start gap-3 rounded-ios-lg bg-amber-50 p-3 text-amber-800">
           <ShieldAlert className="mt-0.5 h-5 w-5 shrink-0" />
           <p className="text-footnote leading-relaxed">
-            Yoqilgan turlar oddiy a&apos;zolar uchun <b>taqiqlanadi</b>. Egasi va adminlar har doim
-            yubora oladi.
+            {t.rich('group.settingsNotice', { b: (chunks) => <b>{chunks}</b> })}
           </p>
         </div>
 
         <div className="space-y-2">
-          {RESTRICTABLE.map(({ type, label, icon: Icon }) => {
+          {RESTRICTABLE.map(({ type, icon: Icon }) => {
             const on = blocked.includes(type);
             return (
               <div
@@ -119,8 +124,8 @@ export function GroupSettingsModal({
                   <span className={cn('flex h-9 w-9 items-center justify-center rounded-ios-md', on ? 'bg-rose-100 text-rose-600' : 'bg-surface-soft text-slate-500')}>
                     <Icon className="h-[18px] w-[18px]" />
                   </span>
-                  {label}
-                  {on && <span className="rounded-full bg-rose-100 px-2 py-0.5 text-caption-2 font-bold text-rose-600">Taqiqlangan</span>}
+                  {typeLabel(type)}
+                  {on && <span className="rounded-full bg-rose-100 px-2 py-0.5 text-caption-2 font-bold text-rose-600">{t('group.blocked')}</span>}
                 </span>
                 <Toggle on={on} onClick={() => toggle(type)} />
               </div>
@@ -133,7 +138,7 @@ export function GroupSettingsModal({
           disabled={saving}
           className="tappable flex h-11 w-full items-center justify-center gap-2 rounded-ios-md bg-accent-500 text-subhead font-semibold text-white transition-colors hover:bg-accent-600 disabled:opacity-60"
         >
-          {saving ? 'Saqlanmoqda…' : 'Saqlash'}
+          {saving ? t('group.saving') : tc('save')}
         </button>
       </div>
     </Modal>

@@ -495,7 +495,10 @@ export type CategoryType = 'startup' | 'problem';
 export interface Category {
   id: string;
   type: CategoryType;
+  /** Kanonik nom — kontentda va filtrda shu ishlatiladi (o'zgarmaydi) */
   name: string;
+  /** Joriy tildagi yorliq (server `Accept-Language` bo'yicha beradi) */
+  label?: string;
 }
 
 /* ── Notifications ────────────────────────────────────────────── */

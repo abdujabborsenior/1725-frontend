@@ -1,33 +1,19 @@
 'use client';
 
 import { useId, useState } from 'react';
+import { useTranslations } from 'next-intl';
 import { ChevronDown } from '@/components/icons';
 import { cn } from '@/lib/utils';
 
 /**
  * "Sizni nima to'xtatib turibdi?" — boshlashga xalaqit beradigan eng keng tarqalgan
  * shubhalar va ularning real javoblari. Foydalanuvchini ichidan gapiradi.
+ * Savol/javob matnlari — lug'atda (`landing.doubts.<key>.{q,a}`).
  */
-const DOUBTS: { q: string; a: string }[] = [
-  {
-    q: '«Mening g‘oyam juda oddiy, arzimas...»',
-    a: 'Eng katta mahsulotlar ham bitta oddiy g‘oyadan boshlangan. Muhimi — g‘oyaning kattaligi emas, uni qo‘lga olib sinab ko‘rganingiz. Bu yerda g‘oyangizni ulashing, fikr oling va u haqiqatan ham arzirligini odamlardan bilib oling.',
-  },
-  {
-    q: '«Men dasturlashni bilmayman...»',
-    a: 'Startap — bu kod emas, bu yechim. G‘oyangiz, mas’uliyatingiz va odamlarni jamlay olishingiz ko‘proq ahamiyatli. Bu yerda dasturchi, dizayner yoki hammuallif topishingiz — bir necha xabar narida.',
-  },
-  {
-    q: '«Yolg‘izman, jamoam yo‘q...»',
-    a: 'Aynan shuning uchun hamjamiyat bor. Sizga o‘xshagan minglab yoshlar shu yerda jamoa qidiryapti. Guruhlarga qo‘shiling, real vaqtda suhbatlashing va o‘z fikrdoshlaringizni toping.',
-  },
-  {
-    q: '«Qayerdan boshlashni bilmayman...»',
-    a: 'Birinchi qadam doim eng qiyini. Sizni qiynayotgan muammoni yozing — qolganini hamjamiyat bilan birgalikda bosqichma-bosqich quramiz. Yo‘l yurish bilan paydo bo‘ladi.',
-  },
-];
+const DOUBTS = ['simple', 'code', 'alone', 'start'] as const;
 
 export function Doubts() {
+  const t = useTranslations('landing.doubts');
   const [open, setOpen] = useState<number | null>(0);
   const uid = useId();
 
@@ -35,12 +21,12 @@ export function Doubts() {
   // shuning uchun qator paddingiga (px-5 / md:px-6) tekislanadi.
   return (
     <div className="ios-list mx-auto max-w-3xl [--row-inset:1.25rem] md:[--row-inset:1.5rem]">
-      {DOUBTS.map((d, i) => {
+      {DOUBTS.map((key, i) => {
         const active = open === i;
         const headerId = `${uid}-h${i}`;
         const panelId = `${uid}-p${i}`;
         return (
-          <div key={d.q} className="bg-white">
+          <div key={key} className="bg-white">
             <h3>
               <button
                 type="button"
@@ -51,7 +37,7 @@ export function Doubts() {
                 className="flex w-full items-center justify-between gap-4 px-5 py-4 text-left hv-row md:px-6"
               >
                 <span className="text-callout font-semibold text-brand-900 md:text-title-3">
-                  {d.q}
+                  {t(`${key}.q`)}
                 </span>
                 {/* Ochish/yopish ko'rsatkichi: chevron PASTGA → ochilganda YUQORIGA
                     buriladi (iOS disclosure naqshi). Bitta ikonka aylanadi —
@@ -77,7 +63,7 @@ export function Doubts() {
             >
               <div>
                 <p className="px-5 pb-4 text-subhead leading-relaxed text-slate-500 md:px-6">
-                  {d.a}
+                  {t(`${key}.a`)}
                 </p>
               </div>
             </div>

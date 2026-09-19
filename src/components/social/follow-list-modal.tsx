@@ -1,6 +1,7 @@
 'use client';
 
 import { useQuery } from '@tanstack/react-query';
+import { useTranslations } from 'next-intl';
 import { Users } from '@/components/icons';
 import { usersApi } from '@/lib/api';
 import { Modal } from '@/components/ui/modal';
@@ -15,7 +16,8 @@ interface Props {
 }
 
 export function FollowListModal({ open, onClose, userId, mode }: Props) {
-  const title = mode === 'followers' ? 'Obunachilar' : 'Obunalar';
+  const t = useTranslations('social');
+  const title = mode === 'followers' ? t('followers') : t('followingList');
 
   const { data, isLoading } = useQuery({
     queryKey: ['follow-list', mode, userId],
@@ -39,7 +41,7 @@ export function FollowListModal({ open, onClose, userId, mode }: Props) {
           <div className="py-12 text-center">
             <span className="mx-auto mb-3 flex h-12 w-12 items-center justify-center rounded-ios-lg bg-accent-50 text-accent-500"><Users className="h-6 w-6" /></span>
             <p className="text-subhead text-slate-500">
-              {mode === 'followers' ? 'Hali obunachilar yo‘q' : 'Hali hech kimga obuna bo‘lmagan'}
+              {mode === 'followers' ? t('noFollowers') : t('noFollowing')}
             </p>
           </div>
         )}

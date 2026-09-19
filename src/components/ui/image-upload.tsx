@@ -1,6 +1,7 @@
 'use client';
 
 import { useRef, useState } from 'react';
+import { useTranslations } from 'next-intl';
 import { Spinner, UploadCloud, X } from '@/components/icons';
 import { uploadsApi, getErrorMessage } from '@/lib/api';
 import { cn } from '@/lib/utils';
@@ -39,6 +40,7 @@ export function ImageUpload({
   uploader,
   rounded,
 }: ImageUploadProps) {
+  const t = useTranslations('ui.imageUpload');
   const inputRef = useRef<HTMLInputElement>(null);
   const [loading, setLoading] = useState(false);
   const [dragOver, setDragOver] = useState(false);
@@ -49,7 +51,7 @@ export function ImageUpload({
       const res = await (uploader ? uploader(file) : uploadsApi.image(file));
       onChange(res.url);
     } catch (err) {
-      toast.error(getErrorMessage(err, 'Yuklashda xatolik'));
+      toast.error(getErrorMessage(err, t('error')));
     } finally {
       setLoading(false);
     }
@@ -72,12 +74,12 @@ export function ImageUpload({
           )}
         >
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src={value} alt="preview" className="h-full w-full object-cover" />
+          <img src={value} alt={t('previewAlt')} className="h-full w-full object-cover" />
           <button
             type="button"
             onClick={() => onChange(null)}
             className="absolute top-2 right-2 h-8 w-8 flex items-center justify-center rounded-ios bg-white/90 backdrop-blur text-slate-600 hover:text-rose-600 shadow-card opacity-0 transition-opacity focus-visible:opacity-100 group-hover:opacity-100"
-            aria-label="O'chirish"
+            aria-label={t('remove')}
           >
             <X className="h-4 w-4" />
           </button>
@@ -114,7 +116,7 @@ export function ImageUpload({
                 <UploadCloud className="h-5 w-5 text-slate-400" />
               </div>
               <span className="text-footnote font-medium text-slate-600">
-                Rasm tanlang yoki sudrab tashlang
+                {t('prompt')}
               </span>
             </>
           )}

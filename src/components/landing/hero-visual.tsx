@@ -1,7 +1,9 @@
 import type { CSSProperties } from 'react';
+import { useTranslations } from 'next-intl';
 
 import { Eye, StarFill, TrendingUp, Users } from '@/components/icons';
 import { YechimMark } from '@/components/ai/yechim-mark';
+import { useFormatNumber } from '@/lib/format';
 
 /**
  * Hero vizuali — MAHSULOTNING O'ZI (stock rasm emas).
@@ -23,6 +25,13 @@ import { YechimMark } from '@/components/ai/yechim-mark';
  * balandligi o'zgarmadi → sahifa maketi surilmaydi.
  */
 export function HeroVisual() {
+  // Namuna (demo) kontent: matn lug'atda, raqamlar joriy til formatida
+  const t = useTranslations('landing.hero');
+  const fmt = useFormatNumber();
+  // AI chipidagi "N ta loyiha" bo'lagi — qalin va qatorga bo'linmaydi
+  const b = (chunks: React.ReactNode) => (
+    <span className="whitespace-nowrap font-semibold text-brand-900">{chunks}</span>
+  );
   return (
     <div
       aria-hidden
@@ -66,9 +75,10 @@ export function HeroVisual() {
             </span>
           </div>
 
+          {/* "Kitobxon" — namuna mahsulot NOMI (brend), tarjima qilinmaydi */}
           <h3 className="text-title-3 font-semibold text-brand-900">Kitobxon</h3>
           <p className="mt-1 text-subhead leading-snug text-slate-500">
-            Maktab kutubxonasi raqamlashdi — kerakli kitob 2 soniyada topiladi.
+            {t('tagline')}
           </p>
 
           <div className="mt-2.5 flex items-center gap-1">
@@ -80,10 +90,10 @@ export function HeroVisual() {
 
         <div className="hairline-t flex items-center justify-between px-4 py-2.5 sm:px-5">
           <span className="inline-flex items-center gap-1.5 text-caption-1 text-slate-500">
-            <Eye className="h-[15px] w-[15px]" /> 1 240
+            <Eye className="h-[15px] w-[15px]" /> {fmt(1240)}
           </span>
           <span className="inline-flex items-center gap-1.5 text-caption-1 font-medium text-emerald-700">
-            <TrendingUp className="h-[15px] w-[15px]" /> 3-o‘rin
+            <TrendingUp className="h-[15px] w-[15px]" /> {t('place', { rank: '3' })}
           </span>
         </div>
       </article>
@@ -94,13 +104,13 @@ export function HeroVisual() {
         style={{ '--enter-delay': '0.2s' } as CSSProperties}
       >
         <span className="flex items-center gap-1.5 text-caption-1 font-medium text-amber-700">
-          <span className="h-1.5 w-1.5 rounded-full bg-amber-500" /> Muammo
+          <span className="h-1.5 w-1.5 rounded-full bg-amber-500" /> {t('problem')}
         </span>
         <p className="mt-1.5 text-subhead leading-snug text-brand-900">
-          Kutubxonada kerakli kitobni topish juda ko‘p vaqt oladi.
+          {t('problemText')}
         </p>
         <span className="mt-2.5 flex items-center gap-1.5 text-caption-1 text-slate-500">
-          <Users className="h-[15px] w-[15px]" /> 34 ta yechim
+          <Users className="h-[15px] w-[15px]" /> {t('solutions', { count: 34, n: fmt(34) })}
         </span>
       </div>
 
@@ -124,10 +134,11 @@ export function HeroVisual() {
         </span>
         <p className="mt-1.5 text-caption-1 leading-snug text-slate-500 sm:text-subhead">
           {/* Tor chipda jumla qisqaradi (kontekstni tepadagi "Muammo" chipi
-              allaqachon beradi); raqam bo'lagi qatorga bo'linmaydi. */}
-          <span className="hidden sm:inline">Bu muammoga mos </span>
-          <span className="whitespace-nowrap font-semibold text-brand-900">2 ta loyiha</span>{' '}
-          topildi.
+              allaqachon beradi); raqam bo'lagi qatorga bo'linmaydi.
+              Ikki to'liq jumla (qisqa/to'liq) — tillarda so'z tartibi har xil,
+              shuning uchun jumla bo'laklardan yig'ilmaydi. */}
+          <span className="hidden sm:inline">{t.rich('aiFound', { count: 2, n: fmt(2), b })}</span>
+          <span className="sm:hidden">{t.rich('aiFoundShort', { count: 2, n: fmt(2), b })}</span>
         </p>
       </div>
     </div>

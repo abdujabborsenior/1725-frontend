@@ -1,6 +1,7 @@
 'use client';
 
 import { useMemo, useState } from 'react';
+import { useLocale, useTranslations } from 'next-intl';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import toast from 'react-hot-toast';
 import { Button } from '@/components/ui/button';
@@ -9,20 +10,12 @@ import { Textarea } from '@/components/ui/textarea';
 import { Switch } from '@/components/ui/switch';
 import { investorsApi, getErrorMessage, type InvestorProfilePayload } from '@/lib/api';
 import { UZ_REGIONS } from '@/lib/constants';
-import { useCategoryNames } from '@/lib/use-categories';
+import { useCategoryList } from '@/lib/use-categories';
+import { useCategoryLabel } from '@/lib/category-labels';
 import { cn } from '@/lib/utils';
-import {
-  INVESTOR_KIND_HINT,
-  INVESTOR_KIND_LABEL,
-  NEED_ORDER,
-  OFFER_LABEL,
-  STAGE_LABEL,
-  STAGE_ORDER,
-  formatRange,
-} from '@/lib/venture';
+import { INVESTOR_KIND_ORDER, NEED_ORDER, STAGE_ORDER, formatRange, stageMessageKey } from '@/lib/venture';
+import type { AppLocale } from '@/i18n/routing';
 import type { InvestorKind, InvestorProfile, StartupStage, VentureNeed } from '@/types';
-
-const KINDS: InvestorKind[] = ['angel', 'fund', 'accelerator', 'grant', 'corporate'];
 
 function Chip({
   active,
@@ -85,6 +78,11 @@ const mlnToSum = (v: string): number | undefined => {
  * lenta bilan uchrashishdan ko'ra yaxshiroq.
  */
 export function InvestorProfileForm({ initial }: { initial?: InvestorProfile | null }) {
+  const t = useTranslations('investorForm');
+  const tv = useTranslations('venture');
+  const tr = useTranslations('regions');
+  const tc = useTranslations('common');
+  const locale = useLocale() as AppLocale;
   const qc = useQueryClient();
   const [kind, setKind] = useState<InvestorKind>(initial?.kind ?? 'angel');
   const [orgName, setOrgName] = useState(initial?.orgName ?? '');
@@ -93,10 +91,16 @@ export function InvestorProfileForm({ initial }: { initial?: InvestorProfile | n
   const [categories, setCategories] = useState<string[]>(initial?.categories ?? []);
   // Sohalar ro'yxati bazadan. Ilgari tanlangan, lekin ro'yxatдан chiqarilgan
   // soha ham ko'rinadi — aks holda uni bekor qilib bo'lmasdi.
-  const categoryNames = useCategoryNames('startup');
+  const categoryList = useCategoryList('startup');
+  const categoryLabel = useCategoryLabel();
   const categoryOptions = useMemo(
-    () => [...categoryNames, ...categories.filter((c) => !categoryNames.includes(c))],
-    [categoryNames, categories],
+    () => [
+      ...categoryList,
+      ...categories
+        .filter((c) => !categoryList.some((o) => o.value === c))
+        .map((c) => ({ value: c, label: categoryLabel(c) })),
+    ],
+    [categoryList, categories, categoryLabel],
   );
   const [stages, setStages] = useState<StartupStage[]>(initial?.stages ?? []);
   const [regions, setRegions] = useState<string[]>(initial?.regions ?? []);
@@ -153,20 +157,20 @@ export function InvestorProfileForm({ initial }: { initial?: InvestorProfile | n
       onSubmit={(e) => {
         e.preventDefault();
         if (thesisTooShort) {
-          toast.error('Tezis kamida 20 ta belgi bo‘lsin yoki bo‘sh qoldiring');
+          toast.error(t('errors.thesisShort'));
           return;
         }
         if (rangeInvalid) {
-          toast.error('Chekning quyi chegarasi yuqorisidan katta bo‘lmasin');
+          toast.error(t('errors.range'));
           return;
         }
         mutate();
       }}
       className="space-y-9"
     >
-      <Section title="Siz kimsiz?">
+      <Section title={t('who.title')}>
         <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
-          {KINDS.map((k) => (
+          {INVESTOR_KIND_ORDER.map((k) => (
             <button
               key={k}
               type="button"
@@ -180,7 +184,7 @@ export function InvestorProfileForm({ initial }: { initial?: InvestorProfile | n
               )}
             >
               <span className="block text-subhead font-medium">
-                {INVESTOR_KIND_LABEL[k]}
+                {tv(`investorKind.${k}`)}
               </span>
               <span
                 className={cn(
@@ -188,20 +192,20 @@ export function InvestorProfileForm({ initial }: { initial?: InvestorProfile | n
                   kind === k ? 'text-white/95' : 'text-slate-500',
                 )}
               >
-                {INVESTOR_KIND_HINT[k]}
+                {tv(`investorKindHint.${k}`)}
               </span>
             </button>
           ))}
         </div>
         <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
           <Input
-            label="Tashkilot nomi (ixtiyoriy)"
-            placeholder="Masalan: UzVentures"
+            label={t('who.orgName')}
+            placeholder={t('who.orgNamePlaceholder')}
             value={orgName}
             onChange={(e) => setOrgName(e.target.value)}
           />
           <Input
-            label="Veb-sayt (ixtiyoriy)"
+            label={t('who.website')}
             placeholder="uzventures.uz"
             value={website}
             onChange={(e) => setWebsite(e.target.value)}
@@ -209,45 +213,39 @@ export function InvestorProfileForm({ initial }: { initial?: InvestorProfile | n
         </div>
       </Section>
 
-      <Section
-        title="Investitsiya tezisingiz"
-        hint="Nimaga qiziqasiz, nimadan qochasiz — o'z so'zingiz bilan. Moslikning mazmuniy qismi aynan shu matnga tayanadi."
-      >
+      <Section title={t('thesis.title')} hint={t('thesis.hint')}>
         <Textarea
           rows={4}
-          placeholder="Masalan: ta'lim va sog'liqni saqlash sohasidagi erta bosqich loyihalarga qiziqaman. Jamoada texnik asoschi bo'lishi muhim."
+          placeholder={t('thesis.placeholder')}
           value={thesis}
           onChange={(e) => setThesis(e.target.value)}
         />
         {thesisTooShort && (
           <p className="text-caption-1 text-rose-600">
-            Kamida 20 ta belgi bo&apos;lsin yoki butunlay bo&apos;sh qoldiring.
+            {t('thesis.tooShort')}
           </p>
         )}
       </Section>
 
-      <Section
-        title="Kriteriyalaringiz"
-        hint="Tanlamasangiz — cheklov yo'q deb hisoblanadi va lentaga hamma tushadi."
-      >
+      <Section title={t('criteria.title')} hint={t('criteria.hint')}>
         <div className="space-y-5">
           <div className="space-y-2">
-            <span className="text-subhead font-medium text-slate-500">Sohalar</span>
+            <span className="text-subhead font-medium text-slate-500">{t('criteria.sectors')}</span>
             <div className="flex flex-wrap gap-2">
               {categoryOptions.map((c) => (
                 <Chip
-                  key={c}
-                  active={categories.includes(c)}
-                  onClick={() => toggle(categories, setCategories, c)}
+                  key={c.value}
+                  active={categories.includes(c.value)}
+                  onClick={() => toggle(categories, setCategories, c.value)}
                 >
-                  {c}
+                  {c.label}
                 </Chip>
               ))}
             </div>
           </div>
 
           <div className="space-y-2">
-            <span className="text-subhead font-medium text-slate-500">Bosqichlar</span>
+            <span className="text-subhead font-medium text-slate-500">{t('criteria.stages')}</span>
             <div className="flex flex-wrap gap-2">
               {STAGE_ORDER.map((s) => (
                 <Chip
@@ -255,22 +253,22 @@ export function InvestorProfileForm({ initial }: { initial?: InvestorProfile | n
                   active={stages.includes(s)}
                   onClick={() => toggle(stages, setStages, s)}
                 >
-                  {STAGE_LABEL[s]}
+                  {tv(`stage.${stageMessageKey(s)}`)}
                 </Chip>
               ))}
             </div>
           </div>
 
           <div className="space-y-2">
-            <span className="text-subhead font-medium text-slate-500">Hududlar</span>
+            <span className="text-subhead font-medium text-slate-500">{t('criteria.regions')}</span>
             <div className="flex flex-wrap gap-2">
               {UZ_REGIONS.map((r) => (
                 <Chip
-                  key={r}
-                  active={regions.includes(r)}
-                  onClick={() => toggle(regions, setRegions, r)}
+                  key={r.value}
+                  active={regions.includes(r.value)}
+                  onClick={() => toggle(regions, setRegions, r.value)}
                 >
-                  {r}
+                  {tr(r.key)}
                 </Chip>
               ))}
             </div>
@@ -278,7 +276,7 @@ export function InvestorProfileForm({ initial }: { initial?: InvestorProfile | n
 
           <div className="space-y-2">
             <span className="text-subhead font-medium text-slate-500">
-              Siz nima taklif qilasiz?
+              {t('criteria.offers')}
             </span>
             <div className="flex flex-wrap gap-2">
               {NEED_ORDER.map((o) => (
@@ -287,25 +285,25 @@ export function InvestorProfileForm({ initial }: { initial?: InvestorProfile | n
                   active={offers.includes(o)}
                   onClick={() => toggle(offers, setOffers, o)}
                 >
-                  {OFFER_LABEL[o]}
+                  {tv(`offer.${o}`)}
                 </Chip>
               ))}
             </div>
             <p className="text-caption-1 text-slate-500">
-              Loyihalarning ehtiyoji shu ro&apos;yxat bilan solishtiriladi.
+              {t('criteria.offersHint')}
             </p>
           </div>
 
           <div className="space-y-2">
             <span className="text-subhead font-medium text-slate-500">
-              Chek hajmi (mln so&apos;m)
+              {t('criteria.check')}
             </span>
             <div className="grid grid-cols-2 gap-3">
               <Input
                 type="number"
                 inputMode="decimal"
                 placeholder="50"
-                label="Eng kami"
+                label={t('criteria.checkMin')}
                 value={checkMin}
                 onChange={(e) => setCheckMin(e.target.value)}
               />
@@ -313,7 +311,7 @@ export function InvestorProfileForm({ initial }: { initial?: InvestorProfile | n
                 type="number"
                 inputMode="decimal"
                 placeholder="500"
-                label="Eng ko'pi"
+                label={t('criteria.checkMax')}
                 value={checkMax}
                 onChange={(e) => setCheckMax(e.target.value)}
               />
@@ -326,28 +324,25 @@ export function InvestorProfileForm({ initial }: { initial?: InvestorProfile | n
                 )}
               >
                 {rangeInvalid
-                  ? 'Quyi chegara yuqorisidan katta bo‘lmasin'
-                  : `Oraliq: ${formatRange(range.min, range.max)}`}
+                  ? t('criteria.rangeInvalid')
+                  : t('criteria.range', { range: formatRange(range.min, range.max, locale) })}
               </p>
             )}
           </div>
         </div>
       </Section>
 
-      <Section
-        title="Aloqa"
-        hint="Bu ma'lumot asoschilarga KO'RINMAYDI — u faqat so'rov qabul qilinganda, chat orqali almashinadi."
-      >
+      <Section title={t('contact.title')} hint={t('contact.hint')}>
         <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
           <Input
-            label="Email (ixtiyoriy)"
+            label={t('contact.email')}
             type="email"
             placeholder="invest@example.uz"
             value={contactEmail}
             onChange={(e) => setContactEmail(e.target.value)}
           />
           <Input
-            label="Telefon (ixtiyoriy)"
+            label={t('contact.phone')}
             placeholder="+998 90 123 45 67"
             value={contactPhone}
             onChange={(e) => setContactPhone(e.target.value)}
@@ -355,37 +350,37 @@ export function InvestorProfileForm({ initial }: { initial?: InvestorProfile | n
         </div>
       </Section>
 
-      <Section title="Sozlamalar">
+      <Section title={t('settings.title')}>
         <div className="overflow-hidden rounded-ios-lg bg-white">
           <div className="ios-row">
             <span className="min-w-0 flex-1">
               <span className="block text-body text-brand-900">
-                Yangi mosliklar haqida xabar
+                {t('settings.alerts')}
               </span>
               <span className="mt-0.5 block text-footnote text-slate-500">
-                Kriteriyangizga mos loyiha chiqqanda bildirishnoma
+                {t('settings.alertsHint')}
               </span>
             </span>
             <Switch
               checked={alertsEnabled}
               onChange={setAlerts}
-              aria-label="Bildirishnomalar"
+              aria-label={t('settings.alertsAria')}
             />
           </div>
           <div className="ios-row hairline-t">
             <span className="min-w-0 flex-1">
-              <span className="block text-body text-brand-900">Lenta faol</span>
+              <span className="block text-body text-brand-900">{t('settings.active')}</span>
               <span className="mt-0.5 block text-footnote text-slate-500">
-                O&apos;chirsangiz yangi mosliklar hisoblanmaydi
+                {t('settings.activeHint')}
               </span>
             </span>
-            <Switch checked={isActive} onChange={setActive} aria-label="Lenta faol" />
+            <Switch checked={isActive} onChange={setActive} aria-label={t('settings.active')} />
           </div>
         </div>
       </Section>
 
       <Button type="submit" loading={isPending} className="w-full">
-        {initial ? 'Saqlash' : 'Profilni yaratish'}
+        {initial ? tc('save') : t('create')}
       </Button>
     </form>
   );

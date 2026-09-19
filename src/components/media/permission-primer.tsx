@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import { useTranslations } from 'next-intl';
 import { Camera, Mic, X, Spinner } from '@/components/icons';
 import {
   queryMediaPermission,
@@ -21,6 +22,7 @@ const SNOOZE_KEY = 'mm_media_perm_snooze';
  * prompt deyarli har doim rad etiladi va uni qaytarib bo'lmaydi).
  */
 export function MediaPermissionPrimer() {
+  const t = useTranslations('media');
   const [show, setShow] = useState(false);
   const [busy, setBusy] = useState(false);
 
@@ -81,18 +83,16 @@ export function MediaPermissionPrimer() {
           </div>
           <div className="min-w-0 flex-1">
             <h3 className="text-callout font-semibold text-brand-900">
-              {VOICE_ENABLED ? 'Kamera va mikrofon' : 'Kameraga ruxsat'}
+              {VOICE_ENABLED ? t('primer.titleBoth') : t('primer.titleCamera')}
             </h3>
             <p className="mt-1 text-footnote leading-relaxed text-slate-500">
-              {VOICE_ENABLED
-                ? 'Chatdagi ovozli va video xabarlar uchun kerak bo‘ladi.'
-                : 'Suhbatda to‘g‘ridan-to‘g‘ri surat olib yuborish uchun kerak bo‘ladi.'}{' '}
-              Bir marta ruxsat bersangiz — keyin qayta so&apos;ralmaydi.
+              {VOICE_ENABLED ? t('primer.whyBoth') : t('primer.whyCamera')}{' '}
+              {t('primer.once')}
             </p>
           </div>
           <button
             onClick={later}
-            aria-label="Yopish"
+            aria-label={t('primer.close')}
             className="tappable -mr-1 -mt-1 flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-fill-tertiary text-slate-500"
           >
             <X className="h-3.5 w-3.5" strokeWidth={2.5} />
@@ -104,13 +104,13 @@ export function MediaPermissionPrimer() {
             disabled={busy}
             className="tappable inline-flex h-11 flex-1 items-center justify-center gap-2 rounded-full bg-accent-600 text-body font-medium text-white active:bg-accent-700 disabled:opacity-40"
           >
-            {busy ? <Spinner className="h-4 w-4 animate-spin" /> : 'Ruxsat berish'}
+            {busy ? <Spinner className="h-4 w-4 animate-spin" /> : t('primer.allow')}
           </button>
           <button
             onClick={later}
             className="tappable inline-flex h-11 items-center justify-center px-4 text-body font-medium text-accent-700"
           >
-            Keyinroq
+            {t('primer.later')}
           </button>
         </div>
       </div>

@@ -1,3 +1,4 @@
+import { useTranslations } from 'next-intl';
 import { cn } from '@/lib/utils';
 
 /**
@@ -26,22 +27,24 @@ const SEAL =
 export function VerifiedBadge({
   size = 16,
   className,
-  label = 'Tasdiqlangan hisob',
+  label,
 }: {
   size?: number;
   className?: string;
   label?: string;
 }) {
+  const t = useTranslations('social');
+  const text = label ?? t('verified');
   return (
     <svg
       viewBox="0 0 24 24"
       width={size}
       height={size}
       role="img"
-      aria-label={label}
+      aria-label={text}
       className={cn('inline-block shrink-0 align-[-0.15em] text-accent-600', className)}
     >
-      <title>{label}</title>
+      <title>{text}</title>
       <path d={SEAL} fill="currentColor" />
       <path
         d="M7.9 12.2 10.6 15l5.5-5.9"

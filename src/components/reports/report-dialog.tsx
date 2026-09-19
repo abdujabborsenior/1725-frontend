@@ -1,17 +1,15 @@
 'use client';
 
-import { useState } from 'react';
-import { useRouter } from 'next/navigation';
+import { useRouter } from '@/i18n/navigation';
+import { useId, useState } from 'react';
+import { useTranslations } from 'next-intl';
 import { Flag, ShieldAlert } from '@/components/icons';
 import toast from 'react-hot-toast';
 import { Modal } from '@/components/ui/modal';
 import { Button } from '@/components/ui/button';
 import { reportsApi } from '@/lib/api';
-import {
-  REPORT_REASON_LABELS,
-  REPORT_REASONS_BY_TYPE,
-  REPORT_TARGET_LABELS,
-} from '@/lib/constants';
+import { REPORT_REASONS_BY_TYPE } from '@/lib/constants';
+import { getErrorMessage } from '@/lib/api';
 import { useAuthStore } from '@/store/auth.store';
 import { cn } from '@/lib/utils';
 import { FIELD_SURFACE } from '@/components/ui/field-styles';
@@ -26,6 +24,9 @@ interface ReportDialogProps {
 
 /** Shikoyat oynasi — sabab tanlash + ixtiyoriy izoh (300 belgigacha) */
 export function ReportDialog({ open, onClose, targetType, targetId }: ReportDialogProps) {
+  const t = useTranslations('report');
+  const tc = useTranslations('common');
+  const detailsId = useId();
   const reasons = REPORT_REASONS_BY_TYPE[targetType] ?? [];
   const [reason, setReason] = useState<ReportReason | null>(null);
   const [details, setDetails] = useState('');
@@ -33,7 +34,7 @@ export function ReportDialog({ open, onClose, targetType, targetId }: ReportDial
 
   async function submit() {
     if (!reason) {
-      toast.error('Iltimos, sababni tanlang');
+      toast.error(t('pickReason'));
       return;
     }
     setSubmitting(true);
@@ -44,15 +45,12 @@ export function ReportDialog({ open, onClose, targetType, targetId }: ReportDial
         reason,
         details: details.trim() || undefined,
       });
-      toast.success(res.message ?? 'Shikoyatingiz yuborildi');
+      toast.success(res.message ?? t('sent'));
       setReason(null);
       setDetails('');
       onClose();
     } catch (err) {
-      const msg =
-        (err as { response?: { data?: { error?: { message?: string } } } })?.response
-          ?.data?.error?.message ?? 'Xatolik yuz berdi';
-      toast.error(msg);
+      toast.error(getErrorMessage(err));
     } finally {
       setSubmitting(false);
     }
@@ -62,14 +60,13 @@ export function ReportDialog({ open, onClose, targetType, targetId }: ReportDial
     <Modal
       open={open}
       onClose={onClose}
-      title={`${REPORT_TARGET_LABELS[targetType]} ustidan shikoyat`}
+      title={t('title', { target: targetType })}
     >
       <div className="space-y-4">
         <div className="flex items-start gap-2.5 rounded-ios-md bg-amber-50 border border-amber-200 px-3.5 py-2.5">
           <ShieldAlert className="mt-0.5 h-4 w-4 shrink-0 text-amber-600" />
           <p className="text-footnote text-amber-800">
-            Shikoyatingiz moderatorlar tomonidan ko&apos;rib chiqiladi. Asossiz
-            shikoyatlardan saqlaning.
+            {t('notice')}
           </p>
         </div>
 
@@ -94,21 +91,22 @@ export function ReportDialog({ open, onClose, targetType, targetId }: ReportDial
               >
                 {reason === r && <span className="h-2 w-2 rounded-full bg-accent-500" />}
               </span>
-              {REPORT_REASON_LABELS[r]}
+              {t(`reason.${r}`)}
             </button>
           ))}
         </div>
 
         {/* Izoh */}
         <div>
-          <label className="mb-1.5 block text-footnote font-semibold text-slate-600">
-            Qo&apos;shimcha izoh (ixtiyoriy)
+          <label htmlFor={detailsId} className="mb-1.5 block text-footnote font-semibold text-slate-600">
+            {t('detailsLabel')}
           </label>
           <textarea
+            id={detailsId}
             value={details}
             onChange={(e) => setDetails(e.target.value.slice(0, 300))}
             rows={3}
-            placeholder="Muammoni qisqacha tasvirlab bering..."
+            placeholder={t('detailsPlaceholder')}
             className={cn(FIELD_SURFACE, 'resize-none px-4 py-3')}
           />
           <p className="mt-1 text-right text-caption-1 text-slate-500">{details.length}/300</p>
@@ -116,10 +114,10 @@ export function ReportDialog({ open, onClose, targetType, targetId }: ReportDial
 
         <div className="flex justify-end gap-2.5 pt-1">
           <Button variant="ghost" onClick={onClose}>
-            Bekor qilish
+            {tc('cancel')}
           </Button>
           <Button variant="primary" onClick={submit} loading={submitting} disabled={!reason}>
-            <Flag className="h-4 w-4" /> Yuborish
+            <Flag className="h-4 w-4" /> {tc('send')}
           </Button>
         </div>
       </div>
@@ -136,7 +134,7 @@ export function ReportButton({
   targetId,
   variant = 'button',
   className,
-  label = 'Shikoyat qilish',
+  label: labelProp,
 }: {
   targetType: ReportTargetType;
   targetId: string;
@@ -144,13 +142,15 @@ export function ReportButton({
   className?: string;
   label?: string;
 }) {
+  const t = useTranslations('report');
+  const label = labelProp ?? t('action');
   const { token } = useAuthStore();
   const router = useRouter();
   const [open, setOpen] = useState(false);
 
   function trigger() {
     if (!token) {
-      toast.error('Shikoyat qilish uchun tizimga kiring');
+      toast.error(t('loginRequired'));
       router.push('/login');
       return;
     }

@@ -1,8 +1,10 @@
 'use client';
 
-import Link from 'next/link';
+import { Link } from '@/i18n/navigation';
 import { ChevronRight, Eye } from '@/components/icons';
-import { timeAgo } from '@/lib/date';
+import { useDateFormat } from '@/lib/date';
+import { useFormatNumber } from '@/lib/format';
+import { useCategoryLabel } from '@/lib/category-labels';
 import { ProblemStatusPill } from '@/components/ui/badge';
 import { ProblemLikeButton } from '@/components/problems/like-button';
 import { cn } from '@/lib/utils';
@@ -17,6 +19,9 @@ import type { Problem } from '@/types';
  * `compact` — bosh sahifadagi kichik variant (like tugmasiz, zichroq).
  */
 export function ProblemCard({ problem, compact = false }: { problem: Problem; compact?: boolean }) {
+  const { timeAgo } = useDateFormat();
+  const fmt = useFormatNumber();
+  const catLabel = useCategoryLabel();
   return (
     /* "Stretched link": havola sarlavhada, qoplama esa butun kartani bosiladigan
        qiladi — "Foydali" tugmasi endi <a> ichida emas (yaroqli nesting). */
@@ -38,7 +43,7 @@ export function ProblemCard({ problem, compact = false }: { problem: Problem; co
               categoryTint(problem.category).chip,
             )}
           >
-            {problem.category}
+            {catLabel(problem.category)}
           </span>
         )}
       </div>
@@ -91,7 +96,7 @@ export function ProblemCard({ problem, compact = false }: { problem: Problem; co
       <div className="mt-auto flex items-center justify-between gap-2">
         {compact ? (
           <span className="flex items-center gap-1.5 text-footnote tabular-nums text-slate-500">
-            <Eye className="h-3.5 w-3.5" /> {problem.viewCount.toLocaleString('uz')}
+            <Eye className="h-3.5 w-3.5" /> {fmt(problem.viewCount)}
           </span>
         ) : (
           <ProblemLikeButton
@@ -106,7 +111,7 @@ export function ProblemCard({ problem, compact = false }: { problem: Problem; co
         <div className="flex items-center gap-2 text-caption-1 text-slate-500">
           {!compact && (
             <span className="flex items-center gap-1 tabular-nums">
-              <Eye className="h-3.5 w-3.5" /> {problem.viewCount.toLocaleString('uz')}
+              <Eye className="h-3.5 w-3.5" /> {fmt(problem.viewCount)}
             </span>
           )}
           <span className="whitespace-nowrap">

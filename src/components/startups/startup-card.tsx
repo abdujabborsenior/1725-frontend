@@ -1,6 +1,7 @@
 'use client';
 
-import Link from 'next/link';
+import { Link } from '@/i18n/navigation';
+import { useTranslations } from 'next-intl';
 import { Eye, StarFill } from '@/components/icons';
 import { PLATFORM_ORDER } from '@/lib/constants';
 import { PlatformIcon } from './platform';
@@ -9,6 +10,8 @@ import { CoverMedia } from './cover-media';
 import { StartupLogo } from './startup-logo';
 import { RatingValue } from './rating';
 import { categoryTint } from '@/lib/category-tint';
+import { useCategoryLabel } from '@/lib/category-labels';
+import { useFormatNumber } from '@/lib/format';
 import type { Startup } from '@/types';
 
 /**
@@ -26,6 +29,9 @@ export function StartupCard({
   startup: Startup;
   priority?: boolean;
 }) {
+  const t = useTranslations('startupCard');
+  const catLabel = useCategoryLabel();
+  const fmt = useFormatNumber();
   const platformTypes = Array.from(new Set(startup.platforms.map((p) => p.type))).sort(
     (a, b) => PLATFORM_ORDER.indexOf(a) - PLATFORM_ORDER.indexOf(b),
   );
@@ -50,7 +56,7 @@ export function StartupCard({
         </div>
         {startup.isFeatured && (
           <span className="material-dark absolute right-3 top-3 inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-caption-2 font-semibold text-white">
-            <StarFill className="h-2.5 w-2.5 text-amber-400" /> TOP
+            <StarFill className="h-2.5 w-2.5 text-amber-400" /> {t('top')}
           </span>
         )}
         <div className="absolute left-3 top-3 z-10">
@@ -74,7 +80,7 @@ export function StartupCard({
             <span
               className={`mb-1 truncate rounded-full px-2.5 py-1 text-caption-1 font-medium ${tint.chip}`}
             >
-              {startup.category}
+              {catLabel(startup.category)}
             </span>
           )}
         </div>
@@ -104,14 +110,14 @@ export function StartupCard({
           {platformTypes.length > 0 ? (
             platformTypes.map((t) => <PlatformIcon key={t} type={t} className="h-[18px] w-[18px]" />)
           ) : (
-            <span className="text-footnote text-slate-500">G&apos;oya bosqichida</span>
+            <span className="text-footnote text-slate-500">{t('ideaStage')}</span>
           )}
         </div>
         <div className="flex items-center gap-3.5">
           {/* Yoqtirish ro'yxatda ham ishlaydi — sahifaga o'tmasdan */}
           <LikeButton startup={startup} variant="card" />
           <span className="flex items-center gap-1 text-footnote tabular-nums text-slate-500">
-            <Eye className="h-4 w-4" /> {startup.viewCount}
+            <Eye className="h-4 w-4" /> {fmt(startup.viewCount)}
           </span>
         </div>
       </div>

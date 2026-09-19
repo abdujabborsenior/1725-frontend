@@ -1,23 +1,29 @@
 'use client';
 
+import { useRouter } from '@/i18n/navigation';
 import { useEffect, useState } from 'react';
-import { useRouter } from 'next/navigation';
+import { useTranslations } from 'next-intl';
 import { useMutation, useQuery, useQueryClient, keepPreviousData } from '@tanstack/react-query';
 import { MessageSquare, Trash2, Star } from '@/components/icons';
 import { startupsApi, getErrorMessage } from '@/lib/api';
 import { useAuthStore } from '@/store/auth.store';
-import { ROLE_LABEL } from '@/lib/constants';
 import { cn } from '@/lib/utils';
 import { FIELD_SURFACE } from '@/components/ui/field-styles';
 import { RatingValue, RatingInput, RATING_MAX } from './rating';
 import { Button } from '@/components/ui/button';
 import { Pagination } from '@/components/ui/pagination';
 import { AuthorLink } from '@/components/social/author-link';
-import { timeAgo } from '@/lib/date';
+import { useDateFormat } from '@/lib/date';
+import { useFormatNumber } from '@/lib/format';
 import toast from 'react-hot-toast';
 import type { Startup } from '@/types';
 
 export function Reviews({ startup }: { startup: Startup }) {
+  const t = useTranslations('reviews');
+  const tc = useTranslations('common');
+  const tl = useTranslations('labels');
+  const { timeAgo } = useDateFormat();
+  const fmt = useFormatNumber();
   const { token } = useAuthStore();
   const router = useRouter();
   const qc = useQueryClient();
@@ -54,7 +60,7 @@ export function Reviews({ startup }: { startup: Startup }) {
   const submit = useMutation({
     mutationFn: () => startupsApi.submitReview(startup.id, { rating, comment: comment.trim() || undefined }),
     onSuccess: (res) => {
-      toast.success(res.message ?? 'Saqlandi');
+      toast.success(res.message ?? t('saved'));
       invalidate();
     },
     onError: (err) => toast.error(getErrorMessage(err)),
@@ -63,7 +69,7 @@ export function Reviews({ startup }: { startup: Startup }) {
   const remove = useMutation({
     mutationFn: () => startupsApi.deleteMyReview(startup.id),
     onSuccess: () => {
-      toast.success('Sharhingiz o\'chirildi');
+      toast.success(t('deleted'));
       setRating(0);
       setComment('');
       invalidate();
@@ -77,7 +83,7 @@ export function Reviews({ startup }: { startup: Startup }) {
     <section className="space-y-5">
       <div className="flex items-center justify-between">
         <h2 className="text-title-3 font-bold text-brand-900 flex items-center gap-2">
-          <MessageSquare className="h-5 w-5 text-accent-600" /> Sharhlar va baholar
+          <MessageSquare className="h-5 w-5 text-accent-600" /> {t('title')}
         </h2>
       </div>
 
@@ -92,17 +98,15 @@ export function Reviews({ startup }: { startup: Startup }) {
             <span className="text-title-3 font-semibold text-slate-500">/{RATING_MAX}</span>
           </div>
           <p className="mt-1 text-footnote text-slate-500">
-            {startup.ratingCount.toLocaleString('uz')} ta ovoz
+            {t('votes', { count: startup.ratingCount, n: fmt(startup.ratingCount) })}
           </p>
         </div>
         <div className="flex-1 border-l border-slate-100 pl-5 sm:pl-6">
           <p className="text-subhead text-slate-600">
-            {startup.ratingCount > 0
-              ? `Foydalanuvchilar bu startapni ${RATING_MAX} ballik shkalada shunday baholashgan.`
-              : 'Hali baho berilmagan. Birinchi bo\'lib baholang!'}
+            {startup.ratingCount > 0 ? t('summary', { max: String(RATING_MAX) }) : t('noRatings')}
           </p>
           <p className="mt-1.5 text-footnote text-slate-500">
-            Reyting o&apos;rinlari IMDB kabi vaznli (Bayes) formula bilan hisoblanadi.
+            {t('formula')}
           </p>
         </div>
       </div>
@@ -111,7 +115,7 @@ export function Reviews({ startup }: { startup: Startup }) {
       {token ? (
         <div className="rounded-ios-2xl bg-white p-5 space-y-3">
           <p className="text-subhead font-semibold text-brand-900">
-            {mine?.data ? 'Sharhingizni yangilang' : 'Baho bering'}
+            {mine?.data ? t('updateTitle') : t('rateTitle')}
           </p>
           <RatingInput value={rating} onChange={setRating} />
           <textarea
@@ -119,7 +123,7 @@ export function Reviews({ startup }: { startup: Startup }) {
             onChange={(e) => setComment(e.target.value)}
             rows={3}
             maxLength={2000}
-            placeholder="Fikringizni yozing (ixtiyoriy)..."
+            placeholder={t('placeholder')}
             className={cn(FIELD_SURFACE, 'resize-none px-4 py-3')}
           />
           <div className="flex gap-2">
@@ -129,11 +133,11 @@ export function Reviews({ startup }: { startup: Startup }) {
               disabled={rating < 1}
               onClick={() => submit.mutate()}
             >
-              <Star className="h-4 w-4" /> {mine?.data ? 'Yangilash' : 'Yuborish'}
+              <Star className="h-4 w-4" /> {mine?.data ? t('update') : tc('send')}
             </Button>
             {mine?.data && (
               <Button variant="danger" loading={remove.isPending} onClick={() => remove.mutate()}>
-                <Trash2 className="h-4 w-4" /> O&apos;chirish
+                <Trash2 className="h-4 w-4" /> {t('delete')}
               </Button>
             )}
           </div>
@@ -143,7 +147,9 @@ export function Reviews({ startup }: { startup: Startup }) {
           onClick={() => router.push('/login')}
           className="w-full rounded-ios-lg bg-white py-5 text-subhead text-slate-600 transition-all hover:bg-slate-50"
         >
-          Baho berish uchun <span className="font-semibold text-accent-700">tizimga kiring</span>
+          {t.rich('signIn', {
+            b: (chunks) => <span className="font-semibold text-accent-700">{chunks}</span>,
+          })}
         </button>
       )}
 
@@ -177,7 +183,7 @@ export function Reviews({ startup }: { startup: Startup }) {
                 <AuthorLink
                   author={r.user}
                   size={36}
-                  subtitle={`${r.user ? ROLE_LABEL[r.user.role] : ''} · ${timeAgo(r.createdAt)}`}
+                  subtitle={`${r.user ? tl(`role.${r.user.role}`) : ''} · ${timeAgo(r.createdAt)}`}
                 />
                 <RatingValue value={r.rating} size="sm" />
               </div>
@@ -188,7 +194,7 @@ export function Reviews({ startup }: { startup: Startup }) {
           ))}
         </div>
       ) : (
-        <p className="py-6 text-center text-subhead text-slate-500">Hali sharhlar yo&apos;q</p>
+        <p className="py-6 text-center text-subhead text-slate-500">{t('empty')}</p>
       )}
 
       {!isLoading && items.length > 0 && (

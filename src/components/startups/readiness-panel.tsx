@@ -1,6 +1,7 @@
 'use client';
 
-import Link from 'next/link';
+import { Link } from '@/i18n/navigation';
+import { useTranslations } from 'next-intl';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import toast from 'react-hot-toast';
 import {
@@ -14,12 +15,8 @@ import {
 } from '@/components/icons';
 import { assessmentApi, founderApi, getErrorMessage } from '@/lib/api';
 import { cn } from '@/lib/utils';
-import {
-  DIMENSION_HINT,
-  DIMENSION_LABEL,
-  GRADE_LABEL,
-  GRADE_TONE,
-} from '@/lib/venture';
+import { GRADE_TONE } from '@/lib/venture';
+import { useFormatNumber } from '@/lib/format';
 import type { AssessmentFinding } from '@/types';
 
 /**
@@ -33,6 +30,9 @@ import type { AssessmentFinding } from '@/types';
  * matnli tahlil yozadi va talab bo'yicha ishga tushadi.
  */
 export function ReadinessPanel({ startupId }: { startupId: string }) {
+  const t = useTranslations('readiness');
+  const tv = useTranslations('venture');
+  const fmt = useFormatNumber();
   const qc = useQueryClient();
 
   const { data, isLoading } = useQuery({
@@ -51,7 +51,7 @@ export function ReadinessPanel({ startupId }: { startupId: string }) {
     mutationFn: () => assessmentApi.refresh(startupId),
     onSuccess: (res) => {
       qc.setQueryData(['assessment', startupId], res);
-      toast.success('Tahlil yangilandi');
+      toast.success(t('refreshed'));
     },
     onError: (e) => toast.error(getErrorMessage(e)),
   });
@@ -60,7 +60,7 @@ export function ReadinessPanel({ startupId }: { startupId: string }) {
     mutationFn: () => assessmentApi.generateAi(startupId),
     onSuccess: (res) => {
       qc.setQueryData(['assessment', startupId], res);
-      toast.success('AI tahlili tayyor');
+      toast.success(t('aiReady'));
     },
     onError: (e) => toast.error(getErrorMessage(e)),
   });
@@ -71,7 +71,7 @@ export function ReadinessPanel({ startupId }: { startupId: string }) {
     <section className="space-y-4">
       <div className="flex items-baseline justify-between gap-3">
         <h2 className="text-title-3 font-semibold text-brand-900">
-          Loyiha tayyorligi
+          {t('title')}
         </h2>
         <button
           type="button"
@@ -82,7 +82,7 @@ export function ReadinessPanel({ startupId }: { startupId: string }) {
           <RefreshCw
             className={cn('h-3.5 w-3.5', refreshing && 'animate-spin')}
           />
-          Yangilash
+          {t('refresh')}
         </button>
       </div>
 
@@ -112,11 +112,10 @@ export function ReadinessPanel({ startupId }: { startupId: string }) {
           </div>
           <div className="min-w-0 flex-1">
             <p className={cn('text-body font-semibold', GRADE_TONE[data.grade])}>
-              {GRADE_LABEL[data.grade]}
+              {tv(`grade.${data.grade}`)}
             </p>
             <p className="mt-0.5 text-footnote text-slate-500">
-              Ball investorlar e&apos;tibor beradigan 6 mezon bo&apos;yicha
-              hisoblanadi. Bu — ichki ish quroli, ommaga ko&apos;rinmaydi.
+              {t('scoreNote')}
             </p>
           </div>
         </div>
@@ -127,7 +126,7 @@ export function ReadinessPanel({ startupId }: { startupId: string }) {
             <li key={d.key}>
               <div className="flex items-baseline justify-between gap-3">
                 <span className="text-subhead text-brand-900">
-                  {DIMENSION_LABEL[d.key]}
+                  {tv(`dimension.${d.key}`)}
                 </span>
                 <span className="text-caption-1 tabular-nums text-slate-500">
                   {d.score}/100
@@ -148,7 +147,7 @@ export function ReadinessPanel({ startupId }: { startupId: string }) {
               </div>
               {d.score < 50 && (
                 <p className="mt-1 text-caption-1 text-slate-500">
-                  {DIMENSION_HINT[d.key]}
+                  {tv(`dimensionHint.${d.key}`)}
                 </p>
               )}
             </li>
@@ -167,22 +166,23 @@ export function ReadinessPanel({ startupId }: { startupId: string }) {
               {interest.inDealflow ? (
                 <>
                   <p className="text-body text-brand-900">
-                    <span className="font-semibold">{interest.matchCount}</span>{' '}
-                    investor kriteriyasiga mos keldingiz
+                    {t.rich('matched', {
+                      count: interest.matchCount,
+                      n: fmt(interest.matchCount),
+                      b: (chunks) => <span className="font-semibold">{chunks}</span>,
+                    })}
                   </p>
                   <p className="mt-0.5 text-footnote text-slate-500">
-                    Kimligi ko&apos;rsatilmaydi — ular o&apos;zi bog&apos;lansa
-                    xabar olasiz.
+                    {t('matchedNote')}
                   </p>
                 </>
               ) : (
                 <>
                   <p className="text-body text-brand-900">
-                    Loyiha investorlar lentasida emas
+                    {t('notInFeed')}
                   </p>
                   <p className="mt-0.5 text-footnote text-slate-500">
-                    Tahrirlashda &laquo;Nimaga muhtojsiz?&raquo; savoliga javob
-                    bersangiz, loyihangiz lentaga qo&apos;shiladi.
+                    {t('notInFeedHint')}
                   </p>
                 </>
               )}
@@ -191,7 +191,7 @@ export function ReadinessPanel({ startupId }: { startupId: string }) {
                   href="/profile/intro-requests"
                   className="tappable mt-2.5 inline-flex h-9 items-center rounded-ios-md bg-accent-600 px-3.5 text-footnote font-semibold text-white"
                 >
-                  {interest.pendingIntros} ta so&apos;rovga javob berish
+                  {t('reply', { count: interest.pendingIntros, n: fmt(interest.pendingIntros) })}
                 </Link>
               )}
             </div>
@@ -205,13 +205,13 @@ export function ReadinessPanel({ startupId }: { startupId: string }) {
           href={`/market/${data.market.slug}`}
           className="tappable block rounded-ios-lg bg-white p-4"
         >
-          <p className="text-footnote text-slate-500">Bozor yo&apos;nalishi</p>
+          <p className="text-footnote text-slate-500">{t('market')}</p>
           <p className="mt-0.5 text-body font-medium text-brand-900">
             {data.market.label}
           </p>
           {data.market.demandScore !== null && (
             <p className="mt-0.5 text-footnote text-slate-500">
-              Bu yo&apos;nalishda talab bali: {data.market.demandScore}/100
+              {t('demand', { score: String(data.market.demandScore) })}
             </p>
           )}
         </Link>
@@ -221,7 +221,7 @@ export function ReadinessPanel({ startupId }: { startupId: string }) {
       {data.findings.length > 0 && (
         <div className="rounded-ios-lg bg-white p-4">
           <h3 className="text-footnote font-semibold uppercase tracking-wide text-slate-500">
-            Tekshiruvlar
+            {t('checks')}
           </h3>
           <ul className="mt-3 space-y-2.5">
             {data.findings.map((f, i) => (
@@ -238,10 +238,9 @@ export function ReadinessPanel({ startupId }: { startupId: string }) {
             <Sparkles className="h-[18px] w-[18px] text-indigo-600" />
           </span>
           <div className="min-w-0 flex-1">
-            <p className="text-body font-medium text-brand-900">AI tahlili</p>
+            <p className="text-body font-medium text-brand-900">{t('aiTitle')}</p>
             <p className="mt-0.5 text-footnote text-slate-500">
-              Kuchli/zaif tomonlar va amaliy tavsiyalar. Ballga ta&apos;sir
-              qilmaydi — u alohida hisoblanadi.
+              {t('aiNote')}
             </p>
           </div>
         </div>
@@ -251,18 +250,18 @@ export function ReadinessPanel({ startupId }: { startupId: string }) {
             {data.ai.summary && (
               <p className="text-subhead text-slate-700">{data.ai.summary}</p>
             )}
-            <AiList title="Kuchli tomonlar" items={data.ai.strengths} tone="accent" />
-            <AiList title="Zaif tomonlar" items={data.ai.weaknesses} tone="amber" />
-            <AiList title="Imkoniyatlar" items={data.ai.opportunities} tone="slate" />
-            <AiList title="Xavflar" items={data.ai.risks} tone="rose" />
-            <AiList title="Tavsiyalar" items={data.ai.recommendations} tone="accent" />
+            <AiList title={t('strengths')} items={data.ai.strengths} tone="accent" />
+            <AiList title={t('weaknesses')} items={data.ai.weaknesses} tone="amber" />
+            <AiList title={t('opportunities')} items={data.ai.opportunities} tone="slate" />
+            <AiList title={t('risks')} items={data.ai.risks} tone="rose" />
+            <AiList title={t('recommendations')} items={data.ai.recommendations} tone="accent" />
             <button
               type="button"
               onClick={() => runAi()}
               disabled={aiPending || !data.aiAvailable}
               className="tappable text-footnote text-accent-700 disabled:opacity-40"
             >
-              {aiPending ? 'Yangilanmoqda…' : 'Qayta tahlil qilish'}
+              {aiPending ? t('updating') : t('rerun')}
             </button>
           </div>
         ) : (
@@ -273,10 +272,10 @@ export function ReadinessPanel({ startupId }: { startupId: string }) {
             className="tappable mt-3.5 inline-flex h-10 items-center rounded-ios-md bg-indigo-600 px-4 text-subhead font-semibold text-white disabled:opacity-40"
           >
             {aiPending
-              ? 'Tahlil tayyorlanmoqda…'
+              ? t('preparing')
               : data.aiAvailable
-                ? 'AI tahlilini olish'
-                : 'AI hozircha ishlamayapti'}
+                ? t('getAi')
+                : t('aiUnavailable')}
           </button>
         )}
       </div>

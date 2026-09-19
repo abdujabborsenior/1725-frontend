@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import { useTranslations } from 'next-intl';
 
 import { cn } from '@/lib/utils';
 import { YechimOrb } from './yechim-mark';
@@ -14,14 +15,10 @@ import { YechimOrb } from './yechim-mark';
  * esa progress segmentlari. Pastdagi skelet — javob AYNAN paydo bo'ladigan
  * joyda turadi, shuning uchun javob kelganda maket sakramaydi.
  */
-const STAGES = [
-  'Muammoni tushunyapman',
-  'Loyihalarni ko‘rib chiqyapman',
-  'Eng mosini solishtiryapman',
-  'Javobni yozyapman',
-];
+const STAGES = ['understand', 'review', 'compare', 'write'] as const;
 
 export function AiThinking() {
+  const t = useTranslations('ai.thinking');
   const [stage, setStage] = useState(0);
 
   useEffect(() => {
@@ -40,7 +37,7 @@ export function AiThinking() {
       <div className="min-w-0 flex-1">
         {/* key — matn almashganda yangidan materializatsiya bo'ladi */}
         <p key={stage} className="yz-shimmer text-subhead font-medium">
-          {STAGES[stage]}…
+          {t(STAGES[stage])}…
         </p>
 
         {/* Progress — bajarilgan bosqichlar yorug' qoladi */}

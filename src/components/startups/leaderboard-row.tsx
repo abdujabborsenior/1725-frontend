@@ -1,15 +1,19 @@
 'use client';
 
-import Link from 'next/link';
+import { Link } from '@/i18n/navigation';
 import { Eye, Users } from '@/components/icons';
 import type { LeaderboardEntry } from '@/types';
 import { RatingValue } from './rating';
 import { PlatformIcon } from './platform';
 import { PLATFORM_ORDER } from '@/lib/constants';
+import { useFormatNumber } from '@/lib/format';
+import { useCategoryLabel } from '@/lib/category-labels';
 import { RankMovement, RankNumber, ScoreBadge } from './leaderboard-bits';
 import { StartupLogo } from './startup-logo';
 
 export function LeaderboardRow({ entry }: { entry: LeaderboardEntry }) {
+  const fmt = useFormatNumber();
+  const catLabel = useCategoryLabel();
   const platformTypes = Array.from(
     new Set(entry.platforms.map((p) => p.type)),
   ).sort((a, b) => PLATFORM_ORDER.indexOf(a) - PLATFORM_ORDER.indexOf(b));
@@ -40,13 +44,13 @@ export function LeaderboardRow({ entry }: { entry: LeaderboardEntry }) {
         </h3>
         <div className="mt-0.5 flex flex-wrap items-center gap-x-2 gap-y-0.5 text-caption-1 text-slate-500">
           {entry.category && (
-            <span className="font-medium text-slate-500">{entry.category}</span>
+            <span className="font-medium text-slate-500">{catLabel(entry.category)}</span>
           )}
           <span className="inline-flex items-center gap-1">
-            <Users className="h-3 w-3" /> {entry.leaderboardVotes}
+            <Users className="h-3 w-3" /> {fmt(entry.leaderboardVotes)}
           </span>
           <span className="hidden items-center gap-1 sm:inline-flex">
-            <Eye className="h-3 w-3" /> {entry.viewCount}
+            <Eye className="h-3 w-3" /> {fmt(entry.viewCount)}
           </span>
           {platformTypes.length > 0 && (
             <span className="hidden items-center gap-1 text-slate-500 sm:inline-flex">

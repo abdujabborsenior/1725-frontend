@@ -1,6 +1,6 @@
 'use client';
 
-import Link from 'next/link';
+import { Link } from '@/i18n/navigation';
 import { ChevronRight } from '@/components/icons';
 import { cn } from '@/lib/utils';
 import type { ReactNode } from 'react';

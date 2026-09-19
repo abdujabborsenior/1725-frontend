@@ -1,6 +1,7 @@
 'use client';
 
 import { forwardRef, useId, useState, type InputHTMLAttributes } from 'react';
+import { useTranslations } from 'next-intl';
 import { CheckCircleFill, Eye, EyeOff, Lock } from '@/components/icons';
 import { cn } from '@/lib/utils';
 import {
@@ -19,11 +20,13 @@ import {
    ikkalasi ham shundan foydalanadi, ya'ni ular hech qachon ajralib
    ketmaydi.                                                              */
 export const PASSWORD_RULES = [
-  { id: 'len', label: '8+ belgi', test: (v: string) => v.length >= 8 },
-  { id: 'upper', label: 'Katta harf', test: (v: string) => /[A-Z]/.test(v) },
-  { id: 'digit', label: 'Raqam', test: (v: string) => /[0-9]/.test(v) },
-  { id: 'special', label: 'Maxsus belgi', test: (v: string) => /[!@#$%^&*]/.test(v) },
+  { id: 'len', test: (v: string) => v.length >= 8 },
+  { id: 'upper', test: (v: string) => /[A-Z]/.test(v) },
+  { id: 'digit', test: (v: string) => /[0-9]/.test(v) },
+  { id: 'special', test: (v: string) => /[!@#$%^&*]/.test(v) },
 ] as const;
+
+export type PasswordRuleId = (typeof PASSWORD_RULES)[number]['id'];
 
 export function isPasswordValid(v: string) {
   return PASSWORD_RULES.every((r) => r.test(v));
@@ -48,6 +51,7 @@ export function PasswordRules({
   className?: string;
   id?: string;
 }) {
+  const t = useTranslations('ui.password');
   return (
     <ul
       id={id}
@@ -79,8 +83,8 @@ export function PasswordRules({
                 aria-hidden
               />
             )}
-            <span className="sr-only">{ok ? 'Bajarildi:' : 'Kerak:'}</span>
-            {r.label}
+            <span className="sr-only">{ok ? t('ruleDone') : t('ruleNeeded')}</span>
+            {t(`rules.${r.id}`)}
           </li>
         );
       })}
@@ -124,6 +128,7 @@ export const PasswordField = forwardRef<HTMLInputElement, PasswordFieldProps>(
     },
     ref,
   ) => {
+    const t = useTranslations('ui.password');
     const [show, setShow] = useState(false);
     // Yozayotgan paytda qolgan shartlar QIZIL bo'lmaydi (odam hali yozyapti) —
     // ular maydondan chiqilgandan keyin yoki forma xato berganda qizaradi.
@@ -178,7 +183,7 @@ export const PasswordField = forwardRef<HTMLInputElement, PasswordFieldProps>(
             type="button"
             tabIndex={-1}
             onClick={() => setShow((s) => !s)}
-            aria-label={show ? 'Parolni yashirish' : "Parolni ko'rsatish"}
+            aria-label={show ? t('hide') : t('show')}
             className="tappable absolute right-2 top-1/2 flex h-9 w-9 -translate-y-1/2 items-center justify-center rounded-full text-slate-400 transition-colors duration-150 hover:text-slate-700"
           >
             {show ? <EyeOff className="h-[18px] w-[18px]" /> : <Eye className="h-[18px] w-[18px]" />}

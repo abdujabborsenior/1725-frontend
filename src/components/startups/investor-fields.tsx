@@ -1,21 +1,14 @@
 'use client';
 
 import { useMemo, useState } from 'react';
+import { useLocale, useTranslations } from 'next-intl';
 import { ChevronDown, Sparkles } from '@/components/icons';
 import { Input } from '@/components/ui/input';
 import { Select } from '@/components/ui/select';
 import { Textarea } from '@/components/ui/textarea';
 import { cn } from '@/lib/utils';
-import {
-  BUSINESS_MODEL_LABEL,
-  NEED_HINT,
-  NEED_LABEL,
-  NEED_ORDER,
-  STAGE_HINT,
-  STAGE_LABEL,
-  STAGE_ORDER,
-  formatRange,
-} from '@/lib/venture';
+import { BUSINESS_MODEL_ORDER, NEED_ORDER, STAGE_ORDER, formatRange, stageMessageKey } from '@/lib/venture';
+import type { AppLocale } from '@/i18n/routing';
 import type { BusinessModel, StartupStage, VentureNeed } from '@/types';
 
 /**
@@ -193,6 +186,9 @@ export function InvestorFields({
   onChange: (next: InvestorFieldsValue) => void;
   defaultOpen?: boolean;
 }) {
+  const t = useTranslations('investorFields');
+  const tv = useTranslations('venture');
+  const locale = useLocale() as AppLocale;
   const [open, setOpen] = useState(defaultOpen);
   const completeness = useMemo(() => localCompleteness(value), [value]);
   const wantsMoney =
@@ -229,12 +225,11 @@ export function InvestorFields({
         </span>
         <span className="min-w-0 flex-1">
           <span className="block text-body text-brand-900">
-            Investorlar uchun{' '}
-            <span className="text-slate-500">(ixtiyoriy)</span>
+            {t('title')}{' '}
+            <span className="text-slate-500">{t('optional')}</span>
           </span>
           <span className="mt-0.5 block text-footnote text-slate-500">
-            Loyihangiz bosqichi va ko&apos;rsatkichlarini kiritsangiz,
-            investorlar qidiruvida ko&apos;rinasiz.
+            {t('subtitle')}
           </span>
         </span>
         {completeness > 0 && (
@@ -256,9 +251,7 @@ export function InvestorFields({
           {/* Rag'bat — bosim emas, kafolat bilan */}
           <div className="rounded-ios-md bg-fill-tertiary px-3.5 py-3">
             <p className="text-footnote text-slate-600">
-              Bu maydonlar to&apos;ldirilmasa ham loyihangiz e&apos;lon
-              qilinadi. To&apos;ldirilsa — moslik aniqligi sezilarli oshadi va
-              siz kriteriyasi mos investorlarning lentasiga tushasiz.
+              {t('reassurance')}
             </p>
             {completeness > 0 && (
               <div className="mt-2.5">
@@ -269,7 +262,7 @@ export function InvestorFields({
                   />
                 </div>
                 <p className="mt-1.5 text-caption-1 text-slate-500">
-                  To&apos;ldirilgan: {completeness}%
+                  {t('completed', { percent: String(completeness) })}
                 </p>
               </div>
             )}
@@ -278,7 +271,7 @@ export function InvestorFields({
           {/* Bosqich */}
           <div className="space-y-2">
             <span className="text-subhead font-medium text-slate-500">
-              Loyiha bosqichi
+              {t('stage')}
             </span>
             <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
               {STAGE_ORDER.map((stage) => (
@@ -286,8 +279,8 @@ export function InvestorFields({
                   key={stage}
                   active={value.stage === stage}
                   onClick={() => set('stage', value.stage === stage ? '' : stage)}
-                  label={STAGE_LABEL[stage]}
-                  hint={STAGE_HINT[stage]}
+                  label={tv(`stage.${stageMessageKey(stage)}`)}
+                  hint={tv(`stageHint.${stageMessageKey(stage)}`)}
                 />
               ))}
             </div>
@@ -296,7 +289,7 @@ export function InvestorFields({
           {/* Nimaga muhtoj */}
           <div className="space-y-2">
             <span className="text-subhead font-medium text-slate-500">
-              Nimaga muhtojsiz? (bir nechtasini tanlash mumkin)
+              {t('needs')}
             </span>
             <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
               {NEED_ORDER.map((need) => (
@@ -304,14 +297,13 @@ export function InvestorFields({
                   key={need}
                   active={value.needs.includes(need)}
                   onClick={() => toggleNeed(need)}
-                  label={NEED_LABEL[need]}
-                  hint={NEED_HINT[need]}
+                  label={tv(`need.${need}`)}
+                  hint={tv(`needHint.${need}`)}
                 />
               ))}
             </div>
             <p className="text-caption-1 text-slate-500">
-              Kamida bittasini tanlasangiz, loyihangiz investorlar lentasiga
-              qo&apos;shiladi.
+              {t('needsHint')}
             </p>
           </div>
 
@@ -319,11 +311,11 @@ export function InvestorFields({
           {wantsMoney && (
             <div className="space-y-2">
               <span className="text-subhead font-medium text-slate-500">
-                Qancha mablag&apos; kerak?
+                {t('ask')}
               </span>
               <div className="grid grid-cols-2 gap-3">
                 <Input
-                  label="Eng kami (mln so'm)"
+                  label={t('askMin')}
                   type="number"
                   inputMode="decimal"
                   placeholder="50"
@@ -331,7 +323,7 @@ export function InvestorFields({
                   onChange={(e) => set('askMinMln', e.target.value)}
                 />
                 <Input
-                  label="Eng ko'pi (mln so'm)"
+                  label={t('askMax')}
                   type="number"
                   inputMode="decimal"
                   placeholder="200"
@@ -341,10 +333,10 @@ export function InvestorFields({
               </div>
               {(askSum.min || askSum.max) && (
                 <p className="text-caption-1 text-slate-500">
-                  Investorga shunday ko&apos;rinadi:{' '}
-                  <span className="font-medium text-brand-900">
-                    {formatRange(askSum.min, askSum.max)}
-                  </span>
+                  {t.rich('askPreview', {
+                    range: formatRange(askSum.min, askSum.max, locale),
+                    b: (chunks) => <span className="font-medium text-brand-900">{chunks}</span>,
+                  })}
                 </p>
               )}
             </div>
@@ -353,25 +345,25 @@ export function InvestorFields({
           {/* Muammo va auditoriya */}
           <div className="space-y-4">
             <Textarea
-              label="Qanday muammoni hal qilyapsiz?"
+              label={t('problem')}
               rows={3}
-              placeholder="Masalan: fermerlar mahsulotini vositachilarga arzon topshirishga majbur, chunki xaridorga chiqish kanali yo'q."
+              placeholder={t('problemPlaceholder')}
               value={value.problemStatement}
               onChange={(e) => set('problemStatement', e.target.value)}
             />
             <Input
-              label="Kim uchun?"
-              placeholder="Masalan: kichik fermer xo'jaliklari"
+              label={t('audience')}
+              placeholder={t('audiencePlaceholder')}
               value={value.targetAudience}
               onChange={(e) => set('targetAudience', e.target.value)}
             />
             <Select
-              label="Biznes modeli"
+              label={t('businessModel')}
               options={[
-                { value: '', label: 'Tanlanmagan' },
-                ...Object.entries(BUSINESS_MODEL_LABEL).map(([v, label]) => ({
+                { value: '', label: t('notSelected') },
+                ...BUSINESS_MODEL_ORDER.map((v) => ({
                   value: v,
-                  label,
+                  label: tv(`businessModel.${v}`),
                 })),
               ]}
               value={value.businessModel}
@@ -384,11 +376,11 @@ export function InvestorFields({
           {/* Ko'rsatkichlar */}
           <div className="space-y-2">
             <span className="text-subhead font-medium text-slate-500">
-              Ko&apos;rsatkichlar
+              {t('metrics')}
             </span>
             <div className="grid grid-cols-2 gap-3">
               <Input
-                label="Jamoa (kishi)"
+                label={t('teamSize')}
                 type="number"
                 inputMode="numeric"
                 placeholder="4"
@@ -396,7 +388,7 @@ export function InvestorFields({
                 onChange={(e) => set('teamSize', e.target.value)}
               />
               <Input
-                label="Oylik daromad (mln so'm)"
+                label={t('revenue')}
                 type="number"
                 inputMode="decimal"
                 placeholder="12"
@@ -404,7 +396,7 @@ export function InvestorFields({
                 onChange={(e) => set('monthlyRevenueMln', e.target.value)}
               />
               <Input
-                label="Oylik faol foydalanuvchi"
+                label={t('activeUsers')}
                 type="number"
                 inputMode="numeric"
                 placeholder="3000"
@@ -412,7 +404,7 @@ export function InvestorFields({
                 onChange={(e) => set('monthlyActiveUsers', e.target.value)}
               />
               <Input
-                label="To'lovchi mijoz"
+                label={t('payingCustomers')}
                 type="number"
                 inputMode="numeric"
                 placeholder="240"
@@ -421,14 +413,14 @@ export function InvestorFields({
               />
             </div>
             <p className="text-caption-1 text-slate-500">
-              Bilganingizni yozing — hammasini bilish shart emas.
+              {t('metricsHint')}
             </p>
           </div>
 
           <Textarea
-            label="Nimaga erishdingiz?"
+            label={t('traction')}
             rows={3}
-            placeholder="Masalan: uch oyda 3000 foydalanuvchi va 240 obunachi yig'ildi, oylik o'sish 22 foiz."
+            placeholder={t('tractionPlaceholder')}
             value={value.traction}
             onChange={(e) => set('traction', e.target.value)}
           />

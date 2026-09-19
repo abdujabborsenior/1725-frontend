@@ -1,5 +1,5 @@
+import type { AppLocale } from '@/i18n/routing';
 import type {
-  BillingInterval,
   BillingPlan,
   PaymentProvider,
   PlanTier,
@@ -37,79 +37,81 @@ export const BILLING_ENABLED = process.env.NEXT_PUBLIC_BILLING_ENABLED === 'true
  * olib keladi. Narx — foydalanuvchi ishonadigan raqam, u har joyda BIR XIL
  * ko'rinishi shart.
  */
-function group(n: number): string {
-  return String(n).replace(/\B(?=(\d{3})+(?!\d))/g, '\u00A0');
+const GROUP: Record<AppLocale, string> = { uz: '\u00A0', ru: '\u00A0', en: ',' };
+/** Valyuta nomi har tilda (so'm · сум · UZS) — kichik jadval, lug'at emas. */
+const CURRENCY: Record<AppLocale, string> = { uz: "so'm", ru: 'сум', en: 'UZS' };
+
+function group(n: number, locale: AppLocale): string {
+  return String(n).replace(/\B(?=(\d{3})+(?!\d))/g, GROUP[locale]);
 }
 
 /**
  * Backend narxni **tiyin**da qaytaradi (butun son — yaxlitlash xatosi yo'q,
  * Payme ham tiyin bilan ishlaydi). Ekranga chiqarishda so'mga o'giriladi.
  */
-export function formatSum(tiyin: number): string {
-  return `${group(Math.round(tiyin / 100))} so'm`;
+export function formatSum(tiyin: number, locale: AppLocale): string {
+  return `${group(Math.round(tiyin / 100), locale)} ${CURRENCY[locale]}`;
 }
 
 /** "1 000" — valyutasiz (yirik ko'rsatiladigan raqam uchun). */
-export function formatSumShort(tiyin: number): string {
-  return group(Math.round(tiyin / 100));
+export function formatSumShort(tiyin: number, locale: AppLocale): string {
+  return group(Math.round(tiyin / 100), locale);
 }
 
-export const INTERVAL_LABEL: Record<BillingInterval, string> = {
-  monthly: 'Oylik',
-  yearly: 'Yillik',
-};
+/** Valyuta nomi — yirik narx yonida alohida ko'rsatish uchun. */
+export function currencyLabel(locale: AppLocale): string {
+  return CURRENCY[locale];
+}
 
-/** Narx yonidagi qo'shimcha ("/oy", "/yil") */
-export const INTERVAL_SUFFIX: Record<BillingInterval, string> = {
-  monthly: '/oy',
-  yearly: '/yil',
-};
+/* Muddat yorliqlari lug'atda: `billing.interval.<monthly|yearly>` ("Oylik"),
+   `billing.intervalSuffix.<monthly|yearly>` ("/oy"). */
 
 /* ── Tarif darajalari ─────────────────────────────────────────── */
 
 /**
- * Daraja uchun VIZUAL meta (matn/rang) — narx va limit BACKENDDAN keladi.
- * Narxni frontendda hech qachon qattiq yozmaymiz: u serverda o'zgarganda
- * ekranda darhol yangilanishi kerak (va to'lov summasi doim server hisobi).
+ * Daraja uchun VIZUAL meta (rang) — narx va limit BACKENDDAN keladi, shior
+ * lug'atda (`billing.tier.<tier>.tagline`). Narxni frontendda hech qachon
+ * qattiq yozmaymiz: u serverda o'zgarganda ekranda darhol yangilanishi kerak
+ * (va to'lov summasi doim server hisobi).
  */
-export const TIER_META: Record<
-  PlanTier,
-  { tagline: string; accentClass: string; badgeClass: string }
-> = {
+export const TIER_META: Record<PlanTier, { accentClass: string; badgeClass: string }> = {
   starter: {
-    tagline: 'Birinchi loyihangizni ishonch bilan boshlang',
     accentClass: 'bg-slate-500',
     badgeClass: 'bg-fill-tertiary text-slate-600',
   },
   pro: {
-    tagline: "Bir nechta loyihani birga olib boradiganlar uchun",
     accentClass: 'bg-accent-600',
     badgeClass: 'bg-accent-50 text-accent-700',
   },
   business: {
-    tagline: 'Jamoa va portfel darajasidagi ish uchun',
     accentClass: 'bg-indigo-600',
     badgeClass: 'bg-indigo-50 text-indigo-700',
   },
 };
 
+export type PlanFeatureKey =
+  | 'projects'
+  | 'page'
+  | 'solutions'
+  | 'edit'
+  | 'priority'
+  | 'yearTerm'
+  | 'monthTerm';
+
 /**
- * Tarifning asosiy imkoniyatlari. Loyiha limiti serverdan (`startupLimit`)
- * olinadi — bu yerda faqat unga qo'shimcha, o'zgarmas bandlar.
+ * Tarifning asosiy imkoniyatlari — lug'at KALITLARI (`billing.features.<key>`).
+ * Loyiha limiti serverdan (`startupLimit`) olinadi va `count` sifatida
+ * uzatiladi (ICU plural: "1 ta loyiha" / "5 tagacha loyiha").
  */
-export function planFeatures(plan: BillingPlan): string[] {
-  const base = [
-    plan.startupLimit === 1
-      ? '1 ta loyiha e’lon qilish'
-      : `${plan.startupLimit} tagacha loyiha e’lon qilish`,
-    'Loyiha sahifasi, reyting va sharhlar',
-    'Muammolarga yechim taklif qilish',
+export function planFeatures(plan: BillingPlan): { key: PlanFeatureKey; count?: number }[] {
+  const base: { key: PlanFeatureKey; count?: number }[] = [
+    { key: 'projects', count: plan.startupLimit },
+    { key: 'page' },
+    { key: 'solutions' },
   ];
-  if (plan.tier !== 'starter') base.push('Loyihalarni istalgan vaqtda tahrirlash');
-  if (plan.tier === 'business') base.push('Ustuvor qo‘llab-quvvatlash');
-  base.push(
-    plan.interval === 'yearly' ? '12 oylik muddat, bir to‘lov' : '1 oylik muddat',
-  );
+  if (plan.tier !== 'starter') base.push({ key: 'edit' });
+  if (plan.tier === 'business') base.push({ key: 'priority' });
+  base.push({ key: plan.interval === 'yearly' ? 'yearTerm' : 'monthTerm' });
   return base;
 }
 
@@ -184,11 +186,12 @@ export const PROVIDER_META: Record<
 /** Ekrandagi tartib — sozlanganlari orasidan shu ketma-ketlikda. */
 export const PROVIDER_ORDER: PaymentProvider[] = ['payme', 'click'];
 
-/** Sozlangan usullar ro'yxatidan matn: "Payme", "Payme yoki Click". */
-export function providersLabel(providers: PaymentProvider[]): string {
-  const names = PROVIDER_ORDER.filter((p) => providers.includes(p)).map(
+/**
+ * Sozlangan usullar nomlari (tartib bilan). Matnga aylantirish lug'atda:
+ * `billing.providers` — "{a} yoki {b}" / "{a} или {b}" / "{a} or {b}".
+ */
+export function providerNames(providers: PaymentProvider[]): string[] {
+  return PROVIDER_ORDER.filter((p) => providers.includes(p)).map(
     (p) => PROVIDER_META[p].label,
   );
-  if (names.length === 0) return 'Karta';
-  return names.join(' yoki ');
 }

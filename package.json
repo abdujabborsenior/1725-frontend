@@ -13,9 +13,12 @@
   "scripts": {
     "dev": "next dev -p 3330",
     "build": "next build",
+    "prebuild": "node scripts/i18n-check.mjs",
     "start": "next start -p 3330",
     "lint": "next lint",
-    "icons:gen": "node scripts/gen-icons.js"
+    "i18n:check": "node scripts/i18n-check.mjs --report",
+    "icons:gen": "node scripts/gen-icons.js",
+    "og:gen": "node scripts/gen-og.mjs"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.9.1",
@@ -25,6 +28,7 @@
     "date-fns": "^4.1.0",
     "framer-motion": "^11.11.17",
     "next": "14.2.29",
+    "next-intl": "4.14.5",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "react-hook-form": "^7.53.2",
@@ -41,10 +45,10 @@
     "autoprefixer": "^10.4.20",
     "eslint": "^8",
     "eslint-config-next": "14.2.29",
+    "ionicons": "^8.0.13",
     "postcss": "^8.4.47",
     "puppeteer-core": "^23.11.1",
     "tailwindcss": "^3.4.14",
-    "typescript": "^5.6.3",
-    "ionicons": "^8.0.13"
+    "typescript": "^5.6.3"
   }
 }

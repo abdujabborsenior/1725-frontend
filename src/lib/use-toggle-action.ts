@@ -1,7 +1,7 @@
 'use client';
 
+import { usePathname, useRouter } from '@/i18n/navigation';
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { usePathname, useRouter } from 'next/navigation';
 import { useQueryClient } from '@tanstack/react-query';
 import toast from 'react-hot-toast';
 import { getErrorMessage } from '@/lib/api';

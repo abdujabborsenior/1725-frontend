@@ -1,8 +1,8 @@
 'use client';
 
+import { Link, useRouter } from '@/i18n/navigation';
 import { useEffect, useMemo, useState, type CSSProperties, type ReactNode } from 'react';
-import Link from 'next/link';
-import { useRouter } from 'next/navigation';
+import { useTranslations } from 'next-intl';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { MessageSquarePlus, Users, UsersRound, ChevronLeft, Search, X } from '@/components/icons';
 import { chatApi } from '@/lib/api';
@@ -14,24 +14,20 @@ import { ConversationListSkeleton } from './chat-skeletons';
 import { CreateGroupModal } from './create-group-modal';
 import { cn } from '@/lib/utils';
 import { FIELD_ICON, FIELD_SIZE, FIELD_SURFACE } from '@/components/ui/field-styles';
-import { timeAgoShort } from '@/lib/date';
+import { useDateFormat } from '@/lib/date';
+import { CANONICAL_PREVIEW, useChatText } from './chat-text';
 import type { Conversation } from '@/types';
 
 type Filter = 'all' | 'direct' | 'group';
 const FILTER_KEY = 'sh_chat_filter';
 
-// Matn bo'lmagan xabar turlari uchun preview (backend PREVIEW bilan bir xil)
-const TYPE_PREVIEW: Record<string, string> = {
-  image: 'Rasm', video: 'Video', voice: 'Ovozli xabar', round_video: 'Video xabar', file: 'Fayl',
-};
-
-const TABS: { id: Filter; label: string }[] = [
-  { id: 'all', label: 'Hammasi' },
-  { id: 'direct', label: 'Shaxsiy' },
-  { id: 'group', label: 'Guruhlar' },
-];
+// Yorliq — `chat.list.tabs.<id>` (joriy tilda)
+const TABS: Filter[] = ['all', 'direct', 'group'];
 
 export function ConversationList({ activeId }: { activeId?: string }) {
+  const t = useTranslations('chat');
+  const tc = useTranslations('common');
+  const { preview } = useChatText();
   const router = useRouter();
   const { token, user } = useAuthStore();
   const qc = useQueryClient();
@@ -93,7 +89,8 @@ export function ConversationList({ activeId }: { activeId?: string }) {
           ? {
               ...c,
               lastMessagePreview:
-                msg.type === 'text' ? (msg.content ?? '').slice(0, 120) : (TYPE_PREVIEW[msg.type] ?? c.lastMessagePreview),
+                // Matnsiz xabar — backend bilan AYNI kanonik qiymat (ko'rsatishda tarjima qilinadi)
+                msg.type === 'text' ? (msg.content ?? '').slice(0, 120) : (CANONICAL_PREVIEW[msg.type] ?? c.lastMessagePreview),
               lastMessageAt: msg.createdAt,
               unreadCount: mine || active ? c.unreadCount : (c.unreadCount || 0) + 1,
             }
@@ -136,9 +133,11 @@ export function ConversationList({ activeId }: { activeId?: string }) {
       (c) =>
         (c.title ?? '').toLowerCase().includes(q) ||
         (c.username ?? '').toLowerCase().includes(q) ||
-        (c.lastMessagePreview ?? '').toLowerCase().includes(q),
+        (c.lastMessagePreview ?? '').toLowerCase().includes(q) ||
+        // Ekrandagi (tarjima qilingan) ko'rinish bo'yicha ham — "Фото" deb qidirilsa topilsin
+        (c.lastMessagePreview ? preview(c.lastMessagePreview).toLowerCase().includes(q) : false),
     );
-  }, [conversations, filter, query]);
+  }, [conversations, filter, query, preview]);
 
   return (
     <div className="flex h-full w-full flex-col overflow-hidden">
@@ -146,21 +145,21 @@ export function ConversationList({ activeId }: { activeId?: string }) {
         <div className="flex items-center gap-2">
           <button
             onClick={() => router.push('/')}
-            aria-label="Ortga"
-            title="Ortga"
+            aria-label={t('back')}
+            title={t('back')}
             className="btn-round flex h-9 w-9 items-center justify-center rounded-full text-accent-600 md:hidden"
           >
             <ChevronLeft className="h-[22px] w-[22px]" strokeWidth={3} />
           </button>
-          <h2 className="text-title-2 font-bold tracking-tight text-brand-900">Suhbatlar</h2>
+          <h2 className="text-title-2 font-bold tracking-tight text-brand-900">{t('list.title')}</h2>
         </div>
         <div className="flex items-center gap-1">
           {canCreateGroup && (
-            <button onClick={() => setGroupModal(true)} aria-label="Guruh yaratish" className="btn-round flex h-9 w-9 items-center justify-center rounded-full text-accent-600">
+            <button onClick={() => setGroupModal(true)} aria-label={t('list.createGroup')} className="btn-round flex h-9 w-9 items-center justify-center rounded-full text-accent-600">
               <UsersRound className="h-5 w-5" />
             </button>
           )}
-          <Link href="/discover" aria-label="Yangi suhbat" className="btn-round flex h-9 w-9 items-center justify-center rounded-full text-accent-600">
+          <Link href="/discover" aria-label={t('list.newChat')} className="btn-round flex h-9 w-9 items-center justify-center rounded-full text-accent-600">
             <MessageSquarePlus className="h-5 w-5" />
           </Link>
         </div>
@@ -173,15 +172,15 @@ export function ConversationList({ activeId }: { activeId?: string }) {
           <input
             value={query}
             onChange={(e) => setQuery(e.target.value)}
-            placeholder="Suhbatlarda qidirish"
-            aria-label="Suhbatlarda qidirish"
+            placeholder={t('list.search')}
+            aria-label={t('list.search')}
             className={cn(FIELD_SURFACE, FIELD_SIZE.sm, 'pl-9 pr-9 text-subhead')}
           />
           {query && (
             <button
               type="button"
               onClick={() => setQuery('')}
-              aria-label="Tozalash"
+              aria-label={tc('clear')}
               className="tappable absolute right-2.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-slate-400 text-white transition-colors hover:bg-accent-500"
             >
               <X className="h-3 w-3" strokeWidth={3} />
@@ -193,13 +192,13 @@ export function ConversationList({ activeId }: { activeId?: string }) {
       {/* Segmented filter — Telegram uslubi */}
       <div className="hairline-b px-3 py-2">
         <div className="segmented w-full">
-          {TABS.map((t) => {
-            const active = filter === t.id;
-            const count = unreadByTab[t.id];
+          {TABS.map((id) => {
+            const active = filter === id;
+            const count = unreadByTab[id];
             return (
               <button
-                key={t.id}
-                onClick={() => selectFilter(t.id)}
+                key={id}
+                onClick={() => selectFilter(id)}
                 className={cn(
                   'group relative flex flex-1 items-center justify-center gap-1.5 rounded-xl px-2 py-1.5 text-caption-1 font-bold transition-colors',
                   active ? 'text-brand-900' : 'text-slate-600 hover:text-brand-800',
@@ -210,7 +209,7 @@ export function ConversationList({ activeId }: { activeId?: string }) {
                      beriladi: kapsula soyasi bir oz chuqurlashadi. */
                   <span className="absolute inset-0 rounded-[7px] bg-white shadow-segment transition-shadow duration-150 group-hover:shadow-card-hover" />
                 )}
-                <span className="relative z-10 whitespace-nowrap">{t.label}</span>
+                <span className="relative z-10 whitespace-nowrap">{t(`list.tabs.${id}`)}</span>
                 {count > 0 && (
                   <span
                     className={cn(
@@ -249,9 +248,9 @@ export function ConversationList({ activeId }: { activeId?: string }) {
         ) : query ? (
           <div className="px-4 py-16 text-center">
             <ChatGlyph icon={<Search className="h-6 w-6" />} />
-            <p className="text-subhead font-semibold text-brand-900">Hech narsa topilmadi</p>
+            <p className="text-subhead font-semibold text-brand-900">{t('list.noResults')}</p>
             <p className="mt-1 text-caption-1 text-slate-500">
-              «{query}» bo‘yicha suhbat yo‘q.
+              {t('list.noResultsFor', { query })}
             </p>
           </div>
         ) : (
@@ -276,6 +275,9 @@ function ChatGlyph({ icon }: { icon: ReactNode }) {
 }
 
 function ConversationRow({ c, active }: { c: Conversation; active: boolean }) {
+  const t = useTranslations('chat.list');
+  const { preview } = useChatText();
+  const { timeAgoShort } = useDateFormat();
   return (
     <Link
       href={`/messages/${c.id}`}
@@ -302,7 +304,7 @@ function ConversationRow({ c, active }: { c: Conversation; active: boolean }) {
         <div className="flex items-center justify-between gap-2">
           <p className="truncate text-subhead text-slate-500">
             {c.type === 'group' && <Users className="mr-1 inline h-3 w-3" />}
-            {c.lastMessagePreview ?? 'Suhbat boshlang'}
+            {c.lastMessagePreview != null ? preview(c.lastMessagePreview) : t('startChat')}
           </p>
           {c.unreadCount > 0 && (
             <span className="flex h-[20px] min-w-[20px] shrink-0 items-center justify-center rounded-full bg-accent-600 px-1.5 text-caption-2 font-semibold text-white">
@@ -316,16 +318,17 @@ function ConversationRow({ c, active }: { c: Conversation; active: boolean }) {
 }
 
 function EmptyState({ filter, hasAny }: { filter: Filter; hasAny: boolean }) {
+  const t = useTranslations('chat.list');
   if (filter === 'direct') {
     return (
       <div className="px-4 py-16 text-center">
         <ChatGlyph icon={<MessageSquarePlus className="h-6 w-6" />} />
-        <p className="text-callout font-semibold text-brand-900">Shaxsiy suhbatlar yo‘q</p>
+        <p className="text-callout font-semibold text-brand-900">{t('emptyDirect')}</p>
         <p className="mt-1 text-subhead text-slate-500">
-          Hamjamiyatdan odam toping va suhbat boshlang
+          {t('emptyHint')}
         </p>
         <Link href="/discover" className="tappable mt-3 inline-block text-subhead font-medium text-accent-700">
-          Odamlarni topish
+          {t('findPeople')}
         </Link>
       </div>
     );
@@ -334,10 +337,10 @@ function EmptyState({ filter, hasAny }: { filter: Filter; hasAny: boolean }) {
     return (
       <div className="px-4 py-16 text-center">
         <ChatGlyph icon={<UsersRound className="h-6 w-6" />} />
-        <p className="text-callout font-semibold text-brand-900">Guruhlar yo‘q</p>
-        <p className="mt-1 text-subhead text-slate-500">Hamjamiyat guruhlariga qo&apos;shiling</p>
+        <p className="text-callout font-semibold text-brand-900">{t('emptyGroups')}</p>
+        <p className="mt-1 text-subhead text-slate-500">{t('emptyGroupsHint')}</p>
         <Link href="/discover" className="tappable mt-3 inline-block text-subhead font-medium text-accent-700">
-          Guruhlarni topish
+          {t('findGroups')}
         </Link>
       </div>
     );
@@ -345,9 +348,9 @@ function EmptyState({ filter, hasAny }: { filter: Filter; hasAny: boolean }) {
   return (
     <div className="px-4 py-16 text-center">
       <ChatGlyph icon={<MessageSquarePlus className="h-6 w-6" />} />
-      <p className="text-callout font-semibold text-brand-900">{hasAny ? 'Bu yerda hech narsa yo‘q' : 'Hali suhbatlar yo‘q'}</p>
-      <p className="mt-1 text-subhead text-slate-500">Hamjamiyatdan odam toping va suhbat boshlang</p>
-      <Link href="/discover" className="tappable mt-3 inline-block text-subhead font-medium text-accent-700">Odamlarni topish</Link>
+      <p className="text-callout font-semibold text-brand-900">{hasAny ? t('emptyFiltered') : t('emptyAll')}</p>
+      <p className="mt-1 text-subhead text-slate-500">{t('emptyHint')}</p>
+      <Link href="/discover" className="tappable mt-3 inline-block text-subhead font-medium text-accent-700">{t('findPeople')}</Link>
     </div>
   );
 }

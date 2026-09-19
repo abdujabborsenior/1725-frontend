@@ -1,31 +1,27 @@
 'use client';
 
-import { useRouter } from 'next/navigation';
-import { useEffect, useRef, useState } from 'react';
+import { useRouter } from '@/i18n/navigation';
+import { useEffect, useMemo, useRef, useState } from 'react';
+import { useTranslations } from 'next-intl';
 
 import { ArrowUp, Mic } from '@/components/icons';
 import { useAuthStore } from '@/store/auth.store';
 import { useTypewriter } from '@/lib/use-typewriter';
 import { YechimOrb } from './yechim-mark';
 
-/** Jonli placeholder — real foydalanuvchi savollari ohangida. */
-const PROMPTS = [
-  'ingliz tilini arzon o‘rganmoqchiman',
-  'kichik biznesim uchun buxgalteriya kerak',
-  'mahsulotlarimni onlayn sotmoqchiman',
-  'qishloqda internet sekin — nima qilay?',
-];
+/**
+ * Jonli placeholder — real foydalanuvchi savollari ohangida.
+ * Matnlar lug'atda (`aiLauncher.prompts.*`) — har tilda o'z ohangida.
+ */
+const PROMPTS = ['english', 'accounting', 'onlineSales', 'ruralInternet'] as const;
 
 /**
  * Bir bosishli savollar. Yorliq QISQA (chiplar bir qatorga sig'adi), AI ga
  * esa to'liq savol ketadi — model kontekstsiz "Buxgalteriya" so'zidan
  * foydalanuvchi nima istayotganini taxmin qilmasin.
+ * (`aiLauncher.chips.<kalit>.label` / `.question`)
  */
-const CHIPS: { label: string; q: string }[] = [
-  { label: 'Ingliz tili', q: 'Ingliz tilini arzon o‘rganmoqchiman' },
-  { label: 'Buxgalteriya', q: 'Kichik biznesim uchun buxgalteriya kerak' },
-  { label: 'Onlayn sotuv', q: 'Mahsulotlarimni onlayn sotmoqchiman' },
-];
+const CHIPS = ['english', 'accounting', 'onlineSales'] as const;
 
 /**
  * Bosh sahifadagi **Yechim AI** kirish nuqtasi — Studio'ning "eshigi".
@@ -39,10 +35,13 @@ const CHIPS: { label: string; q: string }[] = [
  * kengligiga cho'zilmaydi — chapda "bu nima", o'ngda "nima qilish kerak".
  */
 export function AiLauncher() {
+  const t = useTranslations('aiLauncher');
   const router = useRouter();
   const { token, hasHydrated } = useAuthStore();
   const [value, setValue] = useState('');
-  const typed = useTypewriter(PROMPTS);
+  // Barqaror massiv: typewriter effekti har renderda qayta boshlanmasin
+  const prompts = useMemo(() => PROMPTS.map((key) => t(`prompts.${key}`)), [t]);
+  const typed = useTypewriter(prompts);
   const ghostRef = useRef<HTMLSpanElement>(null);
 
   /**
@@ -92,12 +91,12 @@ export function AiLauncher() {
                 id="yechim-ai-title"
                 className="mt-0.5 text-title-3 font-semibold tracking-tight text-[color:var(--yz-ink)] md:text-title-2"
               >
-                Muammoingizni ayting — yechimini topaman
+                {t('title')}
               </h2>
             </div>
           </div>
           <p className="mt-2.5 text-subhead leading-relaxed text-[color:var(--yz-ink-2)] lg:pl-[4.1rem]">
-            Yozib yoki aytib bering — platformadagi mos loyihani topib beraman
+            {t('subtitle')}
           </p>
         </div>
 
@@ -117,7 +116,7 @@ export function AiLauncher() {
                 /* O'zbekcha matn brauzer lug'atida yo'q — spellcheck butun
                    savolni qizil to'lqin bilan chizib qo'yardi. */
                 spellCheck={false}
-                aria-label="Muammoingiz"
+                aria-label={t('inputLabel')}
                 className="w-full bg-transparent px-3 py-2 text-body text-[color:var(--yz-ink)] focus:outline-none"
               />
               {/* Ghost matn maydon ICHIGA qamalgan: `right-1` chegarasi
@@ -137,14 +136,14 @@ export function AiLauncher() {
             <button
               type="button"
               onClick={() => go()}
-              aria-label="Ovozli xabar bilan so‘rash"
+              aria-label={t('voice')}
               className="yz-btn flex h-10 w-10 shrink-0 items-center justify-center rounded-full text-[color:var(--yz-ink-2)]"
             >
               <Mic className="h-5 w-5" />
             </button>
             <button
               type="submit"
-              aria-label="Yechim izlash"
+              aria-label={t('submit')}
               className="yz-send flex h-10 w-10 shrink-0 items-center justify-center rounded-full"
             >
               <ArrowUp className="h-[18px] w-[18px]" strokeWidth={2.8} />
@@ -153,17 +152,20 @@ export function AiLauncher() {
 
           {/* Tez savollar — "nima so'rash mumkin"ni ko'rsatadi */}
           <div className="no-scrollbar mt-2.5 flex gap-2 overflow-x-auto px-1">
-            {CHIPS.map(({ label, q }) => (
-              <button
-                key={label}
-                type="button"
-                onClick={() => go(q)}
-                aria-label={`So‘rash: ${q}`}
-                className="yz-btn shrink-0 rounded-full bg-white/[0.07] px-3 py-1.5 text-footnote text-[color:var(--yz-ink-2)]"
-              >
-                {label}
-              </button>
-            ))}
+            {CHIPS.map((key) => {
+              const q = t(`chips.${key}.question`);
+              return (
+                <button
+                  key={key}
+                  type="button"
+                  onClick={() => go(q)}
+                  aria-label={t('ask', { question: q })}
+                  className="yz-btn shrink-0 rounded-full bg-white/[0.07] px-3 py-1.5 text-footnote text-[color:var(--yz-ink-2)]"
+                >
+                  {t(`chips.${key}.label`)}
+                </button>
+              );
+            })}
           </div>
         </div>
       </div>

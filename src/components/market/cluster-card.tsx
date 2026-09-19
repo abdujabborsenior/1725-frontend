@@ -1,8 +1,10 @@
 'use client';
 
-import Link from 'next/link';
+import { Link } from '@/i18n/navigation';
+import { useTranslations } from 'next-intl';
 import { ArrowUpRight, Sprout } from '@/components/icons';
 import { cn } from '@/lib/utils';
+import { useFormatNumber } from '@/lib/format';
 import type { MarketCluster } from '@/types';
 
 /**
@@ -13,6 +15,8 @@ import type { MarketCluster } from '@/types';
  * ga aylantiradi, shuning uchun u eng ko'zga tashlanadigan joyda turadi.
  */
 export function ClusterCard({ cluster }: { cluster: MarketCluster }) {
+  const t = useTranslations('clusterCard');
+  const fmt = useFormatNumber();
   const tone = opportunityTone(cluster.opportunityScore);
 
   return (
@@ -46,19 +50,19 @@ export function ClusterCard({ cluster }: { cluster: MarketCluster }) {
 
           <div className="mt-3 flex flex-wrap items-center gap-x-4 gap-y-1.5">
             <Metric
-              label="Imkoniyat"
+              label={t('opportunity')}
               value={cluster.opportunityScore}
               tone={tone.text}
               emphasis
             />
-            <Metric label="Talab" value={cluster.demandScore} />
+            <Metric label={t('demand')} value={cluster.demandScore} />
             <span className="text-caption-1 text-slate-500">
-              {cluster.size} ta so&apos;rov
+              {t('requests', { count: cluster.size, n: fmt(cluster.size) })}
             </span>
             <span className="text-caption-1 text-slate-500">
               {cluster.coverageCount === 0
-                ? 'Yechim yo‘q'
-                : `${cluster.coverageCount} ta loyiha`}
+                ? t('noSolution')
+                : t('projects', { count: cluster.coverageCount, n: fmt(cluster.coverageCount) })}
             </span>
           </div>
 
@@ -107,19 +111,24 @@ function Metric({
   );
 }
 
-/** Imkoniyat bali darajasi — butun bo'lim bo'ylab izchil ranglar. */
+export type OpportunityLevel = 'high' | 'medium' | 'saturated';
+
+/**
+ * Imkoniyat bali darajasi — butun bo'lim bo'ylab izchil ranglar.
+ * Yorliq lug'atda: `clusterCard.level.<level>`.
+ */
 export function opportunityTone(score: number): {
   bg: string;
   icon: string;
   text: string;
-  label: string;
+  level: OpportunityLevel;
 } {
   if (score >= 60) {
     return {
       bg: 'bg-accent-50',
       icon: 'text-accent-600',
       text: 'text-accent-700',
-      label: 'Katta imkoniyat',
+      level: 'high',
     };
   }
   if (score >= 35) {
@@ -127,13 +136,13 @@ export function opportunityTone(score: number): {
       bg: 'bg-amber-50',
       icon: 'text-amber-600',
       text: 'text-amber-700',
-      label: 'O‘rtacha imkoniyat',
+      level: 'medium',
     };
   }
   return {
     bg: 'bg-fill-tertiary',
     icon: 'text-slate-500',
     text: 'text-slate-600',
-    label: 'Bozor to‘yingan',
+    level: 'saturated',
   };
 }

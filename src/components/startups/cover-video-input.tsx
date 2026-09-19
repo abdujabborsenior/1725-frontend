@@ -1,6 +1,7 @@
 'use client';
 
 import { useRef, useState } from 'react';
+import { useTranslations } from 'next-intl';
 import { Film, Link2, Spinner, UploadCloud, X, Youtube } from '@/components/icons';
 import { uploadsApi, getErrorMessage } from '@/lib/api';
 import { cn } from '@/lib/utils';
@@ -25,6 +26,7 @@ export function CoverVideoInput({
   /** Rasm muqova — video posteri sifatida ishlatiladi (bo'lsa) */
   posterUrl?: string | null;
 }) {
+  const t = useTranslations('startupForm');
   const fileRef = useRef<HTMLInputElement>(null);
   const [loading, setLoading] = useState(false);
   const [mode, setMode] = useState<Mode>(value && youtubeId(value) ? 'link' : 'upload');
@@ -32,16 +34,16 @@ export function CoverVideoInput({
 
   async function handleFile(file: File) {
     if (file.size > 50 * 1024 * 1024) {
-      toast.error('Video hajmi 50MB dan oshmasin');
+      toast.error(t('video.tooBig'));
       return;
     }
     setLoading(true);
     try {
       const res = await uploadsApi.video(file);
       onChange(res.url);
-      toast.success('Video yuklandi');
+      toast.success(t('video.uploaded'));
     } catch (err) {
-      toast.error(getErrorMessage(err, 'Yuklashda xatolik'));
+      toast.error(getErrorMessage(err, t('video.uploadFailed')));
     } finally {
       setLoading(false);
     }
@@ -54,7 +56,7 @@ export function CoverVideoInput({
       return;
     }
     if (!youtubeId(url) && !isPlayableVideo(url)) {
-      toast.error('YouTube havolasi yoki to‘g‘ridan-to‘g‘ri video (.mp4/.webm) havolasi kiriting');
+      toast.error(t('video.invalidLink'));
       return;
     }
     onChange(url);
@@ -70,23 +72,21 @@ export function CoverVideoInput({
     return (
       <div className="flex flex-col gap-1.5">
         <label className="text-subhead font-medium text-slate-500">
-          Muqova videosi
+          {t('video.label')}
         </label>
         <div className="group relative aspect-video w-full overflow-hidden rounded-ios-md border border-slate-200">
-          <CoverMedia coverUrl={posterUrl} videoUrl={value} title="Muqova" size="lg" />
+          <CoverMedia coverUrl={posterUrl} videoUrl={value} title={t('video.coverTitle')} size="lg" />
           <button
             type="button"
             onClick={clear}
-            aria-label="Videoni olib tashlash"
+            aria-label={t('video.remove')}
             className="absolute right-2 top-2 z-10 flex h-8 w-8 items-center justify-center rounded-ios bg-white/90 text-slate-600 shadow-card transition-colors hover:text-rose-600"
           >
             <X className="h-4 w-4" />
           </button>
         </div>
         <p className="text-footnote text-slate-500">
-          {youtubeId(value)
-            ? 'YouTube videosi sayt ichida ko‘rsatiladi. Ijro faqat bosilganda boshlanadi.'
-            : 'Video muqova o‘rnida turadi. Ijro faqat bosilganda boshlanadi.'}
+          {youtubeId(value) ? t('video.youtubeNote') : t('video.fileNote')}
         </p>
       </div>
     );
@@ -96,14 +96,14 @@ export function CoverVideoInput({
   return (
     <div className="flex flex-col gap-1.5">
       <label className="text-subhead font-medium text-slate-500">
-        Muqova videosi <span className="font-medium normal-case tracking-normal text-slate-500">(ixtiyoriy)</span>
+        {t('video.label')} <span className="font-medium normal-case tracking-normal text-slate-500">{t('video.optional')}</span>
       </label>
 
       {/* Rejim tanlash */}
       <div className="inline-flex w-fit items-center gap-1 rounded-ios border border-slate-200 bg-white p-1">
         {([
-          { m: 'upload' as const, icon: Film, label: 'Video yuklash' },
-          { m: 'link' as const, icon: Youtube, label: 'YouTube havolasi' },
+          { m: 'upload' as const, icon: Film, label: t('video.modeUpload') },
+          { m: 'link' as const, icon: Youtube, label: t('video.modeLink') },
         ]).map(({ m, icon: Icon, label }) => (
           <button
             key={m}
@@ -136,7 +136,7 @@ export function CoverVideoInput({
                 <UploadCloud className="h-5 w-5 text-slate-400" />
               </div>
               <span className="text-footnote font-medium text-slate-600">
-                Video tanlang — mp4 yoki webm, maks 50MB
+                {t('video.pick')}
               </span>
             </>
           )}
@@ -150,7 +150,7 @@ export function CoverVideoInput({
               onChange={(e) => setLink(e.target.value)}
               onKeyDown={(e) => { if (e.key === 'Enter') { e.preventDefault(); applyLink(); } }}
               placeholder="https://youtube.com/watch?v=..."
-              aria-label="YouTube havolasi"
+              aria-label={t('video.modeLink')}
               className={cn(FIELD_SURFACE, FIELD_SIZE.md, 'pl-10 pr-3')}
             />
           </div>
@@ -159,14 +159,13 @@ export function CoverVideoInput({
             onClick={applyLink}
             className="h-11 shrink-0 rounded-ios-lg bg-white px-4 text-footnote font-semibold text-slate-600 transition-all hover:bg-accent-50 hover:text-accent-700"
           >
-            Qo&apos;shish
+            {t('video.add')}
           </button>
         </div>
       )}
 
       <p className="text-footnote text-slate-500">
-        Video qo&apos;shsangiz u muqova o&apos;rnida turadi — birinchi kadr ko&apos;rinadi,
-        ijro esa foydalanuvchi bosganda boshlanadi.
+        {t('video.hint')}
       </p>
 
       <input

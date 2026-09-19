@@ -1,7 +1,8 @@
 'use client';
 
+import { Link } from '@/i18n/navigation';
 import { useEffect, useRef, useState } from 'react';
-import Link from 'next/link';
+import { useTranslations } from 'next-intl';
 import { createPortal } from 'react-dom';
 import { motion, AnimatePresence, useMotionValue, useTransform, animate } from 'framer-motion';
 import { Play, Pause, FileText, Reply, Download, Copy, Flag, Paperclip, Pencil } from '@/components/icons';
@@ -10,13 +11,11 @@ import { Avatar } from '@/components/ui/avatar';
 import { ReportDialog } from '@/components/reports/report-dialog';
 import { profileHref } from '@/components/social/user-list-item';
 import { cn } from '@/lib/utils';
-import { formatTime } from '@/lib/date';
+import { useDateFormat } from '@/lib/date';
+import { useChatText } from './chat-text';
 import type { ChatMessage, MessageAttachment } from '@/types';
 import toast from 'react-hot-toast';
 
-function fmtTime(iso: string) {
-  return formatTime(iso);
-}
 function fmtDuration(sec?: number | null) {
   const s = Math.round(sec ?? 0);
   return `${Math.floor(s / 60)}:${String(s % 60).padStart(2, '0')}`;
@@ -24,6 +23,7 @@ function fmtDuration(sec?: number | null) {
 
 /** Ovozli xabar — to'lqin + play/pause */
 function VoiceMessage({ att, mine }: { att: MessageAttachment; mine: boolean }) {
+  const t = useTranslations('chat.bubble');
   const audioRef = useRef<HTMLAudioElement>(null);
   const [playing, setPlaying] = useState(false);
   const [progress, setProgress] = useState(0);
@@ -47,7 +47,7 @@ function VoiceMessage({ att, mine }: { att: MessageAttachment; mine: boolean }) 
     <div className="flex w-full min-w-0 items-center gap-3 py-1">
       <button
         onClick={toggle}
-        aria-label={playing ? 'To‘xtatish' : 'Tinglash'}
+        aria-label={playing ? t('pause') : t('play')}
         className={cn(
           'tappable-scale flex h-10 w-10 shrink-0 items-center justify-center rounded-full',
           mine ? 'bg-white/25 text-white' : 'bg-accent-500 text-white',
@@ -90,6 +90,7 @@ function VoiceMessage({ att, mine }: { att: MessageAttachment; mine: boolean }) 
 }
 
 function Attachment({ att, mine }: { att: MessageAttachment; mine: boolean }) {
+  const t = useTranslations('chat');
   if (att.type === 'voice') return <VoiceMessage att={att} mine={mine} />;
   if (att.type === 'round_video') {
     return (
@@ -130,10 +131,10 @@ function Attachment({ att, mine }: { att: MessageAttachment; mine: boolean }) {
       </span>
       <span className="min-w-0">
         <span className={cn('block truncate text-footnote font-medium', mine ? 'text-white' : 'text-brand-900')}>
-          {att.name ?? 'Fayl'}
+          {att.name ?? t('type.file')}
         </span>
         <span className={cn('text-caption-2', mine ? 'text-white/70' : 'text-slate-500')}>
-          {(att.size / 1024).toFixed(0)} KB
+          {t('bubble.sizeKb', { size: (att.size / 1024).toFixed(0) })}
         </span>
       </span>
       <Download className={cn('h-4 w-4 shrink-0', mine ? 'text-white/80' : 'text-slate-400')} />
@@ -148,6 +149,8 @@ function ContextMenu({
   x: number; y: number; hasText: boolean; canReport: boolean; canEdit: boolean;
   onReply: () => void; onCopy: () => void; onReport: () => void; onEdit: () => void; onClose: () => void;
 }) {
+  const t = useTranslations('chat.bubble');
+  const tr = useTranslations('report');
   useEffect(() => {
     const close = () => onClose();
     window.addEventListener('scroll', close, true);
@@ -180,14 +183,14 @@ function ContextMenu({
           onClick={() => { onReply(); onClose(); }}
           className="flex w-full items-center gap-2.5 rounded-[9px] px-3 py-2 text-body text-brand-900 hv-row"
         >
-          <Reply className="h-[18px] w-[18px] text-slate-500" /> Javob berish
+          <Reply className="h-[18px] w-[18px] text-slate-500" /> {t('reply')}
         </button>
         {canEdit && (
           <button
             onClick={() => { onEdit(); onClose(); }}
             className="flex w-full items-center gap-2.5 rounded-[9px] px-3 py-2 text-body text-brand-900 hv-row"
           >
-            <Pencil className="h-[18px] w-[18px] text-slate-500" /> Tahrirlash
+            <Pencil className="h-[18px] w-[18px] text-slate-500" /> {t('edit')}
           </button>
         )}
         {hasText && (
@@ -195,7 +198,7 @@ function ContextMenu({
             onClick={() => { onCopy(); onClose(); }}
             className="flex w-full items-center gap-2.5 rounded-[9px] px-3 py-2 text-body text-brand-900 hv-row"
           >
-            <Copy className="h-[18px] w-[18px] text-slate-500" /> Nusxa olish
+            <Copy className="h-[18px] w-[18px] text-slate-500" /> {t('copy')}
           </button>
         )}
         {canReport && (
@@ -203,7 +206,7 @@ function ContextMenu({
             onClick={() => { onReport(); onClose(); }}
             className="flex w-full items-center gap-2.5 rounded-[9px] px-3 py-2 text-body text-rose-600 transition-colors duration-150 hover:bg-rose-50/60 active:bg-rose-50"
           >
-            <Flag className="h-[18px] w-[18px]" /> Shikoyat qilish
+            <Flag className="h-[18px] w-[18px]" /> {tr('action')}
           </button>
         )}
       </div>
@@ -236,6 +239,9 @@ const SWIPE_THRESHOLD = 64;
 export function MessageBubble({
   message, mine, showAvatar, groupEnd = true, isGroup, read, animate: animateIn, onReply, onEdit,
 }: Props) {
+  const t = useTranslations('chat');
+  const { formatTime } = useDateFormat();
+  const { system } = useChatText();
   const [menu, setMenu] = useState<{ x: number; y: number } | null>(null);
   const [reportOpen, setReportOpen] = useState(false);
   const x = useMotionValue(0);
@@ -251,7 +257,7 @@ export function MessageBubble({
     return (
       <div className="my-2 flex justify-center">
         <span className={cn('rounded-full bg-black/[0.06] px-3 py-1 text-caption-1 font-medium text-slate-500', animateIn && 'msg-pop')}>
-          {message.content}
+          {message.content && system(message.content)}
         </span>
       </div>
     );
@@ -275,8 +281,8 @@ export function MessageBubble({
   function copyText() {
     if (message.content) {
       navigator.clipboard?.writeText(message.content).then(
-        () => toast.success('Nusxa olindi'),
-        () => toast.error('Nusxa olib bo‘lmadi'),
+        () => toast.success(t('bubble.copied')),
+        () => toast.error(t('bubble.copyFailed')),
       );
     }
   }
@@ -313,8 +319,8 @@ export function MessageBubble({
         mine && !onlyMedia ? 'text-white/85' : onlyMedia ? '' : 'text-slate-500',
       )}
     >
-      {edited && <span className="italic">tahrirlangan</span>}
-      {fmtTime(message.createdAt)}
+      {edited && <span className="italic">{t('bubble.edited')}</span>}
+      {formatTime(message.createdAt)}
     </span>
   );
 
@@ -403,9 +409,9 @@ export function MessageBubble({
           {/* Reply preview */}
           {message.replyTo && (
             <div className={cn('mb-1.5 rounded-[10px] border-l-[3px] px-2.5 py-1.5 text-footnote', mine ? 'border-white/70 bg-white/15' : 'border-accent-500 bg-black/[0.04]')}>
-              <p className={cn('font-semibold', mine ? 'text-white/90' : 'text-accent-700')}>{message.replyTo.senderName ?? 'Xabar'}</p>
+              <p className={cn('font-semibold', mine ? 'text-white/90' : 'text-accent-700')}>{message.replyTo.senderName ?? t('message')}</p>
               <p className={cn('flex items-center gap-1 truncate', mine ? 'text-white/75' : 'text-slate-500')}>
-                {message.replyTo.content ?? (<><Paperclip className="h-3 w-3 shrink-0" /> Biriktirma</>)}
+                {message.replyTo.content ?? (<><Paperclip className="h-3 w-3 shrink-0" /> {t('attachment')}</>)}
               </p>
             </div>
           )}
@@ -432,7 +438,7 @@ export function MessageBubble({
         {/* Holat — HAR pufakda emas, faqat oxirgi o'z xabaring ostida */}
         {mine && read !== undefined && (
           <span className="bubble-status">
-            {message.pending ? 'Yuborilmoqda' : read ? 'Ko‘rildi' : 'Yetkazildi'}
+            {message.pending ? t('bubble.sending') : read ? t('bubble.read') : t('bubble.delivered')}
           </span>
         )}
       </div>
@@ -441,8 +447,8 @@ export function MessageBubble({
           ixcham ikonka; sichqoncha kelgandagina paydo bo'ladi. */}
       <button
         onClick={triggerReply}
-        aria-label="Javob berish"
-        title="Javob berish"
+        aria-label={t('bubble.reply')}
+        title={t('bubble.reply')}
         className="btn-round mb-1 hidden h-7 w-7 shrink-0 items-center justify-center rounded-full text-slate-400 group-hover:flex"
       >
         <Reply className="h-[15px] w-[15px]" />

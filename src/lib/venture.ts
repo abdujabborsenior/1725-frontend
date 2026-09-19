@@ -1,139 +1,55 @@
+import type { AppLocale } from '@/i18n/routing';
 import type {
-  AssessmentDimensionKey,
   IntroStatus,
   BusinessModel,
   InvestorKind,
   MatchDetailKey,
-  MatchFactorKey,
   ReadinessGrade,
   StartupStage,
   VentureNeed,
 } from '@/types';
 
 /**
- * Venture bo'limining barcha YORLIQLARI — yagona manba.
+ * Venture bo'limining KALITLARI, tartibi va ranglari — yagona manba.
  *
- * Backend kalit qaytaradi (`stage: 'mvp'`, `detail: 'exact'`), matn esa
- * shu yerda. Sabab §9 (i18n siyosati): server foydalanuvchi tiliga bog'liq
- * matnni qotirmaydi, va yangi til qo'shilganda bitta fayl tarjima qilinadi.
+ * Backend kalit qaytaradi (`stage: 'mvp'`, `detail: 'exact'`), MATN esa
+ * lug'atda (`messages/*.json` → `venture.*`): `t(`stage.${stageMessageKey(key)}`)`,
+ * `t(`stageHint.${key}`)`, `t(`need.${key}`)`, `t(`needHint.${key}`)`,
+ * `t(`offer.${key}`)`, `t(`investorKind.${key}`)`, `t(`investorKindHint.${key}`)`,
+ * `t(`factor.${key}`)`, `t(`detail.${key}`)`, `t(`dimension.${key}`)`,
+ * `t(`dimensionHint.${key}`)`, `t(`grade.${key}`)`, `t(`introStatus.${key}`)`,
+ * `t(`score.${level}`)`, `t(`businessModel.${key}`)`.
  */
 
-/* ── Loyiha bosqichi ──────────────────────────────────────────── */
+/**
+ * Bosqich kaliti → LUG'AT kaliti.
+ *
+ * ⚠️ `prototype` — next-intl'da TAQIQLANGAN segment (prototip ifloslanishidan
+ * himoya: `Object.prototype` nomlari kalit bo'la olmaydi; build "Invalid
+ * message id segment" bilan yiqiladi). Backend enumi o'zgarmaydi, faqat
+ * lug'atda `prototyping` deb yoziladi va matn shu yerdan olinadi.
+ */
+export type StageMessageKey = Exclude<StartupStage, 'prototype'> | 'prototyping';
 
-export const STAGE_LABEL: Record<StartupStage, string> = {
-  idea: "G'oya",
-  prototype: 'Prototip',
-  mvp: 'MVP ishlayapti',
-  early_revenue: 'Daromad boshlangan',
-  growth: "Barqaror o'sish",
-};
-
-/** Tanlash ro'yxatida ko'rinadigan qisqa izoh — foydalanuvchi adashmasin. */
-export const STAGE_HINT: Record<StartupStage, string> = {
-  idea: 'Hali qurilmagan, faqat reja',
-  prototype: 'Dizayn yoki prototip bor',
-  mvp: 'Birinchi foydalanuvchilar bor',
-  early_revenue: 'Birinchi pul kelmoqda',
-  growth: 'Foydalanuvchi va daromad barqaror',
-};
+export function stageMessageKey(stage: StartupStage): StageMessageKey {
+  return stage === 'prototype' ? 'prototyping' : stage;
+}
 
 export const STAGE_ORDER: StartupStage[] = [
   'idea', 'prototype', 'mvp', 'early_revenue', 'growth',
 ];
 
-/* ── Biznes modeli ────────────────────────────────────────────── */
-
-export const BUSINESS_MODEL_LABEL: Record<BusinessModel, string> = {
-  b2c: 'Bevosita iste’molchiga (B2C)',
-  b2b: 'Bizneslarga (B2B)',
-  b2b2c: 'Biznes orqali iste’molchiga (B2B2C)',
-  marketplace: 'Marketplace (ikki tomonli bozor)',
-  subscription: 'Obuna',
-  ads: 'Reklama',
-  hardware: 'Qurilma / apparat',
-  service: 'Xizmat ko‘rsatish',
-  nonprofit: 'Notijorat',
-  other: 'Boshqa',
-};
-
-/* ── Loyiha nimaga muhtoj ─────────────────────────────────────── */
-
-export const NEED_LABEL: Record<VentureNeed, string> = {
-  investment: 'Investitsiya',
-  grant: 'Grant',
-  mentor: 'Mentor',
-  team: 'Jamoaga hamkasb',
-  customers: 'Birinchi mijozlar',
-  partner: 'Biznes hamkor',
-};
-
-export const NEED_HINT: Record<VentureNeed, string> = {
-  investment: 'Ulush evaziga sarmoya',
-  grant: 'Qaytarilmaydigan moliyalashtirish',
-  mentor: 'Tajribali maslahatchi',
-  team: 'Dasturchi, dizayner, marketolog',
-  customers: 'Pilot mijoz yoki sinov maydoni',
-  partner: 'Distribyutor yoki sheriklik',
-};
+export const BUSINESS_MODEL_ORDER: BusinessModel[] = [
+  'b2c', 'b2b', 'b2b2c', 'marketplace', 'subscription', 'ads', 'hardware', 'service', 'nonprofit', 'other',
+];
 
 export const NEED_ORDER: VentureNeed[] = [
   'investment', 'grant', 'mentor', 'team', 'customers', 'partner',
 ];
 
-/** Investor tomonida bir xil kalitlar "nima taklif qilaman" ma'nosida. */
-export const OFFER_LABEL: Record<VentureNeed, string> = {
-  investment: 'Investitsiya',
-  grant: 'Grant',
-  mentor: 'Mentorlik',
-  team: 'Jamoa topishda yordam',
-  customers: 'Mijoz / pilot',
-  partner: 'Hamkorlik',
-};
-
-/* ── Investor turi ────────────────────────────────────────────── */
-
-export const INVESTOR_KIND_LABEL: Record<InvestorKind, string> = {
-  angel: 'Biznes farishta',
-  fund: 'Investitsiya fondi',
-  accelerator: 'Akselerator',
-  grant: 'Grant tashkiloti',
-  corporate: 'Korxona',
-};
-
-export const INVESTOR_KIND_HINT: Record<InvestorKind, string> = {
-  angel: 'Shaxsan sarmoya kiritaman',
-  fund: 'Fond nomidan sarmoya kiritamiz',
-  accelerator: 'Dastur va mentorlik beramiz',
-  grant: 'Qaytarilmaydigan mablag‘ ajratamiz',
-  corporate: 'Yechim yoki hamkor izlaymiz',
-};
-
-/* ── Moslik omillari ──────────────────────────────────────────── */
-
-export const FACTOR_LABEL: Record<MatchFactorKey, string> = {
-  category: 'Soha',
-  stage: 'Bosqich',
-  check: 'Summa oralig‘i',
-  needs: 'Ehtiyoj va taklif',
-  region: 'Hudud',
-  traction: 'Traksiya',
-  semantic: 'Mazmuniy yaqinlik',
-};
-
-/**
- * Omil qanday hal bo'lgani.
- *
- * Bu matnlar Match Score ostidagi ISHONCHNI ta'minlaydi: raqamning ortida
- * nima turganini investor bir qarashda ko'rishi kerak, aks holda foizga
- * ishonmaydi va qaytmaydi.
- */
-export const DETAIL_LABEL: Record<MatchDetailKey, string> = {
-  exact: 'Aniq mos',
-  partial: 'Qisman mos',
-  open: 'Cheklov qo‘yilmagan',
-  none: 'Mos emas',
-  unknown: 'Baholanmadi',
-};
+export const INVESTOR_KIND_ORDER: InvestorKind[] = [
+  'angel', 'fund', 'accelerator', 'grant', 'corporate',
+];
 
 export const DETAIL_TONE: Record<MatchDetailKey, string> = {
   exact: 'text-accent-600',
@@ -141,33 +57,6 @@ export const DETAIL_TONE: Record<MatchDetailKey, string> = {
   open: 'text-slate-500',
   none: 'text-rose-500',
   unknown: 'text-slate-500',
-};
-
-/* ── Tayyorlik tahlili ────────────────────────────────────────── */
-
-export const DIMENSION_LABEL: Record<AssessmentDimensionKey, string> = {
-  clarity: 'Aniqlik',
-  market: 'Bozor',
-  product: 'Mahsulot',
-  traction: 'Traksiya',
-  team: 'Jamoa',
-  ask: 'So‘rov aniqligi',
-};
-
-export const DIMENSION_HINT: Record<AssessmentDimensionKey, string> = {
-  clarity: 'Loyiha nima qilishi begona odamga tushunarlimi',
-  market: 'Kim uchun, qaysi sohada, qayerda',
-  product: 'Nimadir qurilganmi va ko‘rsa bo‘ladimi',
-  traction: 'Raqamlar bilan isbot bormi',
-  team: 'Loyiha ortida kim turibdi',
-  ask: 'Nimaga muhtojligingiz aniq yozilganmi',
-};
-
-export const GRADE_LABEL: Record<ReadinessGrade, string> = {
-  strong: 'Investorga tayyor',
-  good: 'Yaxshi holatda',
-  basic: 'Asosiy ma’lumot bor',
-  early: 'Boshlang‘ich',
 };
 
 export const GRADE_TONE: Record<ReadinessGrade, string> = {
@@ -180,84 +69,104 @@ export const GRADE_TONE: Record<ReadinessGrade, string> = {
 /* ── Pul formatlash ───────────────────────────────────────────── */
 
 /**
- * Summani odam o'qiydigan shaklga keltiradi ("120 mln so'm").
+ * Pul birliklari har tilda — kichik jadval, lug'at emas: formatlash sof
+ * funksiya (render, SSR, hook'siz joylarda ham ishlaydi) va `Record<AppLocale>`
+ * tipi har tilning to'liqligini KOMPILYATOR darajasida kafolatlaydi.
+ */
+const MONEY: Record<
+  AppLocale,
+  { bn: string; mn: string; k: string; one: string; decimal: string; group: string; from: (s: string) => string; upTo: (s: string) => string; unset: string }
+> = {
+  uz: {
+    bn: "mlrd so'm", mn: "mln so'm", k: "ming so'm", one: "so'm", decimal: '.', group: ' ',
+    from: (x) => `${x} dan`, upTo: (x) => `${x} gacha`, unset: 'Ko‘rsatilmagan',
+  },
+  ru: {
+    bn: 'млрд сум', mn: 'млн сум', k: 'тыс. сум', one: 'сум', decimal: ',', group: ' ',
+    from: (x) => `от ${x}`, upTo: (x) => `до ${x}`, unset: 'Не указано',
+  },
+  en: {
+    bn: 'bn UZS', mn: 'mln UZS', k: 'thousand UZS', one: 'UZS', decimal: '.', group: ',',
+    from: (x) => `from ${x}`, upTo: (x) => `up to ${x}`, unset: 'Not specified',
+  },
+};
+
+/**
+ * Summani odam o'qiydigan shaklga keltiradi ("120 mln so'm" · "120 млн сум" ·
+ * "120 mln UZS").
  *
  * ⚠️ `toLocaleString` ATAYLAB ishlatilmaydi: SSR (Node ICU) va brauzer
  * turlicha ajratgich qo'yib, hidratsiya mos kelmasligini keltirib chiqaradi
  * (billing bo'limida aynan shu tuzoqqa tushilgan). Guruhlash qo'lda.
  */
-export function formatSum(value: number | null | undefined): string {
+export function formatSum(value: number | null | undefined, locale: AppLocale): string {
   if (value === null || value === undefined) return '—';
-  if (value >= 1_000_000_000) {
-    return `${trimZero(value / 1_000_000_000)} mlrd so'm`;
-  }
-  if (value >= 1_000_000) return `${trimZero(value / 1_000_000)} mln so'm`;
-  if (value >= 1_000) return `${trimZero(value / 1_000)} ming so'm`;
-  return `${group(value)} so'm`;
+  const m = MONEY[locale];
+  const unit = unitOf(value, m);
+  return unit.size === 1
+    ? `${group(value, m.group)} ${m.one}`
+    : `${trimZero(value / unit.size, m.decimal)} ${unit.label}`;
 }
 
 /** Summa oralig'i ("50–200 mln so'm"). Bitta chegara bo'lsa moslashadi. */
 export function formatRange(
   min: number | null | undefined,
   max: number | null | undefined,
+  locale: AppLocale,
 ): string {
-  if (!min && !max) return 'Ko‘rsatilmagan';
+  const m = MONEY[locale];
+  if (!min && !max) return m.unset;
   if (min && max) {
     // Bir xil birlikda bo'lsa birlikni bir marta yozamiz: "50–200 mln so'm".
-    const unit = unitOf(max);
-    if (unitOf(min) === unit) {
-      return `${trimZero(min / unit.size)}–${trimZero(max / unit.size)} ${unit.label}`;
+    const unit = unitOf(max, m);
+    if (unit.size > 1 && unitOf(min, m).size === unit.size) {
+      return `${trimZero(min / unit.size, m.decimal)}–${trimZero(max / unit.size, m.decimal)} ${unit.label}`;
     }
-    return `${formatSum(min)} – ${formatSum(max)}`;
+    return `${formatSum(min, locale)} – ${formatSum(max, locale)}`;
   }
-  return min ? `${formatSum(min)} dan` : `${formatSum(max)} gacha`;
+  return min ? m.from(formatSum(min, locale)) : m.upTo(formatSum(max, locale));
 }
 
-function unitOf(value: number): { size: number; label: string } {
-  if (value >= 1_000_000_000) return { size: 1_000_000_000, label: "mlrd so'm" };
-  if (value >= 1_000_000) return { size: 1_000_000, label: "mln so'm" };
-  if (value >= 1_000) return { size: 1_000, label: "ming so'm" };
-  return { size: 1, label: "so'm" };
+function unitOf(value: number, m: (typeof MONEY)[AppLocale]): { size: number; label: string } {
+  if (value >= 1_000_000_000) return { size: 1_000_000_000, label: m.bn };
+  if (value >= 1_000_000) return { size: 1_000_000, label: m.mn };
+  if (value >= 1_000) return { size: 1_000, label: m.k };
+  return { size: 1, label: m.one };
 }
 
-function trimZero(n: number): string {
+function trimZero(n: number, decimal: string): string {
   const rounded = Math.round(n * 10) / 10;
-  return Number.isInteger(rounded) ? String(rounded) : rounded.toFixed(1);
+  return Number.isInteger(rounded) ? String(rounded) : rounded.toFixed(1).replace('.', decimal);
 }
 
-function group(n: number): string {
-  return String(Math.round(n)).replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
+function group(n: number, sep: string): string {
+  return String(Math.round(n)).replace(/\B(?=(\d{3})+(?!\d))/g, sep);
 }
 
 /* ── Match Score ranglari ─────────────────────────────────────── */
 
-/** Ball darajasi — bitta joyda, butun mahsulot bo'ylab izchil. */
+export type ScoreLevel = 'veryHigh' | 'high' | 'partial' | 'weak';
+
+/** Ball darajasi — bitta joyda, butun mahsulot bo'ylab izchil. Yorliq: `t(`score.${level}`)`. */
 export function scoreTone(score: number): {
   text: string;
   ring: string;
   bg: string;
-  label: string;
+  level: ScoreLevel;
 } {
   if (score >= 85) {
-    return { text: 'text-accent-700', ring: 'stroke-accent-500', bg: 'bg-accent-50', label: 'Juda mos' };
+    return { text: 'text-accent-700', ring: 'stroke-accent-500', bg: 'bg-accent-50', level: 'veryHigh' };
   }
   if (score >= 70) {
-    return { text: 'text-accent-700', ring: 'stroke-accent-500', bg: 'bg-accent-50', label: 'Mos' };
+    return { text: 'text-accent-700', ring: 'stroke-accent-500', bg: 'bg-accent-50', level: 'high' };
   }
   if (score >= 55) {
-    return { text: 'text-amber-700', ring: 'stroke-amber-500', bg: 'bg-amber-50', label: 'Qisman mos' };
+    return { text: 'text-amber-700', ring: 'stroke-amber-500', bg: 'bg-amber-50', level: 'partial' };
   }
-  return { text: 'text-slate-600', ring: 'stroke-slate-400', bg: 'bg-fill-tertiary', label: 'Zaif moslik' };
+  return { text: 'text-slate-600', ring: 'stroke-slate-400', bg: 'bg-fill-tertiary', level: 'weak' };
 }
 
-/* ── Bog'lanish so'rovi holati ────────────────────────────────── */
-
-export const INTRO_STATUS_LABEL: Record<IntroStatus, string> = {
-  pending: 'Javob kutilmoqda',
-  accepted: 'Qabul qilingan',
-  declined: 'Rad etilgan',
-  withdrawn: 'Qaytarib olingan',
-};
+/* ── Bog'lanish so'rovi holati (yorliq: `t(`introStatus.${status}`)`) ── */
 
 export const INTRO_STATUS_TONE: Record<IntroStatus, string> = {
   pending: 'bg-amber-50 text-amber-700',

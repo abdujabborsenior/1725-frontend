@@ -1,6 +1,7 @@
 'use client';
 
 import { useRef, useState } from 'react';
+import { useTranslations } from 'next-intl';
 import { Play } from '@/components/icons';
 import { cn } from '@/lib/utils';
 
@@ -70,6 +71,7 @@ export function CoverMedia({
   size?: 'sm' | 'lg';
   tintClass?: string;
 }) {
+  const t = useTranslations('coverMedia');
   const [playing, setPlaying] = useState(false);
   const videoRef = useRef<HTMLVideoElement>(null);
 
@@ -100,7 +102,7 @@ export function CoverMedia({
         {ytId ? (
           <iframe
             src={`https://www.youtube-nocookie.com/embed/${ytId}?autoplay=1&rel=0&modestbranding=1&playsinline=1`}
-            title={title ? `${title} — video` : 'Video'}
+            title={title ? t('videoTitle', { title }) : t('videoUntitled')}
             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
             allowFullScreen
             className="h-full w-full border-0"
@@ -165,7 +167,7 @@ export function CoverMedia({
         <button
           type="button"
           onClick={start}
-          aria-label={title ? `${title} videosini ijro etish` : 'Videoni ijro etish'}
+          aria-label={title ? t('play', { title }) : t('playUntitled')}
           /* z-10 — karta "stretched link" qoplamasi ostida qolib ketmasin */
           className="group/play absolute inset-0 z-10 flex items-center justify-center bg-black/15 transition-colors duration-150 hover:bg-black/25 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-white/80"
         >

@@ -1,6 +1,6 @@
 'use client';
 
-import Link from 'next/link';
+import { Link } from '@/i18n/navigation';
 import { Avatar } from '@/components/ui/avatar';
 import { FollowButton } from './follow-button';
 import { FounderBadge } from './founder-badge';

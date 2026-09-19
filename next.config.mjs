@@ -1,3 +1,25 @@
+import createNextIntlPlugin from 'next-intl/plugin';
+
+/**
+ * Tillar (uz/ru/en) — `next-intl`.
+ *  · `precompile` — ICU xabarlar BUILD vaqtida kompilyatsiya qilinadi: brauzerga
+ *    ICU parser (~10 KB) yuborilmaydi, formatlash esa oddiy massiv yurishi.
+ *  · `createMessagesDeclaration` — `messages/uz.json` dan qat'iy tiplar: kalit
+ *    xatosi yoki yetishmayotgan `{param}` — `tsc`/build xatosi (runtime emas).
+ */
+const withNextIntl = createNextIntlPlugin({
+  requestConfig: './src/i18n/request.ts',
+  experimental: {
+    createMessagesDeclaration: './messages/uz.json',
+    messages: {
+      path: './messages',
+      format: 'json',
+      locales: 'infer',
+      precompile: true,
+    },
+  },
+});
+
 /**
  * Butun sayt uchun xavfsizlik javob-sarlavhalari. Funksiyani buzmaydigan,
  * standart himoya to'plami:
@@ -69,4 +91,4 @@ const nextConfig = {
   },
 };
 
-export default nextConfig;
+export default withNextIntl(nextConfig);

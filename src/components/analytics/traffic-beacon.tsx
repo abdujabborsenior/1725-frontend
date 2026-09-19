@@ -1,7 +1,8 @@
 'use client';
 
 import { useEffect, useRef } from 'react';
-import { usePathname } from 'next/navigation';
+import { useLocale } from 'next-intl';
+import { usePathname } from '@/i18n/navigation';
 import { API_URL, STORAGE } from '@/lib/constants';
 
 /**
@@ -67,7 +68,10 @@ function utmSource(): string | undefined {
 }
 
 export function TrafficBeacon() {
+  // Til prefiksisiz yo'l (`/startups`) — marshrut naqshi har tilda bitta
+  // bo'lib hisoblanadi; til alohida maydonda (`lang`) — tillar kesimi uchun.
   const pathname = usePathname();
+  const locale = useLocale();
   /** Bir xil sahifa ikki marta yozilmasin (Strict Mode / tez qayta render). */
   const lastSent = useRef<{ path: string; at: number } | null>(null);
 
@@ -108,11 +112,12 @@ export function TrafficBeacon() {
         ref: externalReferrer(),
         src: utmSource(),
         vid: visitorId(),
+        lang: locale,
       }),
     }).catch(() => {
       /* jim: analitika hech qachon foydalanuvchiga ko'rinmaydi */
     });
-  }, [pathname]);
+  }, [pathname, locale]);
 
   return null;
 }

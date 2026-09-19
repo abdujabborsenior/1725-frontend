@@ -1,11 +1,13 @@
 'use client';
 
 import { useCallback } from 'react';
+import { useTranslations } from 'next-intl';
 import { Lightbulb, LightbulbFill } from '@/components/icons';
 import { solutionsApi } from '@/lib/api';
 import { useToggleAction } from '@/lib/use-toggle-action';
 import { useAuthStore } from '@/store/auth.store';
 import { cn } from '@/lib/utils';
+import { useFormatNumber } from '@/lib/format';
 
 /**
  * Yechimni "Foydali" deb belgilash — toggle (bitta endpoint).
@@ -25,6 +27,8 @@ export function SolutionHelpfulButton({
   initialCount: number;
   className?: string;
 }) {
+  const t = useTranslations('helpful');
+  const fmt = useFormatNumber();
   const { user } = useAuthStore();
   const isMine = !!user && user.id === ownerId;
 
@@ -60,7 +64,7 @@ export function SolutionHelpfulButton({
         )}
       >
         <Lightbulb className="h-3.5 w-3.5 text-accent-600" />
-        {count.toLocaleString('uz')} kishi foydali dedi
+        {t('foundHelpful', { count, n: fmt(count) })}
       </span>
     );
   }
@@ -70,7 +74,7 @@ export function SolutionHelpfulButton({
       onClick={toggle}
       aria-pressed={helpful}
       aria-busy={pending}
-      title={helpful ? 'Belgini olib tashlash' : 'Yechimni foydali deb belgilash'}
+      title={helpful ? t('unmarkTitle') : t('markTitle')}
       className={cn(
         'tappable inline-flex h-8 items-center gap-1.5 rounded-ios border px-2.5 text-footnote font-semibold transition-colors duration-150 ease-ios',
         helpful
@@ -84,10 +88,10 @@ export function SolutionHelpfulButton({
       ) : (
         <Lightbulb className="h-3.5 w-3.5" />
       )}
-      {helpful ? 'Foydali deb belgilandi' : 'Foydali'}
+      {helpful ? t('marked') : t('label')}
       {count > 0 && (
         <span className={cn('tabular-nums font-bold', helpful ? 'text-accent-700' : 'text-slate-500')}>
-          {count.toLocaleString('uz')}
+          {fmt(count)}
         </span>
       )}
     </button>

@@ -1,6 +1,7 @@
 'use client';
 
 import { useRef, useState } from 'react';
+import { useTranslations } from 'next-intl';
 import { Camera, Spinner, X, Hash } from '@/components/icons';
 import { chatApi, getErrorMessage } from '@/lib/api';
 import { cn } from '@/lib/utils';
@@ -21,19 +22,20 @@ export function GroupAvatarPicker({
   onChange: (url: string | null) => void;
   size?: number;
 }) {
+  const t = useTranslations('chat');
   const inputRef = useRef<HTMLInputElement>(null);
   const [loading, setLoading] = useState(false);
   const letter = name?.trim()?.[0]?.toUpperCase();
 
   async function handleFile(file: File) {
-    if (!file.type.startsWith('image/')) return toast.error('Faqat rasm');
-    if (file.size > 8 * 1024 * 1024) return toast.error('Maks. 8MB');
+    if (!file.type.startsWith('image/')) return toast.error(t('group.imagesOnly'));
+    if (file.size > 8 * 1024 * 1024) return toast.error(t('group.maxSize'));
     setLoading(true);
     try {
       const res = await chatApi.upload(file);
       onChange(res.url);
     } catch (err) {
-      toast.error(getErrorMessage(err, 'Yuklashda xatolik'));
+      toast.error(getErrorMessage(err, t('uploadFailed')));
     } finally {
       setLoading(false);
     }
@@ -52,7 +54,7 @@ export function GroupAvatarPicker({
         >
           {value ? (
             // eslint-disable-next-line @next/next/no-img-element
-            <img src={value} alt={name ?? 'Guruh'} className="h-full w-full object-cover" />
+            <img src={value} alt={name ?? t('group.avatarAlt')} className="h-full w-full object-cover" />
           ) : letter ? (
             <span className="text-title-1 font-semibold text-white">{letter}</span>
           ) : (
@@ -73,7 +75,7 @@ export function GroupAvatarPicker({
           <button
             type="button"
             onClick={() => onChange(null)}
-            aria-label="Rasmni olib tashlash"
+            aria-label={t('group.removePhoto')}
             className="absolute -right-1 -top-1 flex h-6 w-6 items-center justify-center rounded-full border border-slate-200 bg-white text-slate-500 shadow-card transition-colors hover:text-rose-600"
           >
             <X className="h-3.5 w-3.5" />
@@ -86,7 +88,7 @@ export function GroupAvatarPicker({
         onClick={() => inputRef.current?.click()}
         className="text-footnote font-semibold text-accent-700 transition-colors hover:text-accent-800"
       >
-        {value ? 'Rasmni almashtirish' : 'Avatar yuklash'}
+        {value ? t('group.changePhoto') : t('group.uploadAvatar')}
       </button>
 
       <input

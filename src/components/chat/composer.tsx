@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
+import { useTranslations } from 'next-intl';
 import {
   Paperclip, Mic, ArrowUp, X, Check, Video, Spinner, Trash2, ShieldAlert,
   FileText, Pencil, Plus, Images, Camera,
@@ -8,10 +9,11 @@ import {
 import { chatApi, getErrorMessage, type SendMessagePayload } from '@/lib/api';
 import { useMediaRecorder } from '@/lib/use-media-recorder';
 import {
-  DISABLED_CHAT_REASON, ROUND_VIDEO_ENABLED, VOICE_ENABLED, VIDEO_ENABLED,
+  ROUND_VIDEO_ENABLED, VOICE_ENABLED, VIDEO_ENABLED,
   fileAccept, isChatTypeDisabled,
 } from '@/lib/chat-features';
 import { cn } from '@/lib/utils';
+import { disabledReasonKey, useChatText } from './chat-text';
 import type { ChatMessage, MessageType } from '@/types';
 import toast from 'react-hot-toast';
 
@@ -52,10 +54,6 @@ interface Props {
   presetDraft?: { text: string; n: number } | null;
 }
 
-const RESTRICTION_LABEL: Record<string, string> = {
-  text: 'Matn', image: 'Rasm', video: 'Video', voice: 'Ovozli xabar', round_video: 'Video xabar',
-};
-
 /** Bir nechta biriktirma uchun umumlashtirilgan xabar turi (preview/cheklov uchun) */
 function dominantType(items: Staged[]): MessageType {
   if (items.some((s) => s.type === 'image')) return 'image';
@@ -69,6 +67,9 @@ export function Composer({
   blockedMessageTypes = [], canBypassRestrictions = false,
   presetDraft = null,
 }: Props) {
+  const t = useTranslations('chat');
+  const tc = useTranslations('common');
+  const { typeLabel } = useChatText();
   const [text, setText] = useState('');
   const [staged, setStaged] = useState<Staged[]>([]);
   const [uploading, setUploading] = useState(false);
@@ -148,15 +149,15 @@ export function Composer({
 
     const next: Staged[] = [];
     for (const file of files) {
-      if (staged.length + next.length >= 10) { toast.error('Eng ko‘pi 10 ta fayl'); break; }
-      if (file.size > 50 * 1024 * 1024) { toast.error(`${file.name}: maks. 50MB`); continue; }
+      if (staged.length + next.length >= 10) { toast.error(t('composer.maxFiles')); break; }
+      if (file.size > 50 * 1024 * 1024) { toast.error(t('composer.fileTooLarge', { name: file.name })); continue; }
       const type = typeFromMime(file.type);
       if (isChatTypeDisabled(type)) {
-        toast.error(DISABLED_CHAT_REASON[type] ?? 'Bu fayl turi vaqtincha o‘chirilgan');
+        toast.error(t(`disabled.${disabledReasonKey(type)}`));
         continue;
       }
       if (blocked.has(type)) {
-        toast.error(`Bu guruhda ${RESTRICTION_LABEL[type] ?? type} taqiqlangan`);
+        toast.error(t('composer.typeBlocked', { type }));
         continue;
       }
       const isMedia = type === 'image' || type === 'video';
@@ -203,34 +204,34 @@ export function Composer({
       setText('');
       onCancelReply();
     } catch (err) {
-      toast.error(getErrorMessage(err, 'Yuklashda xatolik'));
+      toast.error(getErrorMessage(err, t('uploadFailed')));
     } finally {
       setUploading(false);
     }
   }
 
   function sendText() {
-    const t = text.trim();
-    if (!t) return;
-    if (textBlocked) { toast.error('Bu guruhda matn yuborish taqiqlangan'); return; }
-    onSend({ type: 'text', content: t, replyToId: replyTo?.id });
+    const body = text.trim();
+    if (!body) return;
+    if (textBlocked) { toast.error(t('composer.textBlocked')); return; }
+    onSend({ type: 'text', content: body, replyToId: replyTo?.id });
     setText('');
     onCancelReply();
   }
 
   async function saveEdit() {
     if (!editing || !onEditSave) return;
-    const t = text.trim();
+    const body = text.trim();
     const hasAttach = (editing.attachments?.length ?? 0) > 0;
-    if (!t && !hasAttach) { toast.error("Xabar matni bo'sh bo'lmasin"); return; }
-    if (t === (editing.content ?? '')) { onCancelEdit?.(); return; }
+    if (!body && !hasAttach) { toast.error(t('composer.emptyMessage')); return; }
+    if (body === (editing.content ?? '')) { onCancelEdit?.(); return; }
     setSavingEdit(true);
     try {
-      await onEditSave(editing.id, t);
+      await onEditSave(editing.id, body);
       setText('');
       onCancelEdit?.();
     } catch (err) {
-      toast.error(getErrorMessage(err, 'Tahrirlab bo‘lmadi'));
+      toast.error(getErrorMessage(err, t('composer.editFailed')));
     } finally {
       setSavingEdit(false);
     }
@@ -257,7 +258,7 @@ export function Composer({
       });
       onCancelReply();
     } catch (err) {
-      toast.error(getErrorMessage(err, 'Yuklashda xatolik'));
+      toast.error(getErrorMessage(err, t('uploadFailed')));
     } finally {
       setUploading(false);
     }
@@ -281,13 +282,13 @@ export function Composer({
     } catch (err) {
       const name = (err as { name?: string })?.name;
       if (name === 'NotAllowedError') {
-        toast.error(kind === 'video' ? 'Kameraga ruxsat bering' : 'Mikrofonga ruxsat bering');
+        toast.error(kind === 'video' ? t('composer.allowCamera') : t('composer.allowMic'));
       } else if (name === 'NotFoundError') {
-        toast.error(kind === 'video' ? 'Kamera topilmadi' : 'Mikrofon topilmadi');
+        toast.error(kind === 'video' ? t('composer.noCamera') : t('composer.noMic'));
       } else if (name === 'NotReadableError') {
-        toast.error(kind === 'video' ? 'Kamera band (boshqa dastur ishlatyapti)' : 'Mikrofon band');
+        toast.error(kind === 'video' ? t('composer.cameraBusy') : t('composer.micBusy'));
       } else {
-        toast.error('Yozishni boshlab bo‘lmadi');
+        toast.error(t('composer.recordFailed'));
       }
     }
   }
@@ -311,7 +312,7 @@ export function Composer({
       {restrictionList.length > 0 && !isEditing && (
         <div className="mb-2 flex items-center gap-2 rounded-ios-md bg-rose-50 px-3 py-2 text-footnote font-medium text-rose-600">
           <ShieldAlert className="h-3.5 w-3.5 shrink-0" />
-          <span className="truncate">Bu guruhda taqiqlangan: {restrictionList.map((t) => RESTRICTION_LABEL[t] ?? t).join(', ')}</span>
+          <span className="truncate">{t('composer.blockedList', { list: restrictionList.map((type) => typeLabel(type)).join(', ') })}</span>
         </div>
       )}
 
@@ -320,8 +321,8 @@ export function Composer({
         <div className="mb-2 flex items-center gap-2 rounded-ios-md border-l-[3px] border-iris-500 bg-iris-50 px-3 py-2">
           <Pencil className="h-3.5 w-3.5 shrink-0 text-iris-600" />
           <div className="min-w-0 flex-1">
-            <p className="text-footnote font-semibold text-iris-700">Xabarni tahrirlash</p>
-            <p className="truncate text-footnote text-slate-500">{editing?.content ?? 'Media izohi'}</p>
+            <p className="text-footnote font-semibold text-iris-700">{t('composer.editing')}</p>
+            <p className="truncate text-footnote text-slate-500">{editing?.content ?? t('composer.mediaCaption')}</p>
           </div>
           <button onClick={() => { setText(''); onCancelEdit?.(); }} className="text-slate-400 hover:text-rose-500"><X className="h-4 w-4" /></button>
         </div>
@@ -331,9 +332,9 @@ export function Composer({
       {replyTo && !isEditing && (
         <div className="mb-2 flex items-center gap-2 rounded-ios-md border-l-[3px] border-accent-500 bg-fill-tertiary px-3 py-2">
           <div className="min-w-0 flex-1">
-            <p className="text-footnote font-semibold text-accent-700">{replyTo.sender?.fullName ?? 'Xabar'}</p>
+            <p className="text-footnote font-semibold text-accent-700">{replyTo.sender?.fullName ?? t('message')}</p>
             <p className="flex items-center gap-1 truncate text-footnote text-slate-500">
-              {replyTo.content ?? (<><Paperclip className="h-3 w-3 shrink-0" /> Biriktirma</>)}
+              {replyTo.content ?? (<><Paperclip className="h-3 w-3 shrink-0" /> {t('attachment')}</>)}
             </p>
           </div>
           <button onClick={onCancelReply} className="text-slate-400 hover:text-rose-500"><X className="h-4 w-4" /></button>
@@ -358,7 +359,7 @@ export function Composer({
               )}
               <button
                 onClick={() => removeStaged(s.id)}
-                aria-label="O'chirish"
+                aria-label={t('composer.remove')}
                 className="material-dark absolute right-1 top-1 flex h-5 w-5 items-center justify-center rounded-full text-white"
               >
                 <X className="h-3 w-3" />
@@ -371,7 +372,7 @@ export function Composer({
             className="tappable flex h-20 w-20 shrink-0 flex-col items-center justify-center gap-1 rounded-ios-md bg-white text-slate-400"
           >
             <Plus className="h-5 w-5" />
-            <span className="text-caption-2">Qo&apos;shish</span>
+            <span className="text-caption-2">{t('composer.add')}</span>
           </button>
         </div>
       )}
@@ -388,10 +389,10 @@ export function Composer({
             </span>
             <span className="absolute -bottom-2 left-1/2 -translate-x-1/2 rounded-full bg-white px-2.5 py-0.5 text-caption-1 font-semibold tabular-nums text-brand-900 shadow-card">{mmss}</span>
           </div>
-          <p className="text-footnote text-slate-500">Dumaloq video yozilmoqda…</p>
+          <p className="text-footnote text-slate-500">{t('composer.recordingRound')}</p>
           <div className="flex items-center gap-5">
-            <button onClick={rec.cancel} title="Bekor qilish" className="tappable flex h-12 w-12 items-center justify-center rounded-full bg-white/10 text-white"><Trash2 className="h-5 w-5" /></button>
-            <button onClick={finishRecording} disabled={uploading} title="Yuborish" className="tappable-scale tappable flex h-16 w-16 items-center justify-center rounded-full bg-accent-500 text-white">
+            <button onClick={rec.cancel} title={tc('cancel')} className="tappable flex h-12 w-12 items-center justify-center rounded-full bg-white/10 text-white"><Trash2 className="h-5 w-5" /></button>
+            <button onClick={finishRecording} disabled={uploading} title={tc('send')} className="tappable-scale tappable flex h-16 w-16 items-center justify-center rounded-full bg-accent-500 text-white">
               {uploading ? <Spinner className="h-7 w-7 animate-spin" /> : <ArrowUp className="h-7 w-7" strokeWidth={3} />}
             </button>
           </div>
@@ -403,7 +404,7 @@ export function Composer({
         <div className="composer-field flex items-center gap-3 !rounded-full px-2 py-1.5">
           <button
             onClick={rec.cancel}
-            aria-label="Bekor qilish"
+            aria-label={tc('cancel')}
             className="rec-pulse flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-rose-500 text-white"
           >
             <Trash2 className="h-4 w-4" />
@@ -421,7 +422,7 @@ export function Composer({
           <button
             onClick={finishRecording}
             disabled={uploading}
-            aria-label="Yuborish"
+            aria-label={tc('send')}
             className="btn-send flex h-9 w-9 shrink-0 items-center justify-center rounded-full"
           >
             {uploading ? (
@@ -442,7 +443,7 @@ export function Composer({
                 <button
                   onClick={() => setAttachOpen((o) => !o)}
                   disabled={uploading}
-                  aria-label="Biriktirish"
+                  aria-label={t('composer.attach')}
                   aria-expanded={attachOpen}
                   className={cn(
                     'btn-round flex h-9 w-9 items-center justify-center rounded-full text-slate-500',
@@ -473,9 +474,9 @@ export function Composer({
                         <Images className="h-[18px] w-[18px]" />
                       </span>
                       <span className="min-w-0">
-                        <span className="block text-body text-brand-900">Galereya</span>
+                        <span className="block text-body text-brand-900">{t('composer.gallery')}</span>
                         <span className="block text-caption-1 text-slate-500">
-                          {VIDEO_ENABLED ? 'Rasm va video' : 'Rasm'}
+                          {VIDEO_ENABLED ? t('composer.galleryHintVideo') : t('composer.galleryHint')}
                         </span>
                       </span>
                     </button>
@@ -488,8 +489,8 @@ export function Composer({
                         <Camera className="h-[18px] w-[18px]" />
                       </span>
                       <span className="min-w-0">
-                        <span className="block text-body text-brand-900">Kamera</span>
-                        <span className="block text-caption-1 text-slate-500">Suratga olish</span>
+                        <span className="block text-body text-brand-900">{t('composer.camera')}</span>
+                        <span className="block text-caption-1 text-slate-500">{t('composer.cameraHint')}</span>
                       </span>
                     </button>
                     <button
@@ -500,9 +501,9 @@ export function Composer({
                         <FileText className="h-[18px] w-[18px]" />
                       </span>
                       <span className="min-w-0">
-                        <span className="block text-body text-brand-900">Fayl</span>
+                        <span className="block text-body text-brand-900">{t('type.file')}</span>
                         <span className="block text-caption-1 text-slate-500">
-                          {VOICE_ENABLED ? 'Hujjat, audio, arxiv' : 'Hujjat, arxiv'}
+                          {VOICE_ENABLED ? t('composer.fileHintAudio') : t('composer.fileHint')}
                         </span>
                       </span>
                     </button>
@@ -521,9 +522,9 @@ export function Composer({
               }}
               rows={1}
               placeholder={
-                isEditing ? 'Xabarni tahrirlang…'
-                  : hasStaged ? 'Izoh qo‘shing (ixtiyoriy)…'
-                  : textBlocked ? 'Bu guruhda matn taqiqlangan' : 'Xabar yozing…'
+                isEditing ? t('composer.placeholderEdit')
+                  : hasStaged ? t('composer.placeholderCaption')
+                  : textBlocked ? t('composer.placeholderBlocked') : t('composer.placeholder')
               }
               className="chat-scroll max-h-32 min-h-[36px] flex-1 resize-none bg-transparent px-2 py-2 text-body leading-snug text-brand-900 placeholder:text-slate-500 focus:outline-none disabled:cursor-not-allowed disabled:opacity-50"
             />
@@ -536,7 +537,7 @@ export function Composer({
                   'btn-send flex h-9 w-9 shrink-0 items-center justify-center rounded-full',
                   isEditing && 'bg-none bg-iris-600',
                 )}
-                aria-label={isEditing ? 'Saqlash' : 'Yuborish'}
+                aria-label={isEditing ? tc('save') : tc('send')}
               >
                 {uploading || savingEdit ? (
                   <Spinner className="h-[18px] w-[18px] animate-spin" />
@@ -556,8 +557,8 @@ export function Composer({
               {!roundBlocked && (
                 <button
                   onClick={() => void startRec('video')}
-                  aria-label="Dumaloq video"
-                  title="Dumaloq video"
+                  aria-label={t('composer.roundVideo')}
+                  title={t('composer.roundVideo')}
                   className="btn-round flex h-10 w-10 shrink-0 items-center justify-center rounded-full text-slate-500"
                 >
                   <Video className="h-[22px] w-[22px]" />
@@ -566,8 +567,8 @@ export function Composer({
               {!voiceBlocked && (
                 <button
                   onClick={() => void startRec('audio')}
-                  aria-label="Ovozli xabar"
-                  title="Ovozli xabar"
+                  aria-label={t('type.voice')}
+                  title={t('type.voice')}
                   className="btn-round flex h-10 w-10 shrink-0 items-center justify-center rounded-full text-slate-500"
                 >
                   <Mic className="h-[22px] w-[22px]" />

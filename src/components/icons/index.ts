@@ -84,6 +84,7 @@ export { Images } from './Images';
 export { Info } from './Info';
 export { InfoFill } from './InfoFill';
 export { KeyRound } from './KeyRound';
+export { Language } from './Language';
 export { Layers } from './Layers';
 export { Lightbulb } from './Lightbulb';
 export { LightbulbFill } from './LightbulbFill';

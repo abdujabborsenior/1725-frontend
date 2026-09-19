@@ -1,5 +1,6 @@
 'use client';
 
+import { useTranslations } from 'next-intl';
 import { ChevronUp, ChevronDown, Minus, Star, Trophy, Medal } from '@/components/icons';
 import { cn } from '@/lib/utils';
 
@@ -14,6 +15,7 @@ export function RankMovement({
   delta: number | null;
   className?: string;
 }) {
+  const t = useTranslations('leaderboard.movement');
   if (delta === null) {
     return (
       <span
@@ -22,7 +24,7 @@ export function RankMovement({
           className,
         )}
       >
-        Yangi
+        {t('new')}
       </span>
     );
   }
@@ -30,7 +32,7 @@ export function RankMovement({
     return (
       <span
         className={cn('inline-flex items-center text-slate-400', className)}
-        title="O'rin o'zgarmadi"
+        title={t('same')}
       >
         <Minus className="h-3.5 w-3.5" />
       </span>
@@ -44,7 +46,7 @@ export function RankMovement({
         up ? 'text-emerald-600' : 'text-rose-500',
         className,
       )}
-      title={up ? `${delta} pog'ona ko'tarildi` : `${-delta} pog'ona tushdi`}
+      title={up ? t('up', { count: delta }) : t('down', { count: -delta })}
     >
       {up ? <ChevronUp className="h-3.5 w-3.5" /> : <ChevronDown className="h-3.5 w-3.5" />}
       {Math.abs(delta)}
@@ -103,11 +105,13 @@ export function ScoreBadge({
  * Ilgari bu yerda Tailwind `amber`/`orange` ishlatilgan edi — mahsulot
  * palitrasida ikkalasi ham systemOrange, ya'ni 1- va 3-o'rin bir xil
  * ko'rinardi (medal ma'nosi yo'qolgan edi).
+ *
+ * `key` — metall nomining lug'at kaliti (`leaderboard.medal.<key>`).
  */
 export const MEDAL = {
-  1: { cls: 'medal-gold', icon: Trophy, label: 'Oltin' },
-  2: { cls: 'medal-silver', icon: Medal, label: 'Kumush' },
-  3: { cls: 'medal-bronze', icon: Medal, label: 'Mis' },
+  1: { cls: 'medal-gold', icon: Trophy, key: 'gold' },
+  2: { cls: 'medal-silver', icon: Medal, key: 'silver' },
+  3: { cls: 'medal-bronze', icon: Medal, key: 'bronze' },
 } as const;
 
 /** Yumaloq-kvadrat ichidagi o'rin raqami — top-3 metall, qolgani sodda */

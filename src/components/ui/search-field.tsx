@@ -1,6 +1,7 @@
 'use client';
 
 import { forwardRef, type InputHTMLAttributes } from 'react';
+import { useTranslations } from 'next-intl';
 import { CloseCircleFill, Search } from '@/components/icons';
 import { cn } from '@/lib/utils';
 import { FIELD_ICON, FIELD_SIZE, FIELD_SURFACE } from './field-styles';
@@ -26,9 +27,11 @@ interface SearchFieldProps extends Omit<InputHTMLAttributes<HTMLInputElement>, '
  */
 export const SearchField = forwardRef<HTMLInputElement, SearchFieldProps>(
   (
-    { value, onValueChange, onCancel, cancelLabel = 'Bekor qilish', containerClassName, className, ...props },
+    { value, onValueChange, onCancel, cancelLabel, containerClassName, className, ...props },
     ref,
-  ) => (
+  ) => {
+    const t = useTranslations('common');
+    return (
     <div className={cn('flex items-center gap-2.5', containerClassName)}>
       <div className="relative flex min-w-0 flex-1 items-center">
         <Search
@@ -55,7 +58,7 @@ export const SearchField = forwardRef<HTMLInputElement, SearchFieldProps>(
           <button
             type="button"
             onClick={() => onValueChange('')}
-            aria-label="Tozalash"
+            aria-label={t('clear')}
             className={cn(
               'tappable absolute right-3 flex h-6 w-6 items-center justify-center rounded-full',
               'text-slate-500 transition-colors duration-150 hover:text-accent-700',
@@ -71,11 +74,12 @@ export const SearchField = forwardRef<HTMLInputElement, SearchFieldProps>(
           onClick={onCancel}
           className="tappable shrink-0 text-body text-accent-700"
         >
-          {cancelLabel}
+          {cancelLabel ?? t('cancel')}
         </button>
       )}
     </div>
-  ),
+    );
+  },
 );
 
 SearchField.displayName = 'SearchField';

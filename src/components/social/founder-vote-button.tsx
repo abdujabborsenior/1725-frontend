@@ -1,11 +1,13 @@
 'use client';
 
 import { useCallback } from 'react';
+import { useTranslations } from 'next-intl';
 import { ThumbsUp, ThumbsUpFill } from '@/components/icons';
 import { usersApi } from '@/lib/api';
 import { useToggleAction } from '@/lib/use-toggle-action';
 import { useAuthStore } from '@/store/auth.store';
 import { cn } from '@/lib/utils';
+import { useFormatNumber } from '@/lib/format';
 
 /**
  * Asoschiga ovoz. Mantiq — `useToggleAction`: serverga NIYAT yuboriladi
@@ -25,6 +27,8 @@ export function FounderVoteButton({
   size?: 'sm' | 'md';
   onChange?: (voted: boolean, count: number) => void;
 }) {
+  const t = useTranslations('social');
+  const fmt = useFormatNumber();
   const { user } = useAuthStore();
   const isMe = user?.id === userId;
 
@@ -64,7 +68,7 @@ export function FounderVoteButton({
         )}
       >
         <ThumbsUp className={sm ? 'h-3.5 w-3.5' : 'h-4 w-4'} />
-        {count.toLocaleString('uz')} ovoz
+        {t('votes', { count, n: fmt(count) })}
       </span>
     );
   }
@@ -88,9 +92,9 @@ export function FounderVoteButton({
       ) : (
         <ThumbsUp className={sm ? 'h-3.5 w-3.5' : 'h-4 w-4'} />
       )}
-      {voted ? 'Ovoz berilgan' : 'Ovoz berish'}
+      {voted ? t('voted') : t('vote')}
       <span className={cn('font-bold tabular-nums', voted ? 'text-white/90' : 'text-brand-900')}>
-        {count.toLocaleString('uz')}
+        {fmt(count)}
       </span>
     </button>
   );

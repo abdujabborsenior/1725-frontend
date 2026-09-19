@@ -1,8 +1,10 @@
 'use client';
 
 import { useState } from 'react';
+import { useTranslations } from 'next-intl';
 import { StarFill } from '@/components/icons';
 import { cn } from '@/lib/utils';
+import { useFormatNumber } from '@/lib/format';
 
 /** Reyting shkalasi — IMDB uslubi (1..10 butun ovoz, o'rtacha kasrli) */
 export const RATING_MAX = 10;
@@ -24,6 +26,8 @@ export function RatingValue({
   size?: 'xs' | 'sm' | 'md' | 'lg';
   className?: string;
 }) {
+  const t = useTranslations('rating');
+  const fmt = useFormatNumber();
   const S = {
     xs: { star: 'h-3 w-3', num: 'text-caption-1', sub: 'text-caption-2' },
     sm: { star: 'h-3.5 w-3.5', num: 'text-footnote', sub: 'text-caption-1' },
@@ -35,9 +39,11 @@ export function RatingValue({
     <span
       className={cn('inline-flex items-baseline gap-1', className)}
       role="img"
-      aria-label={`Reyting ${value.toFixed(1)} / ${RATING_MAX}${
-        count != null ? ` — ${count} ta ovoz` : ''
-      }`}
+      aria-label={
+        count != null
+          ? t('valueVotes', { value: value.toFixed(1), max: String(RATING_MAX), count, n: fmt(count) })
+          : t('value', { value: value.toFixed(1), max: String(RATING_MAX) })
+      }
     >
       <StarFill className={cn(S.star, 'self-center text-amber-500')} aria-hidden />
       <span className={cn(S.num, 'font-semibold tabular-nums text-brand-900')}>
@@ -45,7 +51,7 @@ export function RatingValue({
       </span>
       <span className={cn(S.sub, 'text-slate-500')}>/{RATING_MAX}</span>
       {count != null && (
-        <span className={cn(S.sub, 'text-slate-500')}>({count})</span>
+        <span className={cn(S.sub, 'text-slate-500')}>({fmt(count)})</span>
       )}
     </span>
   );
@@ -65,6 +71,7 @@ export function RatingInput({
   onChange: (v: number) => void;
   size?: number;
 }) {
+  const t = useTranslations('rating');
   const [hover, setHover] = useState(0);
   const active = hover || value;
 
@@ -72,7 +79,7 @@ export function RatingInput({
     <div className="flex flex-wrap items-center gap-3">
       <div
         role="radiogroup"
-        aria-label={`Baho — 1 dan ${RATING_MAX} gacha`}
+        aria-label={t('scale', { max: String(RATING_MAX) })}
         className="inline-flex items-center gap-0.5"
         onMouseLeave={() => setHover(0)}
       >
@@ -82,7 +89,7 @@ export function RatingInput({
             type="button"
             role="radio"
             aria-checked={value === n}
-            aria-label={`${n} ball`}
+            aria-label={t('point', { count: n })}
             onMouseEnter={() => setHover(n)}
             onFocus={() => setHover(n)}
             onBlur={() => setHover(0)}

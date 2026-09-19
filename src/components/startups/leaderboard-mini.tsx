@@ -1,12 +1,20 @@
 'use client';
 
-import Link from 'next/link';
+import { useTranslations } from 'next-intl';
+import { Link } from '@/i18n/navigation';
 import { Users } from '@/components/icons';
 import type { LeaderboardEntry } from '@/types';
+import { useFormatNumber } from '@/lib/format';
 import { RankNumber, ScoreBadge } from './leaderboard-bits';
 
-/** Bosh sahifa / yon panel uchun ixcham reyting ro'yxati (top N) */
+/**
+ * Bosh sahifa / yon panel uchun ixcham reyting ro'yxati (top N).
+ * Ovozlar soni — umumiy `social.votes` (global lug'at): bosh sahifaga butun
+ * `leaderboard` nomlar maydonini yuklamaslik uchun.
+ */
 export function LeaderboardMini({ entries }: { entries: LeaderboardEntry[] }) {
+  const t = useTranslations('social');
+  const fmt = useFormatNumber();
   return (
     <div className="overflow-hidden rounded-ios-2xl bg-white shadow-soft">
       {entries.map((e, i) => (
@@ -33,7 +41,8 @@ export function LeaderboardMini({ entries }: { entries: LeaderboardEntry[] }) {
               {e.title}
             </p>
             <p className="mt-0.5 flex items-center gap-1 text-caption-1 text-slate-500">
-              <Users className="h-3 w-3" /> {e.leaderboardVotes} ovoz
+              <Users className="h-3 w-3" />{' '}
+              {t('votes', { count: e.leaderboardVotes, n: fmt(e.leaderboardVotes) })}
             </p>
           </div>
           <ScoreBadge score={e.score} size="sm" />

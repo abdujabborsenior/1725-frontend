@@ -1,7 +1,6 @@
 'use client';
 
-import Link from 'next/link';
-import { usePathname } from 'next/navigation';
+import { Link, usePathname } from '@/i18n/navigation';
 import {
   FileText,
   FileTextFill,
@@ -15,6 +14,7 @@ import {
   UserFill,
 } from '@/components/icons';
 import { useQuery } from '@tanstack/react-query';
+import { useTranslations } from 'next-intl';
 import { useAuthStore } from '@/store/auth.store';
 import { chatApi } from '@/lib/api';
 import { cn } from '@/lib/utils';
@@ -24,36 +24,36 @@ import type { LucideIcon } from '@/components/icons';
    Aynan shu ikkilik iOS'ning o'ziga xos "his"ini beradi. */
 const ITEMS: {
   href: string;
-  label: string;
+  label: 'home' | 'startups' | 'problems' | 'chat' | 'profile';
   icon: LucideIcon;
   iconActive: LucideIcon;
   match: (p: string) => boolean;
 }[] = [
-  { href: '/', label: 'Asosiy', icon: Home, iconActive: HomeFill, match: (p) => p === '/' },
+  { href: '/', label: 'home', icon: Home, iconActive: HomeFill, match: (p) => p === '/' },
   {
     href: '/startups',
-    label: 'Startaplar',
+    label: 'startups',
     icon: Rocket,
     iconActive: RocketFill,
     match: (p) => p.startsWith('/startups'),
   },
   {
     href: '/problems',
-    label: 'Muammolar',
+    label: 'problems',
     icon: FileText,
     iconActive: FileTextFill,
     match: (p) => p.startsWith('/problems'),
   },
   {
     href: '/messages',
-    label: 'Suhbat',
+    label: 'chat',
     icon: MessageCircle,
     iconActive: MessageCircleFill,
     match: (p) => p.startsWith('/messages'),
   },
   {
     href: '/profile',
-    label: 'Profil',
+    label: 'profile',
     icon: User,
     iconActive: UserFill,
     match: (p) => p.startsWith('/profile') || p.startsWith('/u/'),
@@ -62,6 +62,7 @@ const ITEMS: {
 
 /** iOS Tab Bar — translucent material, 0.5px hairline, tint = systemBlue. */
 export function BottomNav() {
+  const t = useTranslations('nav.tabs');
   const pathname = usePathname();
   const { token } = useAuthStore();
 
@@ -104,7 +105,7 @@ export function BottomNav() {
                   </span>
                 )}
               </span>
-              <span className="text-caption-2 font-medium tracking-tight">{label}</span>
+              <span className="text-caption-2 font-medium tracking-tight">{t(label)}</span>
             </Link>
           );
         })}

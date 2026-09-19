@@ -1,5 +1,6 @@
 'use client';
 
+import { useTranslations } from 'next-intl';
 import { Globe, Link2, type LucideProps } from '@/components/icons';
 import { cn } from '@/lib/utils';
 import { PLATFORM_META } from '@/lib/constants';
@@ -64,6 +65,7 @@ export function PlatformChip({
   type: PlatformType;
   className?: string;
 }) {
+  const tl = useTranslations('labels');
   const meta = PLATFORM_META[type];
   return (
     <span
@@ -74,7 +76,7 @@ export function PlatformChip({
       )}
     >
       <PlatformIcon type={type} className="h-3 w-3" />
-      {meta.label}
+      {tl(`platform.${type}.label`)}
     </span>
   );
 }
@@ -92,8 +94,8 @@ export function StoreButton({
   onClickCapture?: () => void;
   className?: string;
 }) {
+  const tl = useTranslations('labels');
   const meta = PLATFORM_META[platform.type];
-  const isStore = platform.type === 'ios' || platform.type === 'android';
 
   return (
     <a
@@ -115,11 +117,12 @@ export function StoreButton({
     >
       <PlatformIcon type={platform.type} className="h-5 w-5 shrink-0" />
       <span className="flex flex-col items-start leading-none text-left">
+        {/* Yuqori matn: do'konlarda "GET IT ON"/"Download on the", qolganida "Ochish" */}
         <span className="text-caption-2 font-medium">
-          {isStore ? meta.storeKicker : 'Ochish'}
+          {tl(`platform.${platform.type}.kicker`)}
         </span>
         <span className="mt-0.5 text-subhead font-semibold">
-          {platform.label || meta.storeName}
+          {platform.label || tl(`platform.${platform.type}.store`)}
         </span>
       </span>
     </a>

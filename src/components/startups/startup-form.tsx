@@ -1,7 +1,8 @@
 'use client';
 
-import { useState } from 'react';
-import { useRouter } from 'next/navigation';
+import { useRouter } from '@/i18n/navigation';
+import { useMemo, useState } from 'react';
+import { useTranslations } from 'next-intl';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
@@ -36,25 +37,36 @@ import { cn } from '@/lib/utils';
 import { FIELD_SIZE, FIELD_SURFACE } from '@/components/ui/field-styles';
 import toast from 'react-hot-toast';
 
-const schema = z.object({
-  title: z.string().min(2, 'Kamida 2 ta belgi').max(200, "Ko'pi bilan 200 ta belgi"),
-  tagline: z.string().max(300, "Ko'pi bilan 300 ta belgi").optional(),
-  description: z.string().min(20, 'Kamida 20 ta belgi').max(10000),
-  category: z.string().optional(),
-  region: z.string().optional(),
-  district: z.string().max(100).optional(),
-  teamName: z.string().max(150).optional(),
-  foundedYear: z
-    .union([z.coerce.number().int().min(1990, 'Min 1990').max(2100, 'Max 2100'), z.literal('')])
-    .optional(),
-});
+type Translator = ReturnType<typeof useTranslations<'startupForm'>>;
+type ValidationTranslator = ReturnType<typeof useTranslations<'validation'>>;
 
-type FormData = z.infer<typeof schema>;
+/** Sxema xabarlari joriy tilda — shuning uchun sxema komponent ichida quriladi. */
+function buildSchema(t: Translator, tv: ValidationTranslator) {
+  return z.object({
+    title: z.string().min(2, tv('minChars', { min: '2' })).max(200, tv('maxChars', { max: '200' })),
+    tagline: z.string().max(300, tv('maxChars', { max: '300' })).optional(),
+    description: z
+      .string()
+      .min(20, tv('minChars', { min: '20' }))
+      .max(10000, tv('maxChars', { max: '10000' })),
+    category: z.string().optional(),
+    region: z.string().optional(),
+    district: z.string().max(100, tv('maxChars', { max: '100' })).optional(),
+    teamName: z.string().max(150, tv('maxChars', { max: '150' })).optional(),
+    foundedYear: z
+      .union([
+        z.coerce
+          .number({ invalid_type_error: tv('number') })
+          .int(tv('number'))
+          .min(1990, t('errors.yearMin', { min: '1990' }))
+          .max(2100, t('errors.yearMax', { max: '2100' })),
+        z.literal(''),
+      ])
+      .optional(),
+  });
+}
 
-const REGION_OPTIONS = [
-  { value: '', label: 'Hudud (ixtiyoriy)' },
-  ...UZ_REGIONS.map((r) => ({ value: r, label: r })),
-];
+type FormData = z.infer<ReturnType<typeof buildSchema>>;
 
 /** Forma bo'limi — iOS'dagi guruhlangan bo'lim sarlavhasi bilan. */
 function Section({
@@ -79,6 +91,10 @@ function Section({
 
 /** Startap joylash/tahrirlash formasi — minimal majburiy maydon, qolgani ixtiyoriy. */
 export function StartupForm({ initial }: { initial?: Startup }) {
+  const t = useTranslations('startupForm');
+  const tv = useTranslations('validation');
+  const tc = useTranslations('common');
+  const tr = useTranslations('regions');
   const router = useRouter();
   const qc = useQueryClient();
   const editing = !!initial;
@@ -94,6 +110,15 @@ export function StartupForm({ initial }: { initial?: Startup }) {
   );
   const [moreOpen, setMoreOpen] = useState(
     !!(initial?.region || initial?.teamName || initial?.foundedYear || initial?.tags.length),
+  );
+
+  const schema = useMemo(() => buildSchema(t, tv), [t, tv]);
+  const regionOptions = useMemo(
+    () => [
+      { value: '', label: t('more.regionPlaceholder') },
+      ...UZ_REGIONS.map((r) => ({ value: r.value, label: tr(r.key) })),
+    ],
+    [t, tr],
   );
 
   const {
@@ -142,14 +167,14 @@ export function StartupForm({ initial }: { initial?: Startup }) {
     onSuccess: (res) => {
       void qc.invalidateQueries({ queryKey: ['startups'] });
       void qc.invalidateQueries({ queryKey: ['startup'] });
-      toast.success(editing ? 'Startap yangilandi!' : "Startap e'lon qilindi!");
+      toast.success(editing ? t('toast.updated') : t('toast.published'));
       router.push(`/startups/${res.data.id}`);
     },
     onError: (e) => {
       // Tarif limiti tugagan — bu "xato" emas, tarif tanlash taklifi.
       // (Bo'lim o'chiq bo'lsa bunday javob umuman kelmaydi.)
       if (BILLING_ENABLED && isStartupLimitError(e)) {
-        toast.error(getErrorMessage(e, 'Loyihalar limiti tugagan'));
+        toast.error(getErrorMessage(e, t('errors.limitReached')));
         router.push('/pricing');
         return;
       }
@@ -160,21 +185,21 @@ export function StartupForm({ initial }: { initial?: Startup }) {
   function onSubmit(d: FormData) {
     // Havola maydonlari — noto'g'ri to'ldirilgani bo'lsa yuborilmaydi
     if (invalidLinks(links).length > 0) {
-      toast.error("Havolalardan biri noto'g'ri — tekshirib qo'ying");
+      toast.error(t('errors.invalidLinks'));
       return;
     }
     submit(d);
   }
 
   function addTag() {
-    const t = tagInput.trim().replace(/^#/, '');
-    if (!t) return;
-    if (t.length > 40) {
-      toast.error("Teg ko'pi bilan 40 ta belgi");
+    const tag = tagInput.trim().replace(/^#/, '');
+    if (!tag) return;
+    if (tag.length > 40) {
+      toast.error(t('errors.tagTooLong'));
       return;
     }
-    if (tags.includes(t) || tags.length >= 15) return;
-    setTags((l) => [...l, t]);
+    if (tags.includes(tag) || tags.length >= 15) return;
+    setTags((l) => [...l, tag]);
     setTagInput('');
   }
 
@@ -209,46 +234,46 @@ export function StartupForm({ initial }: { initial?: Startup }) {
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-9">
       {/* ── 1. Asosiy ma'lumot ──────────────────────────────── */}
-      <Section title="Asosiy ma'lumot">
+      <Section title={t('basic.title')}>
         <div className="space-y-4">
           <Input
-            label="Startap nomi"
-            placeholder="Masalan: EcoDelivery"
+            label={t('basic.name')}
+            placeholder={t('basic.namePlaceholder')}
             error={errors.title?.message}
             {...register('title')}
           />
           <Input
-            label="Bir jumlada (ixtiyoriy)"
-            placeholder="Startapingiz nima qiladi? — qisqa va lo'nda"
+            label={t('basic.tagline')}
+            placeholder={t('basic.taglinePlaceholder')}
             error={errors.tagline?.message}
             {...register('tagline')}
           />
           <Textarea
-            label="Tavsif (nega odamlar aynan sizning loyihangizdan foydalanishi kerak?)"
+            label={t('basic.description')}
             rows={7}
-            placeholder="Startapingiz haqida batafsil: qanday muammoni hal qiladi, kim uchun, nimasi bilan ajralib turadi..."
+            placeholder={t('basic.descriptionPlaceholder')}
             count={{ current: descLength, max: 10000 }}
-            hint={descLength > 0 && descLength < 20 ? 'Kamida 20 ta belgi' : undefined}
+            hint={descLength > 0 && descLength < 20 ? tv('minChars', { min: '20' }) : undefined}
             error={errors.description?.message}
             {...register('description')}
           />
 
           <div className="flex flex-col gap-2">
-            <span className="text-subhead font-medium text-slate-500">Kategoriya (ixtiyoriy)</span>
+            <span className="text-subhead font-medium text-slate-500">{t('basic.category')}</span>
             <div className="flex flex-wrap gap-2">
               {categoryOptions.map((cat) => {
-                const selected = selectedCategory === cat;
+                const selected = selectedCategory === cat.value;
                 return (
                   <button
-                    key={cat}
+                    key={cat.value}
                     type="button"
-                    onClick={() => setValue('category', selected ? '' : cat)}
+                    onClick={() => setValue('category', selected ? '' : cat.value)}
                     className={cn(
                       'tappable rounded-full px-3.5 py-1.5 text-subhead font-medium transition-colors duration-150 ease-ios',
                       selected ? 'bg-accent-600 text-white' : 'bg-fill-tertiary text-slate-600',
                     )}
                   >
-                    {cat}
+                    {cat.label}
                   </button>
                 );
               })}
@@ -258,15 +283,12 @@ export function StartupForm({ initial }: { initial?: Startup }) {
       </Section>
 
       {/* ── 2. Media (ixtiyoriy) ────────────────────────────── */}
-      <Section
-        title="Media"
-        hint="Ixtiyoriy — havolani kiritsangiz logo va muqova o'zi to'ldiriladi"
-      >
+      <Section title={t('media.title')} hint={t('media.hint')}>
         <div className="space-y-4">
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-[140px_1fr]">
-            <ImageUpload label="Logo" aspect="logo" value={logoUrl} onChange={setLogoUrl} />
+            <ImageUpload label={t('media.logo')} aspect="logo" value={logoUrl} onChange={setLogoUrl} />
             <ImageUpload
-              label="Muqova rasmi"
+              label={t('media.cover')}
               aspect="video"
               value={coverUrl}
               onChange={setCoverUrl}
@@ -278,10 +300,7 @@ export function StartupForm({ initial }: { initial?: Startup }) {
       </Section>
 
       {/* ── 3. Havolalar — har platformaning o'z maydoni ─────── */}
-      <Section
-        title="Havolalar"
-        hint="Foydalanuvchilar startapingizni qayerdan topadi? Bittasini to'ldirsangiz ham bo'ladi."
-      >
+      <Section title={t('links.title')} hint={t('links.hint')}>
         <LinkFields
           values={links}
           onChange={setLinks}
@@ -306,9 +325,9 @@ export function StartupForm({ initial }: { initial?: Startup }) {
           className="ios-row w-full text-left"
         >
           <span className="min-w-0 flex-1">
-            <span className="block text-body text-brand-900">Qo&apos;shimcha ma&apos;lumotlar</span>
+            <span className="block text-body text-brand-900">{t('more.title')}</span>
             <span className="mt-0.5 block text-footnote text-slate-500">
-              Hudud, jamoa, teglar — ixtiyoriy
+              {t('more.subtitle')}
             </span>
           </span>
           <ChevronDown
@@ -323,27 +342,27 @@ export function StartupForm({ initial }: { initial?: Startup }) {
           <div className="hairline-t space-y-4 px-4 pb-5 pt-4">
             <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
               <Select
-                label="Hudud"
-                options={REGION_OPTIONS}
+                label={t('more.region')}
+                options={regionOptions}
                 error={errors.region?.message}
                 {...register('region')}
               />
               <Input
-                label="Tuman / shahar"
-                placeholder="Masalan: Chilonzor"
+                label={t('more.district')}
+                placeholder={t('more.districtPlaceholder')}
                 error={errors.district?.message}
                 {...register('district')}
               />
             </div>
             <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
               <Input
-                label="Jamoa nomi"
-                placeholder="Masalan: EcoTeam"
+                label={t('more.teamName')}
+                placeholder={t('more.teamPlaceholder')}
                 error={errors.teamName?.message}
                 {...register('teamName')}
               />
               <Input
-                label="Tashkil etilgan yil"
+                label={t('more.foundedYear')}
                 type="number"
                 placeholder="2024"
                 error={errors.foundedYear?.message}
@@ -351,7 +370,7 @@ export function StartupForm({ initial }: { initial?: Startup }) {
               />
             </div>
             <div className="flex flex-col gap-2">
-              <span className="text-subhead font-medium text-slate-500">Teglar (maks. 15)</span>
+              <span className="text-subhead font-medium text-slate-500">{t('more.tags')}</span>
               <div className="flex gap-2">
                 <input
                   value={tagInput}
@@ -362,13 +381,13 @@ export function StartupForm({ initial }: { initial?: Startup }) {
                       addTag();
                     }
                   }}
-                  placeholder="Masalan: AI, SaaS, logistika"
+                  placeholder={t('more.tagPlaceholder')}
                   className={cn(FIELD_SURFACE, FIELD_SIZE.md, 'flex-1')}
                 />
                 <button
                   type="button"
                   onClick={addTag}
-                  aria-label="Teg qo'shish"
+                  aria-label={t('more.addTag')}
                   className="tappable flex h-12 w-12 shrink-0 items-center justify-center rounded-ios-md bg-fill-tertiary text-slate-600"
                 >
                   <Plus className="h-[18px] w-[18px]" strokeWidth={2.5} />
@@ -376,16 +395,16 @@ export function StartupForm({ initial }: { initial?: Startup }) {
               </div>
               {tags.length > 0 && (
                 <div className="flex flex-wrap gap-2">
-                  {tags.map((t) => (
+                  {tags.map((tag) => (
                     <span
-                      key={t}
+                      key={tag}
                       className="inline-flex items-center gap-1.5 rounded-full bg-fill-tertiary px-3 py-1 text-footnote font-medium text-slate-600"
                     >
-                      #{t}
+                      #{tag}
                       <button
                         type="button"
-                        onClick={() => setTags((l) => l.filter((x) => x !== t))}
-                        aria-label={`${t} tegini o'chirish`}
+                        onClick={() => setTags((l) => l.filter((x) => x !== tag))}
+                        aria-label={t('more.removeTag', { tag })}
                         className="tappable text-slate-400"
                       >
                         <X className="h-3 w-3" strokeWidth={3} />
@@ -402,18 +421,18 @@ export function StartupForm({ initial }: { initial?: Startup }) {
       {/* ── Yuborish ────────────────────────────────────────── */}
       {!editing && (
         <p className="rounded-ios-lg bg-accent-50 px-4 py-3 text-subhead leading-relaxed text-slate-600">
-          Startapingiz yuborilgan zahoti{' '}
-          <span className="font-medium text-accent-700">e&apos;lon qilinadi</span> — tasdiqlash
-          kutish shart emas. Keyin xohlagan payt tahrirlashingiz mumkin.
+          {t.rich('publishNote', {
+            b: (chunks) => <span className="font-medium text-accent-700">{chunks}</span>,
+          })}
         </p>
       )}
 
       <div className="flex gap-3">
         <Button type="button" variant="secondary" size="lg" onClick={() => router.back()}>
-          Bekor qilish
+          {tc('cancel')}
         </Button>
         <Button type="submit" variant="accent" size="lg" loading={isPending} className="flex-1">
-          {editing ? 'Saqlash' : "E'lon qilish"}
+          {editing ? tc('save') : t('publish')}
         </Button>
       </div>
     </form>

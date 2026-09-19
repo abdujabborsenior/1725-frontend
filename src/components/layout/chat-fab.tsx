@@ -1,8 +1,8 @@
 'use client';
 
-import Link from 'next/link';
-import { usePathname } from 'next/navigation';
+import { Link, usePathname } from '@/i18n/navigation';
 import { useQuery } from '@tanstack/react-query';
+import { useTranslations } from 'next-intl';
 import { MessageCircleFill } from '@/components/icons';
 import { chatApi } from '@/lib/api';
 import { useAuthStore } from '@/store/auth.store';
@@ -25,6 +25,7 @@ import { useAuthStore } from '@/store/auth.store';
  *    ikkinchi nusxa tab bar ustiga tushib xalaqit berardi.
  */
 export function ChatFab() {
+  const t = useTranslations('nav');
   const { token } = useAuthStore();
   const pathname = usePathname();
 
@@ -43,8 +44,8 @@ export function ChatFab() {
   return (
     <Link
       href="/messages"
-      aria-label={unread > 0 ? `Suhbatlar — ${unread} ta o'qilmagan` : 'Suhbatlar'}
-      title="Suhbatlar"
+      aria-label={unread > 0 ? t('messagesUnread', { count: unread }) : t('messages')}
+      title={t('messages')}
       className="group fixed bottom-8 right-8 z-40 hidden md:block motion-safe:animate-pop-in"
     >
       <span className="relative flex h-14 w-14 items-center justify-center rounded-full bg-accent-600 text-white shadow-lift transition-[background-color,box-shadow,transform] duration-150 ease-ios group-hover:bg-accent-700 group-hover:shadow-glow-accent group-active:scale-95">

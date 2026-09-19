@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
+import { useTranslations } from 'next-intl';
 import { X } from '@/components/icons';
 import { cn } from '@/lib/utils';
 
@@ -21,6 +22,7 @@ interface ModalProps {
  * Props API o'zgarmadi — barcha mavjud chaqiruvlar shundayligicha ishlaydi.
  */
 export function Modal({ open, onClose, title, children, className }: ModalProps) {
+  const t = useTranslations('common');
   // Portal faqat brauzerda — SSR paytida document mavjud emas.
   const [mounted, setMounted] = useState(false);
   useEffect(() => setMounted(true), []);
@@ -109,7 +111,7 @@ export function Modal({ open, onClose, title, children, className }: ModalProps)
             </h3>
             <button
               onClick={onClose}
-              aria-label="Yopish"
+              aria-label={t('close')}
               className="tappable flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-fill-tertiary text-slate-500"
             >
               <X className="h-4 w-4" strokeWidth={2.5} />

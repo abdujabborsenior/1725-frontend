@@ -1,7 +1,8 @@
 'use client';
 
+import { useTranslations } from 'next-intl';
 import { cn } from '@/lib/utils';
-import { DETAIL_LABEL, DETAIL_TONE, FACTOR_LABEL, scoreTone } from '@/lib/venture';
+import { DETAIL_TONE, scoreTone } from '@/lib/venture';
 import type { MatchFactor } from '@/types';
 
 /**
@@ -20,6 +21,8 @@ export function MatchScoreRing({
   size?: number;
   className?: string;
 }) {
+  const t = useTranslations('matchCard');
+  const tv = useTranslations('venture');
   const tone = scoreTone(score);
   const stroke = size >= 56 ? 4 : 3;
   const r = (size - stroke) / 2;
@@ -31,7 +34,7 @@ export function MatchScoreRing({
       className={cn('relative shrink-0', className)}
       style={{ width: size, height: size }}
       role="img"
-      aria-label={`Moslik ${score} foiz — ${tone.label}`}
+      aria-label={t('ringLabel', { score: String(score), level: tv(`score.${tone.level}`) })}
     >
       <svg width={size} height={size} className="-rotate-90">
         <circle
@@ -80,6 +83,7 @@ export function FactorBreakdown({
   factors: MatchFactor[];
   className?: string;
 }) {
+  const tv = useTranslations('venture');
   const sorted = [...factors].sort((a, b) => b.max - a.max);
   return (
     <ul className={cn('space-y-2.5', className)}>
@@ -89,11 +93,11 @@ export function FactorBreakdown({
           <li key={f.key}>
             <div className="flex items-baseline justify-between gap-3">
               <span className="text-subhead text-brand-900">
-                {FACTOR_LABEL[f.key]}
+                {tv(`factor.${f.key}`)}
               </span>
               <span className="flex items-baseline gap-2">
                 <span className={cn('text-caption-1', DETAIL_TONE[f.detail])}>
-                  {DETAIL_LABEL[f.detail]}
+                  {tv(`detail.${f.detail}`)}
                 </span>
                 <span className="text-caption-1 tabular-nums text-slate-500">
                   {f.earned}/{f.max}

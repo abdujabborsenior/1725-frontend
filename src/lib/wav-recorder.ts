@@ -2,6 +2,9 @@
 
 import { useCallback, useEffect, useRef, useState } from 'react';
 
+/** Mikrofon xatosi turi: `denied` — ruxsat berilmadi, `unavailable` — ochib bo'lmadi. */
+export type RecorderError = 'denied' | 'unavailable';
+
 /**
  * Ovozni **WAV (16 kHz, mono, 16-bit)** formatida yozib beruvchi hook.
  *
@@ -71,7 +74,8 @@ export function useWavRecorder() {
   const [seconds, setSeconds] = useState(0);
   /** Joriy ovoz balandligi 0..1 — to'lqin chiziqchalari uchun. */
   const [level, setLevel] = useState(0);
-  const [error, setError] = useState<string | null>(null);
+  /** Xato KODI (matn emas) — ko'rsatiladigan matn chaqiruvchida, joriy tilda. */
+  const [error, setError] = useState<RecorderError | null>(null);
 
   const ctxRef = useRef<AudioContext | null>(null);
   const streamRef = useRef<MediaStream | null>(null);
@@ -116,7 +120,12 @@ export function useWavRecorder() {
   // Sahifadan chiqilsa mikrofon albatta o'chsin.
   useEffect(() => teardown, [teardown]);
 
-  const start = useCallback(async (): Promise<boolean> => {
+  /**
+   * Yozishni boshlaydi. Qaytadi: `null` — boshlandi, aks holda xato KODI.
+   * (Holat `error` ham yangilanadi, lekin chaqiruvchi `await`dan keyin eski
+   * render qiymatini ko'rardi — shuning uchun natija to'g'ridan qaytariladi.)
+   */
+  const start = useCallback(async (): Promise<RecorderError | null> => {
     setError(null);
     cancelledRef.current = false;
     stoppingRef.current = false;
@@ -226,16 +235,13 @@ export function useWavRecorder() {
       timerRef.current = setInterval(() => {
         setSeconds(Math.floor(lengthRef.current / rateRef.current));
       }, 200);
-      return true;
+      return null;
     } catch (err) {
       teardown();
       const name = (err as DOMException)?.name;
-      setError(
-        name === 'NotAllowedError'
-          ? 'Mikrofonga ruxsat berilmadi'
-          : 'Mikrofonni ochib bo‘lmadi',
-      );
-      return false;
+      const code: RecorderError = name === 'NotAllowedError' ? 'denied' : 'unavailable';
+      setError(code);
+      return code;
     }
   }, [teardown]);
 

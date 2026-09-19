@@ -1,10 +1,12 @@
 'use client';
 
 import { useCallback } from 'react';
+import { useTranslations } from 'next-intl';
 import { Lightbulb, LightbulbFill } from '@/components/icons';
 import { problemsApi } from '@/lib/api';
 import { useToggleAction } from '@/lib/use-toggle-action';
 import { cn } from '@/lib/utils';
+import { useFormatNumber } from '@/lib/format';
 
 interface Props {
   problemId: string;
@@ -22,6 +24,8 @@ interface Props {
 export function ProblemLikeButton({
   problemId, initialLiked, initialCount, size = 'md', className, onChange,
 }: Props) {
+  const t = useTranslations('problemLike');
+  const fmt = useFormatNumber();
   const commit = useCallback(
     async (next: boolean) => {
       const res = await problemsApi.toggleLike(problemId, next);
@@ -52,7 +56,7 @@ export function ProblemLikeButton({
       suppressHydrationWarning
       aria-pressed={liked}
       aria-busy={pending}
-      title="Foydali deb belgilash"
+      title={t('markTitle')}
       className={cn(
         'tappable inline-flex items-center rounded-full font-medium transition-colors duration-150 ease-ios',
         sm ? 'h-8 gap-1.5 px-3.5 text-footnote' : 'h-10 gap-2 px-4 text-subhead',
@@ -71,10 +75,10 @@ export function ProblemLikeButton({
       ) : (
         <Lightbulb className={sm ? 'h-3.5 w-3.5' : 'h-4 w-4'} />
       )}
-      <span>Foydali</span>
+      <span>{t('label')}</span>
       {count > 0 && (
         <span className={cn('tabular-nums', liked ? 'text-white/80' : 'text-slate-500')}>
-          · {count.toLocaleString('uz')}
+          · {fmt(count)}
         </span>
       )}
     </button>

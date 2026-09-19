@@ -1,6 +1,7 @@
 'use client';
 
-import Link from 'next/link';
+import { useTranslations } from 'next-intl';
+import { Link } from '@/i18n/navigation';
 import { Avatar } from '@/components/ui/avatar';
 import { VerifiedBadge } from './verified-badge';
 import { cn } from '@/lib/utils';
@@ -19,10 +20,11 @@ export function AuthorLink({
   author,
   size = 36,
   subtitle,
-  fallbackName = 'Foydalanuvchi',
+  fallbackName,
   className,
 }: Props) {
-  const name = author?.fullName ?? fallbackName;
+  const t = useTranslations('social');
+  const name = author?.fullName ?? fallbackName ?? t('userFallback');
   const href = author?.username
     ? `/u/${author.username}`
     : author?.id

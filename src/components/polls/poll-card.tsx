@@ -1,8 +1,8 @@
 'use client';
 
+import { Link, useRouter } from '@/i18n/navigation';
 import { useEffect, useRef, useState } from 'react';
-import Link from 'next/link';
-import { useRouter } from 'next/navigation';
+import { useTranslations } from 'next-intl';
 import { Check, ChevronRight, Play, X, Lock, Trophy } from '@/components/icons';
 import { useQueryClient } from '@tanstack/react-query';
 import { pollsApi, getErrorMessage } from '@/lib/api';
@@ -11,6 +11,8 @@ import { useInViewOnce } from '@/components/landing/reveal';
 import { useAuthStore } from '@/store/auth.store';
 import { StartupLogo } from '@/components/startups/startup-logo';
 import { cn } from '@/lib/utils';
+import { useFormatNumber } from '@/lib/format';
+import { useCategoryLabel } from '@/lib/category-labels';
 import type { Poll, PollOption } from '@/types';
 import toast from 'react-hot-toast';
 
@@ -39,13 +41,14 @@ function useCountUp(target: number, active: boolean, duration = 800) {
 
 /* Video — iOS pleyeri uslubida (qora sirt, tepada yopish tugmasi) */
 function VideoModal({ url, onClose }: { url: string; onClose: () => void }) {
+  const tc = useTranslations('common');
   return (
     <div className="animate-fade-in fixed inset-0 z-[60] flex items-center justify-center p-4" onClick={onClose}>
       <div className="absolute inset-0 bg-black/80 backdrop-blur-sm" />
       <div className="animate-scale-in relative w-full max-w-2xl" onClick={(e) => e.stopPropagation()}>
         <button
           onClick={onClose}
-          aria-label="Yopish"
+          aria-label={tc('close')}
           className="material-dark tappable absolute -top-12 right-0 grid h-9 w-9 place-items-center rounded-full text-white"
         >
           <X className="h-5 w-5" />
@@ -62,6 +65,8 @@ function VideoModal({ url, onClose }: { url: string; onClose: () => void }) {
  * ko'rinishida foiz + nozik progress chizig'i (dekor emas — ma'lumot).
  */
 export function PollCard({ poll: initial }: { poll: Poll }) {
+  const t = useTranslations('polls.card');
+  const fmt = useFormatNumber();
   const router = useRouter();
   const { token } = useAuthStore();
   const qc = useQueryClient();
@@ -98,10 +103,10 @@ export function PollCard({ poll: initial }: { poll: Poll }) {
   }
 
   const subtitle = poll.isClosed
-    ? 'Ovoz berish yopildi — yakuniy natijalar'
+    ? t('status.closed')
     : showResults
-      ? 'Ovozingiz qabul qilindi. Natijalar real vaqtda yangilanadi.'
-      : 'Bitta startapni tanlang. Ovozingiz anonim qoladi.';
+      ? t('status.voted')
+      : t('status.open');
 
   return (
     <div
@@ -112,15 +117,15 @@ export function PollCard({ poll: initial }: { poll: Poll }) {
       {/* Sarlavha */}
       <div className="px-5 pt-5 sm:px-6 sm:pt-6">
         <div className="flex items-center justify-between gap-3">
-          <span className="text-footnote font-semibold text-accent-600">Hamjamiyat ovozi</span>
+          <span className="text-footnote font-semibold text-accent-600">{t('kicker')}</span>
           {poll.isClosed ? (
             <span className="inline-flex items-center gap-1.5 rounded-full bg-fill-tertiary px-2.5 py-1 text-caption-1 font-medium text-slate-500">
-              <Lock className="h-3 w-3" /> Yakunlandi
+              <Lock className="h-3 w-3" /> {t('ended')}
             </span>
           ) : (
             <span className="inline-flex items-center gap-1.5 rounded-full bg-emerald-50 px-2.5 py-1 text-caption-1 font-medium text-emerald-700">
               <span className="h-1.5 w-1.5 rounded-full bg-emerald-500" />
-              Jonli
+              {t('live')}
             </span>
           )}
         </div>
@@ -157,17 +162,22 @@ export function PollCard({ poll: initial }: { poll: Poll }) {
       {/* Pastki qator */}
       <div className="hairline-t flex flex-wrap items-center justify-between gap-x-3 gap-y-1 px-5 py-3.5 sm:px-6">
         <span className="flex items-baseline gap-1.5 text-footnote text-slate-500">
-          <span className="text-subhead font-semibold tabular-nums text-brand-900">
-            {poll.totalVotes.toLocaleString('uz')}
-          </span>
-          ishtirokchi ovoz berdi
+          {t.rich('participants', {
+            count: poll.totalVotes,
+            n: fmt(poll.totalVotes),
+            b: (chunks) => (
+              <span className="text-subhead font-semibold tabular-nums text-brand-900">
+                {chunks}
+              </span>
+            ),
+          })}
         </span>
         <span className="text-caption-1 text-slate-500">
           {voted
-            ? 'Boshqasini tanlab fikringizni o‘zgartiring'
+            ? t('hint.voted')
             : poll.isClosed
-              ? 'Ovoz berish yopilgan'
-              : 'Tanlash uchun bosing'}
+              ? t('hint.closed')
+              : t('hint.pick')}
         </span>
       </div>
 
@@ -183,6 +193,10 @@ function OptionRow({
   isLeader: boolean; closed: boolean; busy: boolean; animate: boolean;
   onVote: () => void; onPlay: (url: string) => void;
 }) {
+  const t = useTranslations('polls.card');
+  const ts = useTranslations('social');
+  const fmt = useFormatNumber();
+  const catLabel = useCategoryLabel();
   const s = option.startup;
   const pct = useCountUp(option.percent, animate && showResults);
   const winner = closed && isLeader;
@@ -224,7 +238,7 @@ function OptionRow({
         {/* Logotip — ilova ikonkasi (squircle), doira EMAS */}
         <StartupLogo
           src={s?.logoUrl}
-          title={s?.title ?? 'Startap'}
+          title={s?.title ?? t('startupFallback')}
           size={44}
           className="!rounded-[11px] ring-1 ring-black/[0.06]"
         />
@@ -233,23 +247,25 @@ function OptionRow({
         <div className="min-w-0 flex-1">
           <div className="flex items-center gap-1.5">
             <p className="truncate text-callout font-semibold leading-tight text-brand-900">
-              {s?.title ?? 'Startap'}
+              {s?.title ?? t('startupFallback')}
             </p>
             {winner && (
               <span className="shrink-0 rounded-full bg-accent-600 px-2 py-0.5 text-caption-2 font-semibold text-white">
-                G‘olib
+                {t('winner')}
               </span>
             )}
             {!closed && isLeader && showResults && (
               <span className="shrink-0 rounded-full bg-accent-100 px-2 py-0.5 text-caption-2 font-semibold text-accent-700">
-                Yetakchi
+                {t('leader')}
               </span>
             )}
           </div>
 
           <div className="mt-0.5 flex items-center gap-3">
             {s?.tagline || s?.category ? (
-              <span className="truncate text-footnote text-slate-500">{s.tagline || s.category}</span>
+              <span className="truncate text-footnote text-slate-500">
+                {s.tagline || catLabel(s.category)}
+              </span>
             ) : null}
             {s?.videoUrl && (
               <button
@@ -257,7 +273,7 @@ function OptionRow({
                 onClick={(e) => { e.stopPropagation(); onPlay(s.videoUrl as string); }}
                 className="tappable -my-2 inline-flex shrink-0 items-center gap-1 py-2 text-caption-1 font-medium text-accent-600"
               >
-                <Play className="h-3 w-3" /> Video
+                <Play className="h-3 w-3" /> {t('video')}
               </button>
             )}
             {s && (
@@ -266,7 +282,7 @@ function OptionRow({
                 onClick={(e) => e.stopPropagation()}
                 className="tappable -my-2 inline-flex shrink-0 items-center gap-0.5 py-2 text-caption-1 font-medium text-accent-700"
               >
-                Batafsil <ChevronRight className="h-3 w-3" strokeWidth={3} />
+                {t('details')} <ChevronRight className="h-3 w-3" strokeWidth={3} />
               </Link>
             )}
           </div>
@@ -291,7 +307,7 @@ function OptionRow({
                     <Check className="h-2.5 w-2.5" strokeWidth={3.5} />
                   </span>
                 )}
-                {option.voteCount.toLocaleString('uz')} ovoz
+                {ts('votes', { count: option.voteCount, n: fmt(option.voteCount) })}
               </span>
             </div>
           ) : busy ? (

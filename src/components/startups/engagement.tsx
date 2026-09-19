@@ -1,10 +1,12 @@
 'use client';
 
 import { useCallback } from 'react';
+import { useTranslations } from 'next-intl';
 import { Heart, HeartFill, Bookmark, BookmarkFill } from '@/components/icons';
 import { startupsApi } from '@/lib/api';
 import { useToggleAction } from '@/lib/use-toggle-action';
 import { cn } from '@/lib/utils';
+import { useFormatNumber } from '@/lib/format';
 import type { Startup } from '@/types';
 import toast from 'react-hot-toast';
 
@@ -32,6 +34,8 @@ export function LikeButton({
   variant?: Variant;
   onChange?: (liked: boolean, count: number) => void;
 }) {
+  const t = useTranslations('engagement');
+  const fmt = useFormatNumber();
   const commit = useCallback(
     async (next: boolean) => {
       const res = await startupsApi.toggleLike(startup.id, next);
@@ -54,7 +58,7 @@ export function LikeButton({
     onChange,
   });
 
-  const label = liked ? `Yoqtirishni olib tashlash — ${count}` : `Yoqtirish — ${count}`;
+  const label = liked ? t('unlike', { n: fmt(count) }) : t('like', { n: fmt(count) });
 
   /* Karta varianti — meta qatoridagi ixcham amal, lekin haqiqiy 36px tegish
      maydoni bilan. Bosilganda yurak "urib" qo'yadi: ro'yxatda boshqa tasdiq
@@ -81,7 +85,7 @@ export function LikeButton({
         ) : (
           <Heart className="h-[17px] w-[17px]" />
         )}
-        {count}
+        {fmt(count)}
       </button>
     );
   }
@@ -105,7 +109,7 @@ export function LikeButton({
       ) : (
         <Heart className="h-[17px] w-[17px]" />
       )}
-      {count}
+      {fmt(count)}
     </button>
   );
 }
@@ -119,14 +123,15 @@ export function BookmarkButton({
   variant?: Variant;
   onChange?: (bookmarked: boolean) => void;
 }) {
+  const t = useTranslations('engagement');
   const commit = useCallback(
     async (next: boolean) => {
       const res = await startupsApi.toggleBookmark(startup.id, next);
       // Saqlash "ko'rinmas" amal (sanoq chiqmaydi) — qisqa banner bilan tasdiq.
-      toast.success(res.bookmarked ? 'Saqlandi' : 'Saqlanganlardan olib tashlandi');
+      toast.success(res.bookmarked ? t('saved') : t('unsaved'));
       return { on: res.bookmarked };
     },
-    [startup.id],
+    [startup.id, t],
   );
 
   const { on: saved, pending, toggle } = useToggleAction({
@@ -137,7 +142,7 @@ export function BookmarkButton({
     onChange: (v) => onChange?.(v),
   });
 
-  const label = saved ? 'Saqlanganlardan olib tashlash' : 'Keyinroq uchun saqlash';
+  const label = saved ? t('unsave') : t('save');
 
   if (variant === 'card') {
     return (

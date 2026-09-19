@@ -1,5 +1,7 @@
 'use client';
 
+import { DEFAULT_LOCALE, isAppLocale, localizePath, splitLocale } from '@/i18n/locales';
+
 /**
  * Auth holati o'zgargandan KEYINGI navigatsiya (kirish, ro'yxatdan o'tish,
  * chiqish) — HAR DOIM shu funksiya orqali.
@@ -27,6 +29,10 @@
  * Next'ning ichki xulqiga bog'liq bo'lmagan yagona kafolat. Narxi: kirish/
  * chiqishда bitta qo'shimcha yuklanish (foydalanuvchi baribir "ilovaga
  * kirdim" deb kutadigan lahza). Boshqa hamma joyda SPA navigatsiyasi qoladi.
+ *
+ * TIL: prefikssiz ichki yo'l (`/login`, `/`) joriy tilga moslanadi
+ * (ruscha sahifada → `/ru/login`). `?next=` dan kelgan yo'l allaqachon
+ * tashqi ko'rinishda (`/ru/startups/create`) — u o'zgarmaydi.
  */
 export function navigateAfterAuthChange(target: string): void {
   if (typeof window === 'undefined') return;
@@ -34,5 +40,13 @@ export function navigateAfterAuthChange(target: string): void {
   // `safeInternalPath` bilan bir xil qoida, bu yerda oxirgi qalqon sifatida).
   const safe =
     target.startsWith('/') && target[1] !== '/' && target[1] !== '\\' ? target : '/';
-  window.location.assign(safe);
+  window.location.assign(localizeTarget(safe));
+}
+
+function localizeTarget(path: string): string {
+  const [pathname, ...rest] = path.split(/(?=[?#])/);
+  if (splitLocale(pathname).prefixed) return path;
+  const lang = document.documentElement.lang;
+  const locale = isAppLocale(lang) ? lang : DEFAULT_LOCALE;
+  return localizePath(locale, pathname) + rest.join('');
 }

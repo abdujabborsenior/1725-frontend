@@ -1,0 +1,2037 @@
+{
+  "ai": {
+    "newChat": "New chat",
+    "workspace": {
+      "backHome": "Back to home",
+      "history": "Chat history",
+      "chats": "Chats",
+      "answerFailed": "Couldn’t get an answer. Wait a moment and try again.",
+      "openFailed": "Couldn’t open the chat",
+      "deleteFailed": "Couldn’t delete the chat",
+      "disabled": "Yechim AI is turned off for now. It’ll be back soon.",
+      "guestHint": "Sign up — it’s free and takes a minute",
+      "remaining": "{count, plural, =0 {No requests left today} one {# more request left today} other {# more requests left today}}"
+    },
+    "history": {
+      "empty": "Your chats will be saved here",
+      "confirmDelete": "Delete?",
+      "delete": "Delete",
+      "deleteChat": "Delete chat “{title}”",
+      "questions": "{count, plural, one {# question} other {# questions}}",
+      "loadMore": "Show older chats"
+    },
+    "composer": {
+      "inputLabel": "Your problem",
+      "placeholder": {
+        "idle": "Type or say your problem…",
+        "busy": "Preparing an answer…",
+        "transcribing": "Transcribing your voice…"
+      },
+      "voice": "Voice message",
+      "minChars": "Type at least {min, plural, one {# character} other {# characters}}",
+      "cancelRecording": "Cancel recording",
+      "finishRecording": "Stop recording",
+      "noSignal": "No voice detected",
+      "micError": {
+        "denied": "Microphone access was denied",
+        "unavailable": "Couldn’t access the microphone"
+      },
+      "failure": {
+        "empty": "Nothing was recorded. Press the mic button, then stop the recording when you’re done speaking.",
+        "tooShort": "That was too short — say at least one sentence.",
+        "silent": "No voice detected. Check that your mic is on and speak closer to it."
+      },
+      "transcribeFailed": "Couldn’t transcribe your voice"
+    },
+    "thinking": {
+      "understand": "Understanding the problem",
+      "review": "Reviewing projects",
+      "compare": "Comparing the best matches",
+      "write": "Writing the answer"
+    },
+    "answer": {
+      "matches": "{count, plural, one {# matching project} other {# matching projects}}",
+      "noSolutionTitle": "There’s no ready-made solution for this on the platform.",
+      "noSolutionText": "If we share your problem with the community, people will look into it and suggest solutions. I’ve already drafted the text.",
+      "reviewAndPublish": "Review and publish",
+      "nextSteps": "Next steps",
+      "related": "Related discussions",
+      "solutions": "{count, plural, one {# solution} other {# solutions}}",
+      "noSolutions": "No solutions yet",
+      "helpful": "Helpful answer",
+      "notHelpful": "Not helpful",
+      "feedbackSaved": "Feedback received",
+      "feedbackFailed": "Couldn’t send your feedback"
+    },
+    "match": {
+      "best": "Best match"
+    },
+    "welcome": {
+      "title": "Tell me your problem — I’ll find a solution",
+      "subtitle": "I’ll find the project on the platform that fits you best",
+      "examples": {
+        "english": "I want to learn English on a budget",
+        "accounting": "I need bookkeeping for my small business",
+        "onlineSales": "I want to sell my products online",
+        "ruralInternet": "Slow internet in my village"
+      }
+    },
+    "publish": {
+      "title": "Publish your problem",
+      "note": "Yechim AI drafted this text. Edit it as much as you like — once published, your problem will be visible to everyone",
+      "titleLabel": "Title",
+      "descriptionLabel": "Problem description",
+      "categoryLabel": "Category",
+      "noCategory": "No category",
+      "submit": "Publish",
+      "signUpToPublish": "Sign up to publish",
+      "polish": "Polish again",
+      "polished": "The text has been polished",
+      "polishFailed": "Couldn’t polish the text",
+      "published": "Your problem has been published",
+      "publishFailed": "Couldn’t publish your problem"
+    }
+  },
+  "aiLauncher": {
+    "title": "Tell me your problem — I’ll find a solution",
+    "subtitle": "Type it or say it — I’ll find the right project on the platform",
+    "inputLabel": "Your problem",
+    "voice": "Ask by voice",
+    "submit": "Find a solution",
+    "ask": "Ask: {question}",
+    "prompts": {
+      "english": "I want to learn English on a budget",
+      "accounting": "I need bookkeeping for my small business",
+      "onlineSales": "I want to sell my products online",
+      "ruralInternet": "Slow internet in my village — what can I do?"
+    },
+    "chips": {
+      "english": {
+        "label": "Learn English",
+        "question": "I want to learn English on a budget"
+      },
+      "accounting": {
+        "label": "Bookkeeping",
+        "question": "I need bookkeeping for my small business"
+      },
+      "onlineSales": {
+        "label": "Online sales",
+        "question": "I want to sell my products online"
+      }
+    }
+  },
+  "auth": {
+    "homeLink": "Home",
+    "brand": {
+      "title": "From idea to startup — on one platform",
+      "text": "An ecosystem of problems, solutions and startups for Uzbekistan’s youth. Share knowledge, build a team and bring your idea to life.",
+      "highlights": {
+        "problems": {
+          "title": "From problem to idea",
+          "text": "Find real problems and propose solutions"
+        },
+        "showcase": {
+          "title": "Startup showcase",
+          "text": "Present your product to the community"
+        },
+        "rankings": {
+          "title": "Rankings and recognition",
+          "text": "The best projects top an IMDb-style ranking"
+        }
+      },
+      "secure": "Your data is securely protected"
+    },
+    "fields": {
+      "email": "Email",
+      "emailPlaceholder": "you@example.com",
+      "password": "Password"
+    },
+    "errors": {
+      "emailFormat": "Invalid email format",
+      "codeInvalid": "The code is invalid or has expired",
+      "generic": "Something went wrong"
+    },
+    "backToLogin": "Back to sign in",
+    "resend": "Resend code",
+    "resendIn": "Resend ({seconds}s)",
+    "codeResent": "A new code has been sent",
+    "redirecting": "Redirecting...",
+    "login": {
+      "eyebrow": "Sign in",
+      "title": "Welcome back!",
+      "subtitle": "Sign in to your account and bring your ideas to life",
+      "passwordPlaceholder": "Your password",
+      "passwordRequired": "Enter your password",
+      "forgot": "Forgot your password?",
+      "submit": "Sign in",
+      "noAccount": "Don’t have an account? <link>Sign up</link>",
+      "welcome": "Welcome back, {name}!",
+      "failed": "Incorrect email or password"
+    },
+    "register": {
+      "title": "Sign up",
+      "subtitle": "Create a free account in a minute",
+      "chooseType": "Choose your account type",
+      "types": {
+        "general": {
+          "label": "Regular user",
+          "desc": "Anyone, of any age"
+        },
+        "school": {
+          "label": "School student",
+          "desc": "Students in grades 1–11"
+        },
+        "university": {
+          "label": "University student",
+          "desc": "Students at universities and colleges"
+        }
+      },
+      "fullName": "Full name",
+      "fullNamePlaceholder": "Jane Doe",
+      "passwordPlaceholder": "Create a password",
+      "region": "Region",
+      "regionPlaceholder": "Select a region...",
+      "district": "District",
+      "districtPlaceholder": "Chilanzar district",
+      "school": "School",
+      "schoolPlaceholder": "School name or number",
+      "grade": "Grade",
+      "gradeOption": "Grade {grade}",
+      "university": "University",
+      "universityPlaceholder": "University name",
+      "course": "Year",
+      "courseOption": "Year {course}",
+      "submit": "Sign up",
+      "haveAccount": "Already have an account? <link>Sign in</link>",
+      "codeSent": "We’ve sent a code to your email"
+    },
+    "forgot": {
+      "eyebrow": "Help",
+      "title": "Reset your password",
+      "subtitle": "Enter your email and we’ll send you a 6-digit reset code",
+      "submit": "Send code",
+      "sent": "Sent",
+      "sentToast": "If that email is registered, we’ve sent a code to it",
+      "sentNotice": "Code sent to <hl>{email}</hl>. Redirecting..."
+    },
+    "reset": {
+      "eyebrow": "Security",
+      "title": "Set a new password",
+      "subtitle": "Enter the code we emailed you and your new password",
+      "codeLabel": "Verification code",
+      "newPassword": "New password",
+      "newPasswordPlaceholder": "Create a new password",
+      "confirm": "Confirm password",
+      "confirmPlaceholder": "Re-enter your password",
+      "mismatch": "Passwords don’t match",
+      "submit": "Update password",
+      "success": "Password updated! You can now sign in."
+    },
+    "verify": {
+      "title": "Verify your email",
+      "sentTo": "We’ve sent a 6-digit code to:",
+      "submit": "Verify",
+      "otherEmail": "Sign in with a different email",
+      "verified": "Verified!",
+      "verifiedToast": "Email verified!",
+      "welcome": "Welcome, {name}!"
+    }
+  },
+  "billing": {
+    "interval": {
+      "monthly": "Monthly",
+      "yearly": "Yearly"
+    },
+    "intervalSuffix": {
+      "monthly": "/mo",
+      "yearly": "/yr"
+    },
+    "tier": {
+      "starter": {
+        "name": "Starter",
+        "tagline": "Launch your first project with confidence"
+      },
+      "pro": {
+        "name": "Pro",
+        "tagline": "For those running several projects"
+      },
+      "business": {
+        "name": "Business",
+        "tagline": "For teams and project portfolios"
+      }
+    },
+    "features": {
+      "projects": "{count, plural, one {Publish 1 project} other {Publish up to # projects}}",
+      "page": "Project page, rating and reviews",
+      "solutions": "Propose solutions to problems",
+      "edit": "Edit your projects anytime",
+      "priority": "Priority support",
+      "yearTerm": "12 months, one payment",
+      "monthTerm": "1-month term"
+    },
+    "providers": "{count, plural, =0 {Card} one {{a}} other {{a} or {b}}}"
+  },
+  "billingPage": {
+    "title": "My subscription",
+    "subtitle": "Current plan, limits and payment history",
+    "pricing": "Pricing",
+    "current": {
+      "label": "Current plan",
+      "active": "Active",
+      "validUntil": "Valid until {date}",
+      "projects": "Projects",
+      "remaining": "{count, plural, one {You can publish # more project.} other {You can publish # more projects.}}",
+      "limitReached": "You’ve reached your limit — upgrade to a higher plan to add more.",
+      "change": "Change plan"
+    },
+    "noSub": {
+      "title": "No active subscription",
+      "withFree": "{count, plural, one {For now, you can publish # project. Need more? Choose a plan.} other {For now, you can publish # projects. Need more? Choose a plan.}}",
+      "none": "Choose a plan to publish projects",
+      "viewPlans": "View plans"
+    },
+    "history": {
+      "title": "Payment history",
+      "empty": "No payments yet",
+      "planFallback": "Plan"
+    },
+    "orderStatus": {
+      "pending": "Pending",
+      "paid": "Paid",
+      "cancelled": "Cancelled",
+      "expired": "Expired"
+    },
+    "status": {
+      "missingTitle": "Order not found",
+      "missingText": "This link is incomplete. Please try again from the pricing page.",
+      "backToPricing": "Back to pricing",
+      "checkingTitle": "Checking…",
+      "checkingText": "Getting your order status",
+      "paidTitle": "Payment received",
+      "paidWithPlan": "Your {plan} · {interval} plan is now active ({sum}).",
+      "paidPlain": "Payment successful ({sum}).",
+      "publish": "Publish a project",
+      "expiredTitle": "This order has expired",
+      "cancelledTitle": "Payment cancelled",
+      "notCharged": "You haven’t been charged. You can try again.",
+      "confirmingTitle": "Confirming your payment",
+      "delayed": "Confirmation is taking a little longer. If you’ve been charged, your subscription will activate automatically within a few minutes.",
+      "wait": "This usually takes a few seconds. Please don’t close this page."
+    }
+  },
+  "chat": {
+    "back": "Back",
+    "message": "Message",
+    "attachment": "Attachment",
+    "uploadFailed": "Upload failed",
+    "type": {
+      "text": "Text",
+      "image": "Photo",
+      "video": "Video",
+      "voice": "Voice message",
+      "round_video": "Video message",
+      "file": "File"
+    },
+    "disabled": {
+      "voice": "Voice messages are temporarily disabled",
+      "round_video": "Video messages are temporarily disabled",
+      "video": "Sending videos is temporarily disabled",
+      "other": "This file type is temporarily disabled"
+    },
+    "system": {
+      "leftGroup": "{name} left the group"
+    },
+    "page": {
+      "title": "Select a chat",
+      "text": "Open a chat from the list on the left or find new people in the community",
+      "findPeople": "Find people",
+      "privacy": "Chats are private — only the two of you can see them"
+    },
+    "list": {
+      "title": "Messages",
+      "createGroup": "Create group",
+      "newChat": "New chat",
+      "search": "Search chats",
+      "tabs": {
+        "all": "All",
+        "direct": "Direct",
+        "group": "Groups"
+      },
+      "noResults": "No results",
+      "noResultsFor": "No chats match “{query}”",
+      "startChat": "Start a conversation",
+      "emptyDirect": "No direct chats",
+      "emptyGroups": "No groups",
+      "emptyFiltered": "Nothing here yet",
+      "emptyAll": "No chats yet",
+      "emptyHint": "Find people in the community and start a conversation",
+      "emptyGroupsHint": "Join community groups",
+      "findPeople": "Find people",
+      "findGroups": "Find groups"
+    },
+    "window": {
+      "notFound": "Chat not found",
+      "groupInfo": "Group info",
+      "openProfile": "Open profile",
+      "menu": "Menu",
+      "typing": "typing…",
+      "members": "{count, plural, one {{n} member} other {{n} members}}",
+      "online": "online",
+      "lastSeen": "last seen {time}",
+      "groupSettings": "Group settings",
+      "leaveGroup": "Leave group",
+      "leftGroup": "You left the group",
+      "jumpDown": "Scroll to bottom",
+      "jumpDownNew": "{count, plural, one {# new message} other {# new messages}} — scroll to bottom",
+      "restrictions": "Restrictions enabled: {list}",
+      "leaveConfirm": "Leave <b>{title}</b>? You can find it in search and join again later.",
+      "leaveCancel": "Cancel",
+      "leave": "Leave"
+    },
+    "empty": {
+      "title": "No messages here yet",
+      "groupIntro": "The conversation in <b>{title}</b> hasn’t started yet. Be the first to share a thought.",
+      "groupIntroNoTitle": "The conversation in <b>this group</b> hasn’t started yet. Be the first to share a thought.",
+      "directIntro": "Start a conversation with <b>{title}</b> — introduce your project or ask a question",
+      "directIntroNoTitle": "Start a conversation with <b>this person</b> — introduce your project or ask a question",
+      "startersTitle": "Conversation starters",
+      "starters": {
+        "directHello": "Hi! I’ve checked out your project.",
+        "directPartnership": "Could we talk about working together?",
+        "directQuestions": "I have a few questions about your idea.",
+        "groupHello": "Hi everyone!",
+        "groupIdea": "I have a new idea — what do you think?",
+        "groupWho": "Who’s working in this area?"
+      }
+    },
+    "composer": {
+      "maxFiles": "Up to 10 files",
+      "fileTooLarge": "{name}: max 50 MB",
+      "typeBlocked": "This group doesn’t allow {type, select, text {text messages} image {photos} video {videos} voice {voice messages} round_video {video messages} file {files} other {this message type}}",
+      "textBlocked": "Text messages aren’t allowed in this group",
+      "emptyMessage": "The message can’t be empty",
+      "editFailed": "Couldn’t edit the message",
+      "allowCamera": "Allow camera access",
+      "allowMic": "Allow microphone access",
+      "noCamera": "No camera found",
+      "noMic": "No microphone found",
+      "cameraBusy": "The camera is in use by another app",
+      "micBusy": "The microphone is in use",
+      "recordFailed": "Couldn’t start recording",
+      "blockedList": "Not allowed in this group: {list}",
+      "editing": "Editing message",
+      "mediaCaption": "Media caption",
+      "remove": "Remove",
+      "add": "Add",
+      "recordingRound": "Recording video message…",
+      "attach": "Attach",
+      "gallery": "Gallery",
+      "galleryHintVideo": "Photos and videos",
+      "galleryHint": "Photos",
+      "camera": "Camera",
+      "cameraHint": "Take a photo",
+      "fileHintAudio": "Documents, audio, archives",
+      "fileHint": "Documents, archives",
+      "placeholder": "Write a message…",
+      "placeholderEdit": "Edit your message…",
+      "placeholderCaption": "Add a caption (optional)…",
+      "placeholderBlocked": "Text isn’t allowed in this group",
+      "roundVideo": "Video message"
+    },
+    "bubble": {
+      "play": "Play",
+      "pause": "Pause",
+      "sizeKb": "{size} KB",
+      "reply": "Reply",
+      "edit": "Edit",
+      "copy": "Copy",
+      "copied": "Copied",
+      "copyFailed": "Couldn’t copy",
+      "edited": "edited",
+      "sending": "Sending",
+      "read": "Read",
+      "delivered": "Delivered"
+    },
+    "group": {
+      "createTitle": "New group",
+      "nameLabel": "Group name",
+      "namePlaceholder": "e.g. Frontend team",
+      "nameTooShort": "The group name is too short",
+      "usernameLabel": "Username (optional)",
+      "usernamePlaceholder": "ai_team",
+      "usernameInvalid": "Invalid format",
+      "usernameHint": "5–32 characters · starts with a lowercase letter · a-z, 0-9, _",
+      "usernameRule": "Username must be 5–32 characters and start with a lowercase letter",
+      "descriptionLabel": "Description",
+      "descriptionPlaceholder": "What’s this group about?",
+      "publicLabel": "Public — shown on the home page, anyone can join",
+      "create": "Create group",
+      "created": "Group created",
+      "imagesOnly": "Images only",
+      "maxSize": "Max 8 MB",
+      "avatarAlt": "Group",
+      "removePhoto": "Remove photo",
+      "changePhoto": "Change photo",
+      "uploadAvatar": "Upload avatar",
+      "settingsNotice": "Enabled types are <b>blocked</b> for regular members. The owner and admins can always send them.",
+      "blocked": "Blocked",
+      "saving": "Saving…",
+      "saved": "Group settings saved"
+    }
+  },
+  "clusterCard": {
+    "opportunity": "Opportunity",
+    "demand": "Demand",
+    "requests": "{count, plural, one {{n} request} other {{n} requests}}",
+    "noSolution": "No solutions",
+    "projects": "{count, plural, one {{n} project} other {{n} projects}}",
+    "level": {
+      "high": "High opportunity",
+      "medium": "Moderate opportunity",
+      "saturated": "Saturated market"
+    }
+  },
+  "common": {
+    "save": "Save",
+    "cancel": "Cancel",
+    "close": "Close",
+    "back": "Back",
+    "loading": "Loading…",
+    "retry": "Try again",
+    "clear": "Clear",
+    "send": "Send"
+  },
+  "coverMedia": {
+    "play": "Play video: {title}",
+    "playUntitled": "Play video",
+    "videoTitle": "{title} — video",
+    "videoUntitled": "Video"
+  },
+  "dealflow": {
+    "back": "Dashboard",
+    "title": "Deal flow",
+    "subtitle": "Projects that fit your criteria, ranked by Match Score",
+    "filters": {
+      "all": "All",
+      "new": "New",
+      "saved": "Saved"
+    },
+    "error": {
+      "forbiddenTitle": "Your feed isn’t open yet",
+      "title": "Something went wrong",
+      "toCabinet": "Go to dashboard"
+    },
+    "empty": {
+      "savedTitle": "No saved projects",
+      "newTitle": "No new projects",
+      "noneTitle": "No matching projects yet",
+      "savedText": "Save projects you like and they’ll gather here",
+      "noneText": "Broaden your criteria a little, or wait for new projects. We’ll let you know when a match appears."
+    }
+  },
+  "discover": {
+    "title": "Community",
+    "subtitle": "Find people, follow them and join groups",
+    "searchPlaceholder": "Username, name or group",
+    "resultType": "Result type",
+    "tabs": {
+      "all": "All",
+      "people": "People",
+      "groups": "Groups"
+    },
+    "noPeople": "No people found",
+    "noGroups": "No groups found",
+    "recent": "Recent searches",
+    "removeRecent": "{term} — remove from history",
+    "suggestions": "Who to follow",
+    "noSuggestions": "No suggestions yet",
+    "communityGroups": "Community groups",
+    "noCommunityGroups": "No groups yet"
+  },
+  "engagement": {
+    "like": "Like — {n}",
+    "unlike": "Unlike — {n}",
+    "save": "Save for later",
+    "unsave": "Remove from saved",
+    "saved": "Saved",
+    "unsaved": "Removed from saved"
+  },
+  "footer": {
+    "tagline": "From idea to startup — together",
+    "description": "A space where students and creative young people solve problems, build teams and create products.",
+    "cols": {
+      "platform": "Platform",
+      "community": "Community",
+      "start": "Get started"
+    },
+    "links": {
+      "showcase": "Startup showcase",
+      "top": "Top startups",
+      "problems": "Problems",
+      "market": "Market map",
+      "polls": "Polls",
+      "discover": "Discover people",
+      "groups": "Groups",
+      "messages": "Messages",
+      "profile": "Profile",
+      "whatIsStartup": "What is a startup?",
+      "addStartup": "Add a startup",
+      "addProblem": "Share a problem",
+      "register": "Sign up",
+      "login": "Sign in"
+    },
+    "contactTitle": "Contact",
+    "aria": {
+      "telegram": "Message us on Telegram",
+      "email": "Send us an email",
+      "phone": "Call us"
+    },
+    "city": "Tashkent, Uzbekistan",
+    "trust": {
+      "free": {
+        "title": "Free to use",
+        "text": "Posting, solving and rating cost nothing"
+      },
+      "security": {
+        "title": "Data security",
+        "text": "Encrypted connection; passwords are never stored in plain text"
+      },
+      "support": {
+        "title": "Human support",
+        "text": "Mon–Sat · 09:00–20:00"
+      }
+    },
+    "rights": "© {year} MYMarkaz · All rights reserved",
+    "madeFor": "{city} · Made for the youth of Uzbekistan"
+  },
+  "groupCard": {
+    "members": "{count, plural, one {{n} member} other {{n} members}}",
+    "open": "Open",
+    "join": "Join"
+  },
+  "helpful": {
+    "label": "Helpful",
+    "marked": "Marked as helpful",
+    "markTitle": "Mark this solution as helpful",
+    "unmarkTitle": "Unmark as helpful",
+    "foundHelpful": "{count, plural, one {{n} person found this helpful} other {{n} people found this helpful}}"
+  },
+  "home": {
+    "seeAll": "See all",
+    "start": "Get started free",
+    "welcome": "Welcome, {name}",
+    "hero": {
+      "title": "From idea <br></br>to business",
+      "lead": "MYMarkaz is where students and creative young people come together. Describe a problem, build the solution with the community, find a team and turn your idea into a real product.",
+      "showcase": "Explore the showcase",
+      "messages": "Messages",
+      "whatIs": "What is a startup?",
+      "building": "What the community is building here"
+    },
+    "stats": {
+      "startups": "Startups",
+      "problems": "Problems",
+      "polls": "Polls",
+      "groups": "Groups"
+    },
+    "whatIs": {
+      "eyebrow": "Asking yourself these questions?",
+      "title": "What is a startup? Who is a founder?",
+      "subtitle": "Here’s the simple version — no jargon, just everyday language",
+      "cards": {
+        "startup": {
+          "title": "What is a startup?",
+          "body": "A startup isn’t just a business. It’s an idea that solves a real problem in a new way — quickly and affordably. It starts small, with a sketch in a notebook or a note on your phone. What matters is that it makes someone’s life easier in some way."
+        },
+        "founder": {
+          "title": "Who is a founder?",
+          "body": "A founder is someone who doesn’t sit around waiting for a diploma or big investment. They spot a problem around them and say, “I’ll solve this.” Whether you’re in school, at university or still finding your way — it doesn’t matter. The only requirement is the courage to start."
+        },
+        "now": {
+          "title": "Why now?",
+          "body": "Because experience comes from doing, not from books. Here you can test an idea, get real feedback and find a team — all in one place, and for free. The best time is always now."
+        }
+      }
+    },
+    "doubts": {
+      "eyebrow": "Let’s be honest",
+      "title": "Why shouldn’t you start today?",
+      "subtitle": "Here are the four most common reasons you tell yourself. Open each one and answer honestly: which of them is really worth stopping for?",
+      "verdict": "Not a single one",
+      "verdictNote": "That’s why the best day to start is today"
+    },
+    "groups": {
+      "eyebrow": "Live community",
+      "title": "Community groups",
+      "subtitle": "Chat in real time — join in and share ideas"
+    },
+    "featured": {
+      "eyebrow": "Showcase",
+      "title": "Featured startups",
+      "subtitle": "Apps, websites and bots built by the community",
+      "empty": "The first startups are coming soon"
+    },
+    "top": {
+      "eyebrow": "Leaderboard",
+      "title": "Top startups",
+      "subtitle": "Leaders by an IMDb-style weighted rating",
+      "more": "Full rankings"
+    },
+    "follow": {
+      "title": "Who to follow",
+      "loading": "Loading suggestions…",
+      "more": "Find more people"
+    },
+    "problems": {
+      "eyebrow": "Collective wisdom",
+      "title": "Latest problems",
+      "subtitle": "Open problems waiting for a solution"
+    },
+    "how": {
+      "eyebrow": "Roadmap",
+      "title": "How does it work?",
+      "subtitle": "From idea to startup — three simple steps",
+      "steps": {
+        "describe": {
+          "title": "Describe the problem",
+          "desc": "Share a problem that bothers you or the people around you. The best ideas start right here."
+        },
+        "gather": {
+          "title": "Build a team, get feedback",
+          "desc": "Get live feedback from the community, find like-minded people and work on a solution together in real-time chat."
+        },
+        "launch": {
+          "title": "Turn it into a startup",
+          "desc": "Put your idea in the showcase, collect votes and grow it into a real product people use."
+        }
+      }
+    },
+    "polls": {
+      "eyebrow": "Community choice",
+      "title": "Polls",
+      "subtitle": "Vote for the startup you like — watch the results live",
+      "more": "All polls"
+    },
+    "cta": {
+      "title": "Your idea is waiting to begin",
+      "text": "Sign up today, share your first problem and start working alongside young people just like you. One step is where it all begins.",
+      "login": "Sign in"
+    }
+  },
+  "introDialog": {
+    "title": "Intro request",
+    "lead": "Your request goes to the founder of <b>{title}</b>. If they accept, a chat opens with this message at the top.",
+    "messageLabel": "Your message",
+    "placeholder": "Say why you’re interested and what you can offer. Being specific makes a reply much more likely.",
+    "charsNeeded": "{count, plural, one {# more character needed} other {# more characters needed}}"
+  },
+  "introRequests": {
+    "back": "Profile",
+    "title": "Intro requests",
+    "subtitle": "Investors interested in your project. Accept a request to open a chat.",
+    "emptyTitle": "No requests yet",
+    "emptyText": "Fill in your project profile — stage, needs and metrics — and investors will find you faster",
+    "investorFallback": "Investor",
+    "projectFallback": "Project",
+    "accept": "Accept",
+    "decline": "Decline",
+    "openChat": "Open chat"
+  },
+  "investor": {
+    "eyebrow": "Investor dashboard",
+    "title": {
+      "profile": "Your criteria",
+      "join": "Join as an investor"
+    },
+    "subtitle": {
+      "profile": "We use this to pick projects that fit you",
+      "join": "Tell us once what interests you — matching projects will find you"
+    },
+    "verified": "Your profile is verified",
+    "lastUpdated": "updated {time}",
+    "links": {
+      "dealflow": "Deal flow",
+      "saved": "Saved",
+      "requests": "Sent requests"
+    },
+    "pending": {
+      "title": "Awaiting verification",
+      "text": "Your application has been received. The deal flow opens once your profile is verified — this rule protects young founders from fake requests. You can edit your criteria in the meantime."
+    },
+    "criteria": {
+      "title": "Current criteria",
+      "sectors": "Sectors",
+      "check": "Check size",
+      "regions": "Regions",
+      "noLimit": "No restrictions"
+    },
+    "joinNotice": "Once you submit your profile, a platform administrator will review it. After approval, a feed of projects matching your criteria opens, and we’ll let you know when new ones appear."
+  },
+  "investorFields": {
+    "title": "For investors",
+    "optional": "(optional)",
+    "subtitle": "Add your project’s stage and metrics to show up in investor searches.",
+    "reassurance": "Your project is published even if you leave these fields blank. Fill them in and matching becomes much more accurate — you’ll appear in the deal flow of investors whose criteria fit.",
+    "completed": "Completed: {percent}%",
+    "stage": "Project stage",
+    "needs": "What do you need? (choose all that apply)",
+    "needsHint": "Choose at least one, and your project will be added to investors’ deal flow.",
+    "ask": "How much funding do you need?",
+    "askMin": "Minimum (mln UZS)",
+    "askMax": "Maximum (mln UZS)",
+    "askPreview": "Investors will see: <b>{range}</b>",
+    "problem": "What problem are you solving?",
+    "problemPlaceholder": "For example: farmers have to sell their produce cheaply to middlemen because they have no direct channel to buyers.",
+    "audience": "Who is it for?",
+    "audiencePlaceholder": "For example: small family farms",
+    "businessModel": "Business model",
+    "notSelected": "Not selected",
+    "metrics": "Metrics",
+    "teamSize": "Team (people)",
+    "revenue": "Monthly revenue (mln UZS)",
+    "activeUsers": "Monthly active users",
+    "payingCustomers": "Paying customers",
+    "metricsHint": "Fill in what you know — you don’t need all of it.",
+    "traction": "What have you achieved so far?",
+    "tractionPlaceholder": "For example: 3,000 users and 240 subscribers in three months, with 22% monthly growth."
+  },
+  "investorForm": {
+    "errors": {
+      "thesisShort": "Your thesis needs at least 20 characters — or leave it empty",
+      "range": "The minimum check can’t exceed the maximum"
+    },
+    "who": {
+      "title": "Who are you?",
+      "orgName": "Organization name (optional)",
+      "orgNamePlaceholder": "e.g. UzVentures",
+      "website": "Website (optional)"
+    },
+    "thesis": {
+      "title": "Your investment thesis",
+      "hint": "What you’re interested in and what you avoid, in your own words. The semantic part of the Match Score relies on this text.",
+      "placeholder": "e.g. I’m interested in early-stage projects in education and healthcare. A technical co-founder on the team is a must.",
+      "tooShort": "At least 20 characters — or leave it blank."
+    },
+    "criteria": {
+      "title": "Your criteria",
+      "hint": "Leave these empty and there are no restrictions — every project reaches your feed.",
+      "sectors": "Sectors",
+      "stages": "Stages",
+      "regions": "Regions",
+      "offers": "What do you offer?",
+      "offersHint": "Project needs are matched against this list.",
+      "check": "Check size (mln UZS)",
+      "checkMin": "Minimum",
+      "checkMax": "Maximum",
+      "rangeInvalid": "The minimum can’t exceed the maximum",
+      "range": "Range: {range}"
+    },
+    "contact": {
+      "title": "Contact details",
+      "hint": "Founders CAN’T see this — it’s shared in chat only once a request is accepted.",
+      "email": "Email (optional)",
+      "phone": "Phone (optional)"
+    },
+    "settings": {
+      "title": "Settings",
+      "alerts": "New match alerts",
+      "alertsHint": "Get notified when a project fits your criteria",
+      "alertsAria": "Notifications",
+      "active": "Feed active",
+      "activeHint": "When off, new matches aren’t calculated"
+    },
+    "create": "Create profile"
+  },
+  "investorRequests": {
+    "back": "Dashboard",
+    "title": "Sent requests",
+    "subtitle": "If the founder accepts, a chat opens automatically",
+    "emptyTitle": "You haven’t sent any requests yet",
+    "emptyText": "Pick a project from your feed and send the founder a short message",
+    "deleted": "Project deleted",
+    "match": "{score}% match",
+    "openChat": "Open chat",
+    "withdraw": "Withdraw"
+  },
+  "labels": {
+    "problemStatus": {
+      "pending": "Pending",
+      "open": "Open",
+      "under_review": "Under review",
+      "resolved": "Solved",
+      "rejected": "Rejected"
+    },
+    "solutionStatus": {
+      "pending": "Pending",
+      "accepted": "Accepted",
+      "rejected": "Rejected"
+    },
+    "startupStatus": {
+      "draft": "Draft",
+      "published": "Published",
+      "archived": "Archived"
+    },
+    "role": {
+      "superadmin": "Superadmin",
+      "analyzer": "Analyst",
+      "school_student": "School student",
+      "university_student": "University student",
+      "user": "User",
+      "investor": "Investor"
+    },
+    "platform": {
+      "android": {
+        "label": "Android",
+        "cta": "Google Play",
+        "kicker": "GET IT ON",
+        "store": "Google Play"
+      },
+      "ios": {
+        "label": "iOS",
+        "cta": "App Store",
+        "kicker": "Download on the",
+        "store": "App Store"
+      },
+      "website": {
+        "label": "Website",
+        "cta": "Visit website",
+        "kicker": "Open",
+        "store": "Website"
+      },
+      "telegram_bot": {
+        "label": "Telegram",
+        "cta": "Open in Telegram",
+        "kicker": "Open",
+        "store": "Telegram"
+      },
+      "other": {
+        "label": "Link",
+        "cta": "Open link",
+        "kicker": "Open",
+        "store": "Link"
+      }
+    }
+  },
+  "landing": {
+    "doubts": {
+      "simple": {
+        "q": "“My idea is too simple, it’s nothing special...”",
+        "a": "Even the biggest products started with one simple idea. What matters isn’t how big the idea is, but that you pick it up and try it. Share your idea here, get feedback and find out from real people whether it’s truly worth it."
+      },
+      "code": {
+        "q": "“I can’t code...”",
+        "a": "A startup isn’t code — it’s a solution. Your idea, your commitment and your ability to bring people together matter far more. Here, a developer, a designer or a co-founder is just a few messages away."
+      },
+      "alone": {
+        "q": "“I’m on my own, I don’t have a team...”",
+        "a": "That’s exactly why the community exists. Thousands of young people just like you are looking for a team right here. Join groups, chat in real time and find people who share your ideas."
+      },
+      "start": {
+        "q": "“I don’t know where to start...”",
+        "a": "The first step is always the hardest. Describe a problem that bothers you — we’ll build the rest step by step, together with the community. The path appears as you walk it."
+      }
+    },
+    "marquee": {
+      "apps": "Mobile apps",
+      "bots": "Telegram bots",
+      "websites": "Websites",
+      "saas": "SaaS products",
+      "shops": "Online stores",
+      "edtech": "EdTech projects",
+      "games": "Games",
+      "health": "Health services",
+      "agrotech": "AgroTech",
+      "content": "Content platforms",
+      "creative": "Creative projects",
+      "fintech": "FinTech ideas"
+    },
+    "hero": {
+      "tagline": "The school library goes digital — find the book you need in 2 seconds.",
+      "place": "{rank, selectordinal, one {#st} two {#nd} few {#rd} other {#th}} place",
+      "problem": "Problem",
+      "problemText": "Finding the right book in the library takes far too long.",
+      "solutions": "{count, plural, one {{n} solution} other {{n} solutions}}",
+      "aiFound": "Found <b>{count, plural, one {{n} project} other {{n} projects}}</b> that fit this problem.",
+      "aiFoundShort": "<b>{count, plural, one {{n} project} other {{n} projects}}</b> found."
+    }
+  },
+  "lang": {
+    "label": "Language",
+    "change": "Change language (current: {name})"
+  },
+  "leaderboard": {
+    "period": {
+      "all": "All time",
+      "year": "Past year",
+      "month": "Past month",
+      "week": "Past week"
+    },
+    "eyebrow": {
+      "startups": "Startup rankings",
+      "founders": "Founder rankings"
+    },
+    "title": {
+      "startups": "Top startups",
+      "founders": "Top founders"
+    },
+    "subtitle": {
+      "startups": "The best startups by user ratings, ranked with an IMDb-style weighted (Bayesian) score",
+      "founders": "Startup founders ranked by community votes — vote for the founder you back"
+    },
+    "tabsLabel": "Ranking type",
+    "tabs": {
+      "startups": "Startups",
+      "founders": "Founders"
+    },
+    "competing": "<b>{n}</b> rated {count, plural, one {startup} other {startups}} competing",
+    "updating": "updating…",
+    "allCategories": "All",
+    "listHeading": "Rankings list",
+    "empty": {
+      "title": "No ratings yet",
+      "description": "No rated startups found for this period or category"
+    },
+    "place": "{rank, selectordinal, one {#st} two {#nd} few {#rd} other {#th}} place",
+    "podiumAria": "{rank, selectordinal, one {#st} two {#nd} few {#rd} other {#th}} place: {title}, score {score}",
+    "raters": "Rated by",
+    "views": "Views",
+    "movement": {
+      "new": "New",
+      "same": "No change in rank",
+      "up": "{count, plural, one {Up # place} other {Up # places}}",
+      "down": "{count, plural, one {Down # place} other {Down # places}}"
+    },
+    "medal": {
+      "gold": "Gold",
+      "silver": "Silver",
+      "bronze": "Bronze"
+    },
+    "formula": {
+      "question": "How are rankings calculated?",
+      "stats": "Average = <b>{c}</b> · confidence threshold (m) = <b>{m}</b>",
+      "intro": "Ratings use a <b>10-point</b> scale. A simple average would be unfair: a startup with a single 10 would jump ahead of one averaging 9.6 across 1,000 votes. That’s why, like IMDb’s Top 250, we use a <b>Bayesian (weighted) rating</b> — when there are few votes, the score is “pulled” toward the overall average.",
+      "legend": {
+        "r": "the startup’s average rating (0–10)",
+        "v": "number of votes (ratings)",
+        "m": "votes needed for a reliable score",
+        "c": "the average across all startups"
+      }
+    },
+    "founders": {
+      "startups": "{count, plural, one {{n} startup} other {{n} startups}}",
+      "followers": "{count, plural, one {{n} follower} other {{n} followers}}",
+      "empty": {
+        "title": "No founders yet",
+        "text": "The first person to add a startup will appear here"
+      }
+    }
+  },
+  "market": {
+    "eyebrow": "Market intelligence",
+    "title": "Where solutions are missing",
+    "subtitle": "Real requests and problems from the platform, grouped into areas. Where the opportunity score is high, there’s demand but no solution yet.",
+    "metrics": {
+      "areas": "{count, plural, one {Area} other {Areas}}",
+      "signals": "{count, plural, one {Signal} other {Signals}}",
+      "unsolved": "Unsolved",
+      "opportunity": "Opportunity",
+      "demand": "Demand",
+      "projects": "{count, plural, one {Existing project} other {Existing projects}}"
+    },
+    "empty": {
+      "title": "The map is still taking shape",
+      "text": "Areas are built from real requests. Ask Yechim AI or share a problem — the map fills in as you go.",
+      "askAi": "Ask Yechim AI"
+    },
+    "backlog": {
+      "title": "This list is a ready-made idea bank",
+      "text": "People are asking for help in these areas, but there’s no matching project on the platform yet. Build one that fills the gap — the demand is already there.",
+      "cta": "Add a project"
+    },
+    "cluster": {
+      "notFoundTitle": "Area not found",
+      "notFoundText": "It may have been hidden or changed when the map was rebuilt",
+      "backToMap": "Market map",
+      "noCoverage": "People are asking for this, but no matching project was found on the platform.",
+      "coverage": "{count, plural, one {There’s {n} project in this area.} other {There are {n} projects in this area.}} {pct}% of requests are still unanswered.",
+      "samplesTitle": "What people are asking",
+      "projectsTitle": "Projects in this area",
+      "noProjects": "No projects here yet — the gap is wide open",
+      "firstProject": "Be the first to add a project"
+    }
+  },
+  "matchCard": {
+    "ringLabel": "{score}% match — {level}",
+    "new": "New",
+    "ask": "Raising:",
+    "why": "Why this match?",
+    "connect": "Connect",
+    "save": "Save to list",
+    "unsave": "Remove from list",
+    "dismiss": "Not interested"
+  },
+  "media": {
+    "primer": {
+      "titleBoth": "Camera and microphone",
+      "titleCamera": "Camera access",
+      "whyBoth": "Needed for voice and video messages in chat.",
+      "whyCamera": "Needed to take and send photos right in chat.",
+      "once": "Allow it once — we won’t ask again.",
+      "close": "Close",
+      "allow": "Allow",
+      "later": "Later"
+    }
+  },
+  "meta": {
+    "ai": {
+      "title": "Yechim AI — finds a solution to your problem",
+      "description": "Describe your problem in text or by voice — Yechim AI searches Uzbekistan startups and projects on MYMarkaz and finds the ones that can solve it. Free."
+    },
+    "auth": {
+      "login": {
+        "title": "Sign in",
+        "description": "Sign in to MYMarkaz to showcase your startup, propose solutions to real problems and connect with teammates and investors in Uzbekistan."
+      },
+      "register": {
+        "title": "Sign up",
+        "description": "Create a free MYMarkaz account in a minute: showcase your startup, share problems, find solutions and get help from Yechim AI."
+      },
+      "forgotPassword": {
+        "title": "Reset password",
+        "description": "Forgot your MYMarkaz password? Enter your email and we’ll send a 6-digit code so you can safely regain access to your account."
+      },
+      "resetPassword": {
+        "title": "Set a new password",
+        "description": "Enter the verification code from your email and set a new, secure password for your MYMarkaz account — it only takes a few seconds."
+      },
+      "verifyEmail": {
+        "title": "Verify your email",
+        "description": "Enter the 6-digit code from your email to activate your MYMarkaz account — startups, the community and Yechim AI are waiting for you."
+      }
+    },
+    "billing": {
+      "pricing": {
+        "title": "Pricing and plans",
+        "description": "Publish your projects on MYMarkaz — pick a monthly or yearly plan. One-time payment with no auto-renewal, and your projects always stay yours."
+      },
+      "billing": {
+        "title": "My subscription",
+        "description": "Your current plan, project limits and payment history — keep track of your MYMarkaz subscription in one place and switch plans whenever you need."
+      },
+      "status": {
+        "title": "Payment status",
+        "description": "We’re tracking the confirmation of your MYMarkaz payment. As soon as it arrives, your subscription activates automatically — it takes a few seconds."
+      }
+    },
+    "chat": {
+      "title": "Messages",
+      "description": "Private messages and groups on MYMarkaz: talk with startup founders, investors and community members — all your conversations in one place."
+    },
+    "discover": {
+      "title": "Community — people and groups",
+      "description": "The MYMarkaz community: find startup founders, developers and designers, follow them and join groups that match your interests."
+    },
+    "home": {
+      "title": "MYMarkaz — From idea to business",
+      "description": "The startup platform for Uzbekistan’s youth: share problems, find solutions with Yechim AI, showcase your startup and meet teammates and investors."
+    },
+    "investor": {
+      "cabinet": {
+        "title": "Investor dashboard",
+        "description": "Set your investment criteria and get matching Uzbekistan startups, ranked by Match Score with a clear breakdown of why each one fits."
+      },
+      "dealflow": {
+        "title": "Deal flow",
+        "description": "Uzbekistan startups that fit your investment criteria, with Match Score, readiness score and one-click intros to their founders."
+      },
+      "requests": {
+        "title": "Sent requests",
+        "description": "Your intro requests to founders and their status — awaiting reply, accepted or declined. Once a founder accepts, a chat opens automatically."
+      }
+    },
+    "leaderboard": {
+      "title": "Uzbekistan startup and founder rankings",
+      "description": "The best startups in Uzbekistan, ranked by an IMDb-style weighted (Bayesian) rating from user reviews, plus the top founders chosen by community votes."
+    },
+    "market": {
+      "list": {
+        "title": "Market map: where new startups are needed",
+        "description": "What people in Uzbekistan are asking for and where no solution exists yet — a market map built on real requests, with ready-made startup ideas."
+      },
+      "cluster": {
+        "title": "{name}: demand and opportunities",
+        "description": "{name}: what people are asking for, which projects already exist and where there’s room for a new startup — on the MYMarkaz market map.",
+        "notFoundTitle": "Area not found",
+        "notFoundDescription": "This area may have been hidden or changed when the market map was rebuilt. Explore other opportunities on the MYMarkaz market map."
+      }
+    },
+    "notifications": {
+      "title": "Notifications",
+      "description": "Your MYMarkaz notifications: new followers, messages and every update about your solutions and startups, all in one place."
+    },
+    "polls": {
+      "title": "Startup polls — community choice",
+      "description": "Community choice: vote for the strongest startups and follow the results live. Support projects built by young people in Uzbekistan."
+    },
+    "problems": {
+      "list": {
+        "title": "Problems and solutions — startup ideas",
+        "description": "Real problems the community wants solved — read them, mark them “Helpful” and propose your own solutions. Find your next startup idea right here."
+      },
+      "detail": {
+        "notFoundTitle": "Problem not found",
+        "notFoundDescription": "This problem has been removed or doesn’t exist. Explore other real problems and their solutions on MYMarkaz."
+      },
+      "create": {
+        "title": "Share a problem",
+        "description": "Describe your problem in detail and add photos or videos — it goes live instantly and the community will propose solutions."
+      }
+    },
+    "profile": {
+      "title": "Profile",
+      "description": "Your personal MYMarkaz profile: your startups, problems, solutions, saved items and account settings — all in one convenient place.",
+      "introRequests": {
+        "title": "Intro requests",
+        "description": "Intro requests from investors interested in your project: review them, accept the ones you like and start talking in MYMarkaz chat."
+      }
+    },
+    "settings": {
+      "title": "Settings",
+      "description": "Manage your MYMarkaz account: public profile, username, personal details, password, interface language and device permissions."
+    },
+    "site": {
+      "title": "MYMarkaz — From Idea to Business",
+      "description": "The startup platform for Uzbekistan’s youth: share problems, find solutions, showcase your startup, meet teammates and investors. With Yechim AI — free.",
+      "keywords": "startup, Uzbekistan startups, business idea, investors, problems and solutions, community, Yechim AI"
+    },
+    "solutions": {
+      "title": "My solutions",
+      "description": "All the solutions you’ve submitted, the startups attached to them and the “Helpful” marks they’ve earned — in one place."
+    },
+    "startups": {
+      "list": {
+        "title": "Uzbekistan startups — apps, websites and bots",
+        "description": "Explore Uzbekistan startups: mobile apps, websites and Telegram bots built by young teams. Rate projects, write reviews and showcase your own startup."
+      },
+      "detail": {
+        "notFoundTitle": "Startup not found"
+      },
+      "create": {
+        "title": "Add your startup",
+        "description": "List your startup on the MYMarkaz showcase for free: an app, a website or a Telegram bot. All you need is a name and a description — add the rest later."
+      },
+      "edit": {
+        "title": "Edit your startup",
+        "description": "Update your startup’s name, description, links and media — your changes appear on the MYMarkaz showcase for everyone right away."
+      }
+    },
+    "user": {
+      "description": "{name} is part of the MYMarkaz community. Explore their startups, follow their updates and send them a message directly.",
+      "descriptionAbout": "{name} on MYMarkaz: {about}",
+      "notFoundTitle": "User not found",
+      "notFoundDescription": "This profile doesn’t exist or the account is inactive. Discover other founders and their startups in the MYMarkaz community."
+    }
+  },
+  "nav": {
+    "messages": "Messages",
+    "loggedOut": "You’ve signed out",
+    "links": {
+      "startups": "Startups",
+      "leaderboard": "Rankings",
+      "problems": "Problems",
+      "market": "Market",
+      "solutions": "My solutions",
+      "discover": "Community",
+      "pricing": "Pricing"
+    },
+    "search": "Search",
+    "addStartupShort": "Startup",
+    "addStartup": "Add a startup",
+    "addProblem": "Share a problem",
+    "profile": "Profile",
+    "logout": "Sign out",
+    "login": "Sign in",
+    "register": "Sign up",
+    "menu": "Menu",
+    "tabs": {
+      "home": "Home",
+      "startups": "Startups",
+      "problems": "Problems",
+      "chat": "Chat",
+      "profile": "Profile"
+    },
+    "messagesUnread": "{count, plural, one {Messages — # unread} other {Messages — # unread}}",
+    "more": "More",
+    "moreSections": "More sections"
+  },
+  "notFound": {
+    "metaTitle": "Page not found",
+    "title": "Page not found",
+    "text": "The page you’re looking for doesn’t exist or may have been moved",
+    "home": "Go home",
+    "startups": "Startups"
+  },
+  "notifications": {
+    "title": "Notifications",
+    "markAllRead": "Mark all as read",
+    "empty": "No notifications",
+    "seeAll": "See all"
+  },
+  "notificationsPage": {
+    "title": "Notifications",
+    "total": "{n} total",
+    "markAllRead": "Mark all read",
+    "emptyTitle": "No notifications",
+    "emptyText": "Updates will show up here"
+  },
+  "paymentSheet": {
+    "methodAria": "Payment method",
+    "pay": "Pay {sum}",
+    "redirect": "{provider, select, none {You’ll complete the payment on the provider’s page} other {You’ll complete the payment on the {provider} page}}"
+  },
+  "planCard": {
+    "popular": "Popular",
+    "perMonth": "About {sum} a month",
+    "saving": "save {percent}%",
+    "current": "Your current plan",
+    "select": "Choose"
+  },
+  "polls": {
+    "back": "Back",
+    "eyebrow": "Community choice",
+    "title": "Polls",
+    "subtitle": "The community picks the strongest startups. Vote for the project you like — results update live.",
+    "stats": {
+      "active": "Active polls",
+      "votes": "Total votes"
+    },
+    "listHeading": "List of polls",
+    "empty": {
+      "title": "No polls yet",
+      "description": "An admin will launch a startup poll soon"
+    },
+    "card": {
+      "kicker": "Community vote",
+      "ended": "Ended",
+      "live": "Live",
+      "status": {
+        "closed": "Voting has closed — final results",
+        "voted": "Your vote has been counted. Results update in real time.",
+        "open": "Choose one startup. Your vote stays anonymous."
+      },
+      "participants": "<b>{n}</b> {count, plural, one {participant has voted} other {participants have voted}}",
+      "hint": {
+        "voted": "Pick another option to change your vote",
+        "closed": "Voting is closed",
+        "pick": "Tap to choose"
+      },
+      "startupFallback": "Startup",
+      "winner": "Winner",
+      "leader": "Leading",
+      "video": "Video",
+      "details": "Details"
+    }
+  },
+  "pricing": {
+    "title": "Pricing",
+    "subtitle": "Choose a plan to publish your project. You can change it anytime.",
+    "intervalAria": "Billing period",
+    "yearlySaving": "Save <b>up to {percent}%</b> with yearly billing",
+    "empty": "No plans available yet",
+    "checkoutFailed": "Couldn’t start the payment",
+    "trust": {
+      "payVia": "{count, plural, =0 {Pay by card} one {Pay with {a}} other {Pay with {a} or {b}}}",
+      "cardData": "We never store your card details",
+      "noAutoTitle": "No auto-renewal",
+      "noAutoText": "One-time payment — you renew it yourself when it ends",
+      "ownTitle": "Your projects stay yours",
+      "ownText": "Published projects stay up even after your plan ends"
+    },
+    "historyNote": "Your payment history and current subscription are in <link>My subscription</link>."
+  },
+  "problemCreate": {
+    "title": "Share a problem",
+    "subtitle": "Describe the problem in detail — the community will suggest solutions",
+    "fileTooLarge": "Maximum file size is {max} MB",
+    "uploadFailed": "Upload failed",
+    "published": "Problem published!",
+    "invalidUrl": "Enter a valid URL",
+    "titleLabel": "Title",
+    "titlePlaceholder": "Sum up the problem in a few words...",
+    "titleHint": "10–200 characters",
+    "categoryLabel": "Category (optional)",
+    "descriptionLabel": "Description",
+    "descriptionPlaceholder": "Describe the problem in detail. What happened? What do you expect? What have you already tried?...",
+    "imagesLabel": "Images (up to 5)",
+    "uploadImage": "Upload image",
+    "imageUrlPlaceholder": "or paste a URL",
+    "addImage": "Add image",
+    "videosLabel": "Videos (up to 3)",
+    "uploadVideo": "Upload video",
+    "videoUrlPlaceholder": "or YouTube/URL",
+    "addVideo": "Add video",
+    "notice": "<note>Note:</note> Your problem is <hl>published</hl> the moment you submit it — the community can propose solutions right away."
+  },
+  "problemDetail": {
+    "notFound": "Problem not found",
+    "imageAlt": "Problem image",
+    "share": "Share",
+    "postedBy": "Posted by <author></author>",
+    "analyzerNote": "Analyst’s note",
+    "proposeSolution": "Propose a solution",
+    "tabsAria": "Comments or solutions",
+    "tabComments": "Comments",
+    "tabSolutions": "Solutions",
+    "writeComment": "Write a comment",
+    "signUpToComment": "<link>Sign up</link> to leave a comment.",
+    "noComments": "No comments yet",
+    "noSolutions": "No solutions yet — be the first!",
+    "presentation": "Presentation",
+    "video": "Video",
+    "similar": "Similar problems",
+    "comment": {
+      "added": "Comment added",
+      "deleted": "Comment deleted",
+      "delete": "Delete comment",
+      "placeholder": "Share your thoughts...",
+      "linkPlaceholder": "Link (optional)",
+      "linkInvalid": "This link isn’t valid"
+    },
+    "solutionForm": {
+      "sent": "Solution submitted!",
+      "fullNameLabel": "Full name",
+      "fullNamePlaceholder": "First and last name",
+      "attachLabel": "Submit your startup as the solution <muted>(optional)</muted>",
+      "attachAria": "Attach a startup",
+      "attachNone": "Don’t attach",
+      "attachHintSelected": "Your startup is a solution in itself — text, presentation and video are now optional.",
+      "attachHint": "If you choose a startup, text, presentation and video become optional.",
+      "contentLabel": "Solution",
+      "contentLabelOptional": "Solution notes (optional)",
+      "contentPlaceholder": "Describe your solution in detail... (at least 20 characters)",
+      "contentPlaceholderStartup": "Optionally, briefly describe how your startup solves this problem...",
+      "presentationLabel": "Presentation link",
+      "videoLabel": "Video link",
+      "urlPlaceholderOptional": "https://... (optional)",
+      "urlInvalid": "Invalid link",
+      "submit": "Submit solution"
+    }
+  },
+  "problemLike": {
+    "label": "Helpful",
+    "markTitle": "Mark as helpful"
+  },
+  "problemsPage": {
+    "title": "Problems",
+    "subtitle": "{count, plural, one {{n} problem · awaiting a solution} other {{n} problems · awaiting solutions}}",
+    "add": "Add",
+    "searchPlaceholder": "Search problems",
+    "listHeading": "List of problems",
+    "emptyTitle": "No problems found",
+    "emptyDescription": "Try a different keyword"
+  },
+  "profile": {
+    "title": "Profile",
+    "settings": "Settings",
+    "emailVerified": "Email verified",
+    "followers": "{count, plural, one {follower} other {followers}}",
+    "following": "{count, plural, other {following}}",
+    "viewPublic": "View public profile",
+    "setUsername": "Set a username",
+    "details": {
+      "title": "Details",
+      "age": "Age",
+      "region": "Region",
+      "district": "District",
+      "school": "School",
+      "grade": "Grade",
+      "gradeValue": "Grade {grade}",
+      "university": "University",
+      "course": "Year",
+      "courseValue": "Year {course}",
+      "email": "Email"
+    },
+    "saved": "Saved startups · {n}",
+    "problems": {
+      "title": "My problems · {n}",
+      "empty": "You haven’t shared any problems yet",
+      "create": "Share a problem"
+    },
+    "solutions": {
+      "title": "My solutions · {n}",
+      "helpful": "{count, plural, one {{n} person found this helpful} other {{n} people found this helpful}}"
+    },
+    "actions": {
+      "billing": "My subscription",
+      "introRequests": "Intro requests",
+      "investor": "Investor dashboard",
+      "settings": "Settings",
+      "logout": "Sign out",
+      "deleteAccount": "Delete account",
+      "deleteNote": "Sign in again within 30 days and your account will be fully restored."
+    },
+    "delete": {
+      "title": "Delete account",
+      "text": "Your account will be kept for 30 days. If you sign in again during that time, you can restore it.",
+      "confirm": "Delete",
+      "done": "Your account is scheduled for deletion. You can restore it within 30 days."
+    }
+  },
+  "publicProfile": {
+    "back": "Back",
+    "notFoundTitle": "User not found",
+    "notFoundText": "This username doesn’t exist or the account is inactive",
+    "edit": "Edit profile",
+    "message": "Message",
+    "report": "Report user",
+    "followsYou": "Follows you",
+    "memberSince": "Joined {date}",
+    "lastSeen": "Last active {time}",
+    "online": "Online",
+    "followers": "{count, plural, one {follower} other {followers}}",
+    "following": "{count, plural, other {following}}",
+    "startups": "Startups",
+    "noStartups": "No startups yet"
+  },
+  "rating": {
+    "value": "Rated {value} out of {max}",
+    "valueVotes": "{count, plural, one {Rated {value} out of {max} — {n} vote} other {Rated {value} out of {max} — {n} votes}}",
+    "scale": "Rating — 1 to {max}",
+    "point": "{count, plural, one {# point} other {# points}}"
+  },
+  "readiness": {
+    "title": "Project readiness",
+    "refresh": "Refresh",
+    "refreshed": "Analysis updated",
+    "aiReady": "AI analysis is ready",
+    "scoreNote": "The score is based on the 6 criteria investors pay attention to. It’s an internal working tool and isn’t shown publicly.",
+    "matched": "{count, plural, one {You match the criteria of <b>{n}</b> investor} other {You match the criteria of <b>{n}</b> investors}}",
+    "matchedNote": "Their identities stay hidden — you’ll be notified if they reach out.",
+    "notInFeed": "Your project isn’t in investors’ deal flow",
+    "notInFeedHint": "Answer “What do you need?” when editing, and your project will be added to investors’ deal flow.",
+    "reply": "{count, plural, one {Reply to {n} request} other {Reply to {n} requests}}",
+    "market": "Market area",
+    "demand": "Demand score in this area: {score}/100",
+    "checks": "Checks",
+    "aiTitle": "AI analysis",
+    "aiNote": "Strengths, weaknesses and practical recommendations. It doesn’t affect the score, which is calculated separately.",
+    "strengths": "Strengths",
+    "weaknesses": "Weaknesses",
+    "opportunities": "Opportunities",
+    "risks": "Risks",
+    "recommendations": "Recommendations",
+    "updating": "Updating…",
+    "rerun": "Run the analysis again",
+    "preparing": "Preparing the analysis…",
+    "getAi": "Get an AI analysis",
+    "aiUnavailable": "AI is unavailable right now"
+  },
+  "regions": {
+    "andijan": "Andijan",
+    "bukhara": "Bukhara",
+    "fergana": "Fergana",
+    "jizzakh": "Jizzakh",
+    "namangan": "Namangan",
+    "navoi": "Navoi",
+    "kashkadarya": "Kashkadarya",
+    "karakalpakstan": "Karakalpakstan",
+    "samarkand": "Samarkand",
+    "syrdarya": "Syrdarya",
+    "surkhandarya": "Surkhandarya",
+    "tashkentRegion": "Tashkent Region",
+    "tashkentCity": "Tashkent",
+    "khorezm": "Khorezm"
+  },
+  "report": {
+    "title": "Report this {target, select, startup {startup} message {message} problem {problem} solution {solution} user {user} other {content}}",
+    "notice": "Moderators will review your report. Please avoid filing unfounded reports.",
+    "pickReason": "Please choose a reason",
+    "sent": "Your report has been sent",
+    "detailsLabel": "Additional details (optional)",
+    "detailsPlaceholder": "Briefly describe the issue...",
+    "action": "Report",
+    "loginRequired": "Sign in to report",
+    "reason": {
+      "spam": "Spam or advertising",
+      "inappropriate": "Inappropriate content",
+      "harassment": "Harassment or bullying",
+      "hate_speech": "Hate speech",
+      "sexual_content": "Sexual content",
+      "violence": "Violence",
+      "misinformation": "Misinformation",
+      "scam": "Scam or fraud",
+      "copyright": "Copyright violation",
+      "duplicate": "Duplicate",
+      "not_working": "Broken or not working",
+      "low_quality": "Low quality or irrelevant",
+      "offensive": "Offensive",
+      "other": "Something else"
+    }
+  },
+  "reviews": {
+    "title": "Reviews and ratings",
+    "votes": "{count, plural, one {{n} vote} other {{n} votes}}",
+    "summary": "Here’s how users rated this startup on a {max}-point scale.",
+    "noRatings": "No ratings yet. Be the first to rate it!",
+    "formula": "Ranking positions use a weighted (Bayesian) formula, just like IMDb.",
+    "updateTitle": "Update your review",
+    "rateTitle": "Rate this startup",
+    "placeholder": "Share your thoughts (optional)...",
+    "update": "Update",
+    "delete": "Delete",
+    "deleted": "Your review has been deleted",
+    "saved": "Saved",
+    "signIn": "<b>Sign in</b> to rate this startup",
+    "empty": "No reviews yet"
+  },
+  "search": {
+    "title": "Search",
+    "placeholder": "Search people, startups or problems",
+    "quick": "Quick links",
+    "empty": "No results",
+    "people": "People",
+    "startups": "Startups",
+    "problems": "Problems"
+  },
+  "settings": {
+    "back": "Profile",
+    "title": "Settings",
+    "public": {
+      "title": "Public profile",
+      "view": "View profile",
+      "cover": "Cover image",
+      "avatar": "Avatar",
+      "username": "Username",
+      "usernameHint": "5–32 characters · starts with a letter · a-z, 0-9, _",
+      "headline": "Headline",
+      "headlinePlaceholder": "For example: Full-stack developer · Founder",
+      "bio": "About me",
+      "save": "Save public profile",
+      "saved": "Public profile updated",
+      "usernameInvalid": "Username must be 5–32 characters and start with a letter",
+      "usernameTaken": "This username is already taken"
+    },
+    "personal": {
+      "title": "Personal details",
+      "fullName": "Full name",
+      "age": "Age (optional)",
+      "region": "Region",
+      "regionNone": "Not selected",
+      "district": "District",
+      "school": "School",
+      "grade": "Grade",
+      "gradeOption": "Grade {grade}",
+      "university": "University",
+      "course": "Year",
+      "courseOption": "Year {course}",
+      "saved": "Profile updated"
+    },
+    "email": {
+      "title": "Email",
+      "verified": "Verified",
+      "readonly": "Your email can’t be changed"
+    },
+    "password": {
+      "title": "Change password",
+      "current": "Current password",
+      "currentPlaceholder": "Your current password",
+      "new": "New password",
+      "newPlaceholder": "New password",
+      "confirm": "Confirm",
+      "confirmPlaceholder": "Re-enter the new password",
+      "mismatch": "Passwords don’t match",
+      "invalid": "The password doesn’t meet the requirements",
+      "submit": "Update password",
+      "changed": "Password changed"
+    },
+    "devices": {
+      "title": "Device permissions",
+      "state": {
+        "granted": "Allowed",
+        "denied": "Blocked",
+        "prompt": "Not requested",
+        "unsupported": "Unknown"
+      },
+      "camera": "Camera",
+      "cameraDesc": "For video messages and photos",
+      "microphone": "Microphone",
+      "microphoneDesc": "For voice messages",
+      "microphoneOff": "Not in use yet (temporarily turned off)",
+      "request": "Request",
+      "cameraDenied": "Camera access wasn’t granted — you can turn it on from the lock icon in your browser’s address bar",
+      "microphoneDenied": "Microphone access wasn’t granted — you can turn it on from the lock icon in your browser’s address bar",
+      "gallery": "Gallery",
+      "galleryDesc": "Your device asks for access itself when you choose a photo or video",
+      "auto": "Automatic",
+      "hint": "You can turn a blocked permission back on from the lock icon in your browser’s address bar."
+    }
+  },
+  "share": {
+    "title": "Share this problem",
+    "linkLabel": "Link",
+    "copy": "Copy",
+    "copied": "Copied",
+    "copyFailed": "Couldn’t copy the link",
+    "linkHint": "Send the link to anyone — after signing up, they’ll land right on this problem.",
+    "shareVia": "Share via other apps",
+    "sendToChat": "Send to a chat",
+    "searchPlaceholder": "Search chats…",
+    "sent": "Sent",
+    "sentToChat": "Sent to the chat",
+    "noChats": "No chats found",
+    "chatMessage": "Problem: {title}\n{url}"
+  },
+  "social": {
+    "verified": "Verified account",
+    "follow": "Follow",
+    "following": "Following",
+    "unfollow": "Unfollow",
+    "followers": "Followers",
+    "followingList": "Following",
+    "noFollowers": "No followers yet",
+    "noFollowing": "Not following anyone yet",
+    "founder": "Founder",
+    "founderHint": "Founder — a user who has published a startup",
+    "votes": "{count, plural, one {{n} vote} other {{n} votes}}",
+    "vote": "Vote",
+    "voted": "Voted",
+    "userFallback": "User"
+  },
+  "solutionsPage": {
+    "title": "My solutions",
+    "subtitle": "{count, plural, one {You’ve submitted {n} solution — it’s visible to everyone as soon as it’s posted} other {You’ve submitted {n} solutions — they’re visible to everyone as soon as they’re posted}}",
+    "helpfulCount": "{count, plural, other {{n} helpful}}",
+    "presentation": "Presentation",
+    "video": "Video",
+    "guestTitle": "Keep track of your solutions",
+    "guestDescription": "Sign in to see the solutions you’ve submitted",
+    "signIn": "Sign in",
+    "emptyTitle": "No solutions found",
+    "emptyDescription": "You haven’t submitted any solutions yet"
+  },
+  "startupCard": {
+    "top": "TOP",
+    "ideaStage": "Idea stage"
+  },
+  "startupDetail": {
+    "notFound": "Startup not found",
+    "backToList": "Back to startups",
+    "views": "{count, plural, one {{n} view} other {{n} views}}",
+    "linkCopied": "Link copied",
+    "copied": "Copied",
+    "share": "Share",
+    "report": "Report",
+    "edit": "Edit",
+    "ideaStage": "This startup is still at the idea or development stage",
+    "about": "About the startup",
+    "allLinks": "All links",
+    "related": "Similar startups"
+  },
+  "startupForm": {
+    "errors": {
+      "yearMin": "{min} or later",
+      "yearMax": "{max} or earlier",
+      "invalidLinks": "One of the links looks wrong — please check it",
+      "tagTooLong": "Tags can be up to 40 characters long",
+      "limitReached": "You’ve reached your project limit"
+    },
+    "toast": {
+      "updated": "Startup updated!",
+      "published": "Startup published!"
+    },
+    "basic": {
+      "title": "Basic info",
+      "name": "Startup name",
+      "namePlaceholder": "e.g. EcoDelivery",
+      "tagline": "In one sentence (optional)",
+      "taglinePlaceholder": "What does your startup do? — short and to the point",
+      "description": "Description (why should people choose your project?)",
+      "descriptionPlaceholder": "Tell us more: what problem it solves, who it’s for, what makes it stand out...",
+      "category": "Category (optional)"
+    },
+    "media": {
+      "title": "Media",
+      "hint": "Optional — add a link and the logo and cover fill in automatically",
+      "logo": "Logo",
+      "cover": "Cover image"
+    },
+    "video": {
+      "label": "Cover video",
+      "optional": "(optional)",
+      "coverTitle": "Cover",
+      "remove": "Remove video",
+      "youtubeNote": "The YouTube video is shown right on the site. It only plays when someone presses play.",
+      "fileNote": "The video takes the place of the cover. It only plays when someone presses play.",
+      "modeUpload": "Upload video",
+      "modeLink": "YouTube link",
+      "pick": "Choose a video — MP4 or WebM, up to 50 MB",
+      "add": "Add",
+      "hint": "A video takes the place of the cover — its first frame is shown, and it only plays when someone presses play.",
+      "tooBig": "The video must be 50 MB or smaller",
+      "uploaded": "Video uploaded",
+      "uploadFailed": "Upload failed",
+      "invalidLink": "Enter a YouTube link or a direct video link (.mp4/.webm)"
+    },
+    "links": {
+      "title": "Links",
+      "hint": "Where can people find your startup? Filling in just one is enough.",
+      "label": {
+        "website": "Website",
+        "ios": "App Store",
+        "android": "Google Play",
+        "telegram_bot": "Telegram",
+        "other": "Other link"
+      },
+      "placeholder": {
+        "website": "mysite.uz",
+        "ios": "apps.apple.com/app/...",
+        "android": "play.google.com/store/apps/...",
+        "telegram_bot": "@mybot  or  t.me/mybot",
+        "other": "github.com/myproject"
+      },
+      "fetching": "Getting details from the link",
+      "invalid": "That link doesn’t look right — for example: mysite.uz",
+      "searching": "Looking up the link…",
+      "filled": "Filled in from the link: {items} — feel free to change anything.",
+      "field": {
+        "logo": "logo",
+        "cover": "cover",
+        "title": "name",
+        "tagline": "tagline",
+        "description": "description"
+      },
+      "listTwo": "{a} and {b}",
+      "listMany": "{head}, and {last}",
+      "idle": "Fill in the field you need — the logo, cover, name and description are pulled from the link automatically. No need to type “https://”."
+    },
+    "more": {
+      "title": "Additional details",
+      "subtitle": "Region, team, tags — optional",
+      "region": "Region",
+      "regionPlaceholder": "Region (optional)",
+      "district": "District / city",
+      "districtPlaceholder": "e.g. Chilanzar",
+      "teamName": "Team name",
+      "teamPlaceholder": "e.g. EcoTeam",
+      "foundedYear": "Year founded",
+      "tags": "Tags (max 15)",
+      "tagPlaceholder": "e.g. AI, SaaS, logistics",
+      "addTag": "Add tag",
+      "removeTag": "Remove tag “{tag}”"
+    },
+    "publishNote": "Your startup <b>goes live</b> as soon as you submit it — no need to wait for approval. You can edit it any time.",
+    "publish": "Publish",
+    "create": {
+      "title": "Add a startup",
+      "subtitle": "Only the name and description are required — you can fill in the rest later"
+    },
+    "edit": {
+      "eyebrow": "Editing",
+      "delete": "Delete",
+      "deleteTitle": "Delete startup",
+      "deleteConfirm": "<b>“{title}”</b> will be permanently deleted — this can’t be undone. Continue?",
+      "deleted": "Startup deleted",
+      "noAccess": "You don’t have permission to edit this startup",
+      "notFound": "Startup not found"
+    }
+  },
+  "startupsPage": {
+    "title": "Startups",
+    "subtitle": "Apps, websites and Telegram bots built by the community — all in one place",
+    "add": "Add",
+    "searchPlaceholder": "Startup name or description",
+    "sortLabel": "Sort by",
+    "sort": {
+      "featured": "Featured",
+      "top_rated": "Top rated",
+      "newest": "Newest",
+      "popular": "Most popular",
+      "alphabetical": "Alphabetical"
+    },
+    "allPlatforms": "All",
+    "total": "{count, plural, one {<b>{n}</b> startup in total} other {<b>{n}</b> startups in total}}",
+    "listHeading": "Startup list",
+    "empty": {
+      "title": "No startups found",
+      "filtered": "Try adjusting the filters",
+      "none": "No startups have been published yet"
+    }
+  },
+  "time": {
+    "justNow": "just now",
+    "ago": {
+      "minutes": "{count, plural, one {# minute} other {# minutes}} ago",
+      "hours": "{count, plural, one {# hour} other {# hours}} ago",
+      "days": "{count, plural, one {# day} other {# days}} ago",
+      "months": "{count, plural, one {# month} other {# months}} ago",
+      "years": "{count, plural, one {# year} other {# years}} ago"
+    },
+    "short": {
+      "now": "now",
+      "minutes": "{count} min",
+      "hours": "{count} h",
+      "days": "{count} d",
+      "months": "{count} mo",
+      "years": "{count} y"
+    },
+    "today": "Today",
+    "yesterday": "Yesterday",
+    "month": "{month, select, 1 {January} 2 {February} 3 {March} 4 {April} 5 {May} 6 {June} 7 {July} 8 {August} 9 {September} 10 {October} 11 {November} other {December}}",
+    "monthOf": "{month, select, 1 {January} 2 {February} 3 {March} 4 {April} 5 {May} 6 {June} 7 {July} 8 {August} 9 {September} 10 {October} 11 {November} other {December}}",
+    "date": "{month} {day}, {year}",
+    "dateNoYear": "{month} {day}",
+    "monthYear": "{month} {year}"
+  },
+  "ui": {
+    "password": {
+      "show": "Show password",
+      "hide": "Hide password",
+      "ruleDone": "Done:",
+      "ruleNeeded": "Required:",
+      "rules": {
+        "len": "8+ characters",
+        "upper": "Uppercase letter",
+        "digit": "Number",
+        "special": "Special character"
+      }
+    },
+    "imageUpload": {
+      "error": "Upload failed",
+      "previewAlt": "Uploaded image",
+      "remove": "Remove image",
+      "prompt": "Choose an image or drag it here"
+    },
+    "pagination": {
+      "prev": "Previous page",
+      "next": "Next page"
+    }
+  },
+  "validation": {
+    "required": "This field is required",
+    "minChars": "At least {min, plural, one {# character} other {# characters}}",
+    "maxChars": "At most {max, plural, one {# character} other {# characters}}",
+    "email": "Invalid email address",
+    "url": "Enter a valid link",
+    "choose": "Please choose one",
+    "enter": "Please fill this in",
+    "passwordRule": "Required: {rule}",
+    "passwordsMismatch": "Passwords don’t match",
+    "number": "Enter a number"
+  },
+  "venture": {
+    "stage": {
+      "idea": "Idea",
+      "prototyping": "Prototype",
+      "mvp": "MVP live",
+      "early_revenue": "Early revenue",
+      "growth": "Steady growth"
+    },
+    "stageHint": {
+      "idea": "Nothing built yet, just a plan",
+      "prototyping": "There’s a design or a prototype",
+      "mvp": "First users are on board",
+      "early_revenue": "The first money is coming in",
+      "growth": "Users and revenue are stable"
+    },
+    "businessModel": {
+      "b2c": "Direct to consumer (B2C)",
+      "b2b": "For businesses (B2B)",
+      "b2b2c": "To consumers via businesses (B2B2C)",
+      "marketplace": "Marketplace (two-sided)",
+      "subscription": "Subscription",
+      "ads": "Advertising",
+      "hardware": "Hardware / device",
+      "service": "Services",
+      "nonprofit": "Non-profit",
+      "other": "Other"
+    },
+    "need": {
+      "investment": "Investment",
+      "grant": "Grant",
+      "mentor": "Mentor",
+      "team": "Teammates",
+      "customers": "First customers",
+      "partner": "Business partner"
+    },
+    "needHint": {
+      "investment": "Funding in exchange for equity",
+      "grant": "Non-repayable funding",
+      "mentor": "An experienced advisor",
+      "team": "Developer, designer, marketer",
+      "customers": "A pilot customer or a test ground",
+      "partner": "A distributor or partnership"
+    },
+    "offer": {
+      "investment": "Investment",
+      "grant": "Grant",
+      "mentor": "Mentorship",
+      "team": "Help finding a team",
+      "customers": "Customer / pilot",
+      "partner": "Partnership"
+    },
+    "investorKind": {
+      "angel": "Angel investor",
+      "fund": "Investment fund",
+      "accelerator": "Accelerator",
+      "grant": "Grant organization",
+      "corporate": "Corporate"
+    },
+    "investorKindHint": {
+      "angel": "I invest personally",
+      "fund": "We invest on behalf of a fund",
+      "accelerator": "We offer a program and mentorship",
+      "grant": "We award non-repayable funds",
+      "corporate": "We’re looking for a solution or a partner"
+    },
+    "factor": {
+      "category": "Sector",
+      "stage": "Stage",
+      "check": "Check size",
+      "needs": "Needs and offer",
+      "region": "Region",
+      "traction": "Traction",
+      "semantic": "Semantic match"
+    },
+    "detail": {
+      "exact": "Exact match",
+      "partial": "Partial match",
+      "open": "No restriction",
+      "none": "No match",
+      "unknown": "Not rated"
+    },
+    "dimension": {
+      "clarity": "Clarity",
+      "market": "Market",
+      "product": "Product",
+      "traction": "Traction",
+      "team": "Team",
+      "ask": "Clarity of the ask"
+    },
+    "dimensionHint": {
+      "clarity": "Would a stranger understand what the project does",
+      "market": "Who it’s for, in which sector, where",
+      "product": "Is something built and can it be seen",
+      "traction": "Is there proof in numbers",
+      "team": "Who is behind the project",
+      "ask": "Is it clear what you need"
+    },
+    "grade": {
+      "strong": "Investor-ready",
+      "good": "In good shape",
+      "basic": "The basics are there",
+      "early": "Early stage"
+    },
+    "score": {
+      "veryHigh": "Excellent match",
+      "high": "Good match",
+      "partial": "Partial match",
+      "weak": "Weak match"
+    },
+    "introStatus": {
+      "pending": "Awaiting reply",
+      "accepted": "Accepted",
+      "declined": "Declined",
+      "withdrawn": "Withdrawn"
+    }
+  }
+}

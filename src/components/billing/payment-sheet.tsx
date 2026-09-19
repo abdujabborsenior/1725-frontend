@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useMemo, useState } from 'react';
+import { useLocale, useTranslations } from 'next-intl';
 
 import { Modal } from '@/components/ui/modal';
 import { Button } from '@/components/ui/button';
@@ -8,12 +9,13 @@ import { ClickMark, PaymeMark } from '@/components/brand/payment-marks';
 import { CheckCircleFill, Lock } from '@/components/icons';
 import { cn } from '@/lib/utils';
 import {
-  INTERVAL_LABEL,
   PROVIDER_META,
   PROVIDER_ORDER,
   formatSum,
 } from '@/lib/billing';
+import type { AppLocale } from '@/i18n/routing';
 import type { BillingPlan, PaymentProvider } from '@/types';
+import { usePlanText } from './plan-card';
 
 interface PaymentSheetProps {
   open: boolean;
@@ -44,6 +46,10 @@ export function PaymentSheet({
   onClose,
   onConfirm,
 }: PaymentSheetProps) {
+  const t = useTranslations('paymentSheet');
+  const tb = useTranslations('billing');
+  const locale = useLocale() as AppLocale;
+  const planText = usePlanText();
   const available = useMemo(
     () => PROVIDER_ORDER.filter((p) => providers.includes(p)),
     [providers],
@@ -63,20 +69,18 @@ export function PaymentSheet({
       {/* ── Nima uchun to'lanmoqda ──────────────────────────── */}
       <div className="text-center">
         <p className="text-footnote text-slate-500">
-          {plan.name} · {INTERVAL_LABEL[plan.interval]}
+          {planText.name(plan)} · {tb(`interval.${plan.interval}`)}
         </p>
         <p className="mt-1 text-large-title font-bold tabular-nums tracking-tight text-brand-900">
-          {formatSum(plan.price)}
+          {formatSum(plan.price, locale)}
         </p>
         <p className="mt-1 text-footnote text-slate-500">
-          {plan.startupLimit === 1
-            ? '1 ta loyiha e’lon qilish'
-            : `${plan.startupLimit} tagacha loyiha e’lon qilish`}
+          {tb('features.projects', { count: plan.startupLimit })}
         </p>
       </div>
 
       {/* ── Usul tanlash ────────────────────────────────────── */}
-      <div className="mt-6 space-y-2.5" role="radiogroup" aria-label="To‘lov usuli">
+      <div className="mt-6 space-y-2.5" role="radiogroup" aria-label={t('methodAria')}>
         {available.map((provider) => {
           const meta = PROVIDER_META[provider];
           const active = selected === provider;
@@ -151,12 +155,11 @@ export function PaymentSheet({
           disabled={!selected}
           onClick={() => selected && onConfirm(selected)}
         >
-          {formatSum(plan.price)} to‘lash
+          {t('pay', { sum: formatSum(plan.price, locale) })}
         </Button>
         <p className="flex items-center justify-center gap-1.5 text-caption-1 text-slate-500">
           <Lock className="h-3.5 w-3.5" />
-          To‘lov {selected ? PROVIDER_META[selected].label : 'provayder'} sahifasida
-          amalga oshiriladi
+          {t('redirect', { provider: selected ? PROVIDER_META[selected].label : 'none' })}
         </p>
       </div>
     </Modal>

@@ -1,8 +1,9 @@
 'use client';
 
+import { Link, useRouter } from '@/i18n/navigation';
 import { useCallback, useEffect, useRef, useState } from 'react';
-import Link from 'next/link';
-import { useRouter, useSearchParams } from 'next/navigation';
+import { useSearchParams } from 'next/navigation';
+import { useLocale, useTranslations } from 'next-intl';
 import {
   useInfiniteQuery,
   useQuery,
@@ -21,6 +22,8 @@ import { YechimMark } from './yechim-mark';
 import { aiApi, getErrorMessage } from '@/lib/api';
 import { cn } from '@/lib/utils';
 import { useAuthStore } from '@/store/auth.store';
+import { localizePath } from '@/i18n/locales';
+import type { AppLocale } from '@/i18n/routing';
 import type { AiDraft } from '@/types';
 
 /**
@@ -39,6 +42,9 @@ import type { AiDraft } from '@/types';
  *    (`fresh: false`) — eskisini qayta "yozib berish" soxta bo'lardi.
  */
 export function AiWorkspace() {
+  const t = useTranslations('ai');
+  const tc = useTranslations('common');
+  const locale = useLocale() as AppLocale;
   const params = useSearchParams();
   const router = useRouter();
   const queryClient = useQueryClient();
@@ -85,8 +91,11 @@ export function AiWorkspace() {
     // `router.replace` sahifani qayta render qilardi (oqim titrardi) —
     // shuning uchun to'g'ridan-to'g'ri History API (yangi yozuv qo'shmaydi:
     // "ortga" tugmasi foydalanuvchini saytga qaytaradi).
-    window.history.replaceState(null, '', id ? `/ai?c=${id}` : '/ai');
-  }, []);
+    // Yo'l joriy tilda (`/ru/ai`): prefikssiz `/ai` yangilashda sahifani
+    // o'zbekchaga o'tkazib yuborardi.
+    const path = localizePath(locale, '/ai');
+    window.history.replaceState(null, '', id ? `${path}?c=${id}` : path);
+  }, [locale]);
 
   /**
    * Mehmonni ro'yxatdan o'tishga yuboradi va savolini YO'QOTMAYDI:
@@ -133,23 +142,22 @@ export function AiWorkspace() {
           });
         }
       } catch (err) {
+        // Matn map'dan OLDIN olinadi: ichkaridagi `t` — suhbat navbati, tarjimon emas
+        const message = getErrorMessage(err, t('workspace.answerFailed'));
         setTurns((prev) =>
           prev.map((t) =>
             t.id === id
               ? {
                   ...t,
                   status: 'error',
-                  error: getErrorMessage(
-                    err,
-                    'Javob olinmadi. Bir oz kutib, qayta urinib ko‘ring.',
-                  ),
+                  error: message,
                 }
               : t,
           ),
         );
       }
     },
-    [queryClient, setThread],
+    [queryClient, setThread, t],
   );
 
   const openConversation = useCallback(
@@ -188,12 +196,12 @@ export function AiWorkspace() {
         );
       } catch (err) {
         if (threadRef.current === id) setThread(null);
-        toast.error(getErrorMessage(err, 'Suhbatni ochib bo‘lmadi'));
+        toast.error(getErrorMessage(err, t('workspace.openFailed')));
       } finally {
         setOpening(false);
       }
     },
-    [queryClient, setThread],
+    [queryClient, setThread, t],
   );
 
   const newThread = useCallback(() => {
@@ -213,10 +221,10 @@ export function AiWorkspace() {
         queryClient.removeQueries({ queryKey: ['ai-conversation', id] });
         void queryClient.invalidateQueries({ queryKey: ['ai-conversations'] });
       } catch (err) {
-        toast.error(getErrorMessage(err, 'Suhbatni o‘chirib bo‘lmadi'));
+        toast.error(getErrorMessage(err, t('workspace.deleteFailed')));
       }
     },
-    [queryClient, setThread],
+    [queryClient, setThread, t],
   );
 
   /* Bosh sahifadan (yoki register'dan keyin) kelgan savol / suhbat havolasi */
@@ -281,7 +289,7 @@ export function AiWorkspace() {
       <header className="yz-panel relative z-30 flex h-14 shrink-0 items-center gap-2 border-b border-white/[0.07] px-2 sm:px-4">
         <Link
           href="/"
-          aria-label="Bosh sahifaga qaytish"
+          aria-label={t('workspace.backHome')}
           className="yz-btn flex h-10 items-center gap-1.5 rounded-full pl-1.5 pr-3 text-[color:var(--yz-ink-2)]"
         >
           <ArrowLeft className="h-5 w-5" strokeWidth={2.5} />
@@ -306,7 +314,7 @@ export function AiWorkspace() {
               <button
                 type="button"
                 onClick={() => setDrawer(true)}
-                aria-label="Suhbatlar tarixi"
+                aria-label={t('workspace.history')}
                 className="yz-btn flex h-10 w-10 items-center justify-center rounded-full text-[color:var(--yz-ink-2)] lg:hidden"
               >
                 <Clock className="h-[21px] w-[21px]" />
@@ -314,7 +322,7 @@ export function AiWorkspace() {
               <button
                 type="button"
                 onClick={newThread}
-                aria-label="Yangi suhbat"
+                aria-label={t('newChat')}
                 className="yz-btn flex h-10 w-10 items-center justify-center rounded-full text-[color:var(--yz-ink-2)] lg:hidden"
               >
                 <Plus className="h-[21px] w-[21px]" strokeWidth={2.5} />
@@ -337,19 +345,19 @@ export function AiWorkspace() {
           <div className="fixed inset-0 z-40 lg:hidden">
             <button
               type="button"
-              aria-label="Yopish"
+              aria-label={tc('close')}
               onClick={() => setDrawer(false)}
               className="absolute inset-0 bg-black/60 animate-fade-in"
             />
             <div className="yz-panel absolute inset-y-0 left-0 flex w-[86%] max-w-[320px] flex-col border-r border-white/10 shadow-modal yz-drawer">
               <div className="flex h-14 shrink-0 items-center justify-between px-3">
                 <p className="text-subhead font-semibold text-[color:var(--yz-ink)]">
-                  Suhbatlar
+                  {t('workspace.chats')}
                 </p>
                 <button
                   type="button"
                   onClick={() => setDrawer(false)}
-                  aria-label="Yopish"
+                  aria-label={tc('close')}
                   className="yz-btn flex h-9 w-9 items-center justify-center rounded-full text-[color:var(--yz-ink-2)]"
                 >
                   <X className="h-5 w-5" strokeWidth={2.5} />
@@ -412,7 +420,7 @@ export function AiWorkspace() {
             <div className="mx-auto w-full max-w-[46rem]">
               {disabled ? (
                 <p className="yz-card px-4 py-3.5 text-center text-subhead text-[color:var(--yz-ink-2)]">
-                  Yechim AI hozircha o‘chirilgan. Tez orada qaytadi.
+                  {t('workspace.disabled')}
                 </p>
               ) : (
                 <>
@@ -425,13 +433,13 @@ export function AiWorkspace() {
                       deganda yoki mehmon uchun. Aks holda — jim. */}
                   {guest ? (
                     <p className="mt-2 text-center text-caption-2 text-[color:var(--yz-ink-3)]">
-                      Ro‘yxatdan o‘ting — bir daqiqada, bepul
+                      {t('workspace.guestHint')}
                     </p>
                   ) : (
                     status &&
                     status.remaining <= 5 && (
                       <p className="mt-2 text-center text-caption-2 text-[color:var(--yz-ink-3)]">
-                        Bugun yana {status.remaining} ta so‘rov qoldi
+                        {t('workspace.remaining', { count: status.remaining })}
                       </p>
                     )
                   )}

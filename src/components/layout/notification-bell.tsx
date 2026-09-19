@@ -1,18 +1,20 @@
 'use client';
 
+import { Link, useRouter } from '@/i18n/navigation';
 import { useEffect, useRef, useState } from 'react';
-import Link from 'next/link';
-import { useRouter } from 'next/navigation';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
+import { useTranslations } from 'next-intl';
 import { Bell, CheckCheck } from '@/components/icons';
 import { notificationsApi } from '@/lib/api';
 import { useAuthStore } from '@/store/auth.store';
 import { cn } from '@/lib/utils';
 import { notificationMeta, notificationTarget } from '@/lib/notification-meta';
 import type { AppNotification } from '@/types';
-import { timeAgo } from '@/lib/date';
+import { useDateFormat } from '@/lib/date';
 
 export function NotificationBell() {
+  const t = useTranslations('notifications');
+  const { timeAgo } = useDateFormat();
   const { token } = useAuthStore();
   const qc = useQueryClient();
   const router = useRouter();
@@ -74,7 +76,7 @@ export function NotificationBell() {
     <div className="relative" ref={ref}>
       <button
         onClick={() => setOpen((o) => !o)}
-        aria-label="Bildirishnomalar"
+        aria-label={t('title')}
         className="tappable relative flex h-9 w-9 items-center justify-center rounded-full text-slate-600"
       >
         <Bell className="h-[22px] w-[22px]" />
@@ -88,13 +90,13 @@ export function NotificationBell() {
       {open && (
         <div className="material-menu absolute right-0 z-50 mt-2 w-80 max-w-[calc(100vw-2rem)] origin-top-right animate-scale-in overflow-hidden rounded-ios-lg shadow-modal ring-1 ring-black/[0.06]">
           <div className="hairline-b flex items-center justify-between gap-2 px-4 py-2.5">
-            <span className="text-subhead font-semibold text-brand-900">Bildirishnomalar</span>
+            <span className="text-subhead font-semibold text-brand-900">{t('title')}</span>
             {count > 0 && (
               <button
                 onClick={markAll}
                 className="tappable inline-flex items-center gap-1 text-footnote font-medium text-accent-700"
               >
-                <CheckCheck className="h-4 w-4" /> Barchasini o&apos;qildim
+                <CheckCheck className="h-4 w-4" /> {t('markAllRead')}
               </button>
             )}
           </div>
@@ -153,7 +155,7 @@ export function NotificationBell() {
             ) : (
               <div className="py-12 text-center">
                 <Bell className="mx-auto mb-2 h-8 w-8 text-accent-300" />
-                <p className="text-subhead text-slate-500">Bildirishnomalar yo&apos;q</p>
+                <p className="text-subhead text-slate-500">{t('empty')}</p>
               </div>
             )}
           </div>
@@ -163,7 +165,7 @@ export function NotificationBell() {
             onClick={() => setOpen(false)}
             className="hairline-t block px-4 py-3 text-center text-subhead font-medium text-accent-700 hv-row"
           >
-            Barchasini ko&apos;rish
+            {t('seeAll')}
           </Link>
         </div>
       )}

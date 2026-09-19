@@ -1,6 +1,7 @@
 'use client';
 
 import { useCallback, useState } from 'react';
+import { useTranslations } from 'next-intl';
 import { UserPlus, UserCheck } from '@/components/icons';
 import { usersApi } from '@/lib/api';
 import { useToggleAction } from '@/lib/use-toggle-action';
@@ -31,6 +32,7 @@ export function FollowButton({
   className,
   onChange,
 }: FollowButtonProps) {
+  const t = useTranslations('social');
   const [hover, setHover] = useState(false);
 
   const commit = useCallback(
@@ -77,7 +79,7 @@ export function FollowButton({
       ) : (
         <UserPlus className="h-3.5 w-3.5" />
       )}
-      {following ? (hover ? 'Bekor qilish' : 'Kuzatilmoqda') : 'Obuna bo‘lish'}
+      {following ? (hover ? t('unfollow') : t('following')) : t('follow')}
     </button>
   );
 }

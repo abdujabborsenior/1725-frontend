@@ -1,16 +1,46 @@
 'use client';
 
+import { useMemo } from 'react';
+import { useLocale, useTranslations } from 'next-intl';
 import { CheckCircleFill, Sparkles } from '@/components/icons';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 import {
-  INTERVAL_SUFFIX,
   TIER_META,
+  currencyLabel,
   formatSum,
   formatSumShort,
   planFeatures,
 } from '@/lib/billing';
-import type { BillingPlan } from '@/types';
+import type { AppLocale } from '@/i18n/routing';
+import type { BillingPlan, PlanTier } from '@/types';
+
+/**
+ * Tarif nomi va shiori — joriy tilda.
+ *
+ * Backend `name`/`description` ni faqat o'zbekcha saqlaydi (seed ma'lumot,
+ * lokalizatsiyasiz). Shuning uchun o'zbekcha sahifada bazadagi matn (SQL
+ * orqali o'zgartirilsa ham darhol ko'rinadi), ruscha/inglizchada esa daraja
+ * bo'yicha lug'atdagi nom va shior (`billing.tier.<tier>.name|tagline`).
+ * Noma'lum daraja (backend yangisini qo'shsa) — bazadagi matn o'zicha.
+ */
+export function usePlanText() {
+  const t = useTranslations('billing');
+  const locale = useLocale() as AppLocale;
+  return useMemo(() => {
+    const known = (tier: string): tier is PlanTier => tier in TIER_META;
+    return {
+      name: (plan: { tier: PlanTier; name?: string | null }): string =>
+        (locale === 'uz' && plan.name) || !known(plan.tier)
+          ? (plan.name ?? plan.tier)
+          : t(`tier.${plan.tier}.name`),
+      tagline: (plan: { tier: PlanTier; description?: string | null }): string =>
+        (locale === 'uz' && plan.description) || !known(plan.tier)
+          ? (plan.description ?? '')
+          : t(`tier.${plan.tier}.tagline`),
+    };
+  }, [t, locale]);
+}
 
 interface PlanCardProps {
   plan: BillingPlan;
@@ -34,7 +64,10 @@ export function PlanCard({
   current,
   onSelect,
 }: PlanCardProps) {
-  const meta = TIER_META[plan.tier];
+  const t = useTranslations('planCard');
+  const tb = useTranslations('billing');
+  const locale = useLocale() as AppLocale;
+  const planText = usePlanText();
   const features = planFeatures(plan);
   /* Yillik tarifni oylik tilida ham ko'rsatamiz — odam ikki ustunni miyasida
      hisoblamasin (Apple/Claude obuna sahifalaridagi naqsh). */
@@ -51,15 +84,15 @@ export function PlanCard({
       {plan.isPopular && (
         <span className="absolute -top-3 left-6 inline-flex items-center gap-1 rounded-full bg-accent-600 px-3 py-1 text-caption-1 font-semibold text-white">
           <Sparkles className="h-3 w-3" />
-          Ommabop
+          {t('popular')}
         </span>
       )}
 
       {/* Sarlavha */}
       <div className="min-h-[3.5rem]">
-        <h3 className="text-title-3 font-semibold text-brand-900">{plan.name}</h3>
+        <h3 className="text-title-3 font-semibold text-brand-900">{planText.name(plan)}</h3>
         <p className="mt-1 text-footnote text-slate-500">
-          {plan.description || meta.tagline}
+          {planText.tagline(plan)}
         </p>
       </div>
 
@@ -67,18 +100,19 @@ export function PlanCard({
       <div className="mt-5">
         <div className="flex items-baseline gap-1.5">
           <span className="text-large-title font-bold tabular-nums tracking-tight text-brand-900">
-            {formatSumShort(plan.price)}
+            {formatSumShort(plan.price, locale)}
           </span>
           <span className="text-subhead text-slate-500">
-            so&apos;m{INTERVAL_SUFFIX[plan.interval]}
+            {currencyLabel(locale)}
+            {tb(`intervalSuffix.${plan.interval}`)}
           </span>
         </div>
         {/* Ikkilamchi qator FAQAT yangi ma'lumot bo'lganda chiqadi — "/oy"
             yozuvini "Har oy" bilan takrorlash shovqin (Charter: restraint). */}
         {perMonth !== null && (
           <p className="mt-1 text-footnote text-slate-500">
-            Oyiga taxminan {formatSum(perMonth)}
-            {savingPercent ? ` · ${savingPercent}% tejaysiz` : ''}
+            {t('perMonth', { sum: formatSum(perMonth, locale) })}
+            {savingPercent ? ` · ${t('saving', { percent: String(savingPercent) })}` : ''}
           </p>
         )}
       </div>
@@ -86,9 +120,11 @@ export function PlanCard({
       {/* Imkoniyatlar */}
       <ul className="mt-5 flex-1 space-y-2.5">
         {features.map((f) => (
-          <li key={f} className="flex items-start gap-2.5">
+          <li key={f.key} className="flex items-start gap-2.5">
             <CheckCircleFill className="mt-0.5 h-[17px] w-[17px] shrink-0 text-accent-600" />
-            <span className="text-subhead text-slate-600">{f}</span>
+            <span className="text-subhead text-slate-600">
+              {tb(`features.${f.key}`, { count: f.count ?? 0 })}
+            </span>
           </li>
         ))}
       </ul>
@@ -97,7 +133,7 @@ export function PlanCard({
       <div className="mt-6">
         {current ? (
           <div className="flex h-11 items-center justify-center rounded-ios-md bg-fill-tertiary text-callout font-semibold text-slate-600">
-            Joriy tarifingiz
+            {t('current')}
           </div>
         ) : (
           <Button
@@ -106,7 +142,7 @@ export function PlanCard({
             variant={plan.isPopular ? 'primary' : 'secondary'}
             onClick={() => onSelect(plan)}
           >
-            Tanlash
+            {t('select')}
           </Button>
         )}
       </div>

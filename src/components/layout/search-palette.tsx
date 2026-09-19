@@ -1,8 +1,9 @@
 'use client';
 
+import { useRouter } from '@/i18n/navigation';
 import { useEffect, useRef, useState } from 'react';
-import { useRouter } from 'next/navigation';
 import { createPortal } from 'react-dom';
+import { useTranslations } from 'next-intl';
 import { useQuery } from '@tanstack/react-query';
 import {
   Search, Rocket, FileText, Spinner, ChevronRight, CloseCircleFill,
@@ -13,9 +14,9 @@ import { VerifiedBadge } from '@/components/social/verified-badge';
 import { useDebounce } from '@/lib/use-debounce';
 
 const QUICK_LINKS = [
-  { href: '/startups', label: 'Startaplar', icon: Rocket },
-  { href: '/problems', label: 'Muammolar', icon: FileText },
-];
+  { href: '/startups', label: 'startups', icon: Rocket },
+  { href: '/problems', label: 'problems', icon: FileText },
+] as const;
 
 const OPEN_EVENT = 'open-search-palette';
 
@@ -25,6 +26,8 @@ export function openSearchPalette() {
 }
 
 export function SearchPalette() {
+  const t = useTranslations('search');
+  const tc = useTranslations('common');
   const router = useRouter();
   const [open, setOpen] = useState(false);
   const [mounted, setMounted] = useState(false);
@@ -108,7 +111,11 @@ export function SearchPalette() {
       <div className="absolute inset-0 animate-fade-in bg-black/30 backdrop-blur-sm" onClick={() => setOpen(false)} />
 
       {/* iOS Spotlight — NOSHAFFOF panel (o'qilishi blur'ga bog'liq emas) */}
-      <div className="relative w-full max-w-xl animate-scale-in overflow-hidden rounded-ios-2xl bg-white shadow-modal ring-1 ring-black/[0.06]">
+      <div
+        role="dialog"
+        aria-modal="true"
+        aria-label={t('title')}
+        className="relative w-full max-w-xl animate-scale-in overflow-hidden rounded-ios-2xl bg-white shadow-modal ring-1 ring-black/[0.06]">
         {/* Qidiruv maydoni */}
         <div className="hairline-b flex items-center gap-3 px-4">
           <Search className="h-[19px] w-[19px] shrink-0 text-slate-400" />
@@ -116,14 +123,15 @@ export function SearchPalette() {
             ref={inputRef}
             value={q}
             onChange={(e) => setQ(e.target.value)}
-            placeholder="Odam, startap yoki muammo qidiring"
+            placeholder={t('placeholder')}
+            aria-label={t('placeholder')}
             className="h-[52px] flex-1 bg-transparent text-body text-brand-900 placeholder:text-slate-500 focus:outline-none"
           />
           {fetching && <Spinner className="h-4 w-4 animate-spin text-slate-400" />}
           {/* Yopish — barcha ekranlarda × (klaviatura yorlig'i ham ishlaydi) */}
           <button
             onClick={() => setOpen(false)}
-            aria-label="Yopish"
+            aria-label={tc('close')}
             className="tappable flex h-7 w-7 shrink-0 items-center justify-center rounded-full text-slate-400"
           >
             <CloseCircleFill className="h-[19px] w-[19px]" />
@@ -133,7 +141,7 @@ export function SearchPalette() {
         <div className="max-h-[60vh] overflow-y-auto p-2">
           {debounced.trim().length < 2 ? (
             <div>
-              <p className="ios-section-header pt-1">Tezkor o&apos;tish</p>
+              <p className="ios-section-header pt-1">{t('quick')}</p>
               {QUICK_LINKS.map(({ href, label, icon: Icon }) => (
                 <button
                   key={href}
@@ -141,18 +149,18 @@ export function SearchPalette() {
                   className="flex w-full items-center gap-3 rounded-ios px-3 py-2.5 text-left hv-row"
                 >
                   <Icon className="h-[19px] w-[19px] text-accent-600" />
-                  <span className="flex-1 text-body text-brand-900">{label}</span>
+                  <span className="flex-1 text-body text-brand-900">{t(label)}</span>
                   <ChevronRight className="h-[15px] w-[15px] text-slate-300" strokeWidth={3} />
                 </button>
               ))}
             </div>
           ) : !hasResults && !fetching ? (
-            <p className="py-12 text-center text-subhead text-slate-500">Natija topilmadi</p>
+            <p className="py-12 text-center text-subhead text-slate-500">{t('empty')}</p>
           ) : (
             <>
               {userResults.length > 0 && (
                 <div className="mb-1">
-                  <p className="ios-section-header pt-1">Odamlar</p>
+                  <p className="ios-section-header pt-1">{t('people')}</p>
                   {userResults.map((u) => (
                     <button
                       key={u.id}
@@ -178,7 +186,7 @@ export function SearchPalette() {
               )}
               {startupResults.length > 0 && (
                 <div className="mb-1">
-                  <p className="ios-section-header pt-1">Startaplar</p>
+                  <p className="ios-section-header pt-1">{t('startups')}</p>
                   {startupResults.map((s) => (
                     <button
                       key={s.id}
@@ -206,7 +214,7 @@ export function SearchPalette() {
               )}
               {problemResults.length > 0 && (
                 <div>
-                  <p className="ios-section-header pt-1">Muammolar</p>
+                  <p className="ios-section-header pt-1">{t('problems')}</p>
                   {problemResults.map((p) => (
                     <button
                       key={p.id}

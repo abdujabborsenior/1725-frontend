@@ -1,6 +1,6 @@
 'use client';
 
-import Link from 'next/link';
+import { Link } from '@/i18n/navigation';
 import {
   useCallback,
   useEffect,
@@ -9,6 +9,7 @@ import {
   useState,
   type ReactNode,
 } from 'react';
+import { useTranslations } from 'next-intl';
 import { MoreHorizontal } from '@/components/icons';
 import { cn } from '@/lib/utils';
 
@@ -403,6 +404,7 @@ function OverflowMenu({
   onHover: (index: number | null) => void;
   ownBackground: boolean;
 }) {
+  const t = useTranslations('nav');
   const [open, setOpen] = useState(false);
   const wrapRef = useRef<HTMLDivElement>(null);
   const buttonRef = useRef<HTMLButtonElement>(null);
@@ -441,7 +443,7 @@ function OverflowMenu({
         onPointerEnter={() => onHover(index)}
         onFocus={() => onHover(index)}
         onBlur={() => onHover(null)}
-        aria-label="Yana"
+        aria-label={t('more')}
         aria-haspopup="menu"
         aria-expanded={open}
         className={cn(
@@ -460,7 +462,7 @@ function OverflowMenu({
       {open && (
         <div
           role="menu"
-          aria-label="Qo'shimcha bo'limlar"
+          aria-label={t('moreSections')}
           className="material-menu absolute left-0 z-50 mt-2 min-w-[184px] origin-top-left animate-scale-in overflow-hidden rounded-ios-lg py-1 shadow-modal ring-1 ring-black/[0.06]"
         >
           {items.map((item) => {

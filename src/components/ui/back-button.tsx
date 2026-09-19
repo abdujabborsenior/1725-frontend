@@ -1,6 +1,7 @@
 'use client';
 
-import { useRouter } from 'next/navigation';
+import { useTranslations } from 'next-intl';
+import { useRouter } from '@/i18n/navigation';
 import { ChevronLeft } from '@/components/icons';
 import { cn } from '@/lib/utils';
 
@@ -17,6 +18,7 @@ interface BackButtonProps {
  * router.back() ni chaqiradi; tarix bo'lmasa fallbackHref ga yo'naltiradi.
  */
 export function BackButton({ fallbackHref = '/', label, className }: BackButtonProps) {
+  const t = useTranslations('common');
   const router = useRouter();
 
   function goBack() {
@@ -45,8 +47,8 @@ export function BackButton({ fallbackHref = '/', label, className }: BackButtonP
     <button
       type="button"
       onClick={goBack}
-      aria-label="Ortga"
-      title="Ortga"
+      aria-label={t('back')}
+      title={t('back')}
       className={cn(
         'tappable flex h-10 w-10 shrink-0 items-center justify-center rounded-full text-accent-700',
         className,

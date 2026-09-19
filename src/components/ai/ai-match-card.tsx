@@ -1,11 +1,13 @@
 'use client';
 
-import Link from 'next/link';
+import { Link } from '@/i18n/navigation';
 import type { CSSProperties } from 'react';
+import { useTranslations } from 'next-intl';
 
 import { ChevronRight, Star } from '@/components/icons';
 import { StartupLogo } from '@/components/startups/startup-logo';
 import { categoryTintDark } from '@/lib/category-tint';
+import { useCategoryLabel } from '@/lib/category-labels';
 import { cn } from '@/lib/utils';
 import type { AiMatch } from '@/types';
 
@@ -29,6 +31,8 @@ export function AiMatchCard({
   index: number;
   animate: boolean;
 }) {
+  const t = useTranslations('ai.match');
+  const catLabel = useCategoryLabel();
   const { startup, reason } = match;
   const top = index === 0;
   const tint = categoryTintDark(startup.category);
@@ -62,7 +66,7 @@ export function AiMatchCard({
           </p>
           {top && (
             <span className="shrink-0 rounded-full bg-[color:var(--yz-blue)]/18 px-2 py-0.5 text-caption-2 font-semibold text-[color:var(--yz-blue)]">
-              Eng mos
+              {t('best')}
             </span>
           )}
           {startup.ratingCount > 0 && (
@@ -83,7 +87,7 @@ export function AiMatchCard({
             className="mt-2 inline-block text-caption-1 font-medium"
             style={{ color: tint }}
           >
-            {startup.category}
+            {catLabel(startup.category)}
           </span>
         )}
       </div>

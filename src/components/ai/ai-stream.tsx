@@ -1,5 +1,7 @@
 'use client';
 
+import { useTranslations } from 'next-intl';
+
 import { AlertCircle, RefreshCw } from '@/components/icons';
 import { AiAnswer, type AnswerData } from './ai-answer';
 import { AiThinking } from './ai-thinking';
@@ -32,6 +34,7 @@ export function AiStream({
   onRetry: (turn: Turn) => void;
   onPublish: (turn: Turn) => void;
 }) {
+  const tc = useTranslations('common');
   return (
     <div className="space-y-8">
       {turns.map((turn) => (
@@ -61,7 +64,7 @@ export function AiStream({
                   onClick={() => onRetry(turn)}
                   className="mt-2 inline-flex items-center gap-1.5 text-subhead font-medium text-[color:var(--yz-blue)]"
                 >
-                  <RefreshCw className="h-4 w-4" /> Qayta urinish
+                  <RefreshCw className="h-4 w-4" /> {tc('retry')}
                 </button>
               </div>
             </div>

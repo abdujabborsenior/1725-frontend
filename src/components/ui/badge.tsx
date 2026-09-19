@@ -1,12 +1,10 @@
+import { useTranslations } from 'next-intl';
 import { cn } from '@/lib/utils';
 import {
   PROBLEM_STATUS_BADGE,
-  PROBLEM_STATUS_LABEL,
   PROBLEM_STATUS_META,
   SOLUTION_STATUS_BADGE,
-  SOLUTION_STATUS_LABEL,
   STARTUP_STATUS_BADGE,
-  STARTUP_STATUS_LABEL,
 } from '@/lib/constants';
 import type { ProblemStatus, SolutionStatus, StartupStatus } from '@/types';
 
@@ -17,6 +15,7 @@ export function ProblemStatusBadge({
   status: ProblemStatus;
   className?: string;
 }) {
+  const t = useTranslations('labels.problemStatus');
   return (
     <span
       className={cn(
@@ -25,7 +24,7 @@ export function ProblemStatusBadge({
         className,
       )}
     >
-      {PROBLEM_STATUS_LABEL[status]}
+      {t(status)}
     </span>
   );
 }
@@ -41,6 +40,7 @@ export function ProblemStatusPill({
   status: ProblemStatus;
   className?: string;
 }) {
+  const t = useTranslations('labels.problemStatus');
   const m = PROBLEM_STATUS_META[status];
   const live = status === 'open';
   return (
@@ -55,7 +55,7 @@ export function ProblemStatusPill({
         {live && <span className={cn('absolute inline-flex h-full w-full animate-ping rounded-full opacity-60', m.dot)} />}
         <span className={cn('relative inline-flex h-1.5 w-1.5 rounded-full', m.dot)} />
       </span>
-      {m.label}
+      {t(status)}
     </span>
   );
 }
@@ -67,6 +67,7 @@ export function SolutionStatusBadge({
   status: SolutionStatus;
   className?: string;
 }) {
+  const t = useTranslations('labels.solutionStatus');
   return (
     <span
       className={cn(
@@ -75,7 +76,7 @@ export function SolutionStatusBadge({
         className,
       )}
     >
-      {SOLUTION_STATUS_LABEL[status]}
+      {t(status)}
     </span>
   );
 }
@@ -87,6 +88,7 @@ export function StartupStatusBadge({
   status: StartupStatus;
   className?: string;
 }) {
+  const t = useTranslations('labels.startupStatus');
   return (
     <span
       className={cn(
@@ -95,7 +97,7 @@ export function StartupStatusBadge({
         className,
       )}
     >
-      {STARTUP_STATUS_LABEL[status]}
+      {t(status)}
     </span>
   );
 }

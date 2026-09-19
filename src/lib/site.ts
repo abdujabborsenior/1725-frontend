@@ -22,12 +22,11 @@ function humanPhone(e164: string): string {
 
 export const SITE = {
   name: 'MYMarkaz',
-  /** Bir jumlalik ta'rif — footer va meta uchun */
-  tagline: "G'oyadan startapgacha — birgalikda",
-  description:
-    "O'quvchilar, talabalar va kreativ yoshlar uchun muammoni yechib, jamoa qurib, mahsulot yaratish maydoni.",
   url: process.env.NEXT_PUBLIC_SITE_URL ?? 'https://mymarkaz.uz',
 
+  /* Matnlar (shior, tavsif, shahar, ish vaqti, ishonch bandlari) — lug'atda
+     (`messages/*.json` → `footer`): ular har tilda boshqacha yoziladi. Bu
+     yerda faqat tilga bog'liq bo'lmagan rekvizitlar. */
   contact: {
     phoneE164: PHONE_E164,
     phone: humanPhone(PHONE_E164),
@@ -37,15 +36,5 @@ export const SITE = {
     /** Telegram — raqam orqali (alohida username talab qilmaydi) */
     telegram: `https://t.me/${PHONE_E164}`,
     telegramLabel: 'Telegram',
-    city: "Toshkent, O'zbekiston",
-    /** Javob berish vaqti — ishonch signali, va'da emas */
-    hours: 'Dushanba–Shanba · 09:00–20:00',
   },
 } as const;
-
-/** Footer ishonch qatori — mahsulotning haqiqiy va'dalari (dekor emas). */
-export const TRUST_POINTS: { title: string; text: string }[] = [
-  { title: 'Bepul foydalanish', text: "Joylash, yechim berish va baholash — to'lovsiz" },
-  { title: "Ma'lumot xavfsizligi", text: 'Shifrlangan ulanish, parol hech qachon ochiq saqlanmaydi' },
-  { title: 'Jonli qo‘llab-quvvatlash', text: SITE.contact.hours },
-];

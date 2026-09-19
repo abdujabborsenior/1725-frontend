@@ -1,0 +1,2037 @@
+{
+  "ai": {
+    "newChat": "Yangi suhbat",
+    "workspace": {
+      "backHome": "Bosh sahifaga qaytish",
+      "history": "Suhbatlar tarixi",
+      "chats": "Suhbatlar",
+      "answerFailed": "Javob olinmadi. Bir oz kutib, qayta urinib ko‘ring.",
+      "openFailed": "Suhbatni ochib bo‘lmadi",
+      "deleteFailed": "Suhbatni o‘chirib bo‘lmadi",
+      "disabled": "Yechim AI hozircha o‘chirilgan. Tez orada qaytadi.",
+      "guestHint": "Ro‘yxatdan o‘ting — bir daqiqada, bepul",
+      "remaining": "{count, plural, other {Bugun yana # ta so‘rov qoldi}}"
+    },
+    "history": {
+      "empty": "Suhbatlaringiz shu yerda saqlanadi",
+      "confirmDelete": "O‘chirilsinmi?",
+      "delete": "O‘chirish",
+      "deleteChat": "“{title}” suhbatini o‘chirish",
+      "questions": "{count, plural, other {# ta savol}}",
+      "loadMore": "Oldingilarini ko‘rsatish"
+    },
+    "composer": {
+      "inputLabel": "Muammoingiz",
+      "placeholder": {
+        "idle": "Muammoni yozing yoki ayting…",
+        "busy": "Javob tayyorlanmoqda…",
+        "transcribing": "Ovoz matnga o‘girilmoqda…"
+      },
+      "voice": "Ovozli xabar",
+      "minChars": "Kamida {min} ta belgi yozing",
+      "cancelRecording": "Bekor qilish",
+      "finishRecording": "Yozuvni tugatish",
+      "noSignal": "Ovoz eshitilmayapti",
+      "micError": {
+        "denied": "Mikrofonga ruxsat berilmadi",
+        "unavailable": "Mikrofonni ochib bo‘lmadi"
+      },
+      "failure": {
+        "empty": "Yozuv olinmadi. Mikrofonni bosib, gapirib bo‘lgach to‘xtating.",
+        "tooShort": "Juda qisqa bo‘ldi — kamida bir gap ayting.",
+        "silent": "Ovoz eshitilmadi. Mikrofon ochiqligini tekshiring va yaqinroq gapiring."
+      },
+      "transcribeFailed": "Ovozni matnga o‘girib bo‘lmadi"
+    },
+    "thinking": {
+      "understand": "Muammoni tushunyapman",
+      "review": "Loyihalarni ko‘rib chiqyapman",
+      "compare": "Eng mosini solishtiryapman",
+      "write": "Javobni yozyapman"
+    },
+    "answer": {
+      "matches": "{count, plural, other {# ta mos loyiha}}",
+      "noSolutionTitle": "Platformada bunga tayyor yechim yo‘q.",
+      "noSolutionText": "Muammoingizni hamjamiyatga qo‘ysak — ko‘rib chiqishadi va yechim taklif qilishadi. Matnni tayyorlab qo‘ydim.",
+      "reviewAndPublish": "Ko‘rib chiqib joylash",
+      "nextSteps": "Keyingi qadamlar",
+      "related": "Shu mavzudagi muhokamalar",
+      "solutions": "{count, plural, other {# ta yechim}}",
+      "noSolutions": "Hali yechim yo‘q",
+      "helpful": "Javob foydali",
+      "notHelpful": "Javob foydali emas",
+      "feedbackSaved": "Baho qabul qilindi",
+      "feedbackFailed": "Baho yuborilmadi"
+    },
+    "match": {
+      "best": "Eng mos"
+    },
+    "welcome": {
+      "title": "Muammoingizni ayting — yechimini topaman",
+      "subtitle": "Platformadagi loyihalar orasidan sizga mos keladiganini topaman",
+      "examples": {
+        "english": "Ingliz tilini arzon o‘rganmoqchiman",
+        "accounting": "Kichik biznesim uchun buxgalteriya kerak",
+        "onlineSales": "Mahsulotlarimni onlayn sotmoqchiman",
+        "ruralInternet": "Qishloqda internet sekin"
+      }
+    },
+    "publish": {
+      "title": "Muammoni joylash",
+      "note": "Matnni Yechim AI tayyorladi. Xohlagancha o‘zgartiring — joylagach muammo hammaga ko‘rinadi",
+      "titleLabel": "Sarlavha",
+      "descriptionLabel": "Muammo tavsifi",
+      "categoryLabel": "Kategoriya",
+      "noCategory": "Kategoriyasiz",
+      "submit": "Joylash",
+      "signUpToPublish": "Ro‘yxatdan o‘tib joylash",
+      "polish": "Qayta sayqallash",
+      "polished": "Matn qayta sayqallandi",
+      "polishFailed": "Sayqallab bo‘lmadi",
+      "published": "Muammoingiz e’lon qilindi",
+      "publishFailed": "E’lon qilib bo‘lmadi"
+    }
+  },
+  "aiLauncher": {
+    "title": "Muammoingizni ayting — yechimini topaman",
+    "subtitle": "Yozib yoki aytib bering — platformadagi mos loyihani topib beraman",
+    "inputLabel": "Muammoingiz",
+    "voice": "Ovozli xabar bilan so‘rash",
+    "submit": "Yechim izlash",
+    "ask": "So‘rash: {question}",
+    "prompts": {
+      "english": "ingliz tilini arzon o‘rganmoqchiman",
+      "accounting": "kichik biznesim uchun buxgalteriya kerak",
+      "onlineSales": "mahsulotlarimni onlayn sotmoqchiman",
+      "ruralInternet": "qishloqda internet sekin — nima qilay?"
+    },
+    "chips": {
+      "english": {
+        "label": "Ingliz tili",
+        "question": "Ingliz tilini arzon o‘rganmoqchiman"
+      },
+      "accounting": {
+        "label": "Buxgalteriya",
+        "question": "Kichik biznesim uchun buxgalteriya kerak"
+      },
+      "onlineSales": {
+        "label": "Onlayn sotuv",
+        "question": "Mahsulotlarimni onlayn sotmoqchiman"
+      }
+    }
+  },
+  "auth": {
+    "homeLink": "Bosh sahifa",
+    "brand": {
+      "title": "G‘oyadan startapgacha — bitta platformada",
+      "text": "O‘zbekiston yoshlari uchun muammolar, yechimlar va startaplar ekotizimi. Bilim almashing, jamoa quring va g‘oyangizni hayotga tatbiq eting.",
+      "highlights": {
+        "problems": {
+          "title": "Muammodan g‘oyaga",
+          "text": "Real muammolarni toping va yechim taklif qiling"
+        },
+        "showcase": {
+          "title": "Startaplar vitrinasi",
+          "text": "Mahsulotingizni hamjamiyatga taqdim eting"
+        },
+        "rankings": {
+          "title": "Reyting va tan olish",
+          "text": "Eng yaxshilar IMDB uslubidagi reytingda"
+        }
+      },
+      "secure": "Ma‘lumotlaringiz xavfsiz himoyalangan"
+    },
+    "fields": {
+      "email": "Email",
+      "emailPlaceholder": "sizning@email.com",
+      "password": "Parol"
+    },
+    "errors": {
+      "emailFormat": "Email noto'g'ri formatda",
+      "codeInvalid": "Kod noto'g'ri yoki muddati o'tgan",
+      "generic": "Xatolik yuz berdi"
+    },
+    "backToLogin": "Kirishga qaytish",
+    "resend": "Kodni qayta yuborish",
+    "resendIn": "Qayta yuborish ({seconds}s)",
+    "codeResent": "Yangi kod yuborildi",
+    "redirecting": "Yo'naltirilmoqda...",
+    "login": {
+      "eyebrow": "Kirish",
+      "title": "Xush kelibsiz!",
+      "subtitle": "Hisobingizga kiring va g'oyalaringizni hayotga tatbiq eting",
+      "passwordPlaceholder": "Parolingiz",
+      "passwordRequired": "Parol kiritilmagan",
+      "forgot": "Parolni unutdingizmi?",
+      "submit": "Kirish",
+      "noAccount": "Hisobingiz yo'qmi? <link>Ro'yxatdan o'tish</link>",
+      "welcome": "Xush kelibsiz, {name}!",
+      "failed": "Email yoki parol noto'g'ri"
+    },
+    "register": {
+      "title": "Ro'yxatdan o'tish",
+      "subtitle": "Bir daqiqada bepul hisob yarating",
+      "chooseType": "Foydalanuvchi turini tanlang",
+      "types": {
+        "general": {
+          "label": "Oddiy foydalanuvchi",
+          "desc": "Istalgan yoshdagi har qanday inson"
+        },
+        "school": {
+          "label": "Maktab o'quvchisi",
+          "desc": "1–11 sinf o'quvchilari"
+        },
+        "university": {
+          "label": "Talaba",
+          "desc": "Oliy ta'lim muassasasi talabalari"
+        }
+      },
+      "fullName": "To'liq ism",
+      "fullNamePlaceholder": "Ism Familiya",
+      "passwordPlaceholder": "Parol yarating",
+      "region": "Viloyat",
+      "regionPlaceholder": "Viloyatni tanlang...",
+      "district": "Tuman",
+      "districtPlaceholder": "Chilonzor tumani",
+      "school": "Maktab",
+      "schoolPlaceholder": "Maktab nomi / raqami",
+      "grade": "Sinf",
+      "gradeOption": "{grade}-sinf",
+      "university": "Universitet",
+      "universityPlaceholder": "Universitet nomi",
+      "course": "Kurs",
+      "courseOption": "{course}-kurs",
+      "submit": "Ro'yxatdan o'tish",
+      "haveAccount": "Hisobingiz bormi? <link>Kirish</link>",
+      "codeSent": "Emailga kod yuborildi"
+    },
+    "forgot": {
+      "eyebrow": "Yordam",
+      "title": "Parolni tiklash",
+      "subtitle": "Emailingizni kiriting — tiklash uchun 6 xonali kod yuboramiz",
+      "submit": "Kod yuborish",
+      "sent": "Yuborildi",
+      "sentToast": "Agar email mavjud bo'lsa, kod yuborildi",
+      "sentNotice": "Kod <hl>{email}</hl> ga yuborildi. Yo'naltirilmoqda..."
+    },
+    "reset": {
+      "eyebrow": "Xavfsizlik",
+      "title": "Yangi parol o'rnatish",
+      "subtitle": "Emailga yuborilgan kodni va yangi parolingizni kiriting",
+      "codeLabel": "Tasdiqlash kodi",
+      "newPassword": "Yangi parol",
+      "newPasswordPlaceholder": "Yangi parol yarating",
+      "confirm": "Parolni tasdiqlang",
+      "confirmPlaceholder": "Parolni takrorlang",
+      "mismatch": "Parollar mos kelmadi",
+      "submit": "Parolni yangilash",
+      "success": "Parol yangilandi! Endi kiring."
+    },
+    "verify": {
+      "title": "Emailni tasdiqlang",
+      "sentTo": "6 xonali kod quyidagi emailga yuborildi:",
+      "submit": "Tasdiqlash",
+      "otherEmail": "Boshqa email bilan kirish",
+      "verified": "Tasdiqlandi!",
+      "verifiedToast": "Email tasdiqlandi!",
+      "welcome": "Xush kelibsiz, {name}!"
+    }
+  },
+  "billing": {
+    "interval": {
+      "monthly": "Oylik",
+      "yearly": "Yillik"
+    },
+    "intervalSuffix": {
+      "monthly": "/oy",
+      "yearly": "/yil"
+    },
+    "tier": {
+      "starter": {
+        "name": "Boshlang'ich",
+        "tagline": "Birinchi loyihangizni ishonch bilan boshlang"
+      },
+      "pro": {
+        "name": "Pro",
+        "tagline": "Bir nechta loyihani birga olib boradiganlar uchun"
+      },
+      "business": {
+        "name": "Biznes",
+        "tagline": "Jamoa va portfel darajasidagi ish uchun"
+      }
+    },
+    "features": {
+      "projects": "{count, plural, one {1 ta loyiha e’lon qilish} other {# tagacha loyiha e’lon qilish}}",
+      "page": "Loyiha sahifasi, reyting va sharhlar",
+      "solutions": "Muammolarga yechim taklif qilish",
+      "edit": "Loyihalarni istalgan vaqtda tahrirlash",
+      "priority": "Ustuvor qo‘llab-quvvatlash",
+      "yearTerm": "12 oylik muddat, bir to‘lov",
+      "monthTerm": "1 oylik muddat"
+    },
+    "providers": "{count, plural, =0 {Karta} one {{a}} other {{a} yoki {b}}}"
+  },
+  "billingPage": {
+    "title": "Obunam",
+    "subtitle": "Joriy tarif, limitlar va to‘lovlar tarixi",
+    "pricing": "Tariflar",
+    "current": {
+      "label": "Joriy tarif",
+      "active": "Faol",
+      "validUntil": "Amal qilish muddati: {date}",
+      "projects": "Loyihalar",
+      "remaining": "{count, plural, other {Yana # ta loyiha e’lon qilishingiz mumkin.}}",
+      "limitReached": "Limit to‘lgan — yuqoriroq tarifga o‘tish orqali kengaytiring.",
+      "change": "Tarifni o‘zgartirish"
+    },
+    "noSub": {
+      "title": "Faol obuna yo‘q",
+      "withFree": "{count, plural, other {Hozircha # ta loyiha e’lon qila olasiz. Ko‘proq kerak bo‘lsa, tarif tanlang.}}",
+      "none": "Loyiha e’lon qilish uchun tarif tanlang",
+      "viewPlans": "Tariflarni ko‘rish"
+    },
+    "history": {
+      "title": "To‘lovlar tarixi",
+      "empty": "Hali to‘lov qilinmagan",
+      "planFallback": "Tarif"
+    },
+    "orderStatus": {
+      "pending": "Kutilmoqda",
+      "paid": "To‘langan",
+      "cancelled": "Bekor qilingan",
+      "expired": "Muddati o‘tgan"
+    },
+    "status": {
+      "missingTitle": "Buyurtma topilmadi",
+      "missingText": "Havola to‘liq emas. Tariflar sahifasidan qaytadan urinib ko‘ring.",
+      "backToPricing": "Tariflarga qaytish",
+      "checkingTitle": "Tekshirilmoqda…",
+      "checkingText": "Buyurtma holati olinmoqda",
+      "paidTitle": "To‘lov qabul qilindi",
+      "paidWithPlan": "{plan} · {interval} tarifi faollashtirildi ({sum}).",
+      "paidPlain": "To‘lov muvaffaqiyatli ({sum}).",
+      "publish": "Loyiha e’lon qilish",
+      "expiredTitle": "Buyurtma muddati o‘tdi",
+      "cancelledTitle": "To‘lov bekor qilindi",
+      "notCharged": "Hisobingizdan mablag‘ yechilmagan. Qaytadan urinib ko‘rishingiz mumkin.",
+      "confirmingTitle": "To‘lov tasdiqlanmoqda",
+      "delayed": "Tasdiq biroz kechikyapti. Mablag‘ yechilgan bo‘lsa, obuna bir necha daqiqada avtomatik faollashadi.",
+      "wait": "Bu odatda bir necha soniya davom etadi. Sahifani yopmang."
+    }
+  },
+  "chat": {
+    "back": "Ortga",
+    "message": "Xabar",
+    "attachment": "Biriktirma",
+    "uploadFailed": "Yuklashda xatolik",
+    "type": {
+      "text": "Matn",
+      "image": "Rasm",
+      "video": "Video",
+      "voice": "Ovozli xabar",
+      "round_video": "Video xabar",
+      "file": "Fayl"
+    },
+    "disabled": {
+      "voice": "Ovozli xabarlar vaqtincha o‘chirilgan",
+      "round_video": "Video xabarlar vaqtincha o‘chirilgan",
+      "video": "Video yuborish vaqtincha o‘chirilgan",
+      "other": "Bu fayl turi vaqtincha o‘chirilgan"
+    },
+    "system": {
+      "leftGroup": "{name} guruhdan chiqdi"
+    },
+    "page": {
+      "title": "Suhbatni tanlang",
+      "text": "Chap tomondagi ro‘yxatdan suhbat oching yoki hamjamiyatdan yangi odam toping",
+      "findPeople": "Odamlarni topish",
+      "privacy": "Suhbatlar shaxsiy — faqat ikkalangiz ko‘rasiz"
+    },
+    "list": {
+      "title": "Suhbatlar",
+      "createGroup": "Guruh yaratish",
+      "newChat": "Yangi suhbat",
+      "search": "Suhbatlarda qidirish",
+      "tabs": {
+        "all": "Hammasi",
+        "direct": "Shaxsiy",
+        "group": "Guruhlar"
+      },
+      "noResults": "Hech narsa topilmadi",
+      "noResultsFor": "«{query}» bo‘yicha suhbat yo‘q",
+      "startChat": "Suhbat boshlang",
+      "emptyDirect": "Shaxsiy suhbatlar yo‘q",
+      "emptyGroups": "Guruhlar yo‘q",
+      "emptyFiltered": "Bu yerda hech narsa yo‘q",
+      "emptyAll": "Hali suhbatlar yo‘q",
+      "emptyHint": "Hamjamiyatdan odam toping va suhbat boshlang",
+      "emptyGroupsHint": "Hamjamiyat guruhlariga qo'shiling",
+      "findPeople": "Odamlarni topish",
+      "findGroups": "Guruhlarni topish"
+    },
+    "window": {
+      "notFound": "Suhbat topilmadi",
+      "groupInfo": "Guruh ma'lumoti",
+      "openProfile": "Profilni ochish",
+      "menu": "Menyu",
+      "typing": "yozmoqda…",
+      "members": "{count, plural, other {{n} a'zo}}",
+      "online": "onlayn",
+      "lastSeen": "oxirgi faollik {time}",
+      "groupSettings": "Guruh sozlamalari",
+      "leaveGroup": "Guruhdan chiqish",
+      "leftGroup": "Guruhdan chiqdingiz",
+      "jumpDown": "Pastga",
+      "jumpDownNew": "{count, plural, other {# ta yangi xabar — pastga}}",
+      "restrictions": "Cheklovlar yoqilgan: {list}",
+      "leaveConfirm": "<b>{title}</b> guruhidan chiqmoqchimisiz? Keyin uni qidiruvdan qayta topib qo'shilishingiz mumkin.",
+      "leaveCancel": "Bekor",
+      "leave": "Chiqish"
+    },
+    "empty": {
+      "title": "Bu yerda hali xabar yo‘q",
+      "groupIntro": "<b>{title}</b> guruhida suhbat hali boshlanmagan. Birinchi fikrni siz tashlang.",
+      "groupIntroNoTitle": "<b>Bu guruhda</b> suhbat hali boshlanmagan. Birinchi fikrni siz tashlang.",
+      "directIntro": "<b>{title}</b> bilan suhbatni boshlang — loyihangizni tanishtiring yoki savol bering",
+      "directIntroNoTitle": "<b>Suhbatdosh</b> bilan suhbatni boshlang — loyihangizni tanishtiring yoki savol bering",
+      "startersTitle": "Shunday boshlash mumkin",
+      "starters": {
+        "directHello": "Assalomu alaykum! Loyihangiz bilan tanishdim.",
+        "directPartnership": "Hamkorlik haqida gaplashsak bo‘ladimi?",
+        "directQuestions": "G‘oyangiz bo‘yicha bir nechta savolim bor.",
+        "groupHello": "Assalomu alaykum, hammaga!",
+        "groupIdea": "Yangi g‘oyam bor — fikr bildirasizmi?",
+        "groupWho": "Kim shu yo‘nalishda ishlayapti?"
+      }
+    },
+    "composer": {
+      "maxFiles": "Eng ko‘pi 10 ta fayl",
+      "fileTooLarge": "{name}: maks. 50MB",
+      "typeBlocked": "Bu guruhda {type, select, text {matn} image {rasm} video {video} voice {ovozli xabar} round_video {video xabar} file {fayl} other {bu tur}} taqiqlangan",
+      "textBlocked": "Bu guruhda matn yuborish taqiqlangan",
+      "emptyMessage": "Xabar matni bo'sh bo'lmasin",
+      "editFailed": "Tahrirlab bo‘lmadi",
+      "allowCamera": "Kameraga ruxsat bering",
+      "allowMic": "Mikrofonga ruxsat bering",
+      "noCamera": "Kamera topilmadi",
+      "noMic": "Mikrofon topilmadi",
+      "cameraBusy": "Kamera band (boshqa dastur ishlatyapti)",
+      "micBusy": "Mikrofon band",
+      "recordFailed": "Yozishni boshlab bo‘lmadi",
+      "blockedList": "Bu guruhda taqiqlangan: {list}",
+      "editing": "Xabarni tahrirlash",
+      "mediaCaption": "Media izohi",
+      "remove": "O'chirish",
+      "add": "Qo'shish",
+      "recordingRound": "Dumaloq video yozilmoqda…",
+      "attach": "Biriktirish",
+      "gallery": "Galereya",
+      "galleryHintVideo": "Rasm va video",
+      "galleryHint": "Rasm",
+      "camera": "Kamera",
+      "cameraHint": "Suratga olish",
+      "fileHintAudio": "Hujjat, audio, arxiv",
+      "fileHint": "Hujjat, arxiv",
+      "placeholder": "Xabar yozing…",
+      "placeholderEdit": "Xabarni tahrirlang…",
+      "placeholderCaption": "Izoh qo‘shing (ixtiyoriy)…",
+      "placeholderBlocked": "Bu guruhda matn taqiqlangan",
+      "roundVideo": "Dumaloq video"
+    },
+    "bubble": {
+      "play": "Tinglash",
+      "pause": "To‘xtatish",
+      "sizeKb": "{size} KB",
+      "reply": "Javob berish",
+      "edit": "Tahrirlash",
+      "copy": "Nusxa olish",
+      "copied": "Nusxa olindi",
+      "copyFailed": "Nusxa olib bo‘lmadi",
+      "edited": "tahrirlangan",
+      "sending": "Yuborilmoqda",
+      "read": "Ko‘rildi",
+      "delivered": "Yetkazildi"
+    },
+    "group": {
+      "createTitle": "Yangi guruh",
+      "nameLabel": "Guruh nomi",
+      "namePlaceholder": "Masalan: Frontend jamoasi",
+      "nameTooShort": "Guruh nomi juda qisqa",
+      "usernameLabel": "Username (ixtiyoriy)",
+      "usernamePlaceholder": "ai_jamoa",
+      "usernameInvalid": "Noto‘g‘ri format",
+      "usernameHint": "5–32 belgi · kichik harf bilan boshlanadi · a-z, 0-9, _",
+      "usernameRule": "Username 5–32 belgi, kichik harf bilan boshlanadi",
+      "descriptionLabel": "Tavsif",
+      "descriptionPlaceholder": "Guruh nima haqida?",
+      "publicLabel": "Ommaviy — bosh sahifada ko‘rinadi, hamma qo‘shila oladi",
+      "create": "Guruh yaratish",
+      "created": "Guruh yaratildi",
+      "imagesOnly": "Faqat rasm",
+      "maxSize": "Maks. 8MB",
+      "avatarAlt": "Guruh",
+      "removePhoto": "Rasmni olib tashlash",
+      "changePhoto": "Rasmni almashtirish",
+      "uploadAvatar": "Avatar yuklash",
+      "settingsNotice": "Yoqilgan turlar oddiy a'zolar uchun <b>taqiqlanadi</b>. Egasi va adminlar har doim yubora oladi.",
+      "blocked": "Taqiqlangan",
+      "saving": "Saqlanmoqda…",
+      "saved": "Guruh sozlamalari saqlandi"
+    }
+  },
+  "clusterCard": {
+    "opportunity": "Imkoniyat",
+    "demand": "Talab",
+    "requests": "{count, plural, other {{n} ta so'rov}}",
+    "noSolution": "Yechim yo‘q",
+    "projects": "{count, plural, other {{n} ta loyiha}}",
+    "level": {
+      "high": "Katta imkoniyat",
+      "medium": "O‘rtacha imkoniyat",
+      "saturated": "Bozor to‘yingan"
+    }
+  },
+  "common": {
+    "save": "Saqlash",
+    "cancel": "Bekor qilish",
+    "close": "Yopish",
+    "back": "Orqaga",
+    "loading": "Yuklanmoqda…",
+    "retry": "Qayta urinish",
+    "clear": "Tozalash",
+    "send": "Yuborish"
+  },
+  "coverMedia": {
+    "play": "{title} videosini ijro etish",
+    "playUntitled": "Videoni ijro etish",
+    "videoTitle": "{title} — video",
+    "videoUntitled": "Video"
+  },
+  "dealflow": {
+    "back": "Kabinet",
+    "title": "Loyihalar lentasi",
+    "subtitle": "Kriteriyangizga mos loyihalar — moslik bali bo'yicha tartiblangan",
+    "filters": {
+      "all": "Barchasi",
+      "new": "Yangilari",
+      "saved": "Saqlanganlar"
+    },
+    "error": {
+      "forbiddenTitle": "Lenta hali ochilmagan",
+      "title": "Xatolik",
+      "toCabinet": "Kabinetga o'tish"
+    },
+    "empty": {
+      "savedTitle": "Saqlangan loyiha yo‘q",
+      "newTitle": "Yangi loyiha yo‘q",
+      "noneTitle": "Hozircha mos loyiha topilmadi",
+      "savedText": "Yoqqan loyihani saqlab qo‘ysangiz shu yerda to‘planadi",
+      "noneText": "Kriteriyangizni biroz kengaytiring — yoki yangi loyihalar qo‘shilishini kuting. Mos loyiha chiqsa xabar beramiz."
+    }
+  },
+  "discover": {
+    "title": "Hamjamiyat",
+    "subtitle": "Odamlarni toping, kuzating va guruhlarga qo‘shiling",
+    "searchPlaceholder": "Username, ism yoki guruh",
+    "resultType": "Natija turi",
+    "tabs": {
+      "all": "Hammasi",
+      "people": "Odamlar",
+      "groups": "Guruhlar"
+    },
+    "noPeople": "Hech kim topilmadi",
+    "noGroups": "Guruh topilmadi",
+    "recent": "So‘nggi qidiruvlar",
+    "removeRecent": "{term} — tarixdan o'chirish",
+    "suggestions": "Kuzatish uchun",
+    "noSuggestions": "Hozircha tavsiyalar yo‘q",
+    "communityGroups": "Hamjamiyat guruhlari",
+    "noCommunityGroups": "Hozircha guruhlar yo‘q"
+  },
+  "engagement": {
+    "like": "Yoqtirish — {n}",
+    "unlike": "Yoqtirishni olib tashlash — {n}",
+    "save": "Keyinroq uchun saqlash",
+    "unsave": "Saqlanganlardan olib tashlash",
+    "saved": "Saqlandi",
+    "unsaved": "Saqlanganlardan olib tashlandi"
+  },
+  "footer": {
+    "tagline": "G'oyadan startapgacha — birgalikda",
+    "description": "O'quvchilar, talabalar va kreativ yoshlar uchun muammoni yechib, jamoa qurib, mahsulot yaratish maydoni.",
+    "cols": {
+      "platform": "Platforma",
+      "community": "Hamjamiyat",
+      "start": "Boshlash"
+    },
+    "links": {
+      "showcase": "Startaplar vitrinasi",
+      "top": "Top startaplar",
+      "problems": "Muammolar",
+      "market": "Bozor xaritasi",
+      "polls": "Ovoz berish",
+      "discover": "Odamlarni kashf etish",
+      "groups": "Guruhlar",
+      "messages": "Suhbatlar",
+      "profile": "Profil",
+      "whatIsStartup": "Startap nima?",
+      "addStartup": "Startap joylash",
+      "addProblem": "Muammo qoldirish",
+      "register": "Ro'yxatdan o'tish",
+      "login": "Kirish"
+    },
+    "contactTitle": "Bog'lanish",
+    "aria": {
+      "telegram": "Telegram orqali yozish",
+      "email": "Email yozish",
+      "phone": "Telefon qilish"
+    },
+    "city": "Toshkent, O'zbekiston",
+    "trust": {
+      "free": {
+        "title": "Bepul foydalanish",
+        "text": "Joylash, yechim berish va baholash — to'lovsiz"
+      },
+      "security": {
+        "title": "Ma'lumot xavfsizligi",
+        "text": "Shifrlangan ulanish, parol hech qachon ochiq saqlanmaydi"
+      },
+      "support": {
+        "title": "Jonli qo‘llab-quvvatlash",
+        "text": "Dushanba–Shanba · 09:00–20:00"
+      }
+    },
+    "rights": "© {year} MYMarkaz · Barcha huquqlar himoyalangan",
+    "madeFor": "{city} · O'zbekiston yoshlari uchun yaratildi"
+  },
+  "groupCard": {
+    "members": "{count, plural, other {{n} a'zo}}",
+    "open": "Ochish",
+    "join": "Qo'shilish"
+  },
+  "helpful": {
+    "label": "Foydali",
+    "marked": "Foydali deb belgilandi",
+    "markTitle": "Yechimni foydali deb belgilash",
+    "unmarkTitle": "Belgini olib tashlash",
+    "foundHelpful": "{count, plural, other {{n} kishi foydali dedi}}"
+  },
+  "home": {
+    "seeAll": "Barchasi",
+    "start": "Bepul boshlash",
+    "welcome": "Xush kelibsiz, {name}",
+    "hero": {
+      "title": "G‘oyadan <br></br>biznes loyihagacha",
+      "lead": "MYMarkaz — o‘quvchilar, talabalar va kreativ yoshlar yig‘iladigan maydon. Muammoni yozing, yechimini hamjamiyat bilan quring, jamoa toping va g‘oyangizni real mahsulotga aylantiring.",
+      "showcase": "Vitrinani ko‘rish",
+      "messages": "Suhbatlar",
+      "whatIs": "Startap nima?",
+      "building": "Hamjamiyat shu yerda nimalar quryapti"
+    },
+    "stats": {
+      "startups": "Startaplar",
+      "problems": "Muammolar",
+      "polls": "Ovoz berishlar",
+      "groups": "Guruhlar"
+    },
+    "whatIs": {
+      "eyebrow": "Bu savollar sizni o‘ylantiryaptimi?",
+      "title": "Startap nima? Startapper kim?",
+      "subtitle": "Keling, soddagina qilib tushuntiramiz — ortiqcha atamalarsiz, hayotiy tilda",
+      "cards": {
+        "startup": {
+          "title": "Startap nima?",
+          "body": "Startap — shunchaki biznes emas. Bu real muammoni yangicha, tez va arzon hal qiladigan g‘oya. U kichik boshlanadi — daftardagi chizma yoki telefondagi eslatmadan. Muhimi: u kimningdir hayotini biror joyda osonlashtiradi."
+        },
+        "founder": {
+          "title": "Startapper kim?",
+          "body": "Startapper — diplom yoki katta sarmoya kutib o‘tirmaydigan odam. U atrofdagi muammoni ko‘radi-da, «buni men hal qilaman» deydi. Maktab o‘quvchisimisiz, talabami yoki endigina izlanayotgan yoshmisiz — farqi yo‘q. Yagona shart — boshlash jur’ati."
+        },
+        "now": {
+          "title": "Nega aynan hozir?",
+          "body": "Chunki tajriba kitobdan emas, harakatdan keladi. Bu yerda g‘oyani sinab ko‘rish, jonli fikr olish va jamoa topish — hammasi bir joyda va bepul. Eng yaxshi payt har doim — hozir."
+        }
+      }
+    },
+    "doubts": {
+      "eyebrow": "Halol gaplashamiz",
+      "title": "Nega bugun boshlamasliging kerak?",
+      "subtitle": "Mana — o‘zingizga aytadigan eng keng tarqalgan to‘rtta sabab. Ustiga bosing va halol javob bering: qaysi biri rostdan ham to‘xtatishga arziydi?",
+      "verdict": "Bittasi ham emas",
+      "verdictNote": "Shuning uchun eng to‘g‘ri kun — bugun"
+    },
+    "groups": {
+      "eyebrow": "Jonli hamjamiyat",
+      "title": "Hamjamiyat guruhlari",
+      "subtitle": "Real vaqtda suhbatlashing — qo‘shiling va fikr almashing"
+    },
+    "featured": {
+      "eyebrow": "Vitrina",
+      "title": "Tavsiya etilgan startaplar",
+      "subtitle": "Hamjamiyat ishlab chiqqan ilovalar, saytlar va botlar",
+      "empty": "Tez orada birinchi startaplar"
+    },
+    "top": {
+      "eyebrow": "Reyting taxtasi",
+      "title": "Top startaplar",
+      "subtitle": "IMDB uslubidagi vaznli reyting bo‘yicha yetakchilar",
+      "more": "To‘liq reyting"
+    },
+    "follow": {
+      "title": "Kuzatish uchun",
+      "loading": "Tavsiyalar yuklanmoqda…",
+      "more": "Ko‘proq odamlarni topish"
+    },
+    "problems": {
+      "eyebrow": "Jamoaviy aql",
+      "title": "So‘nggi muammolar",
+      "subtitle": "Ochiq va yechim kutayotgan muammolar"
+    },
+    "how": {
+      "eyebrow": "Yo‘l xaritasi",
+      "title": "Qanday ishlaydi?",
+      "subtitle": "G‘oyadan startapgacha — uch oddiy qadam",
+      "steps": {
+        "describe": {
+          "title": "Muammoni yozing",
+          "desc": "Sizni yoki atrofingizdagilarni qiynayotgan biror muammoni baham ko‘ring. Eng yaxshi g‘oyalar shu yerdan boshlanadi."
+        },
+        "gather": {
+          "title": "Jamoa va fikr to‘plang",
+          "desc": "Hamjamiyatdan jonli fikr oling, fikrdosh toping va real vaqtda suhbatlashib yechim ustida ishlang."
+        },
+        "launch": {
+          "title": "Startapga aylantiring",
+          "desc": "G‘oyangizni vitrinaga qo‘ying, ovoz yig‘ing va uni odamlar foydalanadigan real mahsulotga o‘stiring."
+        }
+      }
+    },
+    "polls": {
+      "eyebrow": "Hamjamiyat tanlovi",
+      "title": "Ovoz berish",
+      "subtitle": "Yoqqan startapingizga ovoz bering — natijani jonli ko‘ring",
+      "more": "Barcha so‘rovnomalar"
+    },
+    "cta": {
+      "title": "G‘oyangiz boshlanishini kutyapti",
+      "text": "Bugun ro‘yxatdan o‘ting, birinchi muammongizni yozing va o‘zingizga o‘xshagan yoshlar bilan birga ishni boshlang. Bir qadam — hammasining boshlanishi.",
+      "login": "Kirish"
+    }
+  },
+  "introDialog": {
+    "title": "Bog'lanish so'rovi",
+    "lead": "<b>{title}</b> asoschisiga so'rov yuboriladi. U qabul qilsa — suhbat ochiladi va bu xabar birinchi bo'lib ko'rinadi.",
+    "messageLabel": "Xabaringiz",
+    "placeholder": "Nima uchun qiziqayotganingizni va nima taklif qilishingizni yozing. Aniq gap javob olish ehtimolini keskin oshiradi.",
+    "charsNeeded": "{count, plural, other {Yana # ta belgi kerak}}"
+  },
+  "introRequests": {
+    "back": "Profil",
+    "title": "Bog'lanish so'rovlari",
+    "subtitle": "Loyihangiz bilan qiziqqan investorlar. Qabul qilsangiz suhbat ochiladi.",
+    "emptyTitle": "Hozircha so'rov yo'q",
+    "emptyText": "Loyihangiz profilini to'ldirsangiz — bosqich, ehtiyoj va ko'rsatkichlar — investorlar sizni tezroq topadi",
+    "investorFallback": "Investor",
+    "projectFallback": "Loyiha",
+    "accept": "Qabul qilish",
+    "decline": "Rad etish",
+    "openChat": "Suhbatni ochish"
+  },
+  "investor": {
+    "eyebrow": "Investor kabineti",
+    "title": {
+      "profile": "Kriteriyalaringiz",
+      "join": "Investor sifatida qo‘shiling"
+    },
+    "subtitle": {
+      "profile": "Bu ma’lumot asosida sizga mos loyihalar tanlanadi",
+      "join": "Nimaga qiziqishingizni bir marta yozasiz — mos loyihalar o‘zi topib keladi"
+    },
+    "verified": "Profilingiz tasdiqlangan",
+    "lastUpdated": "oxirgi yangilanish {time}",
+    "links": {
+      "dealflow": "Loyihalar lentasi",
+      "saved": "Saqlanganlar",
+      "requests": "Yuborilgan so'rovlar"
+    },
+    "pending": {
+      "title": "Tasdiq kutilmoqda",
+      "text": "Arizangiz qabul qilindi. Loyihalar lentasi profil tasdiqlangandan so'ng ochiladi — bu qoida yosh asoschilarni soxta so'rovlardan himoya qiladi. Kriteriyalaringizni hozir ham tahrirlashingiz mumkin."
+    },
+    "criteria": {
+      "title": "Hozirgi kriteriyalar",
+      "sectors": "Sohalar",
+      "check": "Chek hajmi",
+      "regions": "Hududlar",
+      "noLimit": "Cheklov yo‘q"
+    },
+    "joinNotice": "Profil yuborilgandan so'ng superadmin uni ko'rib chiqadi. Tasdiqdan keyin kriteriyangizga mos loyihalar lentasi ochiladi va yangi loyiha chiqqanda xabar beramiz."
+  },
+  "investorFields": {
+    "title": "Investorlar uchun",
+    "optional": "(ixtiyoriy)",
+    "subtitle": "Loyihangiz bosqichi va ko'rsatkichlarini kiritsangiz, investorlar qidiruvida ko'rinasiz.",
+    "reassurance": "Bu maydonlar to'ldirilmasa ham loyihangiz e'lon qilinadi. To'ldirilsa — moslik aniqligi sezilarli oshadi va siz kriteriyasi mos investorlarning lentasiga tushasiz.",
+    "completed": "To'ldirilgan: {percent}%",
+    "stage": "Loyiha bosqichi",
+    "needs": "Nimaga muhtojsiz? (bir nechtasini tanlash mumkin)",
+    "needsHint": "Kamida bittasini tanlasangiz, loyihangiz investorlar lentasiga qo'shiladi.",
+    "ask": "Qancha mablag' kerak?",
+    "askMin": "Eng kami (mln so'm)",
+    "askMax": "Eng ko'pi (mln so'm)",
+    "askPreview": "Investorga shunday ko'rinadi: <b>{range}</b>",
+    "problem": "Qanday muammoni hal qilyapsiz?",
+    "problemPlaceholder": "Masalan: fermerlar mahsulotini vositachilarga arzon topshirishga majbur, chunki xaridorga chiqish kanali yo'q.",
+    "audience": "Kim uchun?",
+    "audiencePlaceholder": "Masalan: kichik fermer xo'jaliklari",
+    "businessModel": "Biznes modeli",
+    "notSelected": "Tanlanmagan",
+    "metrics": "Ko'rsatkichlar",
+    "teamSize": "Jamoa (kishi)",
+    "revenue": "Oylik daromad (mln so'm)",
+    "activeUsers": "Oylik faol foydalanuvchi",
+    "payingCustomers": "To'lovchi mijoz",
+    "metricsHint": "Bilganingizni yozing — hammasini bilish shart emas.",
+    "traction": "Nimaga erishdingiz?",
+    "tractionPlaceholder": "Masalan: uch oyda 3000 foydalanuvchi va 240 obunachi yig'ildi, oylik o'sish 22 foiz."
+  },
+  "investorForm": {
+    "errors": {
+      "thesisShort": "Tezis kamida 20 ta belgi bo‘lsin yoki bo‘sh qoldiring",
+      "range": "Chekning quyi chegarasi yuqorisidan katta bo‘lmasin"
+    },
+    "who": {
+      "title": "Siz kimsiz?",
+      "orgName": "Tashkilot nomi (ixtiyoriy)",
+      "orgNamePlaceholder": "Masalan: UzVentures",
+      "website": "Veb-sayt (ixtiyoriy)"
+    },
+    "thesis": {
+      "title": "Investitsiya tezisingiz",
+      "hint": "Nimaga qiziqasiz, nimadan qochasiz — o'z so'zingiz bilan. Moslikning mazmuniy qismi aynan shu matnga tayanadi.",
+      "placeholder": "Masalan: ta'lim va sog'liqni saqlash sohasidagi erta bosqich loyihalarga qiziqaman. Jamoada texnik asoschi bo'lishi muhim.",
+      "tooShort": "Kamida 20 ta belgi bo'lsin yoki butunlay bo'sh qoldiring."
+    },
+    "criteria": {
+      "title": "Kriteriyalaringiz",
+      "hint": "Tanlamasangiz — cheklov yo'q deb hisoblanadi va lentaga hamma tushadi.",
+      "sectors": "Sohalar",
+      "stages": "Bosqichlar",
+      "regions": "Hududlar",
+      "offers": "Siz nima taklif qilasiz?",
+      "offersHint": "Loyihalarning ehtiyoji shu ro'yxat bilan solishtiriladi.",
+      "check": "Chek hajmi (mln so'm)",
+      "checkMin": "Eng kami",
+      "checkMax": "Eng ko'pi",
+      "rangeInvalid": "Quyi chegara yuqorisidan katta bo‘lmasin",
+      "range": "Oraliq: {range}"
+    },
+    "contact": {
+      "title": "Aloqa",
+      "hint": "Bu ma'lumot asoschilarga KO'RINMAYDI — u faqat so'rov qabul qilinganda, chat orqali almashinadi.",
+      "email": "Email (ixtiyoriy)",
+      "phone": "Telefon (ixtiyoriy)"
+    },
+    "settings": {
+      "title": "Sozlamalar",
+      "alerts": "Yangi mosliklar haqida xabar",
+      "alertsHint": "Kriteriyangizga mos loyiha chiqqanda bildirishnoma",
+      "alertsAria": "Bildirishnomalar",
+      "active": "Lenta faol",
+      "activeHint": "O'chirsangiz yangi mosliklar hisoblanmaydi"
+    },
+    "create": "Profilni yaratish"
+  },
+  "investorRequests": {
+    "back": "Kabinet",
+    "title": "Yuborilgan so'rovlar",
+    "subtitle": "Asoschi qabul qilsa, suhbat avtomatik ochiladi",
+    "emptyTitle": "Hali so'rov yubormagansiz",
+    "emptyText": "Lentadan yoqqan loyihani tanlab, asoschiga qisqa xabar yozing",
+    "deleted": "Loyiha o'chirilgan",
+    "match": "moslik {score}%",
+    "openChat": "Suhbatni ochish",
+    "withdraw": "Qaytarib olish"
+  },
+  "labels": {
+    "problemStatus": {
+      "pending": "Kutilmoqda",
+      "open": "Ochiq",
+      "under_review": "Ko'rib chiqilmoqda",
+      "resolved": "Hal qilindi",
+      "rejected": "Rad etildi"
+    },
+    "solutionStatus": {
+      "pending": "Kutilmoqda",
+      "accepted": "Qabul qilingan",
+      "rejected": "Rad etilgan"
+    },
+    "startupStatus": {
+      "draft": "Qoralama",
+      "published": "E'lon qilingan",
+      "archived": "Arxivlangan"
+    },
+    "role": {
+      "superadmin": "Superadmin",
+      "analyzer": "Analizator",
+      "school_student": "Maktab o'quvchisi",
+      "university_student": "Talaba",
+      "user": "Foydalanuvchi",
+      "investor": "Investor"
+    },
+    "platform": {
+      "android": {
+        "label": "Android",
+        "cta": "Google Play",
+        "kicker": "GET IT ON",
+        "store": "Google Play"
+      },
+      "ios": {
+        "label": "iOS",
+        "cta": "App Store",
+        "kicker": "Download on the",
+        "store": "App Store"
+      },
+      "website": {
+        "label": "Veb-sayt",
+        "cta": "Saytga o'tish",
+        "kicker": "Ochish",
+        "store": "Veb-sayt"
+      },
+      "telegram_bot": {
+        "label": "Telegram",
+        "cta": "Telegramda ochish",
+        "kicker": "Ochish",
+        "store": "Telegram"
+      },
+      "other": {
+        "label": "Havola",
+        "cta": "Havolani ochish",
+        "kicker": "Ochish",
+        "store": "Havola"
+      }
+    }
+  },
+  "landing": {
+    "doubts": {
+      "simple": {
+        "q": "«Mening g‘oyam juda oddiy, arzimas...»",
+        "a": "Eng katta mahsulotlar ham bitta oddiy g‘oyadan boshlangan. Muhimi — g‘oyaning kattaligi emas, uni qo‘lga olib sinab ko‘rganingiz. Bu yerda g‘oyangizni ulashing, fikr oling va u haqiqatan ham arzirligini odamlardan bilib oling."
+      },
+      "code": {
+        "q": "«Men dasturlashni bilmayman...»",
+        "a": "Startap — bu kod emas, bu yechim. G‘oyangiz, mas’uliyatingiz va odamlarni jamlay olishingiz ko‘proq ahamiyatli. Bu yerda dasturchi, dizayner yoki hammuallif topishingiz — bir necha xabar narida."
+      },
+      "alone": {
+        "q": "«Yolg‘izman, jamoam yo‘q...»",
+        "a": "Aynan shuning uchun hamjamiyat bor. Sizga o‘xshagan minglab yoshlar shu yerda jamoa qidiryapti. Guruhlarga qo‘shiling, real vaqtda suhbatlashing va o‘z fikrdoshlaringizni toping."
+      },
+      "start": {
+        "q": "«Qayerdan boshlashni bilmayman...»",
+        "a": "Birinchi qadam doim eng qiyini. Sizni qiynayotgan muammoni yozing — qolganini hamjamiyat bilan birgalikda bosqichma-bosqich quramiz. Yo‘l yurish bilan paydo bo‘ladi."
+      }
+    },
+    "marquee": {
+      "apps": "Mobil ilovalar",
+      "bots": "Telegram botlar",
+      "websites": "Veb-saytlar",
+      "saas": "SaaS xizmatlar",
+      "shops": "Onlayn do‘konlar",
+      "edtech": "EdTech loyihalar",
+      "games": "O‘yinlar",
+      "health": "Sog‘liq xizmatlari",
+      "agrotech": "AgroTech",
+      "content": "Kontent platformalar",
+      "creative": "Kreativ loyihalar",
+      "fintech": "FinTech g‘oyalar"
+    },
+    "hero": {
+      "tagline": "Maktab kutubxonasi raqamlashdi — kerakli kitob 2 soniyada topiladi.",
+      "place": "{rank}-o‘rin",
+      "problem": "Muammo",
+      "problemText": "Kutubxonada kerakli kitobni topish juda ko‘p vaqt oladi.",
+      "solutions": "{count, plural, other {{n} ta yechim}}",
+      "aiFound": "Bu muammoga mos <b>{count, plural, other {{n} ta loyiha}}</b> topildi.",
+      "aiFoundShort": "<b>{count, plural, other {{n} ta loyiha}}</b> topildi."
+    }
+  },
+  "lang": {
+    "label": "Til",
+    "change": "Tilni oʻzgartirish (hozir: {name})"
+  },
+  "leaderboard": {
+    "period": {
+      "all": "Barcha vaqt",
+      "year": "Bu yil",
+      "month": "Bu oy",
+      "week": "Bu hafta"
+    },
+    "eyebrow": {
+      "startups": "Startaplar reytingi",
+      "founders": "Asoschilar reytingi"
+    },
+    "title": {
+      "startups": "Top startaplar",
+      "founders": "Top asoschilar"
+    },
+    "subtitle": {
+      "startups": "Foydalanuvchilar baholari asosida, IMDB uslubidagi vaznli (Bayes) reyting bilan tartiblangan eng yaxshi startaplar",
+      "founders": "Hamjamiyat ovozlari asosida tartiblangan startap asoschilari — o'z asoschingizga ovoz bering"
+    },
+    "tabsLabel": "Reyting turi",
+    "tabs": {
+      "startups": "Startaplar",
+      "founders": "Asoschilar"
+    },
+    "competing": "<b>{n}</b> {count, plural, other {ta baholangan startap raqobatda}}",
+    "updating": "yangilanmoqda…",
+    "allCategories": "Hammasi",
+    "listHeading": "Reyting ro'yxati",
+    "empty": {
+      "title": "Hozircha baho yo'q",
+      "description": "Bu davr/kategoriya bo'yicha baholangan startaplar topilmadi"
+    },
+    "place": "{rank}-o'rin",
+    "podiumAria": "{rank}-o'rin: {title}, ball {score}",
+    "raters": "Baholaganlar",
+    "views": "Ko'rishlar",
+    "movement": {
+      "new": "Yangi",
+      "same": "O'rin o'zgarmadi",
+      "up": "{count, plural, other {# pog'ona ko'tarildi}}",
+      "down": "{count, plural, other {# pog'ona tushdi}}"
+    },
+    "medal": {
+      "gold": "Oltin",
+      "silver": "Kumush",
+      "bronze": "Mis"
+    },
+    "formula": {
+      "question": "O'rinlar qanday hisoblanadi?",
+      "stats": "O'rtacha = <b>{c}</b> · ishonch ostonasi (m) = <b>{m}</b>",
+      "intro": "Baholar <b>10 ballik</b> shkalada. Oddiy o'rtacha adolatsiz bo'lardi: bitta 10 ball olgan startap, 1000 ta ovozli 9.6 li startapdan yuqori chiqib ketardi. Shuning uchun biz IMDB Top-250 kabi <b>Bayes (vaznli) reyting</b> ishlatamiz — ovozlar kam bo'lsa, ball umumiy o'rtachaga «tortiladi».",
+      "legend": {
+        "r": "startapning o'rtacha reytingi (0–10)",
+        "v": "ovozlar (baholar) soni",
+        "m": "ishonchli bo'lish uchun zarur ovoz",
+        "c": "barcha startaplar o'rtachasi"
+      }
+    },
+    "founders": {
+      "startups": "{count, plural, other {{n} startap}}",
+      "followers": "{count, plural, other {{n} obunachi}}",
+      "empty": {
+        "title": "Hozircha asoschilar yo'q",
+        "text": "Birinchi startap joylagan foydalanuvchi shu yerda paydo bo'ladi"
+      }
+    }
+  },
+  "market": {
+    "eyebrow": "Bozor razvedkasi",
+    "title": "Qayerda yechim yetishmayapti",
+    "subtitle": "Platformada berilgan real so‘rovlar va muammolar guruhlangan. Imkoniyat bali yuqori bo‘lgan yo‘nalishlarda talab bor, yechim esa hali yo‘q.",
+    "metrics": {
+      "areas": "{count, plural, other {Yo‘nalish}}",
+      "signals": "{count, plural, other {Signal}}",
+      "unsolved": "Yechimsiz",
+      "opportunity": "Imkoniyat",
+      "demand": "Talab",
+      "projects": "{count, plural, other {Mavjud loyiha}}"
+    },
+    "empty": {
+      "title": "Xarita hali tayyorlanmoqda",
+      "text": "Yo‘nalishlar real so‘rovlardan quriladi. Yechim AI'ga savol bering yoki muammo qoldiring — xarita to‘ldirilib boradi.",
+      "askAi": "Yechim AI'ga savol berish"
+    },
+    "backlog": {
+      "title": "Bu ro'yxat — tayyor g'oyalar bazasi",
+      "text": "Yuqoridagi yo'nalishlarda odamlar yordam so'rayapti, lekin platformada mos loyiha yo'q. Shu bo'shliqni to'ldiradigan loyiha qursangiz — talab allaqachon mavjud.",
+      "cta": "Loyiha joylash"
+    },
+    "cluster": {
+      "notFoundTitle": "Yo'nalish topilmadi",
+      "notFoundText": "U yashirilgan yoki qayta qurishda o‘zgargan bo‘lishi mumkin",
+      "backToMap": "Bozor xaritasi",
+      "noCoverage": "Bu yo‘nalishda odamlar so‘rayapti, lekin platformada mos loyiha topilmadi.",
+      "coverage": "{count, plural, other {Bu yo‘nalishda {n} ta loyiha bor. So‘rovlarning {pct} foizi hali javobsiz qolgan.}}",
+      "samplesTitle": "Odamlar nima so'rayapti",
+      "projectsTitle": "Shu yo'nalishdagi loyihalar",
+      "noProjects": "Hozircha bu yo'nalishda loyiha yo'q — bo'shliq ochiq turibdi",
+      "firstProject": "Birinchi bo'lib loyiha joylash"
+    }
+  },
+  "matchCard": {
+    "ringLabel": "Moslik {score} foiz — {level}",
+    "new": "Yangi",
+    "ask": "So'rov:",
+    "why": "Nega mos keldi?",
+    "connect": "Bog'lanish",
+    "save": "Ro'yxatga saqlash",
+    "unsave": "Ro'yxatdan olib tashlash",
+    "dismiss": "Qiziq emas"
+  },
+  "media": {
+    "primer": {
+      "titleBoth": "Kamera va mikrofon",
+      "titleCamera": "Kameraga ruxsat",
+      "whyBoth": "Chatdagi ovozli va video xabarlar uchun kerak bo‘ladi.",
+      "whyCamera": "Suhbatda to‘g‘ridan-to‘g‘ri surat olib yuborish uchun kerak bo‘ladi.",
+      "once": "Bir marta ruxsat bersangiz — keyin qayta so'ralmaydi.",
+      "close": "Yopish",
+      "allow": "Ruxsat berish",
+      "later": "Keyinroq"
+    }
+  },
+  "meta": {
+    "ai": {
+      "title": "Yechim AI — muammoingizga yechim topadi",
+      "description": "Muammoingizni yozing yoki aytib bering — Yechim AI MYMarkaz platformasidagi loyihalar orasidan sizga mos yechimni topib beradi."
+    },
+    "auth": {
+      "login": {
+        "title": "Kirish",
+        "description": "MYMarkaz hisobingizga kiring: startapingizni joylang, muammolarga yechim taklif qiling, jamoa va investorlar bilan bog'laning."
+      },
+      "register": {
+        "title": "Ro'yxatdan o'tish",
+        "description": "MYMarkaz'da bir daqiqada bepul hisob oching: startapingizni joylang, muammo qoldiring, yechim toping va Yechim AI yordamidan foydalaning."
+      },
+      "forgotPassword": {
+        "title": "Parolni tiklash",
+        "description": "MYMarkaz hisobingiz parolini unutdingizmi? Emailingizni kiriting — parolni xavfsiz tiklash uchun 6 xonali kod yuboramiz."
+      },
+      "resetPassword": {
+        "title": "Yangi parol o'rnatish",
+        "description": "Emailingizga yuborilgan tasdiqlash kodini kiriting va MYMarkaz hisobingiz uchun yangi, xavfsiz parol o'rnating — bir necha soniyada."
+      },
+      "verifyEmail": {
+        "title": "Emailni tasdiqlash",
+        "description": "Emailingizga yuborilgan 6 xonali kodni kiriting va MYMarkaz hisobingizni faollashtiring — startaplar, hamjamiyat va Yechim AI sizni kutmoqda."
+      }
+    },
+    "billing": {
+      "pricing": {
+        "title": "Tariflar va narxlar",
+        "description": "Loyihangizni MYMarkazda e’lon qiling — oylik yoki yillik tarifni tanlang. Bir martalik to‘lov, avtomatik yechimsiz, loyihalaringiz esa doim sizniki."
+      },
+      "billing": {
+        "title": "Obunam",
+        "description": "Joriy tarifingiz, loyiha limitlari va to‘lovlar tarixi — MYMarkaz obunangizni bir joyda kuzating va kerak bo‘lsa tarifni istalgan vaqtda o‘zgartiring."
+      },
+      "status": {
+        "title": "To‘lov holati",
+        "description": "MYMarkaz to‘lovingiz tasdiqlanishi kuzatilmoqda. Tasdiq kelishi bilan obuna avtomatik faollashadi — sahifani yopmasdan bir necha soniya kuting."
+      }
+    },
+    "chat": {
+      "title": "Suhbatlar",
+      "description": "MYMarkaz platformasida startap asoschilari, investorlar va hamjamiyat a'zolari bilan shaxsiy suhbatlar va guruhlar — barcha yozishmalaringiz bir joyda."
+    },
+    "discover": {
+      "title": "Hamjamiyat — odamlar va guruhlar",
+      "description": "MYMarkaz hamjamiyati: startapchilar, dasturchilar va dizaynerlarni toping, ularni kuzating va qiziqishlaringiz bo'yicha guruhlarga qo'shiling."
+    },
+    "home": {
+      "title": "MYMarkaz — G'oyadan biznes loyihagacha",
+      "description": "O'zbekiston yoshlari uchun startap platformasi: muammo qoldiring, Yechim AI bilan yechim toping, startapingizni joylang, jamoa va investorlar bilan tanishing."
+    },
+    "investor": {
+      "cabinet": {
+        "title": "Investor kabineti",
+        "description": "Investitsiya kriteriyalaringizni kiriting va O‘zbekiston startaplari orasidan sizga mos loyihalarni Match Score bo‘yicha saralangan holda oling."
+      },
+      "dealflow": {
+        "title": "Loyihalar lentasi",
+        "description": "Kriteriyangizga mos O‘zbekiston startaplari — moslik bali, tayyorlik bali va asoschi bilan bir bosishda bog‘lanish imkoniyati bilan."
+      },
+      "requests": {
+        "title": "Yuborilgan so‘rovlar",
+        "description": "Asoschilarga yuborgan bog‘lanish so‘rovlaringiz va ularning holati. So‘rov qabul qilinsa, asoschi bilan suhbat avtomatik ochiladi."
+      }
+    },
+    "leaderboard": {
+      "title": "O'zbekiston startaplari va asoschilari reytingi",
+      "description": "IMDB uslubidagi vaznli (Bayes) reyting: foydalanuvchilar baholari bo'yicha eng yaxshi startaplar va hamjamiyat ovozlari bo'yicha top asoschilar."
+    },
+    "market": {
+      "list": {
+        "title": "Bozor xaritasi: talab bor, yechim yo‘q",
+        "description": "O‘zbekistonda odamlar nimani so‘rayapti va qaysi yo‘nalishda hali yechim yo‘q — real so‘rovlar asosidagi bozor xaritasi va tayyor startap g‘oyalari."
+      },
+      "cluster": {
+        "title": "{name} — talab va imkoniyatlar",
+        "description": "{name}: odamlar nimani so‘rayapti, qaysi loyihalar allaqachon bor va qayerda yangi startap uchun imkoniyat bor — MYMarkaz bozor xaritasida.",
+        "notFoundTitle": "Yo‘nalish topilmadi",
+        "notFoundDescription": "Bu yo‘nalish yashirilgan yoki bozor xaritasi qayta qurilganda o‘zgargan bo‘lishi mumkin. Boshqa imkoniyatlarni MYMarkaz bozor xaritasida ko‘ring."
+      }
+    },
+    "notifications": {
+      "title": "Bildirishnomalar",
+      "description": "MYMarkaz bildirishnomalari: yangi obunachilar, xabarlar, yechimlaringiz va startaplaringiz bo'yicha barcha yangiliklar bir joyda."
+    },
+    "polls": {
+      "title": "Ovoz berish — hamjamiyat tanlovi",
+      "description": "Hamjamiyat tanlovi — eng kuchli startaplarga ovoz bering va natijalarni jonli kuzating. O'zbekiston yoshlari yaratgan loyihalarni qo'llab-quvvatlang."
+    },
+    "problems": {
+      "list": {
+        "title": "Muammolar va yechimlar — startap g‘oyalari",
+        "description": "Hamjamiyat yechim kutayotgan real muammolar — o‘qing, \"Foydali\" deb belgilang va yechim taklif qiling. Keyingi startap g‘oyangizni shu yerdan toping."
+      },
+      "detail": {
+        "notFoundTitle": "Muammo topilmadi",
+        "notFoundDescription": "Bu muammo o‘chirilgan yoki mavjud emas. MYMarkaz’dagi boshqa real muammolar va ularning yechimlari bilan tanishing."
+      },
+      "create": {
+        "title": "Muammo qoldirish",
+        "description": "Muammoingizni batafsil tasvirlab bering, rasm yoki video qo‘shing — e’lon darhol chiqadi va hamjamiyat unga yechim taklif qiladi."
+      }
+    },
+    "profile": {
+      "title": "Profil",
+      "description": "Shaxsiy MYMarkaz profilingiz: startaplaringiz, muammolaringiz, yechimlaringiz, saqlanganlar va hisob sozlamalari bir joyda.",
+      "introRequests": {
+        "title": "Bog'lanish so'rovlari",
+        "description": "Loyihangiz bilan qiziqqan investorlarning bog'lanish so'rovlari: ko'rib chiqing, qabul qiling va MYMarkaz chatida suhbatni boshlang."
+      }
+    },
+    "settings": {
+      "title": "Sozlamalar",
+      "description": "MYMarkaz hisobingiz sozlamalari: ommaviy profil, username, shaxsiy ma'lumotlar, parol, interfeys tili va qurilma ruxsatlari."
+    },
+    "site": {
+      "title": "MYMarkaz — G'oyadan biznes loyihagacha",
+      "description": "O'zbekiston yoshlari uchun startap platformasi: muammo qoldiring, yechim toping, startapingizni joylang, jamoa va investor toping. Yechim AI bilan — bepul.",
+      "keywords": "startap, startaplar, O'zbekiston startaplari, biznes g'oya, investor, muammo va yechim, hamjamiyat, Yechim AI"
+    },
+    "solutions": {
+      "title": "Yechimlarim",
+      "description": "Siz yuborgan yechimlar, ularga biriktirilgan startaplar va to‘plangan \"Foydali\" belgilari — barchasi bir joyda."
+    },
+    "startups": {
+      "list": {
+        "title": "O'zbekiston startaplari — ilovalar, saytlar va botlar",
+        "description": "O'zbekiston yoshlari yaratgan startaplar vitrinasi: mobil ilovalar, veb-saytlar va Telegram botlar. Baholang, sharh qoldiring va o'z startapingizni joylang."
+      },
+      "detail": {
+        "notFoundTitle": "Startap topilmadi"
+      },
+      "create": {
+        "title": "Startap joylash",
+        "description": "Startapingizni MYMarkaz vitrinasiga bepul joylang: ilova, sayt yoki Telegram bot. Faqat nom va tavsif kerak — qolganini keyin to'ldirasiz."
+      },
+      "edit": {
+        "title": "Startapni tahrirlash",
+        "description": "Startapingiz nomi, tavsifi, havolalari va media fayllarini yangilang — o'zgarishlar MYMarkaz vitrinasida darhol ko'rinadi."
+      }
+    },
+    "user": {
+      "description": "{name} — MYMarkaz hamjamiyati a'zosi. Uning startaplari bilan tanishing, obuna bo'ling va to'g'ridan-to'g'ri xabar yozing.",
+      "descriptionAbout": "{name} MYMarkaz'da: {about}",
+      "notFoundTitle": "Foydalanuvchi topilmadi",
+      "notFoundDescription": "Bu profil mavjud emas yoki hisob faol emas. MYMarkaz hamjamiyatida boshqa asoschilar va ularning startaplarini kashf eting."
+    }
+  },
+  "nav": {
+    "messages": "Suhbatlar",
+    "loggedOut": "Tizimdan chiqdingiz",
+    "links": {
+      "startups": "Startaplar",
+      "leaderboard": "Reyting",
+      "problems": "Muammolar",
+      "market": "Bozor",
+      "solutions": "Yechimlarim",
+      "discover": "Hamjamiyat",
+      "pricing": "Tariflar"
+    },
+    "search": "Qidirish",
+    "addStartupShort": "Startap",
+    "addStartup": "Startap joylash",
+    "addProblem": "Muammo qoldirish",
+    "profile": "Profil",
+    "logout": "Chiqish",
+    "login": "Kirish",
+    "register": "Ro'yxatdan o'tish",
+    "menu": "Menyu",
+    "tabs": {
+      "home": "Asosiy",
+      "startups": "Startaplar",
+      "problems": "Muammolar",
+      "chat": "Suhbat",
+      "profile": "Profil"
+    },
+    "messagesUnread": "{count, plural, other {Suhbatlar — # ta o'qilmagan}}",
+    "more": "Yana",
+    "moreSections": "Qo'shimcha bo'limlar"
+  },
+  "notFound": {
+    "metaTitle": "Sahifa topilmadi",
+    "title": "Sahifa topilmadi",
+    "text": "Qidirayotgan sahifangiz mavjud emas yoki koʻchirilgan boʻlishi mumkin",
+    "home": "Bosh sahifa",
+    "startups": "Startaplar"
+  },
+  "notifications": {
+    "title": "Bildirishnomalar",
+    "markAllRead": "Barchasini o'qildim",
+    "empty": "Bildirishnomalar yo'q",
+    "seeAll": "Barchasini ko'rish"
+  },
+  "notificationsPage": {
+    "title": "Bildirishnomalar",
+    "total": "Jami {n} ta",
+    "markAllRead": "O'qildim",
+    "emptyTitle": "Bildirishnomalar yo'q",
+    "emptyText": "Yangiliklar shu yerda paydo bo'ladi"
+  },
+  "paymentSheet": {
+    "methodAria": "To‘lov usuli",
+    "pay": "{sum} to‘lash",
+    "redirect": "{provider, select, none {To‘lov provayder sahifasida amalga oshiriladi} other {To‘lov {provider} sahifasida amalga oshiriladi}}"
+  },
+  "planCard": {
+    "popular": "Ommabop",
+    "perMonth": "Oyiga taxminan {sum}",
+    "saving": "{percent}% tejaysiz",
+    "current": "Joriy tarifingiz",
+    "select": "Tanlash"
+  },
+  "polls": {
+    "back": "Ortga",
+    "eyebrow": "Hamjamiyat tanlovi",
+    "title": "Ovoz berish",
+    "subtitle": "Eng kuchli startaplarni hamjamiyat tanlaydi. Yoqqan loyihangizga ovoz bering — natijalar jonli yangilanadi.",
+    "stats": {
+      "active": "Faol tanlov",
+      "votes": "Umumiy ovoz"
+    },
+    "listHeading": "Tanlovlar ro'yxati",
+    "empty": {
+      "title": "Hozircha tanlovlar yo‘q",
+      "description": "Superadmin tez orada startaplar tanlovini boshlaydi"
+    },
+    "card": {
+      "kicker": "Hamjamiyat ovozi",
+      "ended": "Yakunlandi",
+      "live": "Jonli",
+      "status": {
+        "closed": "Ovoz berish yopildi — yakuniy natijalar",
+        "voted": "Ovozingiz qabul qilindi. Natijalar real vaqtda yangilanadi.",
+        "open": "Bitta startapni tanlang. Ovozingiz anonim qoladi."
+      },
+      "participants": "<b>{n}</b> {count, plural, other {ishtirokchi ovoz berdi}}",
+      "hint": {
+        "voted": "Boshqasini tanlab fikringizni o‘zgartiring",
+        "closed": "Ovoz berish yopilgan",
+        "pick": "Tanlash uchun bosing"
+      },
+      "startupFallback": "Startap",
+      "winner": "G‘olib",
+      "leader": "Yetakchi",
+      "video": "Video",
+      "details": "Batafsil"
+    }
+  },
+  "pricing": {
+    "title": "Tariflar",
+    "subtitle": "Loyihangizni e’lon qilish uchun mos tarifni tanlang. Istalgan vaqtda o‘zgartirishingiz mumkin.",
+    "intervalAria": "To‘lov muddati",
+    "yearlySaving": "Yillik tarifda <b>{percent}% gacha</b> tejaysiz",
+    "empty": "Tariflar hozircha mavjud emas",
+    "checkoutFailed": "To‘lovni boshlab bo‘lmadi",
+    "trust": {
+      "payVia": "{count, plural, =0 {Karta orqali to‘lov} one {{a} orqali to‘lov} other {{a} yoki {b} orqali to‘lov}}",
+      "cardData": "Karta ma’lumotlari saytimizda saqlanmaydi",
+      "noAutoTitle": "Avtomatik yechim yo‘q",
+      "noAutoText": "To‘lov bir martalik — muddat tugagach o‘zingiz uzaytirasiz",
+      "ownTitle": "Loyihalaringiz sizniki",
+      "ownText": "Muddat tugasa ham e’lon qilingan loyihalar saqlanadi"
+    },
+    "historyNote": "To‘lovlar tarixi va joriy obuna — <link>Obunam</link> bo‘limida."
+  },
+  "problemCreate": {
+    "title": "Muammo qoldirish",
+    "subtitle": "Muammoni batafsil tasvirlab bering — hamjamiyat yechim taklif qiladi",
+    "fileTooLarge": "Maks. {max}MB",
+    "uploadFailed": "Yuklashda xatolik",
+    "published": "Muammo e'lon qilindi!",
+    "invalidUrl": "To'g'ri URL kiriting",
+    "titleLabel": "Sarlavha",
+    "titlePlaceholder": "Muammoni qisqacha ifodalang...",
+    "titleHint": "10–200 ta belgi",
+    "categoryLabel": "Kategoriya (ixtiyoriy)",
+    "descriptionLabel": "Tavsif",
+    "descriptionPlaceholder": "Muammoni batafsil tasvirlab bering. Qanday holat yuzaga keldi? Nima kutasiz? Qanday yechimlar sinab ko'rdingiz?...",
+    "imagesLabel": "Rasmlar (max 5)",
+    "uploadImage": "Rasm yuklash",
+    "imageUrlPlaceholder": "yoki URL joylashtiring",
+    "addImage": "Rasm qo'shish",
+    "videosLabel": "Videolar (max 3)",
+    "uploadVideo": "Video yuklash",
+    "videoUrlPlaceholder": "yoki YouTube/URL",
+    "addVideo": "Video qo'shish",
+    "notice": "<note>Eslatma:</note> Muammongiz yuborilgan zahoti <hl>e'lon qilinadi</hl> — hamjamiyat darhol yechim taklif qilishi mumkin."
+  },
+  "problemDetail": {
+    "notFound": "Muammo topilmadi",
+    "imageAlt": "Muammo rasmi",
+    "share": "Ulashish",
+    "postedBy": "<author></author> tomonidan",
+    "analyzerNote": "Analizator izohi",
+    "proposeSolution": "Yechim taqdim etish",
+    "tabsAria": "Izohlar yoki yechimlar",
+    "tabComments": "Izohlar",
+    "tabSolutions": "Yechimlar",
+    "writeComment": "Izoh yozish",
+    "signUpToComment": "Izoh yozish uchun <link>ro'yxatdan o'ting</link>.",
+    "noComments": "Hali izoh yo'q",
+    "noSolutions": "Hali yechim yo'q — birinchi bo'ling!",
+    "presentation": "Taqdimot",
+    "video": "Video",
+    "similar": "O'xshash muammolar",
+    "comment": {
+      "added": "Izoh qo'shildi",
+      "deleted": "Izoh o'chirildi",
+      "delete": "Izohni o'chirish",
+      "placeholder": "Fikringizni yozing...",
+      "linkPlaceholder": "Havola (ixtiyoriy)",
+      "linkInvalid": "Havola to'g'ri emas"
+    },
+    "solutionForm": {
+      "sent": "Yechim yuborildi!",
+      "fullNameLabel": "To'liq ism",
+      "fullNamePlaceholder": "Ism Familiya",
+      "attachLabel": "Startapingizni yechim sifatida yuborish <muted>(ixtiyoriy)</muted>",
+      "attachAria": "Startapni biriktirish",
+      "attachNone": "Biriktirilmasin",
+      "attachHintSelected": "Startapingizning o’zi yechim sifatida yetarli — matn, taqdimot va video endi ixtiyoriy.",
+      "attachHint": "Startap tanlasangiz, matn/taqdimot/video majburiy bo’lmaydi.",
+      "contentLabel": "Yechim",
+      "contentLabelOptional": "Yechim izohi (ixtiyoriy)",
+      "contentPlaceholder": "Yechimingizni batafsil yozing... (kamida 20 ta belgi)",
+      "contentPlaceholderStartup": "Xohlasangiz startapingiz bu muammoni qanday hal qilishini qisqacha yozing...",
+      "presentationLabel": "Taqdimot havolasi",
+      "videoLabel": "Video havolasi",
+      "urlPlaceholderOptional": "https://... (ixtiyoriy)",
+      "urlInvalid": "Noto'g'ri havola",
+      "submit": "Yechimni yuborish"
+    }
+  },
+  "problemLike": {
+    "label": "Foydali",
+    "markTitle": "Foydali deb belgilash"
+  },
+  "problemsPage": {
+    "title": "Muammolar",
+    "subtitle": "{count, plural, other {Jami {n} ta muammo · yechim kutmoqda}}",
+    "add": "Qoldirish",
+    "searchPlaceholder": "Muammo qidirish",
+    "listHeading": "Muammolar ro'yxati",
+    "emptyTitle": "Muammolar topilmadi",
+    "emptyDescription": "Boshqa kalit so'z bilan urinib ko'ring"
+  },
+  "profile": {
+    "title": "Profil",
+    "settings": "Sozlamalar",
+    "emailVerified": "Email tasdiqlangan",
+    "followers": "{count, plural, other {obunachi}}",
+    "following": "{count, plural, other {obuna}}",
+    "viewPublic": "Ommaviy profilni ko'rish",
+    "setUsername": "Username o'rnating",
+    "details": {
+      "title": "Ma'lumotlar",
+      "age": "Yosh",
+      "region": "Viloyat",
+      "district": "Tuman",
+      "school": "Maktab",
+      "grade": "Sinf",
+      "gradeValue": "{grade}-sinf",
+      "university": "Universitet",
+      "course": "Kurs",
+      "courseValue": "{course}-kurs",
+      "email": "Email"
+    },
+    "saved": "Saqlangan startaplar · {n}",
+    "problems": {
+      "title": "Mening muammolarim · {n}",
+      "empty": "Hali muammo yubormagansiz",
+      "create": "Muammo qoldirish"
+    },
+    "solutions": {
+      "title": "Mening yechimlarim · {n}",
+      "helpful": "{count, plural, other {{n} kishi foydali deb topdi}}"
+    },
+    "actions": {
+      "billing": "Obunam",
+      "introRequests": "Bog'lanish so'rovlari",
+      "investor": "Investor kabineti",
+      "settings": "Sozlamalar",
+      "logout": "Chiqish",
+      "deleteAccount": "Hisobni o'chirish",
+      "deleteNote": "Hisob 30 kun ichida qayta kirilsa to'liq tiklanadi."
+    },
+    "delete": {
+      "title": "Hisobni o'chirish",
+      "text": "Hisobingiz 30 kun davomida saqlanib turadi. Shu muddat ichida qayta kirganingizda tiklash mumkin.",
+      "confirm": "O'chirish",
+      "done": "Hisob o'chirishga yuborildi. 30 kun ichida qayta tiklash mumkin."
+    }
+  },
+  "publicProfile": {
+    "back": "Ortga",
+    "notFoundTitle": "Foydalanuvchi topilmadi",
+    "notFoundText": "Bunday username mavjud emas yoki hisob faol emas",
+    "edit": "Profilni tahrirlash",
+    "message": "Xabar",
+    "report": "Foydalanuvchi ustidan shikoyat",
+    "followsYou": "Sizni kuzatadi",
+    "memberSince": "{date} dan beri",
+    "lastSeen": "oxirgi faollik {time}",
+    "online": "onlayn",
+    "followers": "{count, plural, other {obunachi}}",
+    "following": "{count, plural, other {obuna}}",
+    "startups": "Startaplari",
+    "noStartups": "Hali startaplar yo‘q"
+  },
+  "rating": {
+    "value": "Reyting {value} / {max}",
+    "valueVotes": "{count, plural, other {Reyting {value} / {max} — {n} ta ovoz}}",
+    "scale": "Baho — 1 dan {max} gacha",
+    "point": "{count, plural, other {# ball}}"
+  },
+  "readiness": {
+    "title": "Loyiha tayyorligi",
+    "refresh": "Yangilash",
+    "refreshed": "Tahlil yangilandi",
+    "aiReady": "AI tahlili tayyor",
+    "scoreNote": "Ball investorlar e'tibor beradigan 6 mezon bo'yicha hisoblanadi. Bu — ichki ish quroli, ommaga ko'rinmaydi.",
+    "matched": "{count, plural, other {<b>{n}</b> investor kriteriyasiga mos keldingiz}}",
+    "matchedNote": "Kimligi ko'rsatilmaydi — ular o'zi bog'lansa xabar olasiz.",
+    "notInFeed": "Loyiha investorlar lentasida emas",
+    "notInFeedHint": "Tahrirlashda «Nimaga muhtojsiz?» savoliga javob bersangiz, loyihangiz lentaga qo'shiladi.",
+    "reply": "{count, plural, other {{n} ta so'rovga javob berish}}",
+    "market": "Bozor yo'nalishi",
+    "demand": "Bu yo'nalishda talab bali: {score}/100",
+    "checks": "Tekshiruvlar",
+    "aiTitle": "AI tahlili",
+    "aiNote": "Kuchli/zaif tomonlar va amaliy tavsiyalar. Ballga ta'sir qilmaydi — u alohida hisoblanadi.",
+    "strengths": "Kuchli tomonlar",
+    "weaknesses": "Zaif tomonlar",
+    "opportunities": "Imkoniyatlar",
+    "risks": "Xavflar",
+    "recommendations": "Tavsiyalar",
+    "updating": "Yangilanmoqda…",
+    "rerun": "Qayta tahlil qilish",
+    "preparing": "Tahlil tayyorlanmoqda…",
+    "getAi": "AI tahlilini olish",
+    "aiUnavailable": "AI hozircha ishlamayapti"
+  },
+  "regions": {
+    "andijan": "Andijon",
+    "bukhara": "Buxoro",
+    "fergana": "Farg'ona",
+    "jizzakh": "Jizzax",
+    "namangan": "Namangan",
+    "navoi": "Navoiy",
+    "kashkadarya": "Qashqadaryo",
+    "karakalpakstan": "Qoraqalpog'iston",
+    "samarkand": "Samarqand",
+    "syrdarya": "Sirdaryo",
+    "surkhandarya": "Surxondaryo",
+    "tashkentRegion": "Toshkent viloyati",
+    "tashkentCity": "Toshkent shahri",
+    "khorezm": "Xorazm"
+  },
+  "report": {
+    "title": "{target, select, startup {Startap} message {Xabar} problem {Muammo} solution {Yechim} user {Foydalanuvchi} other {Kontent}} ustidan shikoyat",
+    "notice": "Shikoyatingiz moderatorlar tomonidan ko'rib chiqiladi. Asossiz shikoyatlardan saqlaning.",
+    "pickReason": "Iltimos, sababni tanlang",
+    "sent": "Shikoyatingiz yuborildi",
+    "detailsLabel": "Qo'shimcha izoh (ixtiyoriy)",
+    "detailsPlaceholder": "Muammoni qisqacha tasvirlab bering...",
+    "action": "Shikoyat qilish",
+    "loginRequired": "Shikoyat qilish uchun tizimga kiring",
+    "reason": {
+      "spam": "Spam yoki reklama",
+      "inappropriate": "Nomaqbul kontent",
+      "harassment": "Tahqirlash / bezovta qilish",
+      "hate_speech": "Nafrat nutqi",
+      "sexual_content": "Jinsiy mazmunli kontent",
+      "violence": "Zo'ravonlik",
+      "misinformation": "Yolg'on ma'lumot",
+      "scam": "Firibgarlik / aldov",
+      "copyright": "Mualliflik huquqi buzilishi",
+      "duplicate": "Takroriy",
+      "not_working": "Ishlamaydi / buzilgan",
+      "low_quality": "Past sifatli / ahamiyatsiz",
+      "offensive": "Haqoratli",
+      "other": "Boshqa sabab"
+    }
+  },
+  "reviews": {
+    "title": "Sharhlar va baholar",
+    "votes": "{count, plural, other {{n} ta ovoz}}",
+    "summary": "Foydalanuvchilar bu startapni {max} ballik shkalada shunday baholashgan.",
+    "noRatings": "Hali baho berilmagan. Birinchi bo'lib baholang!",
+    "formula": "Reyting o'rinlari IMDB kabi vaznli (Bayes) formula bilan hisoblanadi.",
+    "updateTitle": "Sharhingizni yangilang",
+    "rateTitle": "Baho bering",
+    "placeholder": "Fikringizni yozing (ixtiyoriy)...",
+    "update": "Yangilash",
+    "delete": "O'chirish",
+    "deleted": "Sharhingiz o'chirildi",
+    "saved": "Saqlandi",
+    "signIn": "Baho berish uchun <b>tizimga kiring</b>",
+    "empty": "Hali sharhlar yo'q"
+  },
+  "search": {
+    "title": "Qidiruv",
+    "placeholder": "Odam, startap yoki muammo qidiring",
+    "quick": "Tezkor o'tish",
+    "empty": "Natija topilmadi",
+    "people": "Odamlar",
+    "startups": "Startaplar",
+    "problems": "Muammolar"
+  },
+  "settings": {
+    "back": "Profil",
+    "title": "Sozlamalar",
+    "public": {
+      "title": "Ommaviy profil",
+      "view": "Profilni ko'rish",
+      "cover": "Muqova rasmi",
+      "avatar": "Avatar",
+      "username": "Username",
+      "usernameHint": "5–32 belgi · harf bilan boshlanadi · a-z, 0-9, _",
+      "headline": "Sarlavha (headline)",
+      "headlinePlaceholder": "Masalan: Full-stack dasturchi · Founder",
+      "bio": "Men haqimda (bio)",
+      "save": "Ommaviy profilni saqlash",
+      "saved": "Ommaviy profil yangilandi",
+      "usernameInvalid": "username 5–32 belgi, harf bilan boshlanishi kerak",
+      "usernameTaken": "Bu username band"
+    },
+    "personal": {
+      "title": "Shaxsiy ma'lumotlar",
+      "fullName": "To'liq ism",
+      "age": "Yosh (ixtiyoriy)",
+      "region": "Viloyat",
+      "regionNone": "Tanlanmagan",
+      "district": "Tuman",
+      "school": "Maktab",
+      "grade": "Sinf",
+      "gradeOption": "{grade}-sinf",
+      "university": "Universitet",
+      "course": "Kurs",
+      "courseOption": "{course}-kurs",
+      "saved": "Profil yangilandi"
+    },
+    "email": {
+      "title": "Email",
+      "verified": "Tasdiqlangan",
+      "readonly": "Emailni o'zgartirib bo'lmaydi"
+    },
+    "password": {
+      "title": "Parolni o'zgartirish",
+      "current": "Joriy parol",
+      "currentPlaceholder": "Joriy parolingiz",
+      "new": "Yangi parol",
+      "newPlaceholder": "Yangi parol",
+      "confirm": "Tasdiqlash",
+      "confirmPlaceholder": "Yangi parolni takrorlang",
+      "mismatch": "Parollar mos kelmadi",
+      "invalid": "Parol talablarga mos emas",
+      "submit": "Parolni yangilash",
+      "changed": "Parol o'zgartirildi"
+    },
+    "devices": {
+      "title": "Qurilma ruxsatlari",
+      "state": {
+        "granted": "Ruxsat berilgan",
+        "denied": "Rad etilgan",
+        "prompt": "So'ralmagan",
+        "unsupported": "Noma’lum"
+      },
+      "camera": "Kamera",
+      "cameraDesc": "Video xabar va rasm olish uchun",
+      "microphone": "Mikrofon",
+      "microphoneDesc": "Ovozli xabarlar uchun",
+      "microphoneOff": "Hozircha ishlatilmaydi (vaqtincha o‘chirilgan)",
+      "request": "So'rash",
+      "cameraDenied": "Kameraga ruxsat berilmadi — brauzer manzil qatoridagi qulf belgisidan yoqishingiz mumkin",
+      "microphoneDenied": "Mikrofonga ruxsat berilmadi — brauzer manzil qatoridagi qulf belgisidan yoqishingiz mumkin",
+      "gallery": "Galereya",
+      "galleryDesc": "Rasm yoki video tanlaganingizda qurilmaning o'zi ruxsat so'raydi",
+      "auto": "Avtomatik",
+      "hint": "Rad etilgan ruxsatni brauzer manzil qatoridagi qulf belgisi orqali qayta yoqish mumkin."
+    }
+  },
+  "share": {
+    "title": "Muammoni ulashish",
+    "linkLabel": "Havola",
+    "copy": "Nusxalash",
+    "copied": "Nusxalandi",
+    "copyFailed": "Nusxalab bo‘lmadi",
+    "linkHint": "Havolani istalgan odamga yuboring — ro‘yxatdan o‘tgach aynan shu muammoga o‘tadi.",
+    "shareVia": "Boshqa ilovalar orqali ulashish",
+    "sendToChat": "Suhbatga yuborish",
+    "searchPlaceholder": "Suhbat qidirish…",
+    "sent": "Yuborildi",
+    "sentToChat": "Suhbatga yuborildi",
+    "noChats": "Suhbatlar topilmadi",
+    "chatMessage": "Muammo: {title}\n{url}"
+  },
+  "social": {
+    "verified": "Tasdiqlangan hisob",
+    "follow": "Obuna bo‘lish",
+    "following": "Kuzatilmoqda",
+    "unfollow": "Bekor qilish",
+    "followers": "Obunachilar",
+    "followingList": "Obunalar",
+    "noFollowers": "Hali obunachilar yo‘q",
+    "noFollowing": "Hali hech kimga obuna bo‘lmagan",
+    "founder": "Asoschi",
+    "founderHint": "Asoschi — startap joylagan foydalanuvchi",
+    "votes": "{count, plural, other {{n} ovoz}}",
+    "vote": "Ovoz berish",
+    "voted": "Ovoz berilgan",
+    "userFallback": "Foydalanuvchi"
+  },
+  "solutionsPage": {
+    "title": "Yechimlarim",
+    "subtitle": "{count, plural, other {Siz yuborgan {n} ta yechim — barchasi joylangan zahoti hammaga ko'rinadi}}",
+    "helpfulCount": "{count, plural, other {{n} foydali}}",
+    "presentation": "Taqdimot",
+    "video": "Video",
+    "guestTitle": "Yechimlaringizni kuzating",
+    "guestDescription": "Yuborgan yechimlaringizni ko'rish uchun tizimga kiring",
+    "signIn": "Tizimga kirish",
+    "emptyTitle": "Yechim topilmadi",
+    "emptyDescription": "Siz hali yechim yubormagansiz"
+  },
+  "startupCard": {
+    "top": "TOP",
+    "ideaStage": "G'oya bosqichida"
+  },
+  "startupDetail": {
+    "notFound": "Startap topilmadi",
+    "backToList": "Startaplarga qaytish",
+    "views": "{count, plural, other {{n} ko'rishlar}}",
+    "linkCopied": "Havola nusxalandi",
+    "copied": "Nusxalandi",
+    "share": "Ulashish",
+    "report": "Shikoyat",
+    "edit": "Tahrirlash",
+    "ideaStage": "Bu startap hozircha g'oya/ishlanma bosqichida",
+    "about": "Startap haqida",
+    "allLinks": "Barcha havolalar",
+    "related": "O'xshash startaplar"
+  },
+  "startupForm": {
+    "errors": {
+      "yearMin": "Min {min}",
+      "yearMax": "Max {max}",
+      "invalidLinks": "Havolalardan biri noto'g'ri — tekshirib qo'ying",
+      "tagTooLong": "Teg ko'pi bilan 40 ta belgi",
+      "limitReached": "Loyihalar limiti tugagan"
+    },
+    "toast": {
+      "updated": "Startap yangilandi!",
+      "published": "Startap e'lon qilindi!"
+    },
+    "basic": {
+      "title": "Asosiy ma'lumot",
+      "name": "Startap nomi",
+      "namePlaceholder": "Masalan: EcoDelivery",
+      "tagline": "Bir jumlada (ixtiyoriy)",
+      "taglinePlaceholder": "Startapingiz nima qiladi? — qisqa va lo'nda",
+      "description": "Tavsif (nega odamlar aynan sizning loyihangizdan foydalanishi kerak?)",
+      "descriptionPlaceholder": "Startapingiz haqida batafsil: qanday muammoni hal qiladi, kim uchun, nimasi bilan ajralib turadi...",
+      "category": "Kategoriya (ixtiyoriy)"
+    },
+    "media": {
+      "title": "Media",
+      "hint": "Ixtiyoriy — havolani kiritsangiz logo va muqova o'zi to'ldiriladi",
+      "logo": "Logo",
+      "cover": "Muqova rasmi"
+    },
+    "video": {
+      "label": "Muqova videosi",
+      "optional": "(ixtiyoriy)",
+      "coverTitle": "Muqova",
+      "remove": "Videoni olib tashlash",
+      "youtubeNote": "YouTube videosi sayt ichida ko‘rsatiladi. Ijro faqat bosilganda boshlanadi.",
+      "fileNote": "Video muqova o‘rnida turadi. Ijro faqat bosilganda boshlanadi.",
+      "modeUpload": "Video yuklash",
+      "modeLink": "YouTube havolasi",
+      "pick": "Video tanlang — mp4 yoki webm, maks 50MB",
+      "add": "Qo'shish",
+      "hint": "Video qo'shsangiz u muqova o'rnida turadi — birinchi kadr ko'rinadi, ijro esa foydalanuvchi bosganda boshlanadi.",
+      "tooBig": "Video hajmi 50MB dan oshmasin",
+      "uploaded": "Video yuklandi",
+      "uploadFailed": "Yuklashda xatolik",
+      "invalidLink": "YouTube havolasi yoki to‘g‘ridan-to‘g‘ri video (.mp4/.webm) havolasi kiriting"
+    },
+    "links": {
+      "title": "Havolalar",
+      "hint": "Foydalanuvchilar startapingizni qayerdan topadi? Bittasini to'ldirsangiz ham bo'ladi.",
+      "label": {
+        "website": "Veb-sayt",
+        "ios": "App Store",
+        "android": "Google Play",
+        "telegram_bot": "Telegram",
+        "other": "Boshqa havola"
+      },
+      "placeholder": {
+        "website": "mysite.uz",
+        "ios": "apps.apple.com/app/...",
+        "android": "play.google.com/store/apps/...",
+        "telegram_bot": "@botim  yoki  t.me/botim",
+        "other": "github.com/loyiham"
+      },
+      "fetching": "Havoladan ma'lumot olinmoqda",
+      "invalid": "Havola noto'g'ri ko'rinyapti — masalan: mysite.uz",
+      "searching": "Havoladan ma'lumot qidirilmoqda…",
+      "filled": "{items} havoladan olindi — xohlasangiz almashtirishingiz mumkin.",
+      "field": {
+        "logo": "logo",
+        "cover": "muqova",
+        "title": "nom",
+        "tagline": "qisqa tavsif",
+        "description": "tavsif"
+      },
+      "listTwo": "{a} va {b}",
+      "listMany": "{head} va {last}",
+      "idle": "Kerakli qatorni to'ldiring — logo, muqova, nom va tavsif havoladan avtomatik olinadi. «https://» yozish shart emas."
+    },
+    "more": {
+      "title": "Qo'shimcha ma'lumotlar",
+      "subtitle": "Hudud, jamoa, teglar — ixtiyoriy",
+      "region": "Hudud",
+      "regionPlaceholder": "Hudud (ixtiyoriy)",
+      "district": "Tuman / shahar",
+      "districtPlaceholder": "Masalan: Chilonzor",
+      "teamName": "Jamoa nomi",
+      "teamPlaceholder": "Masalan: EcoTeam",
+      "foundedYear": "Tashkil etilgan yil",
+      "tags": "Teglar (maks. 15)",
+      "tagPlaceholder": "Masalan: AI, SaaS, logistika",
+      "addTag": "Teg qo'shish",
+      "removeTag": "{tag} tegini o'chirish"
+    },
+    "publishNote": "Startapingiz yuborilgan zahoti <b>e'lon qilinadi</b> — tasdiqlash kutish shart emas. Keyin xohlagan payt tahrirlashingiz mumkin.",
+    "publish": "E'lon qilish",
+    "create": {
+      "title": "Startap joylash",
+      "subtitle": "Faqat nom va tavsif majburiy — qolganini keyin ham to'ldirishingiz mumkin"
+    },
+    "edit": {
+      "eyebrow": "Tahrirlash",
+      "delete": "O'chirish",
+      "deleteTitle": "Startapni o'chirish",
+      "deleteConfirm": "<b>“{title}”</b> butunlay o'chiriladi — buni ortga qaytarib bo'lmaydi. Davom etasizmi?",
+      "deleted": "Startap o'chirildi",
+      "noAccess": "Bu startapni tahrirlash huquqingiz yo'q",
+      "notFound": "Startap topilmadi"
+    }
+  },
+  "startupsPage": {
+    "title": "Startaplar",
+    "subtitle": "Hamjamiyat ishlab chiqqan ilovalar, saytlar va Telegram botlar — bir joyda",
+    "add": "Joylash",
+    "searchPlaceholder": "Startap nomi yoki tavsifi",
+    "sortLabel": "Saralash",
+    "sort": {
+      "featured": "Tavsiya etilgan",
+      "top_rated": "Eng yuqori baholangan",
+      "newest": "Eng yangi",
+      "popular": "Mashhur",
+      "alphabetical": "Alifbo bo'yicha"
+    },
+    "allPlatforms": "Barchasi",
+    "total": "{count, plural, other {Jami <b>{n}</b> ta startap}}",
+    "listHeading": "Startaplar ro'yxati",
+    "empty": {
+      "title": "Startaplar topilmadi",
+      "filtered": "Filtrlarni o'zgartirib ko'ring",
+      "none": "Hozircha e'lon qilingan startaplar yo'q"
+    }
+  },
+  "time": {
+    "justNow": "hozirgina",
+    "ago": {
+      "minutes": "{count, plural, other {# daqiqa oldin}}",
+      "hours": "{count, plural, other {# soat oldin}}",
+      "days": "{count, plural, other {# kun oldin}}",
+      "months": "{count, plural, other {# oy oldin}}",
+      "years": "{count, plural, other {# yil oldin}}"
+    },
+    "short": {
+      "now": "hozir",
+      "minutes": "{count} daqiqa",
+      "hours": "{count} soat",
+      "days": "{count} kun",
+      "months": "{count} oy",
+      "years": "{count} yil"
+    },
+    "today": "Bugun",
+    "yesterday": "Kecha",
+    "month": "{month, select, 1 {yanvar} 2 {fevral} 3 {mart} 4 {aprel} 5 {may} 6 {iyun} 7 {iyul} 8 {avgust} 9 {sentabr} 10 {oktabr} 11 {noyabr} other {dekabr}}",
+    "monthOf": "{month, select, 1 {yanvar} 2 {fevral} 3 {mart} 4 {aprel} 5 {may} 6 {iyun} 7 {iyul} 8 {avgust} 9 {sentabr} 10 {oktabr} 11 {noyabr} other {dekabr}}",
+    "date": "{day}-{month}, {year}",
+    "dateNoYear": "{day}-{month}",
+    "monthYear": "{month}, {year}"
+  },
+  "ui": {
+    "password": {
+      "show": "Parolni koʻrsatish",
+      "hide": "Parolni yashirish",
+      "ruleDone": "Bajarildi:",
+      "ruleNeeded": "Kerak:",
+      "rules": {
+        "len": "8+ belgi",
+        "upper": "Katta harf",
+        "digit": "Raqam",
+        "special": "Maxsus belgi"
+      }
+    },
+    "imageUpload": {
+      "error": "Yuklashda xatolik",
+      "previewAlt": "Yuklangan rasm",
+      "remove": "Rasmni oʻchirish",
+      "prompt": "Rasm tanlang yoki sudrab tashlang"
+    },
+    "pagination": {
+      "prev": "Oldingi sahifa",
+      "next": "Keyingi sahifa"
+    }
+  },
+  "validation": {
+    "required": "Majburiy maydon",
+    "minChars": "Kamida {min} ta belgi",
+    "maxChars": "Ko'pi bilan {max} ta belgi",
+    "email": "Email noto'g'ri",
+    "url": "To'g'ri havola kiriting",
+    "choose": "Tanlang",
+    "enter": "Kiriting",
+    "passwordRule": "Kerak: {rule}",
+    "passwordsMismatch": "Parollar mos emas",
+    "number": "Raqam kiriting"
+  },
+  "venture": {
+    "stage": {
+      "idea": "G'oya",
+      "prototyping": "Prototip",
+      "mvp": "MVP ishlayapti",
+      "early_revenue": "Daromad boshlangan",
+      "growth": "Barqaror o'sish"
+    },
+    "stageHint": {
+      "idea": "Hali qurilmagan, faqat reja",
+      "prototyping": "Dizayn yoki prototip bor",
+      "mvp": "Birinchi foydalanuvchilar bor",
+      "early_revenue": "Birinchi pul kelmoqda",
+      "growth": "Foydalanuvchi va daromad barqaror"
+    },
+    "businessModel": {
+      "b2c": "Bevosita iste’molchiga (B2C)",
+      "b2b": "Bizneslarga (B2B)",
+      "b2b2c": "Biznes orqali iste’molchiga (B2B2C)",
+      "marketplace": "Marketplace (ikki tomonli bozor)",
+      "subscription": "Obuna",
+      "ads": "Reklama",
+      "hardware": "Qurilma / apparat",
+      "service": "Xizmat ko‘rsatish",
+      "nonprofit": "Notijorat",
+      "other": "Boshqa"
+    },
+    "need": {
+      "investment": "Investitsiya",
+      "grant": "Grant",
+      "mentor": "Mentor",
+      "team": "Jamoaga hamkasb",
+      "customers": "Birinchi mijozlar",
+      "partner": "Biznes hamkor"
+    },
+    "needHint": {
+      "investment": "Ulush evaziga sarmoya",
+      "grant": "Qaytarilmaydigan moliyalashtirish",
+      "mentor": "Tajribali maslahatchi",
+      "team": "Dasturchi, dizayner, marketolog",
+      "customers": "Pilot mijoz yoki sinov maydoni",
+      "partner": "Distribyutor yoki sheriklik"
+    },
+    "offer": {
+      "investment": "Investitsiya",
+      "grant": "Grant",
+      "mentor": "Mentorlik",
+      "team": "Jamoa topishda yordam",
+      "customers": "Mijoz / pilot",
+      "partner": "Hamkorlik"
+    },
+    "investorKind": {
+      "angel": "Biznes farishta",
+      "fund": "Investitsiya fondi",
+      "accelerator": "Akselerator",
+      "grant": "Grant tashkiloti",
+      "corporate": "Korxona"
+    },
+    "investorKindHint": {
+      "angel": "Shaxsan sarmoya kiritaman",
+      "fund": "Fond nomidan sarmoya kiritamiz",
+      "accelerator": "Dastur va mentorlik beramiz",
+      "grant": "Qaytarilmaydigan mablag‘ ajratamiz",
+      "corporate": "Yechim yoki hamkor izlaymiz"
+    },
+    "factor": {
+      "category": "Soha",
+      "stage": "Bosqich",
+      "check": "Summa oralig‘i",
+      "needs": "Ehtiyoj va taklif",
+      "region": "Hudud",
+      "traction": "Traksiya",
+      "semantic": "Mazmuniy yaqinlik"
+    },
+    "detail": {
+      "exact": "Aniq mos",
+      "partial": "Qisman mos",
+      "open": "Cheklov qo‘yilmagan",
+      "none": "Mos emas",
+      "unknown": "Baholanmadi"
+    },
+    "dimension": {
+      "clarity": "Aniqlik",
+      "market": "Bozor",
+      "product": "Mahsulot",
+      "traction": "Traksiya",
+      "team": "Jamoa",
+      "ask": "So‘rov aniqligi"
+    },
+    "dimensionHint": {
+      "clarity": "Loyiha nima qilishi begona odamga tushunarlimi",
+      "market": "Kim uchun, qaysi sohada, qayerda",
+      "product": "Nimadir qurilganmi va ko‘rsa bo‘ladimi",
+      "traction": "Raqamlar bilan isbot bormi",
+      "team": "Loyiha ortida kim turibdi",
+      "ask": "Nimaga muhtojligingiz aniq yozilganmi"
+    },
+    "grade": {
+      "strong": "Investorga tayyor",
+      "good": "Yaxshi holatda",
+      "basic": "Asosiy ma’lumot bor",
+      "early": "Boshlang‘ich"
+    },
+    "score": {
+      "veryHigh": "Juda mos",
+      "high": "Mos",
+      "partial": "Qisman mos",
+      "weak": "Zaif moslik"
+    },
+    "introStatus": {
+      "pending": "Javob kutilmoqda",
+      "accepted": "Qabul qilingan",
+      "declined": "Rad etilgan",
+      "withdrawn": "Qaytarib olingan"
+    }
+  }
+}

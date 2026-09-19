@@ -1,7 +1,7 @@
 'use client';
 
+import { useRouter } from '@/i18n/navigation';
 import { useEffect } from 'react';
-import { useRouter } from 'next/navigation';
 import { ConversationList } from './conversation-list';
 import { useAuthStore } from '@/store/auth.store';
 import { cn } from '@/lib/utils';

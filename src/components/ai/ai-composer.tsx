@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
+import { useTranslations } from 'next-intl';
 import toast from 'react-hot-toast';
 
 import { ArrowUp, Mic, Spinner, StopCircleFill, X } from '@/components/icons';
@@ -13,13 +14,15 @@ import { aiApi, getErrorMessage } from '@/lib/api';
 
 const MAX_CHARS = 1200;
 
-/** Yozuv yuborilmaganda — sababi bo'yicha aniq maslahat (umumiy xato emas). */
-const FAILURE_HINT: Record<RecorderFailure, string> = {
-  empty: 'Yozuv olinmadi. Mikrofonni bosib, gapirib bo‘lgach to‘xtating.',
-  'too-short': 'Juda qisqa bo‘ldi — kamida bir gap ayting.',
-  silent:
-    'Ovoz eshitilmadi. Mikrofon ochiqligini tekshiring va yaqinroq gapiring.',
-};
+/**
+ * Yozuv yuborilmaganda — sababi bo'yicha aniq maslahat (umumiy xato emas).
+ * Matnlar lug'atda (`ai.composer.failure.*`), bu yerda faqat sabab → kalit.
+ */
+const FAILURE_KEY = {
+  empty: 'empty',
+  'too-short': 'tooShort',
+  silent: 'silent',
+} as const satisfies Record<RecorderFailure, string>;
 
 /**
  * Studio kirish maydoni — "buyruq paneli".
@@ -51,6 +54,8 @@ export function AiComposer({
   disabled?: boolean;
   autoFocus?: boolean;
 }) {
+  const t = useTranslations('ai.composer');
+  const tc = useTranslations('common');
   const [value, setValue] = useState('');
   const [fromVoice, setFromVoice] = useState(false);
   const [transcribing, setTranscribing] = useState(false);
@@ -102,8 +107,8 @@ export function AiComposer({
       onRequireAuth(value);
       return;
     }
-    const ok = await recorder.start();
-    if (!ok) toast.error(recorder.error ?? 'Mikrofonni ochib bo‘lmadi');
+    const failure = await recorder.start();
+    if (failure) toast.error(t(`micError.${failure}`));
   }
 
   async function finishRecording() {
@@ -115,7 +120,7 @@ export function AiComposer({
     // audioda matn "o'ylab topadi" — foydalanuvchi aytmagan gapini ko'radi.
     if (!res.ok) {
       if (res.reason !== 'empty' || !recorder.error) {
-        toast.error(FAILURE_HINT[res.reason]);
+        toast.error(t(`failure.${FAILURE_KEY[res.reason]}`));
       }
       return;
     }
@@ -128,7 +133,7 @@ export function AiComposer({
       setFromVoice(true);
       ref.current?.focus();
     } catch (err) {
-      toast.error(getErrorMessage(err, 'Ovozni matnga o‘girib bo‘lmadi'));
+      toast.error(getErrorMessage(err, t('transcribeFailed')));
     } finally {
       setTranscribing(false);
     }
@@ -145,7 +150,7 @@ export function AiComposer({
         <button
           type="button"
           onClick={recorder.cancel}
-          aria-label="Bekor qilish"
+          aria-label={t('cancelRecording')}
           className="yz-btn flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-white/[0.07] text-[color:var(--yz-ink-2)]"
         >
           <X className="h-5 w-5" strokeWidth={2.5} />
@@ -158,7 +163,7 @@ export function AiComposer({
 
         {noSignal ? (
           <p className="min-w-0 flex-1 truncate text-footnote text-rose-300">
-            Ovoz eshitilmayapti
+            {t('noSignal')}
           </p>
         ) : (
           <div className="flex h-7 min-w-0 flex-1 items-center gap-[3px] overflow-hidden text-[color:var(--yz-blue)]">
@@ -182,7 +187,7 @@ export function AiComposer({
         <button
           type="button"
           onClick={() => void finishRecording()}
-          aria-label="Yozuvni tugatish"
+          aria-label={t('finishRecording')}
           className="yz-btn flex h-10 w-10 shrink-0 items-center justify-center rounded-full text-[color:var(--yz-blue)]"
         >
           <StopCircleFill className="h-8 w-8" />
@@ -221,13 +226,13 @@ export function AiComposer({
            keyingi savolini tayyorlab turishi mumkin). */
         placeholder={
           transcribing
-            ? 'Ovoz matnga o‘girilmoqda…'
+            ? t('placeholder.transcribing')
             : disabled
-              ? 'Javob tayyorlanmoqda…'
-              : 'Muammoni yozing yoki ayting…'
+              ? t('placeholder.busy')
+              : t('placeholder.idle')
         }
         aria-busy={disabled || undefined}
-        aria-label="Muammoingiz"
+        aria-label={t('inputLabel')}
         className="max-h-[132px] min-h-[40px] flex-1 resize-none bg-transparent px-3 py-2 text-body leading-snug text-[color:var(--yz-ink)] placeholder:overflow-hidden placeholder:text-ellipsis placeholder:whitespace-nowrap placeholder:text-[color:var(--yz-ink-3)] focus:outline-none disabled:opacity-60"
       />
 
@@ -235,7 +240,7 @@ export function AiComposer({
         type="button"
         onClick={() => void startRecording()}
         disabled={disabled || transcribing}
-        aria-label="Ovozli xabar"
+        aria-label={t('voice')}
         className="yz-btn flex h-10 w-10 shrink-0 items-center justify-center rounded-full text-[color:var(--yz-ink-2)] disabled:opacity-40"
       >
         {transcribing ? (
@@ -250,8 +255,8 @@ export function AiComposer({
           type="button"
           onClick={submit}
           disabled={!canSend}
-          aria-label="Yuborish"
-          title={canSend ? 'Yuborish' : 'Kamida 8 ta belgi yozing'}
+          aria-label={tc('send')}
+          title={canSend ? tc('send') : t('minChars', { min: '8' })}
           className="yz-send flex h-10 w-10 shrink-0 items-center justify-center rounded-full disabled:opacity-50"
         >
           <ArrowUp className="h-5 w-5" strokeWidth={3} />

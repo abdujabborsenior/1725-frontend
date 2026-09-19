@@ -1,7 +1,8 @@
 'use client';
 
+import { Link } from '@/i18n/navigation';
 import { Fragment, useState, type CSSProperties } from 'react';
-import Link from 'next/link';
+import { useTranslations } from 'next-intl';
 import toast from 'react-hot-toast';
 
 import {
@@ -54,6 +55,7 @@ export function AiAnswer({
   animate: boolean;
   onPublish: () => void;
 }) {
+  const t = useTranslations('ai.answer');
   const [vote, setVote] = useState<'up' | 'down' | null>(data.feedback ?? null);
 
   async function sendFeedback(value: 'up' | 'down') {
@@ -63,7 +65,7 @@ export function AiAnswer({
       await aiApi.feedback(data.queryId, value);
     } catch (err) {
       setVote(null);
-      toast.error(getErrorMessage(err, 'Baho yuborilmadi'));
+      toast.error(getErrorMessage(err, t('feedbackFailed')));
     }
   }
 
@@ -84,7 +86,7 @@ export function AiAnswer({
         {data.matches.length > 0 && (
           <section className="space-y-2">
             <h3 className="text-caption-1 font-semibold uppercase tracking-[0.07em] text-[color:var(--yz-ink-3)]">
-              {data.matches.length} ta mos loyiha
+              {t('matches', { count: data.matches.length })}
             </h3>
             {data.matches.map((m, i) => (
               <AiMatchCard
@@ -112,10 +114,9 @@ export function AiAnswer({
               </span>
               <p className="min-w-0 text-subhead leading-relaxed text-[color:var(--yz-ink-2)]">
                 <span className="font-semibold text-[color:var(--yz-ink)]">
-                  Platformada bunga tayyor yechim yo‘q.
+                  {t('noSolutionTitle')}
                 </span>{' '}
-                Muammoingizni hamjamiyatga qo‘ysak — ko‘rib chiqishadi va
-                yechim taklif qilishadi. Matnni tayyorlab qo‘ydim.
+                {t('noSolutionText')}
               </p>
             </div>
             <button
@@ -123,7 +124,7 @@ export function AiAnswer({
               onClick={onPublish}
               className="yz-send mt-4 flex h-11 w-full items-center justify-center rounded-full px-5 text-callout font-semibold"
             >
-              Ko‘rib chiqib joylash
+              {t('reviewAndPublish')}
             </button>
           </section>
         )}
@@ -135,7 +136,7 @@ export function AiAnswer({
             style={{ '--d': '0.24s' } as CSSProperties}
           >
             <h3 className="text-caption-1 font-semibold uppercase tracking-[0.07em] text-[color:var(--yz-ink-3)]">
-              Keyingi qadamlar
+              {t('nextSteps')}
             </h3>
             <ol className="yz-card space-y-3 p-4">
               {data.steps.map((step, i) => (
@@ -165,7 +166,7 @@ export function AiAnswer({
             style={{ '--d': '0.3s' } as CSSProperties}
           >
             <h3 className="text-caption-1 font-semibold uppercase tracking-[0.07em] text-[color:var(--yz-ink-3)]">
-              Shu mavzudagi muhokamalar
+              {t('related')}
             </h3>
             <div className="yz-card divide-y divide-white/[0.07] overflow-hidden">
               {data.relatedProblems.map((p) => (
@@ -183,8 +184,8 @@ export function AiAnswer({
                     </span>
                     <span className="block text-caption-1 text-[color:var(--yz-ink-3)]">
                       {p.solutionCount > 0
-                        ? `${p.solutionCount} ta yechim`
-                        : 'Hali yechim yo‘q'}
+                        ? t('solutions', { count: p.solutionCount })
+                        : t('noSolutions')}
                     </span>
                   </span>
                   <ChevronRight
@@ -203,7 +204,7 @@ export function AiAnswer({
             <button
               type="button"
               onClick={() => void sendFeedback('up')}
-              aria-label="Javob foydali"
+              aria-label={t('helpful')}
               aria-pressed={vote === 'up'}
               disabled={!!vote}
               className="yz-btn flex h-9 w-9 items-center justify-center rounded-full text-[color:var(--yz-ink-3)] disabled:opacity-100"
@@ -217,7 +218,7 @@ export function AiAnswer({
             <button
               type="button"
               onClick={() => void sendFeedback('down')}
-              aria-label="Javob foydali emas"
+              aria-label={t('notHelpful')}
               aria-pressed={vote === 'down'}
               disabled={!!vote}
               className="yz-btn flex h-9 w-9 items-center justify-center rounded-full text-[color:var(--yz-ink-3)] disabled:opacity-100"
@@ -232,7 +233,7 @@ export function AiAnswer({
               <Check
                 className="ml-0.5 h-4 w-4 text-[color:var(--yz-mint)]"
                 strokeWidth={2.5}
-                aria-label="Baho qabul qilindi"
+                aria-label={t('feedbackSaved')}
               />
             )}
           </div>

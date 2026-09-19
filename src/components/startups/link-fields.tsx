@@ -1,10 +1,11 @@
 'use client';
 
+import { useTranslations } from 'next-intl';
 import { PLATFORM_ORDER, PLATFORM_META } from '@/lib/constants';
 import { PlatformIcon } from './platform';
 import { CheckCircleFill, Spinner } from '@/components/icons';
 import type { PlatformType } from '@/types';
-import type { AutofillState } from './use-link-autofill';
+import type { AutofillState, FilledField } from './use-link-autofill';
 import { cn } from '@/lib/utils';
 
 export type LinkValues = Record<PlatformType, string>;
@@ -17,22 +18,10 @@ export const EMPTY_LINKS: LinkValues = {
   other: '',
 };
 
-/** Har bir maydon uchun tushunarli namuna — foydalanuvchi nima yozishni biladi. */
-const PLACEHOLDER: Record<PlatformType, string> = {
-  website: 'mysite.uz',
-  ios: 'apps.apple.com/app/...',
-  android: 'play.google.com/store/apps/...',
-  telegram_bot: '@botim  yoki  t.me/botim',
-  other: 'github.com/loyiham',
-};
-
-const LABEL: Record<PlatformType, string> = {
-  website: 'Veb-sayt',
-  ios: 'App Store',
-  android: 'Google Play',
-  telegram_bot: 'Telegram',
-  other: 'Boshqa havola',
-};
+/*
+ * Har bir maydonning nomi va tushunarli namunasi (foydalanuvchi nima yozishni
+ * biladi) — lug'atda: `startupForm.links.label.<type>` / `links.placeholder.<type>`.
+ */
 
 /**
  * Foydalanuvchi yozgan matnni to'g'ri havolaga aylantiradi.
@@ -80,18 +69,9 @@ export function invalidLinks(values: LinkValues): PlatformType[] {
   return PLATFORM_ORDER.filter((t) => values[t].trim() !== '' && !normalizeUrl(values[t], t));
 }
 
-/** «Logo va muqova», «Logo» … — nima to'ldirilganini o'zbekcha aytadi. */
-function describeFilled(filled: string[]): string {
-  const names: Record<string, string> = {
-    logo: 'Logo',
-    cover: 'muqova',
-    title: 'nom',
-    tagline: 'qisqa tavsif',
-    description: 'tavsif',
-  };
-  const parts = filled.map((f) => names[f] ?? f);
-  if (parts.length === 1) return parts[0];
-  return `${parts.slice(0, -1).join(', ')} va ${parts[parts.length - 1]}`;
+/** Gap bosh harf bilan boshlanadi (o'zbekchada ro'yxat gap boshida turadi). */
+function upperFirst(s: string): string {
+  return s ? s.charAt(0).toUpperCase() + s.slice(1) : s;
 }
 
 /**
@@ -115,7 +95,19 @@ export function LinkFields({
   /** Maydondan chiqilganda — avtomatik to'ldirishni darhol boshlash. */
   onFieldBlur?: (type: PlatformType) => void;
 }) {
+  const t = useTranslations('startupForm');
   const bad = invalidLinks(values);
+
+  /** «logo, muqova va nom» — nima to'ldirilganini joriy tilda aytadi. */
+  function describeFilled(filled: FilledField[]): string {
+    const parts = filled.map((f) => t(`links.field.${f}`));
+    if (parts.length <= 1) return parts[0] ?? '';
+    if (parts.length === 2) return t('links.listTwo', { a: parts[0], b: parts[1] });
+    return t('links.listMany', {
+      head: parts.slice(0, -1).join(', '),
+      last: parts[parts.length - 1],
+    });
+  }
 
   return (
     <div>
@@ -133,7 +125,7 @@ export function LinkFields({
                 <PlatformIcon type={type} className="h-[15px] w-[15px]" />
               </span>
               <label className="w-[104px] shrink-0 whitespace-nowrap text-body text-brand-900" htmlFor={`link-${type}`}>
-                {LABEL[type]}
+                {t(`links.label.${type}`)}
               </label>
               <input
                 id={`link-${type}`}
@@ -145,7 +137,7 @@ export function LinkFields({
                 value={values[type]}
                 onChange={(e) => onChange({ ...values, [type]: e.target.value })}
                 onBlur={() => onFieldBlur?.(type)}
-                placeholder={PLACEHOLDER[type]}
+                placeholder={t(`links.placeholder.${type}`)}
                 className={cn(
                   'min-w-0 flex-1 bg-transparent text-right text-body placeholder:text-slate-500 focus:outline-none',
                   isBad ? 'text-rose-600' : 'text-slate-600',
@@ -155,7 +147,7 @@ export function LinkFields({
               {autofill?.type === type && autofill.status === 'loading' && (
                 <Spinner
                   className="h-4 w-4 shrink-0 animate-spin text-accent-500"
-                  aria-label="Havoladan ma'lumot olinmoqda"
+                  aria-label={t('links.fetching')}
                 />
               )}
               {autofill?.type === type && autofill.status === 'done' && (
@@ -171,20 +163,16 @@ export function LinkFields({
       <p className="px-4 pt-2 text-footnote text-slate-500" aria-live="polite">
         {bad.length > 0 ? (
           <span className="text-rose-600">
-            Havola noto&apos;g&apos;ri ko&apos;rinyapti — masalan: mysite.uz
+            {t('links.invalid')}
           </span>
         ) : autofill?.status === 'loading' ? (
-          <>Havoladan ma&apos;lumot qidirilmoqda…</>
+          t('links.searching')
         ) : autofill?.status === 'done' ? (
           <span className="text-accent-600">
-            {describeFilled(autofill.filled)} havoladan olindi — xohlasangiz
-            almashtirishingiz mumkin.
+            {upperFirst(t('links.filled', { items: describeFilled(autofill.filled) }))}
           </span>
         ) : (
-          <>
-            Kerakli qatorni to&apos;ldiring — logo, muqova, nom va tavsif
-            havoladan avtomatik olinadi. «https://» yozish shart emas.
-          </>
+          t('links.idle')
         )}
       </p>
     </div>

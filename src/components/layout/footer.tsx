@@ -1,6 +1,8 @@
-import Link from 'next/link';
+import { useTranslations } from 'next-intl';
+import { Link } from '@/i18n/navigation';
 import { LogoMark } from '@/components/brand/logo-mark';
-import { SITE, TRUST_POINTS } from '@/lib/site';
+import { FooterLanguages } from '@/components/i18n/language-switcher';
+import { SITE } from '@/lib/site';
 import {
   Mail,
   MapPin,
@@ -11,42 +13,52 @@ import {
   Wallet,
 } from '@/components/icons';
 
-const COLS: { title: string; links: { label: string; href: string }[] }[] = [
+type ColKey = 'platform' | 'community' | 'start';
+/** Havola yorlig'i — lug'at kaliti (`footer.links.*`); `null` — brend nomi (tarjima qilinmaydi). */
+type LinkKey =
+  | 'showcase' | 'top' | 'problems' | 'market' | 'polls'
+  | 'discover' | 'groups' | 'messages' | 'profile'
+  | 'whatIsStartup' | 'addStartup' | 'addProblem' | 'register' | 'login';
+
+const COLS: { key: ColKey; links: { key: LinkKey | null; label?: string; href: string }[] }[] = [
   {
-    title: 'Platforma',
+    key: 'platform',
     links: [
-      { label: 'Startaplar vitrinasi', href: '/startups' },
-      { label: 'Top startaplar', href: '/leaderboard' },
-      { label: 'Muammolar', href: '/problems' },
-      { label: 'Yechim AI', href: '/ai' },
-      { label: 'Bozor xaritasi', href: '/market' },
-      { label: 'Ovoz berish', href: '/polls' },
+      { key: 'showcase', href: '/startups' },
+      { key: 'top', href: '/leaderboard' },
+      { key: 'problems', href: '/problems' },
+      { key: null, label: 'Yechim AI', href: '/ai' },
+      { key: 'market', href: '/market' },
+      { key: 'polls', href: '/polls' },
     ],
   },
   {
-    title: 'Hamjamiyat',
+    key: 'community',
     links: [
-      { label: 'Odamlarni kashf etish', href: '/discover' },
-      { label: 'Guruhlar', href: '/discover' },
-      { label: 'Suhbatlar', href: '/messages' },
-      { label: 'Profil', href: '/profile' },
+      { key: 'discover', href: '/discover' },
+      { key: 'groups', href: '/discover' },
+      { key: 'messages', href: '/messages' },
+      { key: 'profile', href: '/profile' },
     ],
   },
   {
-    title: 'Boshlash',
+    key: 'start',
     links: [
-      { label: 'Startap nima?', href: '/#startap-nima' },
-      { label: 'Startap joylash', href: '/startups/create' },
-      { label: 'Muammo qoldirish', href: '/problems/create' },
-      { label: "Ro'yxatdan o'tish", href: '/register' },
-      { label: 'Kirish', href: '/login' },
+      { key: 'whatIsStartup', href: '/#startap-nima' },
+      { key: 'addStartup', href: '/startups/create' },
+      { key: 'addProblem', href: '/problems/create' },
+      { key: 'register', href: '/register' },
+      { key: 'login', href: '/login' },
     ],
   },
 ];
 
-/* Ishonch qatori belgilariga ma'no bo'yicha ikonka biriktiriladi (tartib
-   `TRUST_POINTS` bilan bir xil) — matn manbai bitta joyda qoladi. */
-const TRUST_ICONS = [Wallet, ShieldCheck, Sparkles];
+/* Ishonch qatori: ma'no bo'yicha ikonka + lug'at kaliti (matn — `footer.trust.*`). */
+const TRUST = [
+  { key: 'free', icon: Wallet },
+  { key: 'security', icon: ShieldCheck },
+  { key: 'support', icon: Sparkles },
+] as const;
 
 /**
  * Footer — sahifaning poydevori.
@@ -65,6 +77,7 @@ const TRUST_ICONS = [Wallet, ShieldCheck, Sparkles];
  * Mobilda ham ko'rinadi (pastki tab bar ostida qolmasligi uchun padding).
  */
 export function Footer() {
+  const t = useTranslations('footer');
   const { contact } = SITE;
   /* Email — tor ustunda ma'noli joydan uzilishi uchun `@` bo'yicha bo'linadi
      (aks holda brauzer uni "…@gmai / l.com" deb o'rtasidan kesadi). */
@@ -88,7 +101,7 @@ export function Footer() {
               </span>
             </Link>
             <p className="mt-4 max-w-xs text-subhead leading-relaxed text-white/75">
-              {SITE.tagline}. {SITE.description}
+              {t('tagline')}. {t('description')}
             </p>
 
             {/* Bog'lanish kanallari — hammasi ishlaydigan havolalar.
@@ -98,21 +111,21 @@ export function Footer() {
                 href={contact.telegram}
                 target="_blank"
                 rel="noopener noreferrer"
-                aria-label="Telegram orqali yozish"
+                aria-label={t('aria.telegram')}
                 className="footer-chip tappable flex h-11 w-11 items-center justify-center rounded-full"
               >
                 <PaperPlane className="h-5 w-5" />
               </a>
               <a
                 href={contact.mailto}
-                aria-label="Email yozish"
+                aria-label={t('aria.email')}
                 className="footer-chip tappable flex h-11 w-11 items-center justify-center rounded-full"
               >
                 <Mail className="h-5 w-5" />
               </a>
               <a
                 href={contact.tel}
-                aria-label="Telefon qilish"
+                aria-label={t('aria.phone')}
                 className="footer-chip tappable flex h-11 w-11 items-center justify-center rounded-full"
               >
                 <Smartphone className="h-5 w-5" />
@@ -122,18 +135,18 @@ export function Footer() {
 
           {/* Havola ustunlari */}
           {COLS.map((col) => (
-            <nav key={col.title} aria-label={col.title}>
+            <nav key={col.key} aria-label={t(`cols.${col.key}`)}>
               <h2 className="mb-3 text-callout font-semibold tracking-tight text-white">
-                {col.title}
+                {t(`cols.${col.key}`)}
               </h2>
               <ul>
                 {col.links.map((l) => (
-                  <li key={l.label}>
+                  <li key={l.key ?? l.label}>
                     <Link
                       href={l.href}
                       className="footer-link inline-flex min-h-[40px] items-center py-1 text-subhead font-medium leading-snug"
                     >
-                      {l.label}
+                      {l.key ? t(`links.${l.key}`) : l.label}
                     </Link>
                   </li>
                 ))}
@@ -144,7 +157,7 @@ export function Footer() {
           {/* Bog'lanish */}
           <div className="col-span-2 lg:col-span-1">
             <h2 className="mb-3 text-callout font-semibold tracking-tight text-white">
-              Bog&apos;lanish
+              {t('contactTitle')}
             </h2>
             <ul className="space-y-1">
               <li>
@@ -181,7 +194,7 @@ export function Footer() {
               </li>
               <li className="flex items-center gap-2.5 pt-1 text-subhead text-white/70">
                 <MapPin className="h-[18px] w-[18px] shrink-0 text-white/50" />
-                <span>{contact.city}</span>
+                <span>{t('city')}</span>
               </li>
             </ul>
           </div>
@@ -189,32 +202,29 @@ export function Footer() {
 
         {/* ── Ishonch qatori ────────────────────────────────────────── */}
         <ul className="footer-rule mt-10 grid gap-6 py-7 sm:mt-11 sm:grid-cols-3 sm:gap-8 sm:py-8">
-          {TRUST_POINTS.map((p, i) => {
-            const Icon = TRUST_ICONS[i] ?? ShieldCheck;
-            return (
-              <li key={p.title} className="flex items-start gap-3.5">
-                <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-[11px] bg-white/10 text-accent-400">
-                  <Icon className="h-5 w-5" />
-                </span>
-                <div className="min-w-0">
-                  <p className="text-callout font-semibold text-white">{p.title}</p>
-                  <p className="mt-1 text-subhead leading-relaxed text-white/70">{p.text}</p>
-                </div>
-              </li>
-            );
-          })}
+          {TRUST.map(({ key, icon: Icon }) => (
+            <li key={key} className="flex items-start gap-3.5">
+              <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-[11px] bg-white/10 text-accent-400">
+                <Icon className="h-5 w-5" />
+              </span>
+              <div className="min-w-0">
+                <p className="text-callout font-semibold text-white">{t(`trust.${key}.title`)}</p>
+                <p className="mt-1 text-subhead leading-relaxed text-white/70">{t(`trust.${key}.text`)}</p>
+              </div>
+            </li>
+          ))}
         </ul>
       </div>
 
       {/* ── Rekvizit qatori ─────────────────────────────────────────── */}
       <div className="footer-rule">
-        <div className="mx-auto flex max-w-6xl flex-col gap-2 px-4 py-6 pb-[calc(1.5rem+4rem+env(safe-area-inset-bottom))] text-subhead text-white/65 sm:flex-row sm:items-center sm:justify-between md:px-6 md:pb-6">
-          <p>
-            © {new Date().getFullYear()} {SITE.name} · Barcha huquqlar himoyalangan
-          </p>
-          <p className="sm:text-right">
-            {contact.city} · O&apos;zbekiston yoshlari uchun yaratildi
-          </p>
+        <div className="mx-auto flex max-w-6xl flex-col gap-3 px-4 py-6 pb-[calc(1.5rem+4rem+env(safe-area-inset-bottom))] text-subhead text-white/65 sm:flex-row sm:items-center sm:justify-between md:px-6 md:pb-6">
+          <div className="space-y-1">
+            <p>{t('rights', { year: String(new Date().getFullYear()) })}</p>
+            <p>{t('madeFor', { city: t('city') })}</p>
+          </div>
+          {/* Til versiyalari — `hrefLang` havolalar (qidiruv tizimi ham ko'radi) */}
+          <FooterLanguages className="sm:justify-end" />
         </div>
       </div>
     </footer>

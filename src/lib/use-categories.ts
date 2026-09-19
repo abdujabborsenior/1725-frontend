@@ -3,6 +3,7 @@
 import { useQuery } from '@tanstack/react-query';
 
 import { categoriesApi } from '@/lib/api';
+import { useCategoryLabel } from '@/lib/category-labels';
 import { PROBLEM_CATEGORIES, STARTUP_CATEGORIES } from '@/lib/constants';
 import type { CategoryType } from '@/types';
 
@@ -18,13 +19,22 @@ const FALLBACK: Record<CategoryType, string[]> = {
   problem: PROBLEM_CATEGORIES,
 };
 
+export interface CategoryOption {
+  /** Kanonik nom — bazaga shu yoziladi */
+  value: string;
+  /** Joriy tildagi yorliq */
+  label: string;
+}
+
 /**
- * Kategoriya nomlari (faol, admin belgilagan tartibda).
+ * Kategoriyalar (faol, admin belgilagan tartibda) — `{ value, label }`.
  *
  * Ro'yxat kam o'zgaradi → uzoq `staleTime`: sahifadan sahifaga o'tishда
- * qayta so'ralmaydi (100k yukда keraksiz so'rov bo'lmasin).
+ * qayta so'ralmaydi (100k yukда keraksiz so'rov bo'lmasin). So'rov
+ * `Accept-Language` bilan ketadi — `label` joriy tilda qaytadi.
  */
-export function useCategoryNames(type: CategoryType): string[] {
+export function useCategoryList(type: CategoryType): CategoryOption[] {
+  const labelOf = useCategoryLabel();
   const { data } = useQuery({
     queryKey: ['categories', type],
     queryFn: () => categoriesApi.list(type),
@@ -32,7 +42,10 @@ export function useCategoryNames(type: CategoryType): string[] {
     gcTime: 30 * 60 * 1000,
   });
 
-  return data && data.length > 0 ? data.map((c) => c.name) : FALLBACK[type];
+  if (data && data.length > 0) {
+    return data.map((c) => ({ value: c.name, label: c.label ?? labelOf(c.name) }));
+  }
+  return FALLBACK[type].map((name) => ({ value: name, label: labelOf(name) }));
 }
 
 /**
@@ -45,8 +58,11 @@ export function useCategoryNames(type: CategoryType): string[] {
 export function useCategoryOptions(
   type: CategoryType,
   current?: string | null,
-): string[] {
-  const names = useCategoryNames(type);
-  if (current && !names.includes(current)) return [...names, current];
-  return names;
+): CategoryOption[] {
+  const labelOf = useCategoryLabel();
+  const list = useCategoryList(type);
+  if (current && !list.some((o) => o.value === current)) {
+    return [...list, { value: current, label: labelOf(current) }];
+  }
+  return list;
 }

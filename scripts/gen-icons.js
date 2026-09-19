@@ -149,6 +149,8 @@ const MAP = {
   MapPin: 'location-outline',
   MapPinFill: 'location',
   Globe: 'globe-outline',
+  // Til almashtirgich — iOS'ning standart "Til" belgisi (A / 文)
+  Language: 'language-outline',
   Earth: 'earth-outline',
   Link2: 'link-outline',
   LinkIcon: 'link-outline',
