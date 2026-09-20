@@ -87,10 +87,14 @@ jobs:
             curl -sf -o /dev/null "http://127.0.0.1:3399/" && break || sleep 1
           done
           fail=0
+          # ⚠️ Sarlavhalar AYNAN prod nginx yuboradigandek: `Host` upstream
+          # manzili bo'lib qoladi (`proxy_set_header Host $host` yo'q), lekin
+          # `X-Forwarded-Proto: https` keladi. 2026-09-20 uzilishi AYNAN shu
+          # juftlikda chiqqan — `Host: mymarkaz.uz` bilan sinaganda ko'rinmagan.
           check() { # <yo'l> <kutilgan kod>
             code=$(curl -s -o /dev/null -w '%{http_code}' \
-              -H 'Host: mymarkaz.uz' -H 'X-Forwarded-Host: mymarkaz.uz' \
-              -H 'X-Forwarded-Proto: https' "http://127.0.0.1:3399$1")
+              -H 'Host: localhost:3399' -H 'X-Forwarded-Proto: https' \
+              "http://127.0.0.1:3399$1")
             if [ "$code" != "$2" ]; then
               echo "::error::$1 → $code (kutilgan $2)"; fail=1
             else
@@ -109,7 +113,8 @@ jobs:
           check /sitemap.xml 200
           check /robots.txt  200
           # Bosh sahifada haqiqiy kontent bormi (bo'sh qobiq emas)
-          curl -s -H 'Host: mymarkaz.uz' "http://127.0.0.1:3399/" | grep -q '<html lang="uz"' \
+          curl -s -H 'Host: localhost:3399' -H 'X-Forwarded-Proto: https' \
+            "http://127.0.0.1:3399/" | grep -q '<html lang="uz"' \
             || { echo '::error::bosh sahifada <html lang="uz"> yo'"'"'q'; fail=1; }
           kill "$(cat /tmp/front.pid)" 2>/dev/null || true
           exit $fail
@@ -148,12 +153,33 @@ jobs:
           name: front-build
 
       # Artefaktni serverga yuborish (faqat o'z papkasiga — boshqa loyihalarga tegilmaydi).
+      # ⚠️ 2026-09-20: `dial tcp ***:22: i/o timeout` bilan yiqilgan — runner
+      # serverga ulana olmagan (server o'zi tirik edi). Sabab odatda vaqtinchalik:
+      # fail2ban/firewall runner IP'sini bloklaydi yoki tarmoq uziladi. Shuning
+      # uchun ulanish kutish vaqti uzaytirildi va BIR MARTA qayta urinish bor —
+      # runner boshqa IP bilan qayta ulanadi.
       - name: Artefaktni yuklash (scp)
+        id: scp
+        continue-on-error: true
         uses: appleboy/scp-action@v1
         with:
           host: ${{ secrets.DEPLOY_HOST }}
           username: ${{ secrets.DEPLOY_USER }}
           key: ${{ secrets.DEPLOY_SSH_KEY }}
+          timeout: 60s
+          command_timeout: 10m
+          source: front-build.tar.gz
+          target: ${{ secrets.DEPLOY_PATH }}/incoming/
+
+      - name: Artefaktni yuklash — qayta urinish
+        if: steps.scp.outcome == 'failure'
+        uses: appleboy/scp-action@v1
+        with:
+          host: ${{ secrets.DEPLOY_HOST }}
+          username: ${{ secrets.DEPLOY_USER }}
+          key: ${{ secrets.DEPLOY_SSH_KEY }}
+          timeout: 90s
+          command_timeout: 10m
           source: front-build.tar.gz
           target: ${{ secrets.DEPLOY_PATH }}/incoming/
 
@@ -165,6 +191,8 @@ jobs:
           host: ${{ secrets.DEPLOY_HOST }}
           username: ${{ secrets.DEPLOY_USER }}
           key: ${{ secrets.DEPLOY_SSH_KEY }}
+          timeout: 60s
+          command_timeout: 10m
           script_stop: true # birinchi xatoda to'xta (yarim deploy yo'q)
           script: |
             set -euo pipefail

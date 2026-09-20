@@ -147,7 +147,7 @@ function redirectTo(request: NextRequest, target: string, status?: number): Next
   // edi. Bunday redirect har doim xato: qaytarilmaydi, so'rov odatdagidek
   // (til qatlami bilan) davom etadi.
   if (url.pathname + url.search === request.nextUrl.pathname + request.nextUrl.search) {
-    return withExternalLocation(request, intlMiddleware(request));
+    return withExternalLocation(request, withInternalRewrite(request, intlMiddleware(request)));
   }
   return NextResponse.redirect(url, status);
 }
@@ -174,13 +174,44 @@ function withExternalLocation(request: NextRequest, response: NextResponse): Nex
   return response;
 }
 
+/**
+ * Til qatlamining ICHKI almashtiruvini (`x-middleware-rewrite`) SERVERNING
+ * O'Z origini bilan qayta yozadi.
+ *
+ * ⚠️ 2026-09-20 prod uzilishi shu yerda edi. nginx upstream'ga `Host` ni
+ * uzatmaydi (`localhost:3330`), lekin `X-Forwarded-Proto: https` yuboradi —
+ * `next-intl` almashtiruvni `https://localhost:3330/uz` deb quradi, server
+ * esa aslida `http://`. Protokol mos kelmagani uchun Next buni TASHQI manzil
+ * deb hisoblab, o'ziga HTTPS bilan ulanmoqchi bo'ladi va 500 beradi.
+ * Prefiksli yo'llar (`/ru`) almashtiruvsiz ishlagani uchun faqat o'zbekcha
+ * sahifalar yiqilgan edi.
+ *
+ * `request.url` — Next'ning O'ZI ichki manzil deb biladigan origin, shuning
+ * uchun protokol/host aynan shundan olinadi. (Nisbiy qiymat MUMKIN EMAS —
+ * Next uni `new URL()` bilan o'qiydi va `ERR_INVALID_URL` beradi.)
+ */
+function withInternalRewrite(request: NextRequest, response: NextResponse): NextResponse {
+  const rewrite = response.headers.get('x-middleware-rewrite');
+  if (!rewrite) return response;
+  try {
+    const self = new URL(request.url);
+    const target = new URL(rewrite, self);
+    target.protocol = self.protocol;
+    target.host = self.host;
+    response.headers.set('x-middleware-rewrite', target.toString());
+  } catch {
+    /* buzuq qiymat — tegmaymiz */
+  }
+  return response;
+}
+
 export function middleware(request: NextRequest) {
   const { pathname, search } = request.nextUrl;
 
   // Spekulyativ prefetch — o'z redirect'larimizni qilmaymiz (keshga yozilib
   // qolmasin). Til qatlami (ichki rewrite) esa baribir kerak.
   if (isPrefetch(request)) {
-    return withExternalLocation(request, intlMiddleware(request));
+    return withExternalLocation(request, withInternalRewrite(request, intlMiddleware(request)));
   }
 
   const { locale, path, prefixed } = splitLocale(pathname);
@@ -235,7 +266,7 @@ export function middleware(request: NextRequest) {
     return NextResponse.redirect(authUrl);
   }
 
-  return withExternalLocation(request, intlMiddleware(request));
+  return withExternalLocation(request, withInternalRewrite(request, intlMiddleware(request)));
 }
 
 export const config = {
