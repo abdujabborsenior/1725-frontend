@@ -72,6 +72,48 @@ jobs:
           if [ -d public ]; then cp -r public out/public; fi
           tar -czf front-build.tar.gz -C out .
 
+      # ⚠️ Artefakt SMOKE-TESTI — serverga chiqishdan OLDIN.
+      # Sabab (2026-09-20 prod uzilishi): `next start` bilan hammasi ishlagan,
+      # lekin prod'da ishlaydigan STANDALONE server'da bosh sahifa cheksiz
+      # redirect va 500 bergan. Build "toza" bo'lgani uchun CI sezmagan.
+      # Endi artefaktning O'ZI ishga tushirilib, asosiy marshrutlar tekshiriladi.
+      - name: Artefakt smoke-testi (standalone)
+        env:
+          NEXT_PUBLIC_API_URL: ${{ vars.NEXT_PUBLIC_API_URL }}
+        run: |
+          set -e
+          (cd out && PORT=3399 NODE_ENV=production node server.js & echo $! > /tmp/front.pid)
+          for i in $(seq 1 30); do
+            curl -sf -o /dev/null "http://127.0.0.1:3399/" && break || sleep 1
+          done
+          fail=0
+          check() { # <yo'l> <kutilgan kod>
+            code=$(curl -s -o /dev/null -w '%{http_code}' \
+              -H 'Host: mymarkaz.uz' -H 'X-Forwarded-Host: mymarkaz.uz' \
+              -H 'X-Forwarded-Proto: https' "http://127.0.0.1:3399$1")
+            if [ "$code" != "$2" ]; then
+              echo "::error::$1 → $code (kutilgan $2)"; fail=1
+            else
+              echo "ok  $1 → $code"
+            fi
+          }
+          # Uch til + kanonik strip + SEO fayllari. `/uz` 308 bo'lishi SHART
+          # (dublikat URL bo'lmasin), qolgani 200 — redirect tsikli bo'lmasin.
+          check /            200
+          check /ru          200
+          check /en          200
+          check /startups    200
+          check /problems    200
+          check /ru/startups 200
+          check /uz          308
+          check /sitemap.xml 200
+          check /robots.txt  200
+          # Bosh sahifada haqiqiy kontent bormi (bo'sh qobiq emas)
+          curl -s -H 'Host: mymarkaz.uz' "http://127.0.0.1:3399/" | grep -q '<html lang="uz"' \
+            || { echo '::error::bosh sahifada <html lang="uz"> yo'"'"'q'; fail=1; }
+          kill "$(cat /tmp/front.pid)" 2>/dev/null || true
+          exit $fail
+
       - uses: actions/upload-artifact@v4
         with:
           name: front-build

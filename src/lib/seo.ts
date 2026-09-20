@@ -30,6 +30,14 @@ export function alternatesFor(locale: AppLocale, path: string): Metadata['altern
 }
 
 /** Standart ulashish rasmi (1200×630) — har til o'z shiori bilan. */
+/**
+ * Tilning OG kodi — noma'lum qiymatda ham YIQILMAYDI (asosiy tilga tushadi).
+ * `LOCALE_META[locale]` ni to'g'ridan o'qish prod'da 500 bergan edi.
+ */
+function ogLocale(locale: AppLocale): string {
+  return (LOCALE_META[locale] ?? LOCALE_META[routing.defaultLocale]).og;
+}
+
 export function defaultOgImage(locale: AppLocale) {
   return { url: `/og/og-${locale}.png`, width: 1200, height: 630, alt: 'MYMarkaz' };
 }
@@ -78,8 +86,8 @@ export function pageMetadata({
       title,
       description: desc,
       url: localizePath(locale, path),
-      locale: LOCALE_META[locale].og,
-      alternateLocale: routing.locales.filter((l) => l !== locale).map((l) => LOCALE_META[l].og),
+      locale: ogLocale(locale),
+      alternateLocale: routing.locales.filter((l) => l !== locale).map((l) => ogLocale(l)),
       images,
     },
     twitter: {

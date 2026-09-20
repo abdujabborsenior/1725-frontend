@@ -141,7 +141,15 @@ function isDocumentNavigation(request: NextRequest): boolean {
 }
 
 function redirectTo(request: NextRequest, target: string, status?: number): NextResponse {
-  return NextResponse.redirect(new URL(target, externalOrigin(request)), status);
+  const url = new URL(target, externalOrigin(request));
+  // ⚠️ O'ZINI O'ZIGA redirect — CHEKSIZ TSIKL. Prod'da (standalone server)
+  // `/` so'rovi 308 bilan yana `/` ga qaytib, sayt butunlay ochilmay qolgan
+  // edi. Bunday redirect har doim xato: qaytarilmaydi, so'rov odatdagidek
+  // (til qatlami bilan) davom etadi.
+  if (url.pathname + url.search === request.nextUrl.pathname + request.nextUrl.search) {
+    return withExternalLocation(request, intlMiddleware(request));
+  }
+  return NextResponse.redirect(url, status);
 }
 
 /**

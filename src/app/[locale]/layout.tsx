@@ -27,8 +27,13 @@ export function generateStaticParams() {
 export async function generateMetadata({
   params: { locale },
 }: {
-  params: { locale: AppLocale };
+  params: { locale: string };
 }): Promise<Metadata> {
+  // ⚠️ `locale` — URL segmenti, ya'ni ISTALGAN matn bo'lishi mumkin
+  // (`/favicon.ico`, noto'g'ri havola, proxy normallashtirgan yo'l).
+  // Tekshirmasdan `LOCALE_META[locale]` o'qilsa TypeError bo'lib, sahifa
+  // 500 bilan yiqilardi — prod'da butun sayt shu sababdan ochilmagan.
+  if (!hasLocale(routing.locales, locale)) notFound();
   const t = await getTranslations({ locale, namespace: 'meta.site' });
   const verification = process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION;
 
