@@ -15,6 +15,7 @@ import { dirOf, routing, type AppLocale } from '@/i18n/routing';
 import { LOCALE_META } from '@/i18n/locales';
 import { GLOBAL_CLIENT_NAMESPACES, pickMessages } from '@/i18n/scopes';
 import { SITE_URL, organizationJsonLd, websiteJsonLd } from '@/lib/seo';
+import { DOM_MUTATION_GUARD } from '@/lib/dom-mutation-guard';
 
 // API alohida origin (portda) — birinchi fetch'gacha ulanish tayyor tursin
 const API_ORIGIN = new URL(API_URL).origin;
@@ -59,6 +60,11 @@ export async function generateMetadata({
     },
     twitter: { card: 'summary_large_image' },
     appleWebApp: { title: 'MYMarkaz', capable: true, statusBarStyle: 'default' },
+    // ⚠️ `appleWebApp.capable` faqat ESKIRGAN `apple-mobile-web-app-capable`
+    // metasini yozadi va Chrome buni konsolda ogohlantiradi. Standart nomi —
+    // `mobile-web-app-capable`; Next uni o'zi qo'shmaydi. Ikkalasi birga
+    // turadi: eski iOS versiyalari hamon apple-variantini o'qiydi.
+    other: { 'mobile-web-app-capable': 'yes' },
     ...(verification ? { verification: { google: verification } } : {}),
   };
 }
@@ -98,6 +104,10 @@ export default async function LocaleLayout({
        bir zum LTR bo'lib chizilib, keyin ko'zgulanardi (ko'rinadigan sakrash). */
     <html lang={locale} dir={dirOf(locale)} suppressHydrationWarning>
       <head>
+        {/* Tashqi DOM o'zgarishlaridan (brauzer tarjimasi, kengaytmalar)
+            himoya — HYDRATSIYADAN OLDIN ishlashi shart, shuning uchun inline.
+            Batafsil sabab: `lib/dom-mutation-guard.ts`. */}
+        <script dangerouslySetInnerHTML={{ __html: DOM_MUTATION_GUARD }} />
         {/* Inter — SELF-HOST: lotin subset globals.css ichida inline (base64),
             qolgan subset'lar (latin-ext/cyrillic) public/fonts'dan kerak bo'lganda.
             Google Fonts'ga tashqi so'rov umuman yo'q. */}

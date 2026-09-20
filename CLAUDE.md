@@ -347,6 +347,27 @@ normal` MAJBURIY — arab harflari ULANADI, tracking ularni uzib ko'rsatadi.
 **Tekshirish:** `dir=rtl` + gorizontal toshish 0 + ikonkalar `scale(-1)` +
 `letter-spacing: normal` — hammasi bitta brauzer auditida o'lchanadi.
 
+### 2.13 Tashqi DOM mutatsiyasi (brauzer tarjimasi) — 2026-09-20
+
+Chrome sahifa `lang` i brauzer tilidan farq qilsa TARJIMA qiladi va har matn
+tugunini `<font>` ichiga o'raydi → tugunning otasi o'zgaradi → React uni eski
+ota orqali o'chirmoqchi bo'lganda `NotFoundError: removeChild` va xato chegarasi
+butun sahifani "Ilova xatosi" ga almashtiradi. Ar/zh qo'shilgach bu REAL
+bo'ldi (uz/ru/en sahifalari foydalanuvchi brauzeri bilan mos edi).
+
+**Himoya** — `lib/dom-mutation-guard.ts`, ildiz layout `<head>` ida inline
+(hydratsiyadan OLDIN ishlashi shart): `removeChild`/`insertBefore` mos
+kelmagan tugunni jim o'tkazib yuboradi.
+
+⚠️ `<meta name="google" content="notranslate">` QO'YILMAYDI — tarjimani
+butunlay o'chiradi (biz qamramagan tildagi odam sahifani o'qiy olmay qoladi)
+va faqat Google'ni to'xtatadi; kengaytmalar (Grammarly va b.) baribir DOM'ga
+tegadi.
+
+⚠️ Shu sinf xatoni tekshirish: matn tugunlarini `<font>` ga o'rab, KLIENT
+navigatsiyasini ishga tushirish kerak — shunchaki `click` yetarli emas
+(React elementni o'chirsa parent o'zgarmaydi, xato chiqmaydi).
+
 ## 3. Taqiqlar (qisqa ro'yxat)
 ❌ Gradient fon/matn/avatar (brend logosidan tashqari) · ❌ glow soyalar ·
 ❌ hover-lift · ❌ `font-black` · ❌ KATTA HARFLI eyebrow-pill'lar (faqat
