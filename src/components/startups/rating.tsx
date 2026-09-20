@@ -46,12 +46,19 @@ export function RatingValue({
       }
     >
       <StarFill className={cn(S.star, 'self-center text-amber-500')} aria-hidden />
-      <span className={cn(S.num, 'font-semibold tabular-nums text-brand-900')}>
+      {/* ⚠️ Ball va ovozlar soni — JONLI server qiymatlari (SSR kesh'i bilan
+          klient javobi farq qilishi KUTILGAN hol), `engagement.tsx` naqshi. */}
+      <span
+        className={cn(S.num, 'font-semibold tabular-nums text-brand-900')}
+        suppressHydrationWarning
+      >
         {value.toFixed(1)}
       </span>
       <span className={cn(S.sub, 'text-slate-500')}>/{RATING_MAX}</span>
       {count != null && (
-        <span className={cn(S.sub, 'text-slate-500')}>({fmt(count)})</span>
+        <span className={cn(S.sub, 'text-slate-500')} suppressHydrationWarning>
+          ({fmt(count)})
+        </span>
       )}
     </span>
   );

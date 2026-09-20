@@ -116,8 +116,15 @@ export function StartupCard({
         <div className="flex items-center gap-3.5">
           {/* Yoqtirish ro'yxatda ham ishlaydi — sahifaga o'tmasdan */}
           <LikeButton startup={startup} variant="card" />
-          <span className="flex items-center gap-1 text-footnote tabular-nums text-slate-500">
-            <Eye className="h-4 w-4" /> {fmt(startup.viewCount)}
+          {/* ⚠️ Ko'rishlar — JONLI server sanog'i: SSR HTML kesh'dan (30s) keladi,
+              klient esa yangi qiymatni oladi. Ikkalasi farq qilsa React
+              hidratsiya nomuvofiqligini (#425) yozadi. `engagement.tsx` dagi
+              bilan AYNI naqsh: sanoqda farq KUTILGAN hol. */}
+          <span
+            className="flex items-center gap-1 text-footnote tabular-nums text-slate-500"
+            suppressHydrationWarning
+          >
+            <Eye className="h-4 w-4" /> <span suppressHydrationWarning>{fmt(startup.viewCount)}</span>
           </span>
         </div>
       </div>

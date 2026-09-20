@@ -112,7 +112,7 @@ function PodiumCard({
           <Users className="h-3.5 w-3.5 text-slate-400" /> {fmt(entry.leaderboardVotes)}
         </span>
         <span className="inline-flex items-center gap-1 tabular-nums" title={t('views')}>
-          <Eye className="h-3.5 w-3.5 text-slate-400" /> {fmt(entry.viewCount)}
+          <Eye className="h-3.5 w-3.5 text-slate-400" /> <span suppressHydrationWarning>{fmt(entry.viewCount)}</span>
         </span>
         <RankMovement delta={entry.rankDelta} />
       </div>
