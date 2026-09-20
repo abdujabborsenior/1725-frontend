@@ -128,7 +128,7 @@ export function ReadinessPanel({ startupId }: { startupId: string }) {
                 <span className="text-subhead text-brand-900">
                   {tv(`dimension.${d.key}`)}
                 </span>
-                <span className="text-caption-1 tabular-nums text-slate-500">
+                <span className="text-caption-1 tabular-nums text-slate-500" translate="no">
                   {d.score}/100
                 </span>
               </div>

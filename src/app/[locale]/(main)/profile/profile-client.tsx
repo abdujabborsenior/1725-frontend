@@ -178,7 +178,7 @@ export function MyProfileClient() {
         </h2>
 
         <div className="mt-1 flex flex-wrap items-center justify-center gap-x-2 gap-y-1 text-subhead text-slate-500">
-          {user.username && <span>@{user.username}</span>}
+          {user.username && <span translate="no">@{user.username}</span>}
           {user.isEmailVerified && (
             <span
               title={t('emailVerified')}
@@ -205,7 +205,7 @@ export function MyProfileClient() {
         <div className="mx-auto mt-6 grid max-w-xs grid-cols-2 overflow-hidden rounded-ios-lg bg-surface-soft [&>*:nth-child(2)]:border-s [&>*]:border-slate-200">
           <div className="px-4 py-3">
             <p className="text-title-2 font-semibold tabular-nums text-brand-900">
-              {fmt(user.followerCount ?? 0)}
+              <span translate="no">{fmt(user.followerCount ?? 0)}</span>
             </p>
             <p className="text-footnote text-slate-500">
               {t('followers', { count: user.followerCount ?? 0 })}
@@ -213,7 +213,7 @@ export function MyProfileClient() {
           </div>
           <div className="px-4 py-3">
             <p className="text-title-2 font-semibold tabular-nums text-brand-900">
-              {fmt(user.followingCount ?? 0)}
+              <span translate="no">{fmt(user.followingCount ?? 0)}</span>
             </p>
             <p className="text-footnote text-slate-500">
               {t('following', { count: user.followingCount ?? 0 })}
@@ -308,7 +308,7 @@ export function MyProfileClient() {
                   <span className="block truncate text-body text-brand-900">{p.title}</span>
                   <span className="mt-0.5 flex items-center gap-2 text-footnote text-slate-500">
                     <span className="flex items-center gap-1 tabular-nums">
-                      <Eye className="h-3.5 w-3.5" /> {fmt(p.viewCount)}
+                      <Eye className="h-3.5 w-3.5" /> <span translate="no">{fmt(p.viewCount)}</span>
                     </span>
                     <span className="truncate">
                       {timeAgo(p.createdAt)}
@@ -353,7 +353,7 @@ export function MyProfileClient() {
                   className="inline-flex shrink-0 items-center gap-1 rounded-full bg-accent-50 px-2.5 py-1 text-caption-1 font-medium text-accent-700"
                 >
                   <Lightbulb className="h-3 w-3" />
-                  {fmt(s.helpfulCount ?? 0)}
+                  <span translate="no">{fmt(s.helpfulCount ?? 0)}</span>
                 </span>
               </Link>
             ))}

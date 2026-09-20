@@ -47,10 +47,10 @@ export function LeaderboardRow({ entry }: { entry: LeaderboardEntry }) {
             <span className="font-medium text-slate-500">{catLabel(entry.category)}</span>
           )}
           <span className="inline-flex items-center gap-1">
-            <Users className="h-3 w-3" /> {fmt(entry.leaderboardVotes)}
+            <Users className="h-3 w-3" /> <span translate="no">{fmt(entry.leaderboardVotes)}</span>
           </span>
           <span className="hidden items-center gap-1 sm:inline-flex">
-            <Eye className="h-3 w-3" /> <span suppressHydrationWarning>{fmt(entry.viewCount)}</span>
+            <Eye className="h-3 w-3" /> <span suppressHydrationWarning translate="no">{fmt(entry.viewCount)}</span>
           </span>
           {platformTypes.length > 0 && (
             <span className="hidden items-center gap-1 text-slate-500 sm:inline-flex">

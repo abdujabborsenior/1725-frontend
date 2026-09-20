@@ -62,6 +62,7 @@ export function MatchScoreRing({
           tone.text,
           size >= 56 ? 'text-subhead' : 'text-caption-1',
         )}
+        translate="no"
       >
         {score}
       </span>
@@ -99,7 +100,7 @@ export function FactorBreakdown({
                 <span className={cn('text-caption-1', DETAIL_TONE[f.detail])}>
                   {tv(`detail.${f.detail}`)}
                 </span>
-                <span className="text-caption-1 tabular-nums text-slate-500">
+                <span className="text-caption-1 tabular-nums text-slate-500" translate="no">
                   {f.earned}/{f.max}
                 </span>
               </span>

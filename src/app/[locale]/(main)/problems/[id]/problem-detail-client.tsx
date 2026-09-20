@@ -423,7 +423,7 @@ export function ProblemDetailClient({ initialProblem }: { initialProblem: Proble
             </span>
           )}
           <div className="ms-auto flex items-center gap-3.5 text-footnote text-slate-500">
-            <span className="flex items-center gap-1.5"><Eye className="h-3.5 w-3.5" /> {fmt(problem.viewCount)}</span>
+            <span className="flex items-center gap-1.5"><Eye className="h-3.5 w-3.5" /> <span translate="no">{fmt(problem.viewCount)}</span></span>
             <span className="h-1 w-1 rounded-full bg-slate-300" />
             <span className="flex items-center gap-1.5"><Clock className="h-3.5 w-3.5" />
               {timeAgo(problem.createdAt)}

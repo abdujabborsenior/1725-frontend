@@ -261,9 +261,8 @@ export function HomeClient() {
           {stats.map(({ icon: Icon, key, value }) => (
             <div key={key} className="px-5 py-6 text-center">
               <Icon className="mx-auto mb-2.5 h-[22px] w-[22px] text-slate-400" />
-              <p className="text-title-1 font-semibold tabular-nums text-brand-900">
-                <CountUp value={value} />
-                {value !== undefined && '+'}
+              <p className="text-title-1 font-semibold tabular-nums text-brand-900" translate="no">
+                <CountUp value={value} suffix="+" />
               </p>
               <p className="mt-0.5 text-footnote text-slate-500">{t(`stats.${key}`)}</p>
             </div>

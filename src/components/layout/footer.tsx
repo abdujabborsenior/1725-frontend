@@ -175,7 +175,7 @@ export function Footer() {
                   className="footer-link inline-flex min-h-[40px] items-center gap-2.5 py-1 text-subhead font-medium leading-snug [overflow-wrap:anywhere]"
                 >
                   <Mail className="h-[18px] w-[18px] shrink-0 text-accent-400" />
-                  <span>
+                  <span translate="no">
                     {emailLocal}
                     <wbr />@{emailDomain}
                   </span>

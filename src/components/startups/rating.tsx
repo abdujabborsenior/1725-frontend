@@ -39,6 +39,7 @@ export function RatingValue({
     <span
       className={cn('inline-flex items-baseline gap-1', className)}
       role="img"
+      translate="no"
       aria-label={
         count != null
           ? t('valueVotes', { value: value.toFixed(1), max: String(RATING_MAX), count, n: fmt(count) })
@@ -116,6 +117,7 @@ export function RatingInput({
           active ? 'text-brand-900' : 'text-slate-500',
         )}
         aria-live="polite"
+        translate="no"
       >
         {active ? `${active} / ${RATING_MAX}` : `— / ${RATING_MAX}`}
       </span>

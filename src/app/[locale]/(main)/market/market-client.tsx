@@ -133,7 +133,7 @@ function Stat({
             : 'text-title-2 font-semibold tabular-nums text-brand-900'
         }
       >
-        {fmt(value)}
+        <span translate="no">{fmt(value)}</span>
       </p>
       <p className="mt-0.5 text-caption-1 text-slate-500">{label}</p>
     </div>

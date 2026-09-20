@@ -96,7 +96,7 @@ export function ProblemCard({ problem, compact = false }: { problem: Problem; co
       <div className="mt-auto flex items-center justify-between gap-2">
         {compact ? (
           <span className="flex items-center gap-1.5 text-footnote tabular-nums text-slate-500">
-            <Eye className="h-3.5 w-3.5" /> <span suppressHydrationWarning>{fmt(problem.viewCount)}</span>
+            <Eye className="h-3.5 w-3.5" /> <span suppressHydrationWarning translate="no">{fmt(problem.viewCount)}</span>
           </span>
         ) : (
           <ProblemLikeButton
@@ -111,7 +111,7 @@ export function ProblemCard({ problem, compact = false }: { problem: Problem; co
         <div className="flex items-center gap-2 text-caption-1 text-slate-500">
           {!compact && (
             <span className="flex items-center gap-1 tabular-nums">
-              <Eye className="h-3.5 w-3.5" /> <span suppressHydrationWarning>{fmt(problem.viewCount)}</span>
+              <Eye className="h-3.5 w-3.5" /> <span suppressHydrationWarning translate="no">{fmt(problem.viewCount)}</span>
             </span>
           )}
           <span className="whitespace-nowrap">

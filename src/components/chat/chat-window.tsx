@@ -344,7 +344,7 @@ export function ChatWindow({ conversationId }: { conversationId: string }) {
           </p>
           <p className="truncate text-footnote text-slate-500">
             {typingUser ? <span className="text-accent-600">{t('window.typing')}</span>
-              : isGroup ? <span className="flex items-center gap-1"><Users className="h-3 w-3" /> {t('window.members', { count: conv.participantCount, n: fmt(conv.participantCount) })}{conv.username ? <span> · @{conv.username}</span> : null}</span>
+              : isGroup ? <span className="flex items-center gap-1"><Users className="h-3 w-3" /> {t('window.members', { count: conv.participantCount, n: fmt(conv.participantCount) })}{conv.username ? <span translate="no"> · @{conv.username}</span> : null}</span>
               : online ? <span className="text-accent-600">{t('window.online')}</span>
               : conv.otherUser?.lastSeenAt ? t('window.lastSeen', { time: timeAgo(conv.otherUser.lastSeenAt) }) : ''}
           </p>
@@ -505,7 +505,7 @@ export function ChatWindow({ conversationId }: { conversationId: string }) {
             </span>
             <div className="min-w-0">
               <p className="truncate text-title-3 font-bold text-brand-900">{conv.title}</p>
-              {conv.username && <p className="text-subhead text-accent-700">@{conv.username}</p>}
+              {conv.username && <p className="text-subhead text-accent-700" translate="no">@{conv.username}</p>}
               <p className="flex items-center gap-1 text-caption-1 text-slate-500"><Users className="h-3 w-3" /> {t('window.members', { count: conv.participantCount, n: fmt(conv.participantCount) })}</p>
             </div>
           </div>

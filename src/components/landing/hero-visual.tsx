@@ -81,7 +81,7 @@ export function HeroVisual() {
             {t('tagline')}
           </p>
 
-          <div className="mt-2.5 flex items-center gap-1">
+          <div className="mt-2.5 flex items-center gap-1" translate="no">
             <StarFill className="h-3.5 w-3.5 text-amber-500" />
             <span className="text-footnote font-semibold tabular-nums text-brand-900">8.7</span>
             <span className="text-caption-1 text-slate-500">/10 (42)</span>
@@ -90,7 +90,7 @@ export function HeroVisual() {
 
         <div className="hairline-t flex items-center justify-between px-4 py-2.5 sm:px-5">
           <span className="inline-flex items-center gap-1.5 text-caption-1 text-slate-500">
-            <Eye className="h-[15px] w-[15px]" /> {fmt(1240)}
+            <Eye className="h-[15px] w-[15px]" /> <span translate="no">{fmt(1240)}</span>
           </span>
           <span className="inline-flex items-center gap-1.5 text-caption-1 font-medium text-emerald-700">
             <TrendingUp className="h-[15px] w-[15px]" /> {t('place', { rank: '3' })}

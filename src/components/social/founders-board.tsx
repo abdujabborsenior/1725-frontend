@@ -68,7 +68,7 @@ function FounderRow({ entry }: { entry: FounderEntry }) {
           <FounderBadge size="xs" />
         </div>
         <div className="mt-0.5 flex flex-wrap items-center gap-x-3 gap-y-0.5 text-footnote text-slate-500">
-          {entry.username && <span className="truncate">@{entry.username}</span>}
+          {entry.username && <span className="truncate" translate="no">@{entry.username}</span>}
           <span className="inline-flex items-center gap-1">
             <Rocket className="h-3 w-3" />{' '}
             {t('startups', { count: entry.startupCount, n: fmt(entry.startupCount) })}

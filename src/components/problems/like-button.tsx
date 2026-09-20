@@ -78,7 +78,7 @@ export function ProblemLikeButton({
       <span>{t('label')}</span>
       {count > 0 && (
         <span className={cn('tabular-nums', liked ? 'text-white/80' : 'text-slate-500')}>
-          · {fmt(count)}
+          · <span translate="no">{fmt(count)}</span>
         </span>
       )}
     </button>

@@ -59,7 +59,7 @@ export function GroupCard({ group, className }: { group: PublicGroup; className?
         <div className="min-w-0 flex-1">
           <h3 className="card-title truncate text-callout font-semibold text-brand-900">{group.title}</h3>
           {group.username && (
-            <p className="truncate text-footnote text-accent-700">@{group.username}</p>
+            <p className="truncate text-footnote text-accent-700" translate="no">@{group.username}</p>
           )}
           <p className="flex items-center gap-1 text-footnote text-slate-500">
             <Users className="h-3.5 w-3.5" />{' '}

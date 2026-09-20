@@ -85,7 +85,7 @@ export function LikeButton({
         ) : (
           <Heart className="h-[17px] w-[17px]" />
         )}
-        {fmt(count)}
+        <span translate="no">{fmt(count)}</span>
       </button>
     );
   }
@@ -109,7 +109,7 @@ export function LikeButton({
       ) : (
         <Heart className="h-[17px] w-[17px]" />
       )}
-      {fmt(count)}
+      <span translate="no">{fmt(count)}</span>
     </button>
   );
 }

@@ -94,7 +94,7 @@ export function FounderVoteButton({
       )}
       {voted ? t('voted') : t('vote')}
       <span className={cn('font-bold tabular-nums', voted ? 'text-white/90' : 'text-brand-900')}>
-        {fmt(count)}
+        <span translate="no">{fmt(count)}</span>
       </span>
     </button>
   );

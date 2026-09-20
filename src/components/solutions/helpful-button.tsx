@@ -91,7 +91,7 @@ export function SolutionHelpfulButton({
       {helpful ? t('marked') : t('label')}
       {count > 0 && (
         <span className={cn('tabular-nums font-bold', helpful ? 'text-accent-700' : 'text-slate-500')}>
-          {fmt(count)}
+          <span translate="no">{fmt(count)}</span>
         </span>
       )}
     </button>

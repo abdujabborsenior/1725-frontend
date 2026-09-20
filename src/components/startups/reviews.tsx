@@ -90,7 +90,7 @@ export function Reviews({ startup }: { startup: Startup }) {
       {/* Rating summary — IMDB naqshi: yulduz + X.X/10 + ovozlar soni */}
       <div className="flex items-center gap-5 rounded-ios-2xl bg-white p-5 sm:gap-6">
         <div className="shrink-0 text-center">
-          <div className="flex items-baseline justify-center gap-1">
+          <div className="flex items-baseline justify-center gap-1" translate="no">
             <Star className="h-6 w-6 self-center text-amber-400 fill-amber-400" aria-hidden />
             <span className="text-large-title font-semibold tabular-nums text-brand-900">
               {startup.ratingCount > 0 ? startup.ratingAvg.toFixed(1) : '—'}

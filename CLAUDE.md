@@ -368,6 +368,33 @@ tegadi.
 navigatsiyasini ishga tushirish kerak — shunchaki `click` yetarli emas
 (React elementni o'chirsa parent o'zgarmaydi, xato chiqmaydi).
 
+### 2.14 RAQAM VA IDENTIFIKATOR TARJIMA QILINMAYDI (`translate="no"`)
+
+Brauzer tarjimasi matnni MA'NOSIGA qarab o'giradi — raqam esa tarjima
+qilinadigan matn EMAS. Xitoycha sahifada yalang'och **`16+`** (startaplar
+soni) yosh chegarasi (16岁以上) deb tushunilib **«16+ yosh»** bo'lib chiqqan,
+ya'ni ekrandagi ko'rsatkich butunlay boshqa narsani aytib turgan.
+
+**Qoida:** foydalanuvchiga ko'rsatiladigan har qanday
+- raqam / sanoq / ball / foiz (`16+`, `8.7`, `/10`, `72/100`, `1 240`),
+- identifikator (`@username`, email, do'kon havolasi)
+
+`translate="no"` atributi bor elementning ICHIDA chiqadi. Atribut avlodlarga
+ham o'tadi, shuning uchun uni eng yaqin o'rovchi elementga qo'yish yetarli.
+
+⚠️ **Raqam va unga yopishgan belgi BITTA tugunda bo'lsin.** Ilgari `16` va
+`+` ikki qo'shni matn tuguni edi va `<p>` ning o'zi himoyalanmagan edi —
+shuning uchun `CountUp` ning `suffix` propi ishlatiladi, `{value && '+'}`
+kabi yonma-yon yozuv EMAS.
+
+⚠️ Sanoq separatori tarjimada almashsa (`1,240` → `1.240`) son 1000 barobar
+xato o'qiladi — shu sababli oddiy sanoqlar ham qamrab olinadi. Raqamni
+`lib/format.ts` (`useFormatNumber`) o'zi tilga moslab formatlaydi; tarjimonga
+ish qolmaydi.
+
+ℹ️ `aria-label` va xabar parametrlari (`t('votes', { n })`) TARJIMA
+QILINADIGAN matn — ular bu qoidaga kirmaydi.
+
 ## 3. Taqiqlar (qisqa ro'yxat)
 ❌ Gradient fon/matn/avatar (brend logosidan tashqari) · ❌ glow soyalar ·
 ❌ hover-lift · ❌ `font-black` · ❌ KATTA HARFLI eyebrow-pill'lar (faqat

@@ -39,7 +39,10 @@ export function CountUp({
   }, [inView, value, duration]);
 
   return (
-    <span ref={ref} className={className}>
+    // ⚠️ `translate="no"` — raqam (va unga yopishgan qo'shimcha) brauzer
+    // tarjimasidan CHETDA qoladi: yalang'och "16+" xitoycha sahifada yosh
+    // chegarasi deb o'girilib "16+ yosh" bo'lib chiqqan edi.
+    <span ref={ref} className={className} translate="no">
       {value === undefined ? '—' : fmt(display)}
       {value !== undefined && suffix}
     </span>

@@ -63,7 +63,7 @@ export function StartupMiniCard({
             <RatingValue value={startup.ratingAvg} size="xs" />
           )}
           <span className="flex items-center gap-1">
-            <Eye className="h-3 w-3" /> <span suppressHydrationWarning>{fmt(startup.viewCount)}</span>
+            <Eye className="h-3 w-3" /> <span suppressHydrationWarning translate="no">{fmt(startup.viewCount)}</span>
           </span>
         </span>
       </span>

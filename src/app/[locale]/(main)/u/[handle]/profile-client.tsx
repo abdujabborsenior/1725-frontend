@@ -185,7 +185,7 @@ export function ProfileClient({ initialProfile }: { initialProfile: PublicProfil
                 </span>
               )}
             </div>
-            {profile.username && <p className="text-subhead text-slate-500">@{profile.username}</p>}
+            {profile.username && <p className="text-subhead text-slate-500" translate="no">@{profile.username}</p>}
             {profile.headline && <p className="mt-2 text-callout text-brand-900">{profile.headline}</p>}
             {profile.bio && (
               <p className="mt-2 max-w-2xl text-subhead leading-relaxed text-slate-500">{profile.bio}</p>
@@ -217,11 +217,11 @@ export function ProfileClient({ initialProfile }: { initialProfile: PublicProfil
             {/* Counts */}
             <div className="mt-4 flex flex-wrap items-center gap-x-6 gap-y-3">
               <button onClick={() => setListMode('followers')} className="tappable group text-start">
-                <span className="text-title-3 font-semibold tabular-nums text-brand-900 transition-colors duration-200 group-hover:text-accent-700">{fmt(followers)}</span>
+                <span className="text-title-3 font-semibold tabular-nums text-brand-900 transition-colors duration-200 group-hover:text-accent-700"><span translate="no">{fmt(followers)}</span></span>
                 <span className="ms-1 text-subhead text-slate-500 transition-colors duration-200 group-hover:text-accent-700">{t('followers', { count: followers })}</span>
               </button>
               <button onClick={() => setListMode('following')} className="tappable group text-start">
-                <span className="text-title-3 font-semibold tabular-nums text-brand-900 transition-colors duration-200 group-hover:text-accent-700">{fmt(profile.followingCount)}</span>
+                <span className="text-title-3 font-semibold tabular-nums text-brand-900 transition-colors duration-200 group-hover:text-accent-700"><span translate="no">{fmt(profile.followingCount)}</span></span>
                 <span className="ms-1 text-subhead text-slate-500 transition-colors duration-200 group-hover:text-accent-700">{t('following', { count: profile.followingCount })}</span>
               </button>
               {/* Asoschiga ovoz — toggle (o'z profilida faqat hisob) */}

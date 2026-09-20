@@ -124,7 +124,7 @@ export function StartupCard({
             className="flex items-center gap-1 text-footnote tabular-nums text-slate-500"
             suppressHydrationWarning
           >
-            <Eye className="h-4 w-4" /> <span suppressHydrationWarning>{fmt(startup.viewCount)}</span>
+            <Eye className="h-4 w-4" /> <span suppressHydrationWarning translate="no">{fmt(startup.viewCount)}</span>
           </span>
         </div>
       </div>

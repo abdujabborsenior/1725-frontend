@@ -109,10 +109,10 @@ function PodiumCard({
       {/* Sanoqlar + o'rin harakati */}
       <div className="mt-4 flex w-full items-center justify-center gap-4 border-t border-slate-200/70 px-4 pt-3.5 text-caption-1 text-slate-600">
         <span className="inline-flex items-center gap-1 tabular-nums" title={t('raters')}>
-          <Users className="h-3.5 w-3.5 text-slate-400" /> {fmt(entry.leaderboardVotes)}
+          <Users className="h-3.5 w-3.5 text-slate-400" /> <span translate="no">{fmt(entry.leaderboardVotes)}</span>
         </span>
         <span className="inline-flex items-center gap-1 tabular-nums" title={t('views')}>
-          <Eye className="h-3.5 w-3.5 text-slate-400" /> <span suppressHydrationWarning>{fmt(entry.viewCount)}</span>
+          <Eye className="h-3.5 w-3.5 text-slate-400" /> <span suppressHydrationWarning translate="no">{fmt(entry.viewCount)}</span>
         </span>
         <RankMovement delta={entry.rankDelta} />
       </div>

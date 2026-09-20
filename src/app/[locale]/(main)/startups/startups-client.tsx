@@ -162,7 +162,7 @@ export function StartupsClient({
             >
               {catLabel(c.category)}
               <span className={cn('tabular-nums', category === c.category ? 'text-white/80' : 'text-slate-600')}>
-                {fmt(c.count)}
+                <span translate="no">{fmt(c.count)}</span>
               </span>
             </FilterChip>
           ))}
