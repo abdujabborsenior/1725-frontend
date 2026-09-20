@@ -175,20 +175,33 @@ function withExternalLocation(request: NextRequest, response: NextResponse): Nex
 }
 
 /**
- * Til qatlamining ICHKI almashtiruvini (`x-middleware-rewrite`) SERVERNING
- * O'Z origini bilan qayta yozadi.
+ * Til qatlamining ICHKI almashtiruvini (`x-middleware-rewrite`) serverning
+ * O'Z origini bilan qayta yozadi — zaxira qalqon.
  *
- * ⚠️ 2026-09-20 prod uzilishi shu yerda edi. nginx upstream'ga `Host` ni
- * uzatmaydi (`localhost:3330`), lekin `X-Forwarded-Proto: https` yuboradi —
- * `next-intl` almashtiruvni `https://localhost:3330/uz` deb quradi, server
- * esa aslida `http://`. Protokol mos kelmagani uchun Next buni TASHQI manzil
- * deb hisoblab, o'ziga HTTPS bilan ulanmoqchi bo'ladi va 500 beradi.
- * Prefiksli yo'llar (`/ru`) almashtiruvsiz ishlagani uchun faqat o'zbekcha
- * sahifalar yiqilgan edi.
+ * ⚠️ 2026-09-20 PROD UZILISHINING HAQIQIY SABABI KODDA EMAS, KONFIGURATSIYADA
+ * edi va u `deploy.yml` da yopilgan. O'lchov bilan aniqlangan mexanizm:
  *
- * `request.url` — Next'ning O'ZI ichki manzil deb biladigan origin, shuning
- * uchun protokol/host aynan shundan olinadi. (Nisbiy qiymat MUMKIN EMAS —
- * Next uni `new URL()` bilan o'qiydi va `ERR_INVALID_URL` beradi.)
+ *   Next standalone ichki origini `HOSTNAME:PORT` dan quradi
+ *     (`x-dbg-init: https://localhost:3330/`),
+ *   almashtiruv manzilining HOSTI esa har doim `Host` sarlavhasidan olinadi
+ *     (`NextURL` uni majburan almashtiradi — qiymatda nima yozilsa ham).
+ *
+ * pm2 `HOSTNAME=127.0.0.1` bergan, nginx esa `Host: localhost:3330` yuborgan →
+ * ikki origin mos kelmagan → Next almashtiruvni TASHQI manzil deb hisoblab
+ * o'ziga qayta so'rov yuborgan va `https://` bilan oddiy HTTP serverga ulanib
+ * 500 bergan. Prefiksli yo'llar (`/ru`) almashtiruvsiz ketgani uchun ishlagan —
+ * faqat o'zbekcha (prefikssiz) sahifalar yiqilgan.
+ *
+ * QOIDA: pm2 dagi `HOSTNAME` nginx `proxy_pass` dagi host bilan AYNAN bir xil
+ * bo'lishi shart. CI smoke-testi ham endi `HOSTNAME` bilan ishlaydi — usiz
+ * ichki origin nisbiy bo'lib qoladi va bu sinf xato CI'da KO'RINMAYDI
+ * (o'sha kuni test aynan shu sababdan yolg'on "ok" bergan).
+ *
+ * Bu funksiya qiymatni Next'ning O'ZI ichki deb biladigan origin
+ * (`request.url`) ga tenglashtiradi. Normal holatda bu no-op, lekin
+ * almashtiruv boshqa origin bilan kelib qolsa — uni ichki holatga qaytaradi.
+ * (Nisbiy qiymat MUMKIN EMAS — Next uni `new URL()` bilan o'qiydi va
+ * `ERR_INVALID_URL` beradi.)
  */
 function withInternalRewrite(request: NextRequest, response: NextResponse): NextResponse {
   const rewrite = response.headers.get('x-middleware-rewrite');
