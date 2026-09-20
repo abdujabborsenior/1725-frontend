@@ -82,14 +82,24 @@ jobs:
           NEXT_PUBLIC_API_URL: ${{ vars.NEXT_PUBLIC_API_URL }}
         run: |
           set -e
-          # ⚠️ HOSTNAME prod'dagidek beriladi: usiz Next ichki origini nisbiy
-          # bo'lib qoladi va 2026-09-20 uzilishi CI'da UMUMAN ko'rinmaydi
-          # (o'sha kuni smoke-test aynan shu sababdan yolg'on "ok" bergan).
-          (cd out && PORT=3399 HOSTNAME=localhost NODE_ENV=production node server.js & echo $! > /tmp/front.pid)
+          # ⚠️ Muhit prod bilan AYNAN bir xil bo'lishi SHART.
+          # `HOSTNAME` bo'lmasa Next ichki origini nisbiy bo'lib qoladi va
+          # 2026-09-20 uzilishi CI'da UMUMAN ko'rinmaydi (o'sha kuni
+          # smoke-test aynan shu sababdan yolg'on "ok" bergan).
+          # `--dns-result-order=ipv4first` — `localhost` har doim 127.0.0.1 ga
+          # bog'lansin: IPv6 birinchi bo'lgan muhitda server faqat `::1` da
+          # ochilib, nginx (127.0.0.1) unga ulana olmay 502 berardi.
+          (cd out && PORT=3399 HOSTNAME=localhost \
+             NODE_OPTIONS=--dns-result-order=ipv4first \
+             NODE_ENV=production node server.js & echo $! > /tmp/front.pid)
           for i in $(seq 1 30); do
             curl -sf -o /dev/null "http://127.0.0.1:3399/" && break || sleep 1
           done
           fail=0
+          # Port AYNAN IPv4 loopback'da ochilishi shart (nginx shu manzilga ulanadi).
+          if ! ss -ltn 2>/dev/null | grep -q '127\.0\.0\.1:3399'; then
+            echo "::error::server 127.0.0.1:3399 da ochilmadi: $(ss -ltn | grep 3399 || echo yo\'q)"; fail=1
+          fi
           # ⚠️ Sarlavhalar AYNAN prod nginx yuboradigandek: `Host` upstream
           # manzili bo'lib qoladi (`proxy_set_header Host $host` yo'q), lekin
           # `X-Forwarded-Proto: https` keladi. 2026-09-20 uzilishi AYNAN shu
@@ -204,6 +214,8 @@ jobs:
             mkdir -p "$REL"
             tar -xzf incoming/front-build.tar.gz -C "$REL"
             rm -f incoming/front-build.tar.gz
+            # Orqaga qaytarish uchun joriy (eski) release eslab qolinadi.
+            PREV="$(readlink -f current || true)"
             ln -sfn "$PWD/$REL" current
             # pm2 konfiguratsiyasi (idempotent: bor bo'lsa restart, yo'q bo'lsa start)
             cat > ecosystem.config.js <<'EOC'
@@ -218,12 +230,43 @@ jobs:
                 // kelmasa til qatlamining ichki almashtiruvi TASHQI manzil deb
                 // hisoblanib, o'zbekcha sahifalar 500 beradi (2026-09-20 uzilishi).
                 // `localhost` ham faqat loopback'ga bog'lanadi — xavfsizlik o'zgarmaydi.
-                env: { NODE_ENV: 'production', PORT: 3330, HOSTNAME: 'localhost' },
+                // `--dns-result-order=ipv4first`: `localhost` har doim 127.0.0.1 ga
+                // bog'lansin (IPv6 birinchi bo'lsa server `::1` da ochilib,
+                // nginx unga ulana olmay 502 berardi).
+                env: {
+                  NODE_ENV: 'production', PORT: 3330, HOSTNAME: 'localhost',
+                  NODE_OPTIONS: '--dns-result-order=ipv4first',
+                },
               }],
             };
             EOC
             pm2 startOrRestart ecosystem.config.js --update-env
             pm2 save
+
+            # ── Sog'liq tekshiruvi (2026-09-20 uzilishidan keyin qo'shildi) ──
+            # nginx AYNAN shu sarlavhalar bilan murojaat qiladi; `/` (o'zbekcha,
+            # ichki almashtiruv bilan) — uzilishda aynan shu sahifa 500 bergan.
+            # O'tmasa: eski release'ga QAYTARILADI va deploy XATO bilan tugaydi —
+            # buzuq holat hech qachon jimgina qolib ketmaydi.
+            code=""
+            for i in $(seq 1 30); do
+              code=$(curl -s -o /dev/null -w '%{http_code}' --max-time 5 \
+                -H 'Host: localhost:3330' -H 'X-Forwarded-Proto: https' \
+                http://127.0.0.1:3330/ || true)
+              [ "$code" = "200" ] && break
+              sleep 2
+            done
+            if [ "$code" != "200" ]; then
+              echo "::error::Yangi release sog'liq tekshiruvidan o'tmadi (/ → ${code:-ulanmadi})."
+              if [ -n "${PREV:-}" ] && [ -d "$PREV" ]; then
+                echo "Eski release'ga qaytarilmoqda: $PREV"
+                ln -sfn "$PREV" current
+                pm2 startOrRestart ecosystem.config.js --update-env || true
+              fi
+              exit 1
+            fi
+            echo "Sog'liq tekshiruvi: / → 200"
+
             # Faqat oxirgi 3 ta release qoladi (disk to'lmasin)
             ls -1dt releases/* | tail -n +4 | xargs -r rm -rf
             echo "Deploy OK: $REL"
