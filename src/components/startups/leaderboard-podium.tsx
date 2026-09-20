@@ -62,7 +62,7 @@ function PodiumCard({
       )}
 
       {/* O'rin tamg'asi */}
-      <span className="medal-badge absolute left-1/2 top-3 inline-flex h-7 -translate-x-1/2 items-center gap-1.5 rounded-full pl-2 pr-2.5 text-caption-1 font-bold">
+      <span className="medal-badge absolute left-1/2 top-3 inline-flex h-7 -translate-x-1/2 items-center gap-1.5 rounded-full ps-2 pe-2.5 text-caption-1 font-bold">
         {MedalIcon && <MedalIcon className="h-3.5 w-3.5" />}
         {t('place', { rank: String(entry.rank) })}
       </span>

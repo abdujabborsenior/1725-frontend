@@ -2,7 +2,7 @@
 
 import { Link } from '@/i18n/navigation';
 import { useEffect, useRef, useState } from 'react';
-import { useTranslations } from 'next-intl';
+import { useLocale, useTranslations } from 'next-intl';
 import { createPortal } from 'react-dom';
 import { motion, AnimatePresence, useMotionValue, useTransform, animate } from 'framer-motion';
 import { Play, Pause, FileText, Reply, Download, Copy, Flag, Paperclip, Pencil } from '@/components/icons';
@@ -10,6 +10,7 @@ import { VerifiedBadge } from '@/components/social/verified-badge';
 import { Avatar } from '@/components/ui/avatar';
 import { ReportDialog } from '@/components/reports/report-dialog';
 import { profileHref } from '@/components/social/user-list-item';
+import { dirOf } from '@/i18n/routing';
 import { cn } from '@/lib/utils';
 import { useDateFormat } from '@/lib/date';
 import { useChatText } from './chat-text';
@@ -245,9 +246,14 @@ export function MessageBubble({
   const [menu, setMenu] = useState<{ x: number; y: number } | null>(null);
   const [reportOpen, setReportOpen] = useState(false);
   const x = useMotionValue(0);
+  // ⚠️ Surish YO'NALISHI tilga bog'liq: javob berish uchun pufak o'qish
+  // yo'nalishi BO'YLAB suriladi — LTR'da o'ngga, arabchada chapga. Aks holda
+  // arab foydalanuvchisi pufakni "orqaga" surishga majbur bo'lardi.
+  const rtl = dirOf(useLocale()) === 'rtl';
+  const swipe = rtl ? -SWIPE_THRESHOLD : SWIPE_THRESHOLD;
   // Surilganda ko'rinadigan reply ikonkasi — surish chuqurligiga bog'liq
-  const iconScale = useTransform(x, [0, SWIPE_THRESHOLD], [0.2, 1]);
-  const iconOpacity = useTransform(x, [8, SWIPE_THRESHOLD], [0, 1]);
+  const iconScale = useTransform(x, [0, swipe], [0.2, 1]);
+  const iconOpacity = useTransform(x, [rtl ? -8 : 8, swipe], [0, 1]);
 
   const lastTap = useRef(0);
   const longPress = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -350,7 +356,7 @@ export function MessageBubble({
       {/* Surish (swipe) reply ikonkasi — bubble ortida */}
       <motion.span
         style={{ scale: iconScale, opacity: iconOpacity }}
-        className="pointer-events-none absolute left-8 top-1/2 z-0 flex h-9 w-9 -translate-y-1/2 items-center justify-center rounded-full bg-accent-600 text-white"
+        className="pointer-events-none absolute start-8 top-1/2 z-0 flex h-9 w-9 -translate-y-1/2 items-center justify-center rounded-full bg-accent-600 text-white"
       >
         <Reply className="h-4 w-4" />
       </motion.span>
@@ -358,13 +364,15 @@ export function MessageBubble({
       <div className={cn('relative z-10 flex max-w-[82%] flex-col sm:max-w-[76%]', mine ? 'items-end' : 'items-start')}>
         <motion.div
           drag="x"
-          dragConstraints={{ left: 0, right: SWIPE_THRESHOLD + 24 }}
+          dragConstraints={
+            rtl ? { left: -(SWIPE_THRESHOLD + 24), right: 0 } : { left: 0, right: SWIPE_THRESHOLD + 24 }
+          }
           dragElastic={0.18}
           dragSnapToOrigin
           style={{ x }}
           onDragStart={() => { draggedRef.current = true; cancelLongPress(); }}
           onDragEnd={(_, info) => {
-            if (info.offset.x >= SWIPE_THRESHOLD) {
+            if (rtl ? info.offset.x <= swipe : info.offset.x >= swipe) {
               triggerReply();
             }
             void animate(x, 0, { type: 'spring', stiffness: 600, damping: 40 });
@@ -408,7 +416,7 @@ export function MessageBubble({
 
           {/* Reply preview */}
           {message.replyTo && (
-            <div className={cn('mb-1.5 rounded-[10px] border-l-[3px] px-2.5 py-1.5 text-footnote', mine ? 'border-white/70 bg-white/15' : 'border-accent-500 bg-black/[0.04]')}>
+            <div className={cn('mb-1.5 rounded-[10px] border-s-[3px] px-2.5 py-1.5 text-footnote', mine ? 'border-white/70 bg-white/15' : 'border-accent-500 bg-black/[0.04]')}>
               <p className={cn('font-semibold', mine ? 'text-white/90' : 'text-accent-700')}>{message.replyTo.senderName ?? t('message')}</p>
               <p className={cn('flex items-center gap-1 truncate', mine ? 'text-white/75' : 'text-slate-500')}>
                 {message.replyTo.content ?? (<><Paperclip className="h-3 w-3 shrink-0" /> {t('attachment')}</>)}

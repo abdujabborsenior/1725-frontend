@@ -65,7 +65,7 @@ export function ChatEmptyState({
               : t.rich('directIntroNoTitle', { b: bold })}
         </p>
 
-        <div className="mt-6 text-left">
+        <div className="mt-6 text-start">
           <p className="ios-section-header !px-0 text-center">{t('startersTitle')}</p>
           <div className="ios-list" style={{ '--row-inset': '1rem' } as CSSProperties}>
             {starters.map((key, i) => {
@@ -76,7 +76,7 @@ export function ChatEmptyState({
                   type="button"
                   onClick={() => onPick(s)}
                   style={{ '--row-delay': `${0.16 + i * 0.05}s` } as CSSProperties}
-                  className="ios-row row-in group w-full gap-2 text-left"
+                  className="ios-row row-in group w-full gap-2 text-start"
                 >
                   <span className="min-w-0 flex-1 text-subhead leading-snug text-brand-900">
                     {s}

@@ -93,7 +93,7 @@ export function ProblemShareModal({ open, onClose, problemId, problemTitle }: Pr
         {/* Link */}
         <div>
           <p className="mb-1.5 text-footnote font-medium text-slate-500">{t('linkLabel')}</p>
-          <div className="flex items-center gap-2 rounded-ios-md bg-fill-tertiary p-1.5 pl-3">
+          <div className="flex items-center gap-2 rounded-ios-md bg-fill-tertiary p-1.5 ps-3">
             <span className="flex-1 truncate text-subhead text-slate-600">{shareUrl}</span>
             <button onClick={copy}
               className={cn('flex h-9 shrink-0 items-center gap-1.5 rounded-ios px-3 text-footnote font-semibold transition-all',
@@ -121,9 +121,9 @@ export function ProblemShareModal({ open, onClose, problemId, problemTitle }: Pr
               <MessageCircle className="h-3.5 w-3.5" /> {t('sendToChat')}
             </p>
             <div className="relative mb-2">
-              <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
+              <Search className="pointer-events-none absolute start-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
               <input value={q} onChange={(e) => setQ(e.target.value)} placeholder={t('searchPlaceholder')}
-                className={cn(FIELD_SURFACE, FIELD_SIZE.sm, 'pl-9 pr-3 text-subhead')} />
+                className={cn(FIELD_SURFACE, FIELD_SIZE.sm, 'ps-9 pe-3 text-subhead')} />
             </div>
             <div className="max-h-56 overflow-y-auto chat-scroll -mx-1">
               {isLoading ? (

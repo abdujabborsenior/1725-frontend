@@ -400,7 +400,7 @@ export function ProblemDetailClient({ initialProblem }: { initialProblem: Proble
     <div className="max-w-4xl mx-auto space-y-6">
       <button
         onClick={() => router.back()}
-        className="tappable -ml-1 flex items-center gap-0.5 text-body text-accent-700"
+        className="tappable -ms-1 flex items-center gap-0.5 text-body text-accent-700"
       >
         <ChevronLeft className="h-[19px] w-[19px]" strokeWidth={3} />
         {tc('back')}
@@ -422,7 +422,7 @@ export function ProblemDetailClient({ initialProblem }: { initialProblem: Proble
               {catLabel(problem.category)}
             </span>
           )}
-          <div className="ml-auto flex items-center gap-3.5 text-footnote text-slate-500">
+          <div className="ms-auto flex items-center gap-3.5 text-footnote text-slate-500">
             <span className="flex items-center gap-1.5"><Eye className="h-3.5 w-3.5" /> {fmt(problem.viewCount)}</span>
             <span className="h-1 w-1 rounded-full bg-slate-300" />
             <span className="flex items-center gap-1.5"><Clock className="h-3.5 w-3.5" />
@@ -480,7 +480,7 @@ export function ProblemDetailClient({ initialProblem }: { initialProblem: Proble
           />
 
           {submitter && (
-            <div className="ml-auto flex items-center gap-2.5">
+            <div className="ms-auto flex items-center gap-2.5">
               <Avatar src={submitter.avatarUrl} name={submitter.fullName} size={32} />
               <span className="text-subhead text-slate-500">
                 {/* Tartib tilga bog'liq: "Ism tomonidan" · "Автор: Имя" · "Posted by Name" */}

@@ -177,7 +177,7 @@ export function InvestorProfileForm({ initial }: { initial?: InvestorProfile | n
               onClick={() => setKind(k)}
               aria-pressed={kind === k}
               className={cn(
-                'tappable rounded-ios-md px-3.5 py-3 text-left transition-colors duration-150',
+                'tappable rounded-ios-md px-3.5 py-3 text-start transition-colors duration-150',
                 kind === k
                   ? 'bg-accent-600 text-white'
                   : 'bg-white text-brand-900 hover:bg-accent-50 hover:text-accent-700',

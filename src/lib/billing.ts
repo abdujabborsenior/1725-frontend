@@ -37,9 +37,21 @@ export const BILLING_ENABLED = process.env.NEXT_PUBLIC_BILLING_ENABLED === 'true
  * olib keladi. Narx — foydalanuvchi ishonadigan raqam, u har joyda BIR XIL
  * ko'rinishi shart.
  */
-const GROUP: Record<AppLocale, string> = { uz: '\u00A0', ru: '\u00A0', en: ',' };
-/** Valyuta nomi har tilda (so'm · сум · UZS) — kichik jadval, lug'at emas. */
-const CURRENCY: Record<AppLocale, string> = { uz: "so'm", ru: 'сум', en: 'UZS' };
+const GROUP: Record<AppLocale, string> = {
+  uz: '\u00A0',
+  ru: '\u00A0',
+  en: ',',
+  ar: ',',
+  zh: ',',
+};
+/** Valyuta nomi har tilda (so'm · сум · UZS · سوم · 苏姆) — kichik jadval, lug'at emas. */
+const CURRENCY: Record<AppLocale, string> = {
+  uz: "so'm",
+  ru: 'сум',
+  en: 'UZS',
+  ar: 'سوم',
+  zh: '苏姆',
+};
 
 function group(n: number, locale: AppLocale): string {
   return String(n).replace(/\B(?=(\d{3})+(?!\d))/g, GROUP[locale]);

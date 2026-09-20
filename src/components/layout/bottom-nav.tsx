@@ -100,7 +100,7 @@ export function BottomNav() {
               <span className="relative">
                 <Glyph className="h-[25px] w-[25px]" />
                 {href === '/messages' && unread > 0 && (
-                  <span className="absolute -right-2.5 -top-1 flex h-[17px] min-w-[17px] items-center justify-center rounded-full bg-rose-500 px-1 text-caption-2 font-semibold text-white ring-2 ring-white">
+                  <span className="absolute -end-2.5 -top-1 flex h-[17px] min-w-[17px] items-center justify-center rounded-full bg-rose-500 px-1 text-caption-2 font-semibold text-white ring-2 ring-white">
                     {unread > 9 ? '9+' : unread}
                   </span>
                 )}

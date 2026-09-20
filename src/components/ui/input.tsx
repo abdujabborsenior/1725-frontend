@@ -33,7 +33,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
         {icon && (
           <span
             className={cn(
-              'pointer-events-none absolute left-3.5 top-1/2 flex -translate-y-1/2 items-center',
+              'pointer-events-none absolute start-3.5 top-1/2 flex -translate-y-1/2 items-center',
               FIELD_ICON,
             )}
           >
@@ -45,8 +45,8 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
           className={cn(
             FIELD_SURFACE,
             FIELD_SIZE.md,
-            icon && 'pl-11',
-            rightIcon && 'pr-11',
+            icon && 'ps-11',
+            rightIcon && 'pe-11',
             error && FIELD_INVALID,
             className,
           )}
@@ -55,7 +55,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
         {rightIcon && (
           <span
             className={cn(
-              'absolute right-3 top-1/2 flex -translate-y-1/2 items-center',
+              'absolute end-3 top-1/2 flex -translate-y-1/2 items-center',
               FIELD_ICON,
             )}
           >

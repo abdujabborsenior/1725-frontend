@@ -144,7 +144,7 @@ export function AiAnswer({
                   {i < data.steps.length - 1 && (
                     <span
                       aria-hidden
-                      className="absolute -bottom-3 left-[11px] top-7 w-px bg-white/10"
+                      className="absolute -bottom-3 start-[11px] top-7 w-px bg-white/10"
                     />
                   )}
                   <span className="relative z-10 flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-[color:var(--yz-blue)]/16 text-caption-1 font-semibold text-[color:var(--yz-blue)]">
@@ -231,7 +231,7 @@ export function AiAnswer({
             </button>
             {vote && (
               <Check
-                className="ml-0.5 h-4 w-4 text-[color:var(--yz-mint)]"
+                className="ms-0.5 h-4 w-4 text-[color:var(--yz-mint)]"
                 strokeWidth={2.5}
                 aria-label={t('feedbackSaved')}
               />

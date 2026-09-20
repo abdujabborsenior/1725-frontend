@@ -92,7 +92,7 @@ export function PaymentSheet({
               aria-checked={active}
               onClick={() => setSelected(provider)}
               className={cn(
-                'flex w-full items-center gap-3.5 rounded-ios-xl bg-white p-3.5 text-left',
+                'flex w-full items-center gap-3.5 rounded-ios-xl bg-white p-3.5 text-start',
                 'transition-[box-shadow,transform] duration-200 ease-ios active:scale-[0.99]',
                 active
                   ? 'ring-2 ring-accent-500'

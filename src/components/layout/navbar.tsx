@@ -46,7 +46,7 @@ function CountBadge({ count, floating }: { count: number; floating?: boolean }) 
     <span
       className={cn(
         'flex h-[18px] min-w-[18px] items-center justify-center rounded-full bg-rose-500 px-1 text-caption-2 font-semibold text-white',
-        floating && 'absolute -right-1 -top-1 ring-2 ring-white',
+        floating && 'absolute -end-1 -top-1 ring-2 ring-white',
       )}
     >
       {count > 9 ? '9+' : count}
@@ -162,7 +162,7 @@ export function Navbar() {
             {/* "Qidirish" so'zi keng ekranda — tor desktopda ikonka + ⌘K
                 o'zi tushunarli va navigatsiyaga joy bo'shatadi. */}
             <span className="hidden text-subhead 2xl:inline">{t('search')}</span>
-            <kbd className="rounded-md bg-white px-1.5 py-0.5 text-caption-2 font-medium text-slate-600 2xl:ml-2">
+            <kbd className="rounded-md bg-white px-1.5 py-0.5 text-caption-2 font-medium text-slate-600 2xl:ms-2">
               ⌘K
             </kbd>
           </button>
@@ -170,7 +170,7 @@ export function Navbar() {
           {/* Joylash CTA — guest ham ko'radi (bosganda register orqali qaytadi) */}
           <Link
             href="/startups/create"
-            className="hv-sheen tappable ml-1 flex h-9 items-center gap-1 rounded-full bg-accent-600 pl-3 pr-4 text-subhead font-semibold text-white hover:shadow-[0_10px_24px_-12px_rgba(0,113,227,0.8)] active:bg-accent-700"
+            className="hv-sheen tappable ms-1 flex h-9 items-center gap-1 rounded-full bg-accent-600 ps-3 pe-4 text-subhead font-semibold text-white hover:shadow-[0_10px_24px_-12px_rgba(0,113,227,0.8)] active:bg-accent-700"
           >
             <Plus className="h-4 w-4" strokeWidth={2.6} /> {t('addStartupShort')}
           </Link>
@@ -181,7 +181,7 @@ export function Navbar() {
             <>
               <ChatLink />
               <NotificationBell />
-              <Link href="/profile" aria-label={t('profile')} className="hv-avatar ml-0.5 shrink-0">
+              <Link href="/profile" aria-label={t('profile')} className="hv-avatar ms-0.5 shrink-0">
                 <Avatar src={user?.avatarUrl} name={user?.fullName} size={30} />
               </Link>
               <button
@@ -290,7 +290,7 @@ export function Navbar() {
                   {user?.isVerified && <VerifiedBadge size={14} />}
                 </span>
               </Link>
-              <button onClick={handleLogout} className="ios-row w-full text-left">
+              <button onClick={handleLogout} className="ios-row w-full text-start">
                 <span className="flex-1 text-body text-rose-600">{t('logout')}</span>
               </button>
             </div>

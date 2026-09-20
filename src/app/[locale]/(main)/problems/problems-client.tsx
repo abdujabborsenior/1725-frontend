@@ -48,7 +48,7 @@ export function ProblemsClient({ initialList }: { initialList: PaginatedResponse
           /* Guest ham ko'radi — bosganda register orqali aynan shu yerga qaytadi */
           <Link
             href="/problems/create"
-            className="tappable flex h-10 items-center gap-1 rounded-full bg-accent-600 pl-3.5 pr-4 text-subhead font-semibold text-white active:bg-accent-700"
+            className="tappable flex h-10 items-center gap-1 rounded-full bg-accent-600 ps-3.5 pe-4 text-subhead font-semibold text-white active:bg-accent-700"
           >
             <Plus className="h-4 w-4" strokeWidth={2.6} /> {t('add')}
           </Link>

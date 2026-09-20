@@ -233,6 +233,14 @@ const ERROR_TEXT: Record<AppLocale, { generic: string; network: string }> = {
     generic: 'Something went wrong',
     network: 'No internet connection. Check your connection and try again.',
   },
+  ar: {
+    generic: 'حدث خطأ ما',
+    network: 'لا يوجد اتصال بالإنترنت. تحقّق من الاتصال ثم حاول مرة أخرى.',
+  },
+  zh: {
+    generic: '出错了',
+    network: '网络连接不可用。请检查连接后重试。',
+  },
 };
 
 export function getErrorMessage(err: unknown, fallback?: string): string {

@@ -105,7 +105,7 @@ export function NotificationsClient() {
                 <button
                   key={n.id}
                   onClick={() => open(n)}
-                  className={cn('ios-row w-full items-start text-left', !n.isRead && 'bg-accent-50/50')}
+                  className={cn('ios-row w-full items-start text-start', !n.isRead && 'bg-accent-50/50')}
                 >
                   <span
                     className={cn(

@@ -202,7 +202,7 @@ export function MyProfileClient() {
         </div>
 
         {/* Sanoqlar — ustunli iOS bloki */}
-        <div className="mx-auto mt-6 grid max-w-xs grid-cols-2 overflow-hidden rounded-ios-lg bg-surface-soft [&>*:nth-child(2)]:border-l [&>*]:border-slate-200">
+        <div className="mx-auto mt-6 grid max-w-xs grid-cols-2 overflow-hidden rounded-ios-lg bg-surface-soft [&>*:nth-child(2)]:border-s [&>*]:border-slate-200">
           <div className="px-4 py-3">
             <p className="text-title-2 font-semibold tabular-nums text-brand-900">
               {fmt(user.followerCount ?? 0)}
@@ -411,7 +411,7 @@ export function MyProfileClient() {
             <span className="flex-1 text-body text-brand-900">{t('actions.settings')}</span>
             <ChevronRight className="ios-chevron h-[15px] w-[15px] shrink-0 text-slate-300" strokeWidth={3} />
           </Link>
-          <button onClick={handleLogout} className="ios-row w-full text-left">
+          <button onClick={handleLogout} className="ios-row w-full text-start">
             <span className="flex h-[29px] w-[29px] shrink-0 items-center justify-center rounded-[7px] bg-amber-500 text-white">
               <LogOut className="h-[17px] w-[17px]" />
             </span>

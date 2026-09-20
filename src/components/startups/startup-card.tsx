@@ -55,11 +55,11 @@ export function StartupCard({
           />
         </div>
         {startup.isFeatured && (
-          <span className="material-dark absolute right-3 top-3 inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-caption-2 font-semibold text-white">
+          <span className="material-dark absolute end-3 top-3 inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-caption-2 font-semibold text-white">
             <StarFill className="h-2.5 w-2.5 text-amber-400" /> {t('top')}
           </span>
         )}
-        <div className="absolute left-3 top-3 z-10">
+        <div className="absolute start-3 top-3 z-10">
           <BookmarkButton startup={startup} variant="card" />
         </div>
         {/* Kategoriya rang chizig'i — muqova pastida, kartaning imzosi */}

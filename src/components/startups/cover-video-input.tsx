@@ -80,7 +80,7 @@ export function CoverVideoInput({
             type="button"
             onClick={clear}
             aria-label={t('video.remove')}
-            className="absolute right-2 top-2 z-10 flex h-8 w-8 items-center justify-center rounded-ios bg-white/90 text-slate-600 shadow-card transition-colors hover:text-rose-600"
+            className="absolute end-2 top-2 z-10 flex h-8 w-8 items-center justify-center rounded-ios bg-white/90 text-slate-600 shadow-card transition-colors hover:text-rose-600"
           >
             <X className="h-4 w-4" />
           </button>
@@ -144,14 +144,14 @@ export function CoverVideoInput({
       ) : (
         <div className="flex gap-2">
           <div className="relative flex-1">
-            <Link2 className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
+            <Link2 className="pointer-events-none absolute start-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
             <input
               value={link}
               onChange={(e) => setLink(e.target.value)}
               onKeyDown={(e) => { if (e.key === 'Enter') { e.preventDefault(); applyLink(); } }}
               placeholder="https://youtube.com/watch?v=..."
               aria-label={t('video.modeLink')}
-              className={cn(FIELD_SURFACE, FIELD_SIZE.md, 'pl-10 pr-3')}
+              className={cn(FIELD_SURFACE, FIELD_SIZE.md, 'ps-10 pe-3')}
             />
           </div>
           <button

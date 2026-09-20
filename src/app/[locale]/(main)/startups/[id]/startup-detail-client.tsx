@@ -122,7 +122,7 @@ export function StartupDetailClient({ initialStartup }: { initialStartup: Startu
     <div className="max-w-4xl mx-auto space-y-8">
       <button
         onClick={() => router.back()}
-        className="tappable -ml-1 flex items-center gap-0.5 text-body text-accent-700"
+        className="tappable -ms-1 flex items-center gap-0.5 text-body text-accent-700"
       >
         <ChevronLeft className="h-[19px] w-[19px]" strokeWidth={3} />
         {tc('back')}

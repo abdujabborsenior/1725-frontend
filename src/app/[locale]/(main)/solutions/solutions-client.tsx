@@ -92,7 +92,7 @@ function SkeletonCard() {
     <div className="space-y-3 rounded-ios-2xl bg-white p-5">
       <div className="flex gap-2">
         <div className="skeleton h-5 w-28 rounded-full" />
-        <div className="skeleton ml-auto h-5 w-20 rounded-full" />
+        <div className="skeleton ms-auto h-5 w-20 rounded-full" />
       </div>
       <div className="space-y-2">
         <div className="skeleton h-4 w-full rounded-md" />

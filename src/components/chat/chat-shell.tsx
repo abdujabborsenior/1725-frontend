@@ -30,7 +30,7 @@ export function ChatShell({
     // `surface-window`: 1px hairline halqa + haqiqiy ko'tarilish soyasi →
     // oyna ikkala holatda ham (suhbat tanlanmagan va ochiq) aniq ajraladi.
     <div className="flex min-h-0 flex-1 overflow-hidden bg-white surface-window-md md:rounded-[22px]">
-      <aside className={cn('h-full w-full shrink-0 overflow-hidden md:flex md:w-[21rem] md:border-r md:border-separator/50', activeId ? 'hidden' : 'flex')}>
+      <aside className={cn('h-full w-full shrink-0 overflow-hidden md:flex md:w-[21rem] md:border-e md:border-separator/50', activeId ? 'hidden' : 'flex')}>
         <ConversationList activeId={activeId} />
       </aside>
       <section className={cn('h-full min-w-0 flex-1 overflow-hidden bg-surface-soft', activeId ? 'flex' : 'hidden md:flex')}>

@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 /**
  * Ulashish rasmlarini (Open Graph, 1200×630) yasaydi — HAR TIL uchun bittadan:
- * `public/og/og-{uz,ru,en}.png`.
+ * `public/og/og-{uz,ru,en,ar,zh}.png`.
  *
  * Nega build vaqtida `next/og` emas: satori WOFF2 ni o'qimaydi (bizda Inter
  * faqat WOFF2), qolaversa har build'da uch rasm qayta chizilardi. Bu skript
@@ -23,6 +23,21 @@ const COPY = {
   uz: { title: "G'oyadan biznes loyihagacha", flow: 'Muammo → Yechim → Startap', kicker: 'Startap platformasi' },
   ru: { title: 'От идеи до бизнес-проекта', flow: 'Проблема → Решение → Стартап', kicker: 'Стартап-платформа' },
   en: { title: 'From Idea to Business', flow: 'Problem → Solution → Startup', kicker: 'Startup platform' },
+  // ⚠️ Arabchada oqim strelkasi ham TESKARI (←): o'qish o'ngdan chapga,
+  // "→" bilan yozilsa zanjir orqaga qarab ko'rinardi.
+  ar: { title: 'من الفكرة إلى مشروع تجاري', flow: 'مشكلة ← حلّ ← مشروع', kicker: 'منصّة المشاريع الناشئة' },
+  zh: { title: '从创意到商业项目', flow: '问题 → 方案 → 创业', kicker: '创业平台' },
+};
+
+/** Til → yozuv yo'nalishi va sarlavha o'lchami (yozuvlar eni har xil). */
+const SCRIPT = {
+  uz: { dir: 'ltr', size: 72 },
+  ru: { dir: 'ltr', size: 66 },
+  en: { dir: 'ltr', size: 72 },
+  // Arab harflari balandroq (diakritika bilan) — 66px muvozanatli chiqadi
+  ar: { dir: 'rtl', size: 66 },
+  // Iyeroglif kvadrat va zich — 68px da sarlavha bir qatorga sig'adi
+  zh: { dir: 'ltr', size: 68 },
 };
 
 const SEG = (deg, fill) =>
@@ -34,14 +49,15 @@ const MARK = `<svg viewBox="0 0 100 100" width="96" height="96">
 
 const html = (locale) => {
   const c = COPY[locale];
+  const sc = SCRIPT[locale];
   // Inter WOFF2 — Chrome o'qiydi; kirill uchun alohida subset
   const font = (f) => `url(file://${path.join(ROOT, 'public', 'fonts', f)}) format('woff2')`;
-  return `<!doctype html><html lang="${locale}"><head><meta charset="utf-8"><style>
+  return `<!doctype html><html lang="${locale}" dir="${sc.dir}"><head><meta charset="utf-8"><style>
   @font-face{font-family:Inter;font-weight:100 900;src:${font('inter-var-latin.woff2')};unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+2018-201A,U+2122,U+2192;}
   @font-face{font-family:Inter;font-weight:100 900;src:${font('inter-var-latin-ext.woff2')};unicode-range:U+0100-024F,U+2C60-2C7F,U+A720-A7FF;}
   @font-face{font-family:Inter;font-weight:100 900;src:${font('inter-var-cyrillic.woff2')};unicode-range:U+0301,U+0400-045F,U+0490-0491,U+04B0-04B1,U+2116;}
   *{margin:0;padding:0;box-sizing:border-box}
-  body{width:1200px;height:630px;font-family:Inter,system-ui,sans-serif;color:#fff;overflow:hidden;
+  body{width:1200px;height:630px;font-family:Inter,'Noto Sans Arabic','Noto Naskh Arabic','Noto Sans CJK SC',system-ui,sans-serif;color:#fff;overflow:hidden;
     background:radial-gradient(120% 100% at 12% 0%,#1C3B60 0%,#0A192F 62%,#060F1E 100%);}
   .surface{position:absolute;inset:0;background:
     radial-gradient(70% 90% at 12% 0%,rgba(116,171,216,.28),transparent 62%),
@@ -56,10 +72,10 @@ const html = (locale) => {
   .word{font-size:52px;font-weight:700;letter-spacing:-.02em}
   .word span{color:#74ABD8}
   .kicker{font-size:24px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:#74ABD8}
-  h1{font-size:${locale === 'ru' ? 66 : 72}px;line-height:1.08;font-weight:700;letter-spacing:-.025em;max-width:960px}
+  h1{font-size:${sc.size}px;line-height:1.08;font-weight:700;letter-spacing:-.025em;max-width:960px}
   .flow{display:inline-flex;align-items:center;gap:14px;font-size:28px;font-weight:600;color:#DCE8F5;
     background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.16);border-radius:999px;padding:14px 28px;align-self:flex-start}
-  .foot{position:absolute;left:88px;bottom:56px;font-size:26px;font-weight:600;color:rgba(255,255,255,.72)}
+  .foot{position:absolute;inset-inline-start:88px;bottom:56px;font-size:26px;font-weight:600;color:rgba(255,255,255,.72)}
   </style></head><body><div class="surface"></div><div class="edge"></div>
   <div class="wrap">
     <div class="brand"><div class="plate">${MARK}</div>

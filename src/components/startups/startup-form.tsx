@@ -322,7 +322,7 @@ export function StartupForm({ initial }: { initial?: Startup }) {
           type="button"
           onClick={() => setMoreOpen((o) => !o)}
           aria-expanded={moreOpen}
-          className="ios-row w-full text-left"
+          className="ios-row w-full text-start"
         >
           <span className="min-w-0 flex-1">
             <span className="block text-body text-brand-900">{t('more.title')}</span>

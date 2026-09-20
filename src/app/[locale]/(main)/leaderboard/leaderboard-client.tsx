@@ -106,7 +106,7 @@ export function LeaderboardClient({
         />
 
         {tab === 'startups' && total > 0 && (
-          <span className="inline-flex w-fit items-center gap-2 rounded-full bg-amber-50 py-1.5 pl-2 pr-3.5 text-footnote font-medium text-amber-700">
+          <span className="inline-flex w-fit items-center gap-2 rounded-full bg-amber-50 py-1.5 ps-2 pe-3.5 text-footnote font-medium text-amber-700">
             <span className="flex h-6 w-6 items-center justify-center rounded-full bg-amber-500/15">
               <FlameFill className="h-3.5 w-3.5 text-amber-600" />
             </span>

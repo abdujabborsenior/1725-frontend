@@ -95,7 +95,7 @@ export function AiLauncher() {
               </h2>
             </div>
           </div>
-          <p className="mt-2.5 text-subhead leading-relaxed text-[color:var(--yz-ink-2)] lg:pl-[4.1rem]">
+          <p className="mt-2.5 text-subhead leading-relaxed text-[color:var(--yz-ink-2)] lg:ps-[4.1rem]">
             {t('subtitle')}
           </p>
         </div>
@@ -119,13 +119,13 @@ export function AiLauncher() {
                 aria-label={t('inputLabel')}
                 className="w-full bg-transparent px-3 py-2 text-body text-[color:var(--yz-ink)] focus:outline-none"
               />
-              {/* Ghost matn maydon ICHIGA qamalgan: `right-1` chegarasi
+              {/* Ghost matn maydon ICHIGA qamalgan: `end-1` chegarasi
                   tufayli u hech qachon mikrofon tugmasi ustiga chiqmaydi. */}
               {!value && (
                 <span
                   ref={ghostRef}
                   aria-hidden
-                  className="no-scrollbar pointer-events-none absolute inset-y-0 left-3 right-1 flex items-center overflow-hidden whitespace-nowrap text-body text-[color:var(--yz-ink-3)]"
+                  className="no-scrollbar pointer-events-none absolute inset-y-0 start-3 end-1 flex items-center overflow-hidden whitespace-nowrap text-body text-[color:var(--yz-ink-3)]"
                 >
                   {typed}
                   <i className="ai-caret shrink-0" />

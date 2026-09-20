@@ -130,7 +130,7 @@ export function CreateProblemClient() {
     <div className="max-w-2xl mx-auto space-y-6">
       <button
         onClick={() => router.back()}
-        className="tappable -ml-1 flex items-center gap-0.5 text-body text-accent-700"
+        className="tappable -ms-1 flex items-center gap-0.5 text-body text-accent-700"
       >
         <ChevronLeft className="h-[19px] w-[19px]" strokeWidth={3} />
         {tc('back')}
@@ -192,11 +192,11 @@ export function CreateProblemClient() {
               {uploadingImg ? <Spinner className="h-4 w-4 animate-spin" /> : <UploadCloud className="h-4 w-4" />} {t('uploadImage')}
             </button>
             <div className="relative flex-1">
-              <Link2 className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400 pointer-events-none" />
+              <Link2 className="absolute start-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400 pointer-events-none" />
               <input value={imageInput} onChange={(e) => setImageInput(e.target.value)}
                 onKeyDown={(e) => e.key === 'Enter' && (e.preventDefault(), addUrl('image'))}
                 placeholder={t('imageUrlPlaceholder')}
-                className={cn(FIELD_SURFACE, FIELD_SIZE.md, 'pl-10 pr-3')} />
+                className={cn(FIELD_SURFACE, FIELD_SIZE.md, 'ps-10 pe-3')} />
             </div>
             <button type="button" onClick={() => addUrl('image')} aria-label={t('addImage')}
               className="tappable hv-pop h-12 w-12 flex items-center justify-center rounded-ios-md bg-accent-50 text-accent-700 shrink-0 hover:bg-accent-100">
@@ -210,7 +210,7 @@ export function CreateProblemClient() {
                   {/* eslint-disable-next-line @next/next/no-img-element */}
                   <img src={u} alt="" className="h-full w-full object-cover" />
                   <button type="button" onClick={() => setImageUrls(arr => arr.filter(x => x !== u))}
-                    className="absolute top-1 right-1 h-5 w-5 flex items-center justify-center rounded bg-white/90 text-rose-600 opacity-0 transition-opacity focus-visible:opacity-100 group-hover:opacity-100">
+                    className="absolute top-1 end-1 h-5 w-5 flex items-center justify-center rounded bg-white/90 text-rose-600 opacity-0 transition-opacity focus-visible:opacity-100 group-hover:opacity-100">
                     <X className="h-3 w-3" />
                   </button>
                 </div>
@@ -232,11 +232,11 @@ export function CreateProblemClient() {
               {uploadingVid ? <Spinner className="h-4 w-4 animate-spin" /> : <UploadCloud className="h-4 w-4" />} {t('uploadVideo')}
             </button>
             <div className="relative flex-1">
-              <Link2 className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400 pointer-events-none" />
+              <Link2 className="absolute start-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400 pointer-events-none" />
               <input value={videoInput} onChange={(e) => setVideoInput(e.target.value)}
                 onKeyDown={(e) => e.key === 'Enter' && (e.preventDefault(), addUrl('video'))}
                 placeholder={t('videoUrlPlaceholder')}
-                className={cn(FIELD_SURFACE, FIELD_SIZE.md, 'pl-10 pr-3')} />
+                className={cn(FIELD_SURFACE, FIELD_SIZE.md, 'ps-10 pe-3')} />
             </div>
             <button type="button" onClick={() => addUrl('video')} aria-label={t('addVideo')}
               className="tappable hv-pop h-12 w-12 flex items-center justify-center rounded-ios-md bg-accent-50 text-accent-700 shrink-0 hover:bg-accent-100">

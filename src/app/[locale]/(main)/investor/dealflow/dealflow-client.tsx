@@ -49,7 +49,7 @@ export function DealflowClient() {
     <div className="mx-auto max-w-2xl space-y-5">
       <Link
         href="/investor"
-        className="tappable -ml-1 flex items-center gap-0.5 text-body text-accent-700"
+        className="tappable -ms-1 flex items-center gap-0.5 text-body text-accent-700"
       >
         <ChevronLeft className="h-[19px] w-[19px]" strokeWidth={3} />
         {t('back')}

@@ -173,7 +173,7 @@ export function HomeClient() {
       {/* ── Hero ─────────────────────────────────────────────────────────
           Apple mahsulot sahifasi ritmi: tinch oq sirt, yirik va zich
           sarlavha, bitta asosiy amal + bitta oddiy havola. Dekor yo'q. */}
-      <section className="-mx-4 bg-white px-4 pb-14 pt-12 text-center md:mx-0 md:rounded-ios-3xl md:px-6 md:pb-20 md:pt-16 lg:text-left">
+      <section className="-mx-4 bg-white px-4 pb-14 pt-12 text-center md:mx-0 md:rounded-ios-3xl md:px-6 md:pb-20 md:pt-16 lg:text-start">
         <div className="mx-auto grid max-w-5xl items-center gap-12 lg:grid-cols-[minmax(0,1fr)_minmax(0,444px)] lg:gap-10">
           <div>
             <h1 className="text-[2.5rem] font-semibold leading-[1.05] tracking-[-0.03em] text-brand-900 md:text-[4.5rem] lg:text-[3.25rem] xl:text-[3.75rem]">
@@ -254,8 +254,8 @@ export function HomeClient() {
           className={[
             'grid grid-cols-2 overflow-hidden rounded-ios-xl bg-white md:grid-cols-4',
             '[&>*]:border-slate-200',
-            '[&>*:nth-child(even)]:border-l [&>*:nth-child(n+3)]:border-t',
-            'md:[&>*:nth-child(n+2)]:border-l md:[&>*:nth-child(n+3)]:border-t-0',
+            '[&>*:nth-child(even)]:border-s [&>*:nth-child(n+3)]:border-t',
+            'md:[&>*:nth-child(n+2)]:border-s md:[&>*:nth-child(n+3)]:border-t-0',
           ].join(' ')}
         >
           {stats.map(({ icon: Icon, key, value }) => (

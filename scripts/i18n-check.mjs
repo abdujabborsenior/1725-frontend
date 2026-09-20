@@ -23,7 +23,7 @@ const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const SRC = path.join(ROOT, 'src');
 const APP = path.join(SRC, 'app', '[locale]');
 const MESSAGES = path.join(ROOT, 'messages');
-const LOCALES = ['uz', 'ru', 'en'];
+const LOCALES = ['uz', 'ru', 'en', 'ar', 'zh'];
 const REPORT = process.argv.includes('--report');
 
 let failed = 0;

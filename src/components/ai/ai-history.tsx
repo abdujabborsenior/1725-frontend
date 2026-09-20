@@ -119,7 +119,7 @@ export function AiHistory({
                         type="button"
                         onClick={() => onSelect(c.id)}
                         aria-current={active ? 'true' : undefined}
-                        className="yz-row flex w-full items-center gap-2 py-2 pl-3 pr-10 text-left"
+                        className="yz-row flex w-full items-center gap-2 py-2 ps-3 pe-10 text-start"
                       >
                         <span className="min-w-0 flex-1">
                           <span
@@ -144,7 +144,7 @@ export function AiHistory({
                         type="button"
                         onClick={() => setConfirmId(c.id)}
                         aria-label={t('history.deleteChat', { title: c.title })}
-                        className="yz-btn absolute right-1.5 top-1/2 flex h-8 w-8 -translate-y-1/2 items-center justify-center rounded-full text-[color:var(--yz-ink-3)] opacity-100 [@media(hover:hover)]:opacity-0 [@media(hover:hover)]:group-hover/row:opacity-100 [@media(hover:hover)]:focus-visible:opacity-100"
+                        className="yz-btn absolute end-1.5 top-1/2 flex h-8 w-8 -translate-y-1/2 items-center justify-center rounded-full text-[color:var(--yz-ink-3)] opacity-100 [@media(hover:hover)]:opacity-0 [@media(hover:hover)]:group-hover/row:opacity-100 [@media(hover:hover)]:focus-visible:opacity-100"
                       >
                         <Trash2 className="h-[17px] w-[17px]" />
                       </button>

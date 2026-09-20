@@ -41,7 +41,8 @@ export function Switch({ checked, onChange, disabled, className, ...rest }: Swit
           'pointer-events-none block h-[27px] w-[27px] rounded-full bg-white',
           'shadow-[0_3px_8px_rgba(0,0,0,0.15),0_1px_1px_rgba(0,0,0,0.16)]',
           'transition-transform duration-250 ease-ios',
-          checked ? 'translate-x-5' : 'translate-x-0',
+          // RTL: yo'lak ko'zgulanadi — tugmacha ham teskari tomonga suriladi
+          checked ? 'translate-x-5 rtl:-translate-x-5' : 'translate-x-0',
         )}
       />
     </button>

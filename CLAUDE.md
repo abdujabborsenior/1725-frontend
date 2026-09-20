@@ -300,6 +300,53 @@ tungi blok ko'zni o'ziga tortadi va Studio'ga o'tish uzluksiz bo'ladi.
 - **Qoralama varag'i (`AiPublishSheet`) ATAYLAB OQ qoladi:** u platformaga
   e'lon qilish oqimi, ya'ni Studio'dan chiqish nuqtasi.
 
+### 2.12 RTL — arab tili (2026-09-20, MAJBURIY)
+
+Sayt besh tilda: `uz` (prefikssiz) · `ru` · `en` · **`ar` (RTL)** · `zh`.
+Arabchada maket KO'ZGULANADI — faqat matn emas.
+
+**Yo'nalish — yagona manba:** `i18n/routing.ts` → `dirOf(locale)`;
+`<html dir>` ildiz layoutda SERVERDA yoziladi (klientda qo'yilsa sahifa bir
+zum LTR chizilib, keyin ko'zgulanardi — ko'rinadigan sakrash).
+
+**Yangi kod yozganda:**
+
+| Fizik (TAQIQ) | Mantiqiy (YOZILADI) |
+|---|---|
+| `pl-4` / `pr-4` | `ps-4` / `pe-4` |
+| `ml-2` / `mr-2` | `ms-2` / `me-2` |
+| `left-3` / `right-3` | `start-3` / `end-3` |
+| `text-left` / `text-right` | `text-start` / `text-end` |
+| `border-l` / `border-r` | `border-s` / `border-e` |
+| `rounded-l-*` / `rounded-r-*` | `rounded-s-*` / `rounded-e-*` |
+| CSS `left:` / `padding-left:` | `inset-inline-start:` / `padding-inline-start:` |
+
+⚠️ **ISTISNO — markazlash:** `left-1/2` + `-translate-x-1/2` FIZIK qoladi.
+`start-1/2` ga o'tkazilsa RTL'da element markazdan chetga chiqib ketadi
+(skript bir marta shunday buzib qo'ygan, qaytarilgan).
+
+**Gorizontal harakat** (sheen, strelka siljishi, drawer, stagger) —
+`--dir` ko'paytuvchisi bilan (`:root` da `1`, `[dir='rtl']` da `-1`):
+`transform: translateX(calc(3px * var(--dir)))`. Har animatsiya uchun
+alohida `[dir='rtl']` qoidasi YOZILMAYDI.
+
+**Yo'nalishli ikonkalar** — `scripts/gen-icons.js` dagi `MIRROR` ro'yxatiga
+qo'shiladi (ishlatilgan joyda emas: ikonka 25+ faylda uchraydi, bittasi
+unutilsa arabchada strelka teskari qarab turardi). Generator `data-rtl-flip`
+atributini qo'yadi, `globals.css` bitta qoida bilan ko'zgulaydi.
+⚠️ `transform` EMAS, mustaqil **`scale: -1 1`** — aks holda Tailwind'ning
+`rotate-180` (akkordeon) va `translate-x` (hover) animatsiyalari o'chardi.
+Ro'yxatga KIRMAYDI: media boshqaruvlari (Play/Pause) va grafiklar.
+
+**Tipografika:** veb-shrift yuklanmaydi (arabcha ~120 KB, CJK megabaytlar —
+§7 byudjeti). `html[lang='ar']` / `html[lang='zh']` tizim stekiga o'tadi.
+⚠️ `Inter Fallback` bu tillarda stekdan CHIQARILGAN (Arial arab glifini
+berib, size-adjust 107% bilan matn 7% kattalashardi). `letter-spacing:
+normal` MAJBURIY — arab harflari ULANADI, tracking ularni uzib ko'rsatadi.
+
+**Tekshirish:** `dir=rtl` + gorizontal toshish 0 + ikonkalar `scale(-1)` +
+`letter-spacing: normal` — hammasi bitta brauzer auditida o'lchanadi.
+
 ## 3. Taqiqlar (qisqa ro'yxat)
 ❌ Gradient fon/matn/avatar (brend logosidan tashqari) · ❌ glow soyalar ·
 ❌ hover-lift · ❌ `font-black` · ❌ KATTA HARFLI eyebrow-pill'lar (faqat

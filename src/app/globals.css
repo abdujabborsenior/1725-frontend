@@ -74,11 +74,67 @@
 
   --font-ios: -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'SF Pro Display',
     'Inter', 'Inter Fallback', 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+
+  /* Yozuv yo'nalishi SON sifatida: LTR = 1, RTL = -1.
+     Barcha gorizontal harakat (sheen yugurishi, strelka siljishi, drawer)
+     shu ko'paytuvchi bilan yoziladi — RTL uchun har animatsiyani qo'lda
+     takrorlash (va bittasini unutib qo'yish) o'rniga BITTA manba. */
+  --dir: 1;
   --font-ios-rounded: ui-rounded, 'SF Pro Rounded', -apple-system,
     BlinkMacSystemFont, 'Inter', 'Inter Fallback', sans-serif;
   /* Eski nom — hali ishlatilayotgan joylar uchun taqsim */
   --font-inter: var(--font-ios);
+}
 
+[dir='rtl'] {
+  --dir: -1;
+}
+
+/* ── Arab va xitoy yozuvlari uchun shrift steki ─────────────────────────
+   VEB-SHRIFT YUKLANMAYDI (ataylab): arab uchun ~120 KB, CJK uchun esa
+   megabaytlar bo'lardi — Lighthouse byudjeti (§7) va 100k concurrent yuk
+   buni ko'tarmaydi. Har ikki yozuv uchun tizim shriftlari universal va
+   0 bayt: Apple'da SF Arabic / PingFang SC, Windows'da Segoe UI / Microsoft
+   YaHei, Android'da Noto.
+   ⚠️ `Inter Fallback` (= local('Arial') + size-adjust 107.4%) bu tillarda
+   stekdan CHIQARILDI: Arial ba'zi tizimlarda arab glifini beradi va
+   o'zgartirilgan metrikalar bilan matn 7% kattalashib, asos chizig'i
+   siljib ketardi. */
+html[lang='ar'] {
+  --font-ios: -apple-system, BlinkMacSystemFont, 'SF Arabic', 'Geeza Pro',
+    'Segoe UI', 'Noto Naskh Arabic', 'Noto Sans Arabic', 'Dubai', Tahoma,
+    'Arial Unicode MS', sans-serif;
+  --font-ios-rounded: var(--font-ios);
+}
+
+html[lang='zh'] {
+  --font-ios: -apple-system, BlinkMacSystemFont, 'PingFang SC',
+    'HarmonyOS Sans SC', 'Source Han Sans SC', 'Noto Sans CJK SC',
+    'Microsoft YaHei', 'Hiragino Sans GB', 'Heiti SC', 'WenQuanYi Micro Hei',
+    sans-serif;
+  --font-ios-rounded: var(--font-ios);
+}
+
+/* ⚠️ HARFLAR ORASI arab yozuvida HECH QACHON kengaytirilmaydi/toraytirilmaydi:
+   harflar bir-biriga ULANIB yoziladi, `letter-spacing` esa ulanishni uzib
+   ko'rsatadi (so'z "sinib" ketgandek). Xitoy ieroglifida ham manfiy tracking
+   matnni siqib, o'qilishini buzadi. Spetsifikatsiya (0,1,1) Tailwind'ning
+   `tracking-*` utilitalaridan (0,1,0) yuqori — !important kerak emas. */
+html[lang='ar'] *,
+html[lang='zh'] * {
+  letter-spacing: normal;
+}
+
+/* Yo'nalishli ikonkalar (chevron, strelka, "yuborish") — `data-rtl-flip`
+   belgisi generatorda qo'yiladi (`scripts/gen-icons.js` → MIRROR).
+   ⚠️ `transform` EMAS, mustaqil `scale` xossasi: aks holda bu qoida
+   Tailwind'ning `rotate-180` / `translate-x` animatsiyalarini o'chirardi
+   (ikkalasi ham `transform` ni yozadi). `scale` ular bilan BIRGA qo'llanadi. */
+[dir='rtl'] svg[data-rtl-flip] {
+  scale: -1 1;
+}
+
+:root {
   /* iOS system ranglari (CSS qatlamida kerak bo'lganda) */
   --ios-blue: #007aff;
   --ios-green: #34c759;
@@ -325,8 +381,8 @@ select:-webkit-autofill {
   content: '';
   position: absolute;
   top: 0;
-  left: var(--row-inset, 1rem);
-  right: 0;
+  inset-inline-start: var(--row-inset, 1rem);
+  inset-inline-end: 0;
   height: 1px;
   background: var(--ios-separator);
   transform: scaleY(0.5);
@@ -377,7 +433,7 @@ select:-webkit-autofill {
   .ios-row:hover .ios-chevron,
   .hv-row:hover .ios-chevron {
     color: var(--hv-tint-ink);
-    transform: translateX(2px);
+    transform: translateX(calc(2px * var(--dir)));
   }
 }
 .ios-chevron {
@@ -519,7 +575,7 @@ select:-webkit-autofill {
 .hv-row::before {
   content: '';
   position: absolute;
-  left: 0;
+  inset-inline-start: 0;
   top: 50%;
   width: 3px;
   height: 0;
@@ -597,7 +653,7 @@ select:-webkit-autofill {
     rgba(255, 255, 255, 0.34) 50%,
     transparent 62%
   );
-  transform: translateX(-130%);
+  transform: translateX(calc(-130% * var(--dir)));
   opacity: 0;
 }
 @media (hover: hover) and (pointer: fine) {
@@ -607,14 +663,14 @@ select:-webkit-autofill {
 }
 @keyframes hvSheen {
   0% {
-    transform: translateX(-130%);
+    transform: translateX(calc(-130% * var(--dir)));
     opacity: 0;
   }
   18% {
     opacity: 1;
   }
   100% {
-    transform: translateX(130%);
+    transform: translateX(calc(130% * var(--dir)));
     opacity: 0;
   }
 }
@@ -805,7 +861,7 @@ select:-webkit-autofill {
 @media (hover: hover) and (pointer: fine) {
   :where(a, button):hover > .hv-arrow,
   :where(a, button):hover .hv-arrow {
-    transform: translateX(3px);
+    transform: translateX(calc(3px * var(--dir)));
   }
 }
 
@@ -898,7 +954,7 @@ select:-webkit-autofill {
     background-color: var(--cta-tint);
   }
   .cta-ghost:hover .cta-arrow {
-    transform: translateX(3px);
+    transform: translateX(calc(3px * var(--dir)));
   }
 }
 
@@ -1004,12 +1060,12 @@ select:-webkit-autofill {
     rgba(255, 255, 255, 0.75) 50%,
     transparent 70%
   );
-  transform: translateX(-130%);
+  transform: translateX(calc(-130% * var(--dir)));
   pointer-events: none;
 }
 @keyframes medalSheen {
   to {
-    transform: translateX(130%);
+    transform: translateX(calc(130% * var(--dir)));
   }
 }
 @media (prefers-reduced-motion: reduce) {
@@ -1236,7 +1292,7 @@ select:-webkit-autofill {
   content: '';
   position: absolute;
   bottom: 0;
-  right: 0;
+  inset-inline-end: 0;
   height: 28%;
   width: 28%;
   min-height: 10px;
@@ -1337,7 +1393,7 @@ select:-webkit-autofill {
    oxirgi qatorda vaqt uchun joy ajratadi. */
 .bubble-meta {
   position: absolute;
-  right: 12px;
+  inset-inline-end: 12px;
   bottom: 6px;
   display: flex;
   align-items: center;
@@ -1355,7 +1411,7 @@ select:-webkit-autofill {
 }
 /* Media ustidagi vaqt — o'qilishi uchun to'q shisha kapsula */
 .bubble-meta-over {
-  right: 8px;
+  inset-inline-end: 8px;
   bottom: 8px;
   padding: 2px 7px;
   border-radius: 999px;
@@ -1382,12 +1438,12 @@ select:-webkit-autofill {
     rgba(255, 255, 255, 0.26) 50%,
     transparent 66%
   );
-  transform: translateX(-100%);
+  transform: translateX(calc(-100% * var(--dir)));
   animation: bubbleSending 1.15s var(--ease-ios) infinite;
 }
 @keyframes bubbleSending {
   to {
-    transform: translateX(100%);
+    transform: translateX(calc(100% * var(--dir)));
   }
 }
 
@@ -1395,7 +1451,7 @@ select:-webkit-autofill {
    o'z xabaring ostida bitta qator (iMessage). Shovqin keskin kamayadi. */
 .bubble-status {
   margin-top: 2px;
-  padding-right: 4px;
+  padding-inline-end: 4px;
   font-size: 11px;
   line-height: 1.2;
   /* Tertiary (#a1a1a6) kanvas ustida 2.3:1 — amalda o'qilmasdi.
@@ -2301,13 +2357,13 @@ select:-webkit-autofill {
     rgba(255, 255, 255, 0.16) 48%,
     transparent 66%
   );
-  transform: translateX(-120%);
+  transform: translateX(calc(-120% * var(--dir)));
   animation: yzSheen 1.5s var(--ease-ios) 0.35s both;
   pointer-events: none;
 }
 @keyframes yzSheen {
   to {
-    transform: translateX(120%);
+    transform: translateX(calc(120% * var(--dir)));
   }
 }
 
@@ -2355,13 +2411,13 @@ select:-webkit-autofill {
     rgba(77, 163, 255, 0.16) 50%,
     transparent 66%
   );
-  transform: translateX(-100%);
+  transform: translateX(calc(-100% * var(--dir)));
   animation: yzScan 2.1s var(--ease-ios) infinite;
   pointer-events: none;
 }
 @keyframes yzScan {
   to {
-    transform: translateX(100%);
+    transform: translateX(calc(100% * var(--dir)));
   }
 }
 
@@ -2401,7 +2457,7 @@ select:-webkit-autofill {
 .yz-row::before {
   content: '';
   position: absolute;
-  left: -1px;
+  inset-inline-start: -1px;
   top: 50%;
   width: 3px;
   height: 0;
@@ -2434,7 +2490,7 @@ select:-webkit-autofill {
 @keyframes yzRowIn {
   from {
     opacity: 0;
-    transform: translateX(-10px);
+    transform: translateX(calc(-10px * var(--dir)));
   }
   to {
     opacity: 1;
@@ -2448,7 +2504,7 @@ select:-webkit-autofill {
 }
 @keyframes yzDrawer {
   from {
-    transform: translateX(-100%);
+    transform: translateX(calc(-100% * var(--dir)));
   }
   to {
     transform: none;
@@ -2511,7 +2567,7 @@ select:-webkit-autofill {
   display: inline-block;
   width: 2px;
   height: 1.05em;
-  margin-left: 1px;
+  margin-inline-start: 1px;
   background: var(--yz-blue, #0a84ff);
   vertical-align: -0.16em;
   animation: aiCaret 1.05s steps(1) infinite;

@@ -5,7 +5,7 @@ import { IconBase, type IconProps } from './base';
 
 export function LogOut(props: IconProps) {
   return (
-    <IconBase nativeStroke={32} {...props}>
+    <IconBase nativeStroke={32} data-rtl-flip="" {...props}>
       <path d="M304 336v40a40 40 0 0 1-40 40H104a40 40 0 0 1-40-40V136a40 40 0 0 1 40-40h152c22.09 0 48 17.91 48 40v40M368 336l80-80-80-80M176 256h256" fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" />
     </IconBase>
   );

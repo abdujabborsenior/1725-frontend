@@ -5,7 +5,7 @@ import { IconBase, type IconProps } from './base';
 
 export function CornerDownLeft(props: IconProps) {
   return (
-    <IconBase nativeStroke={32} {...props}>
+    <IconBase nativeStroke={32} data-rtl-flip="" {...props}>
       <path d="m112 352-64-64 64-64" fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" /><path d="M64 288h294c58.76 0 106-49.33 106-108v-20" fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" />
     </IconBase>
   );

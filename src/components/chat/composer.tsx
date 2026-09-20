@@ -318,7 +318,7 @@ export function Composer({
 
       {/* Edit banneri */}
       {isEditing && (
-        <div className="mb-2 flex items-center gap-2 rounded-ios-md border-l-[3px] border-iris-500 bg-iris-50 px-3 py-2">
+        <div className="mb-2 flex items-center gap-2 rounded-ios-md border-s-[3px] border-iris-500 bg-iris-50 px-3 py-2">
           <Pencil className="h-3.5 w-3.5 shrink-0 text-iris-600" />
           <div className="min-w-0 flex-1">
             <p className="text-footnote font-semibold text-iris-700">{t('composer.editing')}</p>
@@ -330,7 +330,7 @@ export function Composer({
 
       {/* Reply preview */}
       {replyTo && !isEditing && (
-        <div className="mb-2 flex items-center gap-2 rounded-ios-md border-l-[3px] border-accent-500 bg-fill-tertiary px-3 py-2">
+        <div className="mb-2 flex items-center gap-2 rounded-ios-md border-s-[3px] border-accent-500 bg-fill-tertiary px-3 py-2">
           <div className="min-w-0 flex-1">
             <p className="text-footnote font-semibold text-accent-700">{replyTo.sender?.fullName ?? t('message')}</p>
             <p className="flex items-center gap-1 truncate text-footnote text-slate-500">
@@ -360,7 +360,7 @@ export function Composer({
               <button
                 onClick={() => removeStaged(s.id)}
                 aria-label={t('composer.remove')}
-                className="material-dark absolute right-1 top-1 flex h-5 w-5 items-center justify-center rounded-full text-white"
+                className="material-dark absolute end-1 top-1 flex h-5 w-5 items-center justify-center rounded-full text-white"
               >
                 <X className="h-3 w-3" />
               </button>
@@ -384,7 +384,7 @@ export function Composer({
             <div className="rounded-full bg-accent-500 p-[3px]">
               <video ref={videoPreviewRef} muted playsInline className="h-44 w-44 rounded-full object-cover ring-2 ring-brand-900" />
             </div>
-            <span className="absolute right-3 top-3 flex items-center gap-1 rounded-full bg-rose-500 px-2 py-0.5 text-caption-2 font-semibold text-white">
+            <span className="absolute end-3 top-3 flex items-center gap-1 rounded-full bg-rose-500 px-2 py-0.5 text-caption-2 font-semibold text-white">
               <span className="h-1.5 w-1.5 animate-ping rounded-full bg-white" /> REC
             </span>
             <span className="absolute -bottom-2 left-1/2 -translate-x-1/2 rounded-full bg-white px-2.5 py-0.5 text-caption-1 font-semibold tabular-nums text-brand-900 shadow-card">{mmss}</span>
@@ -465,10 +465,10 @@ export function Composer({
 
                 {/* Manba menyusi — Telegram uslubi */}
                 {attachOpen && (
-                  <div className="material-menu absolute bottom-12 left-0 z-20 w-56 origin-bottom-left animate-scale-in rounded-ios-lg p-1 shadow-modal ring-1 ring-black/[0.06]">
+                  <div className="material-menu absolute bottom-12 start-0 z-20 w-56 origin-bottom-left rtl:origin-bottom-right animate-scale-in rounded-ios-lg p-1 shadow-modal ring-1 ring-black/[0.06]">
                     <button
                       onClick={() => pickFrom(galleryRef)}
-                      className="flex w-full items-center gap-3 rounded-[9px] px-2.5 py-2 text-left hv-row"
+                      className="flex w-full items-center gap-3 rounded-[9px] px-2.5 py-2 text-start hv-row"
                     >
                       <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-[9px] bg-accent-500 text-white">
                         <Images className="h-[18px] w-[18px]" />
@@ -483,7 +483,7 @@ export function Composer({
                     {/* Kamera — faqat sensorli qurilmalarda (desktop'da capture ishlamaydi) */}
                     <button
                       onClick={() => pickFrom(cameraRef)}
-                      className="hidden w-full items-center gap-3 rounded-[9px] px-2.5 py-2 text-left hv-row [@media(pointer:coarse)]:flex"
+                      className="hidden w-full items-center gap-3 rounded-[9px] px-2.5 py-2 text-start hv-row [@media(pointer:coarse)]:flex"
                     >
                       <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-[9px] bg-iris-500 text-white">
                         <Camera className="h-[18px] w-[18px]" />
@@ -495,7 +495,7 @@ export function Composer({
                     </button>
                     <button
                       onClick={() => pickFrom(fileRef)}
-                      className="flex w-full items-center gap-3 rounded-[9px] px-2.5 py-2 text-left hv-row"
+                      className="flex w-full items-center gap-3 rounded-[9px] px-2.5 py-2 text-start hv-row"
                     >
                       <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-[9px] bg-iris-500 text-white">
                         <FileText className="h-[18px] w-[18px]" />

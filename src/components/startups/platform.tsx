@@ -116,7 +116,7 @@ export function StoreButton({
       )}
     >
       <PlatformIcon type={platform.type} className="h-5 w-5 shrink-0" />
-      <span className="flex flex-col items-start leading-none text-left">
+      <span className="flex flex-col items-start leading-none text-start">
         {/* Yuqori matn: do'konlarda "GET IT ON"/"Download on the", qolganida "Ochish" */}
         <span className="text-caption-2 font-medium">
           {tl(`platform.${platform.type}.kicker`)}

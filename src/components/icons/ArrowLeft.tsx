@@ -5,7 +5,7 @@ import { IconBase, type IconProps } from './base';
 
 export function ArrowLeft(props: IconProps) {
   return (
-    <IconBase nativeStroke={48} {...props}>
+    <IconBase nativeStroke={48} data-rtl-flip="" {...props}>
       <path d="M244 400 100 256l144-144M120 256h292" fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" />
     </IconBase>
   );

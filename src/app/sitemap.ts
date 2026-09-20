@@ -6,12 +6,12 @@ import { SITE_URL } from '@/lib/seo';
 import { fetchInitial } from '@/lib/server-api';
 
 /**
- * `sitemap.xml` — uch tilning HAMMASI, har URL uchun o'zaro `hreflang`
+ * `sitemap.xml` — BARCHA tillar, har URL uchun o'zaro `hreflang`
  * (`xhtml:link`) bilan. Google ko'p tilli saytda aynan shu juftlikni kutadi:
  * har til versiyasi mustaqil URL, lekin bir-birini ko'rsatadi.
  *
  * Bo'limlarga BO'LINGAN (`generateSitemaps`): bitta fayl 50 000 URL / 50 MB
- * chegarasidan oshmasligi kerak, uch tilli alternates bilan esa bu chegara
+ * chegarasidan oshmasligi kerak, ko'p tilli alternates bilan esa bu chegara
  * tez yaqinlashadi. Next o'zi sitemap indeksini yasaydi.
  *
  * Ma'lumot backend'dan (`GET /seo/sitemap`, 1 soat server keshi) — faqat
@@ -36,7 +36,7 @@ export function generateSitemaps() {
   return [{ id: 0 }, { id: 1 }, { id: 2 }, { id: 3 }, { id: 4 }];
 }
 
-/** Bitta ichki yo'l → uch tilli yozuv (kanonik uz, alternates ru/en). */
+/** Bitta ichki yo'l → ko'p tilli yozuv (kanonik uz, qolgan tillar alternates). */
 function entry(
   path: string,
   opts: { lastModified?: string | Date; changeFrequency?: MetadataRoute.Sitemap[number]['changeFrequency']; priority?: number } = {},

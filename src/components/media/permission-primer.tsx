@@ -68,7 +68,7 @@ export function MediaPermissionPrimer() {
   if (!show) return null;
 
   return (
-    <div className="fixed inset-x-4 z-50 bottom-[calc(4.75rem+env(safe-area-inset-bottom))] sm:inset-x-auto sm:right-6 sm:bottom-6 sm:w-[380px] animate-slide-up">
+    <div className="fixed inset-x-4 z-50 bottom-[calc(4.75rem+env(safe-area-inset-bottom))] sm:inset-x-auto sm:end-6 sm:bottom-6 sm:w-[380px] animate-slide-up">
       <div className="material-thick rounded-ios-2xl p-5 shadow-modal ring-1 ring-black/[0.06]">
         <div className="flex items-start gap-3.5">
           <div className="flex shrink-0 -space-x-2">
@@ -93,7 +93,7 @@ export function MediaPermissionPrimer() {
           <button
             onClick={later}
             aria-label={t('primer.close')}
-            className="tappable -mr-1 -mt-1 flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-fill-tertiary text-slate-500"
+            className="tappable -me-1 -mt-1 flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-fill-tertiary text-slate-500"
           >
             <X className="h-3.5 w-3.5" strokeWidth={2.5} />
           </button>

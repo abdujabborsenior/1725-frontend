@@ -9,8 +9,9 @@ import { SITE } from '@/lib/site';
  * Qoidalar (Google Search Central, ko'p tilli saytlar):
  *  · har til versiyasi O'ZINI kanonik ko'rsatadi (ruscha sahifa o'zbekchaga
  *    kanoniklashtirilmaydi — aks holda Google ruscha versiyani indekslamaydi);
- *  · hreflang to'plami har versiyada TO'LIQ va o'zaro (uz ↔ ru ↔ en) +
- *    `x-default` → asosiy til;
+ *  · hreflang to'plami har versiyada TO'LIQ va o'zaro (uz ↔ ru ↔ en ↔ ar ↔
+ *    zh) + `x-default` → asosiy til; ro'yxat `routing.locales` dan quriladi,
+ *    ya'ni yangi til qo'shilganda HAR sahifa o'z-o'zidan qamrab olinadi;
  *  · URL'lar absolyut (`metadataBase` orqali), so'rov parametrlarisiz.
  */
 export const SITE_URL = SITE.url.replace(/\/$/, '');
@@ -21,7 +22,7 @@ export function absoluteUrl(locale: AppLocale, path: string): string {
   return localized === '/' ? SITE_URL : `${SITE_URL}${localized}`;
 }
 
-/** Kanonik + hreflang (uz, ru, en, x-default) — sahifa yo'li bo'yicha. */
+/** Kanonik + hreflang (barcha tillar + x-default) — sahifa yo'li bo'yicha. */
 export function alternatesFor(locale: AppLocale, path: string): Metadata['alternates'] {
   const languages: Record<string, string> = {};
   for (const l of routing.locales) languages[l] = localizePath(l, path);
@@ -139,7 +140,7 @@ export function organizationJsonLd(locale: AppLocale) {
       telephone: SITE.contact.phoneE164,
       email: SITE.contact.email,
       areaServed: 'UZ',
-      availableLanguage: ['uz', 'ru', 'en'],
+      availableLanguage: [...routing.locales],
     },
     address: { '@type': 'PostalAddress', addressLocality: 'Tashkent', addressCountry: 'UZ' },
   };

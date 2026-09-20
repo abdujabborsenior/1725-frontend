@@ -1,0 +1,2037 @@
+{
+  "ai": {
+    "newChat": "新会话",
+    "workspace": {
+      "backHome": "返回首页",
+      "history": "会话历史",
+      "chats": "会话",
+      "answerFailed": "未能获取回答，请稍候重试。",
+      "openFailed": "无法打开该会话",
+      "deleteFailed": "无法删除该会话",
+      "disabled": "Yechim AI 暂时关闭，很快会回来。",
+      "guestHint": "注册吧——免费，一分钟搞定",
+      "remaining": "{count, plural, =0 {今日次数已用完} other {今日还剩 # 次提问}}"
+    },
+    "history": {
+      "empty": "您的会话会保存在这里",
+      "confirmDelete": "确定删除？",
+      "delete": "删除",
+      "deleteChat": "删除会话「{title}」",
+      "questions": "{count, plural, other {# 个问题}}",
+      "loadMore": "查看更早的会话"
+    },
+    "composer": {
+      "inputLabel": "您的问题",
+      "placeholder": {
+        "idle": "输入或说出您的问题…",
+        "busy": "正在准备回答…",
+        "transcribing": "正在转写语音…"
+      },
+      "voice": "语音消息",
+      "minChars": "至少输入 {min, plural, other {# 个字符}}",
+      "cancelRecording": "取消录音",
+      "finishRecording": "停止录音",
+      "noSignal": "未检测到语音",
+      "micError": {
+        "denied": "麦克风权限被拒绝",
+        "unavailable": "无法访问麦克风"
+      },
+      "failure": {
+        "empty": "没有录到内容。请点击麦克风按钮，说完后再停止录音。",
+        "tooShort": "太短了——请至少说一句话。",
+        "silent": "未检测到语音。请确认麦克风已开启，并靠近说话。"
+      },
+      "transcribeFailed": "语音转写失败"
+    },
+    "thinking": {
+      "understand": "理解问题",
+      "review": "筛查项目",
+      "compare": "比较最佳匹配",
+      "write": "撰写回答"
+    },
+    "answer": {
+      "matches": "{count, plural, other {# 个匹配项目}}",
+      "noSolutionTitle": "平台上暂时没有现成的解决方案。",
+      "noSolutionText": "把您的问题分享给社区，会有人研究并提出方案。文案我已经替您草拟好了。",
+      "reviewAndPublish": "查看并发布",
+      "nextSteps": "下一步",
+      "related": "相关讨论",
+      "solutions": "{count, plural, other {# 个解决方案}}",
+      "noSolutions": "暂无解决方案",
+      "helpful": "回答有用",
+      "notHelpful": "没有帮助",
+      "feedbackSaved": "已收到您的反馈",
+      "feedbackFailed": "反馈发送失败"
+    },
+    "match": {
+      "best": "最佳匹配"
+    },
+    "welcome": {
+      "title": "说出您的问题——我来找解决方案",
+      "subtitle": "我会在平台上找到最适合您的项目",
+      "examples": {
+        "english": "我想低成本学英语",
+        "accounting": "我的小生意需要记账",
+        "onlineSales": "我想在网上卖自己的产品",
+        "ruralInternet": "村里网速很慢"
+      }
+    },
+    "publish": {
+      "title": "发布您的问题",
+      "note": "这段文字由 Yechim AI 草拟，您可以随意修改——发布后所有人都能看到",
+      "titleLabel": "标题",
+      "descriptionLabel": "问题描述",
+      "categoryLabel": "分类",
+      "noCategory": "不选分类",
+      "submit": "发布",
+      "signUpToPublish": "注册后发布",
+      "polish": "重新润色",
+      "polished": "文字已润色",
+      "polishFailed": "润色失败",
+      "published": "问题已发布",
+      "publishFailed": "发布失败"
+    }
+  },
+  "aiLauncher": {
+    "title": "说出您的问题——我来找解决方案",
+    "subtitle": "打字或语音都行——我会在平台上找到合适的项目",
+    "inputLabel": "您的问题",
+    "voice": "语音提问",
+    "submit": "查找解决方案",
+    "ask": "提问：{question}",
+    "prompts": {
+      "english": "我想低成本学英语",
+      "accounting": "我的小生意需要记账",
+      "onlineSales": "我想在网上卖自己的产品",
+      "ruralInternet": "村里网速很慢，该怎么办？"
+    },
+    "chips": {
+      "english": {
+        "label": "学英语",
+        "question": "我想低成本学英语"
+      },
+      "accounting": {
+        "label": "记账",
+        "question": "我的小生意需要记账"
+      },
+      "onlineSales": {
+        "label": "网上销售",
+        "question": "我想在网上卖自己的产品"
+      }
+    }
+  },
+  "auth": {
+    "homeLink": "首页",
+    "brand": {
+      "title": "从创意到创业——都在同一个平台",
+      "text": "面向乌兹别克斯坦年轻人的问题、解决方案与创业项目生态。分享知识、组建团队、实现你的想法。",
+      "highlights": {
+        "problems": {
+          "title": "从问题到创意",
+          "text": "发现真实问题并提出解决方案"
+        },
+        "showcase": {
+          "title": "项目展示区",
+          "text": "把你的产品展示给社区"
+        },
+        "rankings": {
+          "title": "榜单与认可",
+          "text": "优秀项目登上 IMDb 式榜单"
+        }
+      },
+      "secure": "您的数据受到安全保护"
+    },
+    "fields": {
+      "email": "邮箱",
+      "emailPlaceholder": "you@example.com",
+      "password": "密码"
+    },
+    "errors": {
+      "emailFormat": "邮箱格式不正确",
+      "codeInvalid": "验证码无效或已过期",
+      "generic": "出错了"
+    },
+    "backToLogin": "返回登录",
+    "resend": "重新发送验证码",
+    "resendIn": "重新发送（{seconds} 秒）",
+    "codeResent": "已发送新的验证码",
+    "redirecting": "正在跳转…",
+    "login": {
+      "eyebrow": "登录",
+      "title": "欢迎回来！",
+      "subtitle": "登录账号，把想法变成现实",
+      "passwordPlaceholder": "请输入密码",
+      "passwordRequired": "请输入密码",
+      "forgot": "忘记密码？",
+      "submit": "登录",
+      "noAccount": "还没有账号？<link>注册</link>",
+      "welcome": "欢迎回来，{name}！",
+      "failed": "邮箱或密码不正确"
+    },
+    "register": {
+      "title": "注册",
+      "subtitle": "一分钟创建免费账号",
+      "chooseType": "选择账号类型",
+      "types": {
+        "general": {
+          "label": "普通用户",
+          "desc": "任何年龄、任何人"
+        },
+        "school": {
+          "label": "中学生",
+          "desc": "1–11 年级学生"
+        },
+        "university": {
+          "label": "大学生",
+          "desc": "高校与学院学生"
+        }
+      },
+      "fullName": "姓名",
+      "fullNamePlaceholder": "张三",
+      "passwordPlaceholder": "设置密码",
+      "region": "州／省",
+      "regionPlaceholder": "请选择地区…",
+      "district": "区县",
+      "districtPlaceholder": "奇兰扎尔区",
+      "school": "学校",
+      "schoolPlaceholder": "学校名称或编号",
+      "grade": "年级",
+      "gradeOption": "{grade} 年级",
+      "university": "大学",
+      "universityPlaceholder": "大学名称",
+      "course": "学年",
+      "courseOption": "{course} 年级",
+      "submit": "注册",
+      "haveAccount": "已有账号？<link>登录</link>",
+      "codeSent": "验证码已发送至您的邮箱"
+    },
+    "forgot": {
+      "eyebrow": "帮助",
+      "title": "重置密码",
+      "subtitle": "输入邮箱，我们会发送 6 位数重置验证码",
+      "submit": "发送验证码",
+      "sent": "已发送",
+      "sentToast": "若该邮箱已注册，我们已向其发送验证码",
+      "sentNotice": "验证码已发送至 <hl>{email}</hl>。正在跳转…"
+    },
+    "reset": {
+      "eyebrow": "安全",
+      "title": "设置新密码",
+      "subtitle": "输入邮箱收到的验证码和新密码",
+      "codeLabel": "验证码",
+      "newPassword": "新密码",
+      "newPasswordPlaceholder": "设置新密码",
+      "confirm": "确认密码",
+      "confirmPlaceholder": "再次输入密码",
+      "mismatch": "两次输入的密码不一致",
+      "submit": "更新密码",
+      "success": "密码已更新！现在可以登录了。"
+    },
+    "verify": {
+      "title": "验证邮箱",
+      "sentTo": "我们已向以下邮箱发送 6 位数验证码：",
+      "submit": "验证",
+      "otherEmail": "使用其他邮箱登录",
+      "verified": "验证成功！",
+      "verifiedToast": "邮箱验证成功！",
+      "welcome": "欢迎，{name}！"
+    }
+  },
+  "billing": {
+    "interval": {
+      "monthly": "按月",
+      "yearly": "按年"
+    },
+    "intervalSuffix": {
+      "monthly": "/月",
+      "yearly": "/年"
+    },
+    "tier": {
+      "starter": {
+        "name": "入门版",
+        "tagline": "从容发布您的第一个项目"
+      },
+      "pro": {
+        "name": "专业版",
+        "tagline": "适合同时运营多个项目"
+      },
+      "business": {
+        "name": "商业版",
+        "tagline": "适合团队与项目组合"
+      }
+    },
+    "features": {
+      "projects": "{count, plural, other {最多发布 # 个项目}}",
+      "page": "项目主页、评分与评价",
+      "solutions": "为问题提交解决方案",
+      "edit": "随时编辑您的项目",
+      "priority": "优先技术支持",
+      "yearTerm": "12 个月，一次付清",
+      "monthTerm": "1 个月有效期"
+    },
+    "providers": "{count, plural, =0 {银行卡} one {{a}} other {{a} 或 {b}}}"
+  },
+  "billingPage": {
+    "title": "我的订阅",
+    "subtitle": "当前套餐、额度与付款记录",
+    "pricing": "价格",
+    "current": {
+      "label": "当前套餐",
+      "active": "生效中",
+      "validUntil": "有效期至 {date}",
+      "projects": "项目",
+      "remaining": "{count, plural, other {您还可以发布 # 个项目。}}",
+      "limitReached": "已达上限——升级到更高套餐即可继续发布。",
+      "change": "更换套餐"
+    },
+    "noSub": {
+      "title": "暂无有效订阅",
+      "withFree": "{count, plural, other {目前您可以发布 # 个项目。需要更多？请选择套餐。}}",
+      "none": "选择套餐即可发布项目",
+      "viewPlans": "查看套餐"
+    },
+    "history": {
+      "title": "付款记录",
+      "empty": "暂无付款",
+      "planFallback": "套餐"
+    },
+    "orderStatus": {
+      "pending": "待支付",
+      "paid": "已支付",
+      "cancelled": "已取消",
+      "expired": "已过期"
+    },
+    "status": {
+      "missingTitle": "未找到订单",
+      "missingText": "此链接不完整，请从价格页重新尝试。",
+      "backToPricing": "返回价格页",
+      "checkingTitle": "查询中…",
+      "checkingText": "正在获取订单状态",
+      "paidTitle": "付款成功",
+      "paidWithPlan": "您的 {plan} · {interval} 套餐已生效（{sum}）。",
+      "paidPlain": "支付成功（{sum}）。",
+      "publish": "发布项目",
+      "expiredTitle": "该订单已过期",
+      "cancelledTitle": "支付已取消",
+      "notCharged": "未产生扣款，您可以重试。",
+      "confirmingTitle": "正在确认支付",
+      "delayed": "确认时间稍长。若已扣款，订阅会在几分钟内自动生效。",
+      "wait": "通常只需几秒，请不要关闭此页面。"
+    }
+  },
+  "chat": {
+    "back": "返回",
+    "message": "消息",
+    "attachment": "附件",
+    "uploadFailed": "上传失败",
+    "type": {
+      "text": "文字",
+      "image": "图片",
+      "video": "视频",
+      "voice": "语音消息",
+      "round_video": "视频消息",
+      "file": "文件"
+    },
+    "disabled": {
+      "voice": "语音消息已暂时停用",
+      "round_video": "视频消息已暂时停用",
+      "video": "发送视频已暂时停用",
+      "other": "该文件类型已暂时停用"
+    },
+    "system": {
+      "leftGroup": "{name} 退出了群组"
+    },
+    "page": {
+      "title": "选择一个聊天",
+      "text": "从左侧列表打开聊天，或到社区里认识新朋友",
+      "findPeople": "发现用户",
+      "privacy": "聊天是私密的——只有你们两人可见"
+    },
+    "list": {
+      "title": "消息",
+      "createGroup": "创建群组",
+      "newChat": "新建聊天",
+      "search": "搜索聊天",
+      "tabs": {
+        "all": "全部",
+        "direct": "私聊",
+        "group": "群组"
+      },
+      "noResults": "没有结果",
+      "noResultsFor": "没有与「{query}」匹配的聊天",
+      "startChat": "开始聊天",
+      "emptyDirect": "暂无私聊",
+      "emptyGroups": "暂无群组",
+      "emptyFiltered": "这里还什么都没有",
+      "emptyAll": "暂无聊天",
+      "emptyHint": "在社区里找到人，开始一段对话",
+      "emptyGroupsHint": "加入社区群组",
+      "findPeople": "发现用户",
+      "findGroups": "寻找群组"
+    },
+    "window": {
+      "notFound": "未找到该聊天",
+      "groupInfo": "群组信息",
+      "openProfile": "查看主页",
+      "menu": "菜单",
+      "typing": "正在输入…",
+      "members": "{count, plural, other {{n} 位成员}}",
+      "online": "在线",
+      "lastSeen": "最后在线 {time}",
+      "groupSettings": "群组设置",
+      "leaveGroup": "退出群组",
+      "leftGroup": "您已退出群组",
+      "jumpDown": "回到底部",
+      "jumpDownNew": "{count, plural, other {# 条新消息}} — 回到底部",
+      "restrictions": "已启用限制：{list}",
+      "leaveConfirm": "确定退出 <b>{title}</b>？之后可以通过搜索重新加入。",
+      "leaveCancel": "取消",
+      "leave": "退出"
+    },
+    "empty": {
+      "title": "这里还没有消息",
+      "groupIntro": "<b>{title}</b> 里的对话还没开始。来做第一个发言的人吧。",
+      "groupIntroNoTitle": "<b>这个群组</b>里的对话还没开始。来做第一个发言的人吧。",
+      "directIntro": "和 <b>{title}</b> 聊聊——介绍你的项目，或者提个问题",
+      "directIntroNoTitle": "和 <b>这位用户</b>聊聊——介绍你的项目，或者提个问题",
+      "startersTitle": "开场白",
+      "starters": {
+        "directHello": "你好！我看了你的项目。",
+        "directPartnership": "我们可以聊聊合作吗？",
+        "directQuestions": "关于你的想法，我有几个问题。",
+        "groupHello": "大家好！",
+        "groupIdea": "我有个新想法——你们怎么看？",
+        "groupWho": "有谁在做这个方向？"
+      }
+    },
+    "composer": {
+      "maxFiles": "最多 10 个文件",
+      "fileTooLarge": "{name}：最大 50 MB",
+      "typeBlocked": "该群组不允许{type, select, text {发送文字消息} image {发送图片} video {发送视频} voice {发送语音消息} round_video {发送视频消息} file {发送文件} other {发送该类型消息}}",
+      "textBlocked": "该群组不允许发送文字消息",
+      "emptyMessage": "消息内容不能为空",
+      "editFailed": "消息编辑失败",
+      "allowCamera": "请允许使用摄像头",
+      "allowMic": "请允许使用麦克风",
+      "noCamera": "未检测到摄像头",
+      "noMic": "未检测到麦克风",
+      "cameraBusy": "摄像头正被其他应用占用",
+      "micBusy": "麦克风正在使用中",
+      "recordFailed": "无法开始录制",
+      "blockedList": "该群组不允许：{list}",
+      "editing": "正在编辑消息",
+      "mediaCaption": "媒体说明",
+      "remove": "移除",
+      "add": "添加",
+      "recordingRound": "正在录制视频消息…",
+      "attach": "添加附件",
+      "gallery": "相册",
+      "galleryHintVideo": "照片和视频",
+      "galleryHint": "照片",
+      "camera": "相机",
+      "cameraHint": "拍照",
+      "fileHintAudio": "文档、音频、压缩包",
+      "fileHint": "文档、压缩包",
+      "placeholder": "写点什么…",
+      "placeholderEdit": "编辑消息…",
+      "placeholderCaption": "添加说明（选填）…",
+      "placeholderBlocked": "该群组不允许发送文字",
+      "roundVideo": "视频消息"
+    },
+    "bubble": {
+      "play": "播放",
+      "pause": "暂停",
+      "sizeKb": "{size} KB",
+      "reply": "回复",
+      "edit": "编辑",
+      "copy": "复制",
+      "copied": "已复制",
+      "copyFailed": "复制失败",
+      "edited": "已编辑",
+      "sending": "发送中",
+      "read": "已读",
+      "delivered": "已送达"
+    },
+    "group": {
+      "createTitle": "新建群组",
+      "nameLabel": "群组名称",
+      "namePlaceholder": "例如：前端小队",
+      "nameTooShort": "群组名称太短",
+      "usernameLabel": "群组用户名（选填）",
+      "usernamePlaceholder": "ai_team",
+      "usernameInvalid": "格式不正确",
+      "usernameHint": "5–32 个字符 · 以小写字母开头 · a-z、0-9、_",
+      "usernameRule": "用户名须为 5–32 个字符并以小写字母开头",
+      "descriptionLabel": "简介",
+      "descriptionPlaceholder": "这个群组是做什么的？",
+      "publicLabel": "公开 — 显示在首页，任何人都可加入",
+      "create": "创建群组",
+      "created": "群组已创建",
+      "imagesOnly": "仅支持图片",
+      "maxSize": "最大 8 MB",
+      "avatarAlt": "群组",
+      "removePhoto": "移除图片",
+      "changePhoto": "更换图片",
+      "uploadAvatar": "上传头像",
+      "settingsNotice": "勾选的类型对普通成员<b>禁止</b>发送；群主和管理员始终可以发送。",
+      "blocked": "已禁止",
+      "saving": "保存中…",
+      "saved": "群组设置已保存"
+    }
+  },
+  "clusterCard": {
+    "opportunity": "机会",
+    "demand": "需求",
+    "requests": "{count, plural, other {{n} 次提问}}",
+    "noSolution": "暂无解决方案",
+    "projects": "{count, plural, other {{n} 个项目}}",
+    "level": {
+      "high": "机会很大",
+      "medium": "机会中等",
+      "saturated": "市场饱和"
+    }
+  },
+  "common": {
+    "save": "保存",
+    "cancel": "取消",
+    "close": "关闭",
+    "back": "返回",
+    "loading": "加载中…",
+    "retry": "重试",
+    "clear": "清除",
+    "send": "发送"
+  },
+  "coverMedia": {
+    "play": "播放视频：{title}",
+    "playUntitled": "播放视频",
+    "videoTitle": "{title} — 视频",
+    "videoUntitled": "视频"
+  },
+  "dealflow": {
+    "back": "工作台",
+    "title": "项目流",
+    "subtitle": "符合您条件的项目，按匹配度排序",
+    "filters": {
+      "all": "全部",
+      "new": "最新",
+      "saved": "已收藏"
+    },
+    "error": {
+      "forbiddenTitle": "您的项目流尚未开放",
+      "title": "出错了",
+      "toCabinet": "前往工作台"
+    },
+    "empty": {
+      "savedTitle": "暂无收藏的项目",
+      "newTitle": "暂无新项目",
+      "noneTitle": "暂时没有匹配的项目",
+      "savedText": "收藏喜欢的项目，它们会集中显示在这里",
+      "noneText": "适当放宽条件，或等待新项目。出现匹配时我们会通知您。"
+    }
+  },
+  "discover": {
+    "title": "社区",
+    "subtitle": "发现用户、关注他们并加入群组",
+    "searchPlaceholder": "用户名、姓名或群组",
+    "resultType": "结果类型",
+    "tabs": {
+      "all": "全部",
+      "people": "用户",
+      "groups": "群组"
+    },
+    "noPeople": "未找到用户",
+    "noGroups": "未找到群组",
+    "recent": "最近搜索",
+    "removeRecent": "{term} — 从历史中移除",
+    "suggestions": "推荐关注",
+    "noSuggestions": "暂无推荐",
+    "communityGroups": "社区群组",
+    "noCommunityGroups": "暂无群组"
+  },
+  "engagement": {
+    "like": "点赞 — {n}",
+    "unlike": "取消点赞 — {n}",
+    "save": "稍后再看",
+    "unsave": "取消收藏",
+    "saved": "已收藏",
+    "unsaved": "已取消收藏"
+  },
+  "footer": {
+    "tagline": "从创意到创业——一起走",
+    "description": "一个让学生和有创造力的年轻人解决问题、组建团队、打造产品的空间。",
+    "cols": {
+      "platform": "平台",
+      "community": "社区",
+      "start": "开始使用"
+    },
+    "links": {
+      "showcase": "项目展示",
+      "top": "热门项目",
+      "problems": "问题",
+      "market": "市场地图",
+      "polls": "投票",
+      "discover": "发现用户",
+      "groups": "群组",
+      "messages": "消息",
+      "profile": "个人主页",
+      "whatIsStartup": "什么是创业项目？",
+      "addStartup": "发布项目",
+      "addProblem": "发布问题",
+      "register": "注册",
+      "login": "登录"
+    },
+    "contactTitle": "联系我们",
+    "aria": {
+      "telegram": "通过 Telegram 联系我们",
+      "email": "给我们发邮件",
+      "phone": "致电我们"
+    },
+    "city": "乌兹别克斯坦，塔什干",
+    "trust": {
+      "free": {
+        "title": "完全免费",
+        "text": "发布、解答与评分均不收费"
+      },
+      "security": {
+        "title": "数据安全",
+        "text": "加密连接；密码绝不以明文保存"
+      },
+      "support": {
+        "title": "真人客服",
+        "text": "周一至周六 · 09:00–20:00"
+      }
+    },
+    "rights": "© {year} MYMarkaz · 保留所有权利",
+    "madeFor": "{city} · 为乌兹别克斯坦的年轻人而建"
+  },
+  "groupCard": {
+    "members": "{count, plural, other {{n} 位成员}}",
+    "open": "打开",
+    "join": "加入"
+  },
+  "helpful": {
+    "label": "有用",
+    "marked": "已标记为有用",
+    "markTitle": "将该解决方案标记为有用",
+    "unmarkTitle": "取消「有用」标记",
+    "foundHelpful": "{count, plural, other {{n} 人认为有用}}"
+  },
+  "home": {
+    "seeAll": "查看全部",
+    "start": "免费开始",
+    "welcome": "欢迎，{name}",
+    "hero": {
+      "title": "从创意<br></br>到商业项目",
+      "lead": "MYMarkaz 是学生与有创造力的年轻人相聚的地方。描述一个问题，和社区一起打造解决方案，组建团队，把创意变成真正的产品。",
+      "showcase": "浏览展示区",
+      "messages": "消息",
+      "whatIs": "什么是创业项目？",
+      "building": "社区正在这里打造什么"
+    },
+    "stats": {
+      "startups": "项目",
+      "problems": "问题",
+      "polls": "投票",
+      "groups": "群组"
+    },
+    "whatIs": {
+      "eyebrow": "你也在问这些问题吗？",
+      "title": "什么是创业项目？谁是创始人？",
+      "subtitle": "用最直白的话来说——不讲术语，只说人话",
+      "cards": {
+        "startup": {
+          "title": "什么是创业项目？",
+          "body": "创业项目不只是生意。它是用新方式、更快更省地解决一个真实问题的想法。它从很小的地方开始——笔记本上的草图，或手机里的一条备忘。重要的是，它让某个人的生活变得更容易一些。"
+        },
+        "founder": {
+          "title": "谁是创始人？",
+          "body": "创始人不会坐等文凭或大笔投资。他看到身边的问题，然后说：「这个我来解决。」无论你在读中学、上大学，还是仍在寻找方向——都没关系。唯一的条件，是敢于开始。"
+        },
+        "now": {
+          "title": "为什么是现在？",
+          "body": "因为经验来自动手，而不是书本。在这里你可以验证想法、获得真实反馈、找到队友——都在同一个地方，而且免费。最好的时机，永远是现在。"
+        }
+      }
+    },
+    "doubts": {
+      "eyebrow": "说点实话",
+      "title": "为什么你今天不该开始？",
+      "subtitle": "这是你最常对自己说的四个理由。逐条展开，诚实回答：哪一个真的值得让你停下？",
+      "verdict": "一个都没有",
+      "verdictNote": "所以，开始的最好日子就是今天"
+    },
+    "groups": {
+      "eyebrow": "活跃社区",
+      "title": "社区群组",
+      "subtitle": "实时交流——加入进来，分享你的想法"
+    },
+    "featured": {
+      "eyebrow": "展示区",
+      "title": "精选项目",
+      "subtitle": "社区打造的应用、网站与机器人",
+      "empty": "首批项目即将上线"
+    },
+    "top": {
+      "eyebrow": "榜单",
+      "title": "热门项目",
+      "subtitle": "按 IMDb 式加权评分排名的领先项目",
+      "more": "完整榜单"
+    },
+    "follow": {
+      "title": "推荐关注",
+      "loading": "正在加载推荐…",
+      "more": "发现更多人"
+    },
+    "problems": {
+      "eyebrow": "集体智慧",
+      "title": "最新问题",
+      "subtitle": "等待解决方案的开放问题"
+    },
+    "how": {
+      "eyebrow": "路线图",
+      "title": "它是怎么运作的？",
+      "subtitle": "从创意到创业——三个简单步骤",
+      "steps": {
+        "describe": {
+          "title": "描述问题",
+          "desc": "写下困扰你或身边人的问题。最好的想法，正是从这里开始。"
+        },
+        "gather": {
+          "title": "组建团队、获取反馈",
+          "desc": "从社区获得即时反馈，找到志同道合的人，在实时聊天中一起打磨解决方案。"
+        },
+        "launch": {
+          "title": "把它变成创业项目",
+          "desc": "把创意放进展示区，收集投票，逐步成长为真正有人使用的产品。"
+        }
+      }
+    },
+    "polls": {
+      "eyebrow": "社区之选",
+      "title": "投票",
+      "subtitle": "为你喜欢的项目投票——实时查看结果",
+      "more": "全部投票"
+    },
+    "cta": {
+      "title": "你的创意正等着开始",
+      "text": "今天就注册，发布第一个问题，和同龄的年轻人一起动手。一切，都从这一步开始。",
+      "login": "登录"
+    }
+  },
+  "introDialog": {
+    "title": "对接请求",
+    "lead": "您的请求将发送给 <b>{title}</b> 的创始人。对方接受后，会以这条消息开启聊天。",
+    "messageLabel": "您的留言",
+    "placeholder": "说明您为何感兴趣、能提供什么。越具体，越容易得到回复。",
+    "charsNeeded": "{count, plural, other {还需 # 个字符}}"
+  },
+  "introRequests": {
+    "back": "个人主页",
+    "title": "对接请求",
+    "subtitle": "对您项目感兴趣的投资人。接受请求即可开启聊天。",
+    "emptyTitle": "暂无请求",
+    "emptyText": "完善项目资料——阶段、需求与关键数据——投资人会更快找到您",
+    "investorFallback": "投资人",
+    "projectFallback": "项目",
+    "accept": "接受",
+    "decline": "拒绝",
+    "openChat": "打开聊天"
+  },
+  "investor": {
+    "eyebrow": "投资人工作台",
+    "title": {
+      "profile": "您的条件",
+      "join": "以投资人身份加入"
+    },
+    "subtitle": {
+      "profile": "我们据此为您筛选合适的项目",
+      "join": "一次填写您的关注方向——匹配的项目会主动找到您"
+    },
+    "verified": "您的资料已通过认证",
+    "lastUpdated": "更新于 {time}",
+    "links": {
+      "dealflow": "项目流",
+      "saved": "已收藏",
+      "requests": "已发送的请求"
+    },
+    "pending": {
+      "title": "等待审核",
+      "text": "我们已收到您的申请。资料通过认证后即可查看项目流——这条规则可以保护年轻创始人免受虚假请求打扰。在此期间您仍可修改条件。"
+    },
+    "criteria": {
+      "title": "当前条件",
+      "sectors": "行业",
+      "check": "投资额度",
+      "regions": "地区",
+      "noLimit": "不限"
+    },
+    "joinNotice": "提交资料后，平台管理员会进行审核。通过后即可查看符合您条件的项目列表，出现新项目时我们也会通知您。"
+  },
+  "investorFields": {
+    "title": "面向投资人",
+    "optional": "（选填）",
+    "subtitle": "补充项目阶段与关键数据，让投资人搜索时能找到您。",
+    "reassurance": "即使这些字段留空，项目同样会发布。填写后匹配会精准得多——您会出现在条件相符的投资人项目流中。",
+    "completed": "完成度：{percent}%",
+    "stage": "项目阶段",
+    "needs": "您需要什么？（可多选）",
+    "needsHint": "至少选择一项，您的项目就会加入投资人的项目流。",
+    "ask": "您需要多少资金？",
+    "askMin": "最低（百万苏姆）",
+    "askMax": "最高（百万苏姆）",
+    "askPreview": "投资人将看到：<b>{range}</b>",
+    "problem": "您解决的是什么问题？",
+    "problemPlaceholder": "例如：农户缺少直达买家的渠道，只能低价卖给中间商。",
+    "audience": "面向谁？",
+    "audiencePlaceholder": "例如：小型家庭农场",
+    "businessModel": "商业模式",
+    "notSelected": "未选择",
+    "metrics": "关键数据",
+    "teamSize": "团队（人）",
+    "revenue": "月收入（百万苏姆）",
+    "activeUsers": "月活跃用户",
+    "payingCustomers": "付费客户",
+    "metricsHint": "填写您知道的即可，不必全部填满。",
+    "traction": "目前取得了哪些进展？",
+    "tractionPlaceholder": "例如：三个月获得 3000 名用户、240 名订阅者，月增长 22%。"
+  },
+  "investorForm": {
+    "errors": {
+      "thesisShort": "投资理念至少需要 20 个字符——或者留空",
+      "range": "最低投资额不能超过最高额"
+    },
+    "who": {
+      "title": "您的身份",
+      "orgName": "机构名称（选填）",
+      "orgNamePlaceholder": "例如 UzVentures",
+      "website": "网站（选填）"
+    },
+    "thesis": {
+      "title": "您的投资理念",
+      "hint": "用自己的话说明关注什么、回避什么。匹配度中的语义部分依赖这段文字。",
+      "placeholder": "例如：我关注教育与医疗领域的早期项目，团队中必须有技术型联合创始人。",
+      "tooShort": "至少 20 个字符——或者留空。"
+    },
+    "criteria": {
+      "title": "您的条件",
+      "hint": "留空即不设限制——所有项目都会进入您的列表。",
+      "sectors": "行业",
+      "stages": "阶段",
+      "regions": "地区",
+      "offers": "您能提供什么？",
+      "offersHint": "项目的需求会与此列表进行匹配。",
+      "check": "投资额度（百万苏姆）",
+      "checkMin": "最低",
+      "checkMax": "最高",
+      "rangeInvalid": "最低额不能超过最高额",
+      "range": "区间：{range}"
+    },
+    "contact": {
+      "title": "联系方式",
+      "hint": "创始人看不到这些信息——只有请求被接受后才在聊天中共享。",
+      "email": "邮箱（选填）",
+      "phone": "电话（选填）"
+    },
+    "settings": {
+      "title": "设置",
+      "alerts": "新匹配提醒",
+      "alertsHint": "有项目符合您的条件时通知您",
+      "alertsAria": "通知",
+      "active": "项目流已开启",
+      "activeHint": "关闭后将不再计算新的匹配"
+    },
+    "create": "创建资料"
+  },
+  "investorRequests": {
+    "back": "工作台",
+    "title": "已发送的请求",
+    "subtitle": "创始人接受后会自动开启聊天",
+    "emptyTitle": "您还没有发送任何请求",
+    "emptyText": "从推荐列表中选择项目，给创始人发一段简短留言",
+    "deleted": "项目已删除",
+    "match": "匹配度 {score}%",
+    "openChat": "打开聊天",
+    "withdraw": "撤回"
+  },
+  "labels": {
+    "problemStatus": {
+      "pending": "待审核",
+      "open": "开放中",
+      "under_review": "处理中",
+      "resolved": "已解决",
+      "rejected": "已拒绝"
+    },
+    "solutionStatus": {
+      "pending": "待处理",
+      "accepted": "已采纳",
+      "rejected": "已拒绝"
+    },
+    "startupStatus": {
+      "draft": "草稿",
+      "published": "已发布",
+      "archived": "已归档"
+    },
+    "role": {
+      "superadmin": "超级管理员",
+      "analyzer": "分析员",
+      "school_student": "中学生",
+      "university_student": "大学生",
+      "user": "用户",
+      "investor": "投资人"
+    },
+    "platform": {
+      "android": {
+        "label": "Android",
+        "cta": "Google Play",
+        "kicker": "下载自",
+        "store": "Google Play"
+      },
+      "ios": {
+        "label": "iOS",
+        "cta": "App Store",
+        "kicker": "下载自",
+        "store": "App Store"
+      },
+      "website": {
+        "label": "网站",
+        "cta": "访问网站",
+        "kicker": "打开",
+        "store": "网站"
+      },
+      "telegram_bot": {
+        "label": "Telegram",
+        "cta": "在 Telegram 中打开",
+        "kicker": "打开",
+        "store": "Telegram"
+      },
+      "other": {
+        "label": "链接",
+        "cta": "打开链接",
+        "kicker": "打开",
+        "store": "链接"
+      }
+    }
+  },
+  "landing": {
+    "doubts": {
+      "simple": {
+        "q": "「我的想法太简单了，没什么特别的……」",
+        "a": "再大的产品，也都从一个简单的想法开始。重要的不是想法有多大，而是你愿意把它拿出来试一试。在这里分享你的想法，收获反馈，从真实的人那里知道它是否真的值得做。"
+      },
+      "code": {
+        "q": "「我不会写代码……」",
+        "a": "创业项目不是代码，而是解决方案。你的想法、你的投入、你把人聚起来的能力，远比技术重要。在这里，开发者、设计师或联合创始人，只隔着几条消息。"
+      },
+      "alone": {
+        "q": "「我一个人，没有团队……」",
+        "a": "社区存在的意义正在于此。成千上万和你一样的年轻人正在这里寻找队友。加入群组、实时交流，找到与你想法相合的人。"
+      },
+      "start": {
+        "q": "「我不知道该从哪里开始……」",
+        "a": "第一步永远最难。先描述一个困扰你的问题——剩下的，我们和社区一起一步步来。路是走出来的。"
+      }
+    },
+    "marquee": {
+      "apps": "移动应用",
+      "bots": "Telegram 机器人",
+      "websites": "网站",
+      "saas": "SaaS 产品",
+      "shops": "网店",
+      "edtech": "教育科技项目",
+      "games": "游戏",
+      "health": "健康服务",
+      "agrotech": "农业科技",
+      "content": "内容平台",
+      "creative": "创意项目",
+      "fintech": "金融科技创意"
+    },
+    "hero": {
+      "tagline": "校园图书馆数字化——2 秒找到想借的书。",
+      "place": "{rank, selectordinal, other {第 # 名}}",
+      "problem": "问题",
+      "problemText": "在图书馆找到需要的书要花太长时间。",
+      "solutions": "{count, plural, other {{n} 个解决方案}}",
+      "aiFound": "为这个问题找到 <b>{count, plural, other {{n} 个项目}}</b>。",
+      "aiFoundShort": "找到 <b>{count, plural, other {{n} 个项目}}</b>。"
+    }
+  },
+  "lang": {
+    "label": "语言",
+    "change": "切换语言（当前：{name}）"
+  },
+  "leaderboard": {
+    "period": {
+      "all": "全部时间",
+      "year": "近一年",
+      "month": "近一个月",
+      "week": "近一周"
+    },
+    "eyebrow": {
+      "startups": "项目榜单",
+      "founders": "创始人榜单"
+    },
+    "title": {
+      "startups": "热门项目",
+      "founders": "优秀创始人"
+    },
+    "subtitle": {
+      "startups": "按用户评分排列的优秀项目，采用 IMDb 式加权（贝叶斯）算法",
+      "founders": "按社区票数排列的项目创始人——为你支持的创始人投票"
+    },
+    "tabsLabel": "榜单类型",
+    "tabs": {
+      "startups": "项目",
+      "founders": "创始人"
+    },
+    "competing": "<b>{n}</b> 个{count, plural, other {已评分项目}}参与排名",
+    "updating": "更新中…",
+    "allCategories": "全部",
+    "listHeading": "榜单列表",
+    "empty": {
+      "title": "暂无评分",
+      "description": "该时间段或分类下没有已评分的项目"
+    },
+    "place": "{rank, selectordinal, other {第 # 名}}",
+    "podiumAria": "{rank, selectordinal, other {第 # 名}}：{title}，得分 {score}",
+    "raters": "评分人数",
+    "views": "浏览量",
+    "movement": {
+      "new": "新上榜",
+      "same": "名次不变",
+      "up": "{count, plural, other {上升 # 位}}",
+      "down": "{count, plural, other {下降 # 位}}"
+    },
+    "medal": {
+      "gold": "金牌",
+      "silver": "银牌",
+      "bronze": "铜牌"
+    },
+    "formula": {
+      "question": "排名如何计算？",
+      "stats": "平均分 = <b>{c}</b> · 置信阈值（m）= <b>{m}</b>",
+      "intro": "评分采用 <b>10 分制</b>。简单平均并不公平：只有一个 10 分的项目会超过 1000 人评出 9.6 分的项目。因此，与 IMDb Top 250 一样，我们采用<b>贝叶斯（加权）评分</b>——票数少时，分数会向总体平均值靠拢。",
+      "legend": {
+        "r": "该项目的平均分（0–10）",
+        "v": "评分票数",
+        "m": "得到可靠分数所需的票数",
+        "c": "全部项目的平均分"
+      }
+    },
+    "founders": {
+      "startups": "{count, plural, other {{n} 个项目}}",
+      "followers": "{count, plural, other {{n} 位粉丝}}",
+      "empty": {
+        "title": "暂无创始人",
+        "text": "第一个发布项目的人将出现在这里"
+      }
+    }
+  },
+  "market": {
+    "eyebrow": "市场洞察",
+    "title": "哪里还缺解决方案",
+    "subtitle": "平台上的真实提问与问题，按领域归类。机会分越高，说明需求存在但尚无解决方案。",
+    "metrics": {
+      "areas": "{count, plural, other {领域}}",
+      "signals": "{count, plural, other {信号}}",
+      "unsolved": "未解决",
+      "opportunity": "机会",
+      "demand": "需求",
+      "projects": "{count, plural, other {现有项目}}"
+    },
+    "empty": {
+      "title": "地图还在形成中",
+      "text": "领域由真实提问汇聚而成。向 Yechim AI 提问或发布一个问题——地图会随之丰富。",
+      "askAi": "向 Yechim AI 提问"
+    },
+    "backlog": {
+      "title": "这份清单就是现成的创意库",
+      "text": "人们正在这些领域寻求帮助，但平台上还没有对应的项目。做一个填补空白的产品吧——需求已经在那里了。",
+      "cta": "发布项目"
+    },
+    "cluster": {
+      "notFoundTitle": "未找到该领域",
+      "notFoundText": "它可能在地图重建时被隐藏或调整了",
+      "backToMap": "市场地图",
+      "noCoverage": "人们正在寻求这方面的帮助，但平台上还没有对应的项目。",
+      "coverage": "{count, plural, other {该领域现有 {n} 个项目。}}仍有 {pct}% 的提问没有得到回应。",
+      "samplesTitle": "人们在问什么",
+      "projectsTitle": "该领域的项目",
+      "noProjects": "这里还没有项目——空白很大",
+      "firstProject": "成为第一个发布项目的人"
+    }
+  },
+  "matchCard": {
+    "ringLabel": "匹配度 {score}% — {level}",
+    "new": "新",
+    "ask": "融资需求：",
+    "why": "为何匹配？",
+    "connect": "联系",
+    "save": "加入收藏",
+    "unsave": "取消收藏",
+    "dismiss": "不感兴趣"
+  },
+  "media": {
+    "primer": {
+      "titleBoth": "摄像头与麦克风",
+      "titleCamera": "摄像头权限",
+      "whyBoth": "用于在聊天中发送语音和视频消息。",
+      "whyCamera": "用于在聊天中直接拍摄并发送照片。",
+      "once": "授权一次即可——我们不会重复询问。",
+      "close": "关闭",
+      "allow": "允许",
+      "later": "稍后"
+    }
+  },
+  "meta": {
+    "ai": {
+      "title": "Yechim AI — 为你的问题找到解决方案",
+      "description": "用文字或语音描述问题——Yechim AI 会在 MYMarkaz 的乌兹别克斯坦项目中，找出能够解决它的那一个。免费使用。"
+    },
+    "auth": {
+      "login": {
+        "title": "登录",
+        "description": "登录 MYMarkaz，展示你的项目、为真实问题提供解决方案，并与乌兹别克斯坦的团队和投资人建立联系。"
+      },
+      "register": {
+        "title": "注册",
+        "description": "一分钟创建 MYMarkaz 免费账号：展示项目、发布问题、寻找解决方案，还有 Yechim AI 为你提供帮助。"
+      },
+      "forgotPassword": {
+        "title": "重置密码",
+        "description": "忘记 MYMarkaz 密码？输入邮箱，我们会发送 6 位数验证码，帮助你安全地重新登录账号。"
+      },
+      "resetPassword": {
+        "title": "设置新密码",
+        "description": "输入邮箱中的验证码，为 MYMarkaz 账号设置一个新的安全密码——只需几秒钟。"
+      },
+      "verifyEmail": {
+        "title": "验证邮箱",
+        "description": "输入邮箱中的 6 位数验证码即可激活 MYMarkaz 账号——项目、社区与 Yechim AI 正在等你。"
+      }
+    },
+    "billing": {
+      "pricing": {
+        "title": "价格与套餐",
+        "description": "在 MYMarkaz 发布你的项目——可选按月或按年套餐。一次性付费、不自动续费，项目始终属于你。"
+      },
+      "billing": {
+        "title": "我的订阅",
+        "description": "当前套餐、项目额度与付款记录——在一个页面掌握 MYMarkaz 订阅状态，随时更换套餐。"
+      },
+      "status": {
+        "title": "支付状态",
+        "description": "我们正在确认你在 MYMarkaz 的付款。确认到账后订阅会自动生效——通常只需几秒。"
+      }
+    },
+    "chat": {
+      "title": "消息",
+      "description": "MYMarkaz 的私聊与群组：与项目创始人、投资人和社区成员交流——所有会话集中在一处。"
+    },
+    "discover": {
+      "title": "社区 — 用户与群组",
+      "description": "MYMarkaz 社区：发现项目创始人、开发者与设计师，关注他们，并加入符合你兴趣的群组。"
+    },
+    "home": {
+      "title": "MYMarkaz — 从创意到商业项目",
+      "description": "面向乌兹别克斯坦年轻人的创业平台：发布问题、用 Yechim AI 寻找解决方案、展示项目，结识队友与投资人。"
+    },
+    "investor": {
+      "cabinet": {
+        "title": "投资人工作台",
+        "description": "设定你的投资条件，获取匹配的乌兹别克斯坦项目，按匹配度排序，并清楚看到每个项目为何契合。"
+      },
+      "dealflow": {
+        "title": "项目流",
+        "description": "符合你投资条件的乌兹别克斯坦项目，附带匹配度、成熟度评分，一键即可联系创始人。"
+      },
+      "requests": {
+        "title": "已发送的请求",
+        "description": "你向创始人发出的对接请求及其状态——等待回复、已接受或已拒绝。对方接受后会自动开启聊天。"
+      }
+    },
+    "leaderboard": {
+      "title": "乌兹别克斯坦项目与创始人榜单",
+      "description": "乌兹别克斯坦优秀项目榜单，基于用户评价、采用 IMDb 式加权（贝叶斯）算法排名，另有由社区投票选出的优秀创始人。"
+    },
+    "market": {
+      "list": {
+        "title": "市场地图：哪里需要新的创业项目",
+        "description": "乌兹别克斯坦的人们在寻求什么、哪里还没有解决方案——基于真实提问绘制的市场地图，附带现成的创业创意。"
+      },
+      "cluster": {
+        "title": "{name}：需求与机会",
+        "description": "{name}：人们在问什么、已有哪些项目、新项目还有多大空间——尽在 MYMarkaz 市场地图。",
+        "notFoundTitle": "未找到该领域",
+        "notFoundDescription": "该领域可能在市场地图重建时被隐藏或调整。欢迎在 MYMarkaz 市场地图上探索其他机会。"
+      }
+    },
+    "notifications": {
+      "title": "通知",
+      "description": "你在 MYMarkaz 的通知：新粉丝、新消息，以及与你的解决方案和项目相关的全部动态。"
+    },
+    "polls": {
+      "title": "项目投票 — 社区之选",
+      "description": "社区之选：为最出色的项目投票并实时查看结果，支持乌兹别克斯坦年轻人打造的产品。"
+    },
+    "problems": {
+      "list": {
+        "title": "问题与解决方案 — 创业创意",
+        "description": "社区希望被解决的真实问题——阅读、标记「有用」、提出你的方案。你的下一个创业创意也许就在这里。"
+      },
+      "detail": {
+        "notFoundTitle": "未找到该问题",
+        "notFoundDescription": "该问题已被删除或不存在。欢迎在 MYMarkaz 浏览其他真实问题及其解决方案。"
+      },
+      "create": {
+        "title": "发布问题",
+        "description": "详细描述你的问题并附上图片或视频——提交后立即上线，社区会给出解决方案。"
+      }
+    },
+    "profile": {
+      "title": "个人主页",
+      "description": "你的 MYMarkaz 个人主页：项目、问题、解决方案、收藏与账号设置——全部集中于此。",
+      "introRequests": {
+        "title": "对接请求",
+        "description": "对你项目感兴趣的投资人发来的请求：逐条查看、接受合适的一方，并在 MYMarkaz 聊天中开始沟通。"
+      }
+    },
+    "settings": {
+      "title": "设置",
+      "description": "管理你的 MYMarkaz 账号：公开资料、用户名、个人信息、密码、界面语言与设备权限。"
+    },
+    "site": {
+      "title": "MYMarkaz — 从创意到商业项目",
+      "description": "面向乌兹别克斯坦年轻人的创业平台：发布问题、寻找解决方案、展示项目、结识队友与投资人。还有 Yechim AI——完全免费。",
+      "keywords": "创业, 乌兹别克斯坦创业, 商业创意, 投资人, 问题与解决方案, 社区, Yechim AI"
+    },
+    "solutions": {
+      "title": "我的解决方案",
+      "description": "你提交过的全部解决方案、关联的项目，以及获得的「有用」数——集中在一个页面。"
+    },
+    "startups": {
+      "list": {
+        "title": "乌兹别克斯坦项目 — 应用、网站与机器人",
+        "description": "探索乌兹别克斯坦的创业项目：由年轻团队打造的移动应用、网站与 Telegram 机器人。为项目评分、撰写评价，也可以展示你自己的项目。"
+      },
+      "detail": {
+        "notFoundTitle": "未找到该项目"
+      },
+      "create": {
+        "title": "发布你的项目",
+        "description": "在 MYMarkaz 展示区免费发布你的项目：应用、网站或 Telegram 机器人。只需名称和介绍，其余可稍后补充。"
+      },
+      "edit": {
+        "title": "编辑你的项目",
+        "description": "更新项目的名称、介绍、链接与媒体——修改会立即展示在 MYMarkaz 展示区。"
+      }
+    },
+    "user": {
+      "description": "{name} 是 MYMarkaz 社区的一员。浏览其项目、关注其动态，也可以直接发消息。",
+      "descriptionAbout": "{name} 在 MYMarkaz：{about}",
+      "notFoundTitle": "未找到该用户",
+      "notFoundDescription": "该主页不存在或账号未激活。欢迎在 MYMarkaz 社区发现其他创始人及其项目。"
+    }
+  },
+  "nav": {
+    "messages": "消息",
+    "loggedOut": "您已退出登录",
+    "links": {
+      "startups": "项目",
+      "leaderboard": "榜单",
+      "problems": "问题",
+      "market": "市场",
+      "solutions": "我的解决方案",
+      "discover": "社区",
+      "pricing": "价格"
+    },
+    "search": "搜索",
+    "addStartupShort": "项目",
+    "addStartup": "发布项目",
+    "addProblem": "发布问题",
+    "profile": "个人主页",
+    "logout": "退出登录",
+    "login": "登录",
+    "register": "注册",
+    "menu": "菜单",
+    "tabs": {
+      "home": "首页",
+      "startups": "项目",
+      "problems": "问题",
+      "chat": "聊天",
+      "profile": "我的"
+    },
+    "messagesUnread": "{count, plural, other {消息 — # 条未读}}",
+    "more": "更多",
+    "moreSections": "更多板块"
+  },
+  "notFound": {
+    "metaTitle": "页面不存在",
+    "title": "页面不存在",
+    "text": "您访问的页面不存在，或已被移动",
+    "home": "返回首页",
+    "startups": "项目"
+  },
+  "notifications": {
+    "title": "通知",
+    "markAllRead": "全部标记为已读",
+    "empty": "暂无通知",
+    "seeAll": "查看全部"
+  },
+  "notificationsPage": {
+    "title": "通知",
+    "total": "共 {n} 条",
+    "markAllRead": "全部已读",
+    "emptyTitle": "暂无通知",
+    "emptyText": "有新动态时会显示在这里"
+  },
+  "paymentSheet": {
+    "methodAria": "支付方式",
+    "pay": "支付 {sum}",
+    "redirect": "{provider, select, none {您将在支付服务商页面完成付款} other {您将在 {provider} 页面完成付款}}"
+  },
+  "planCard": {
+    "popular": "热门",
+    "perMonth": "约 {sum}／月",
+    "saving": "省 {percent}%",
+    "current": "当前套餐",
+    "select": "选择"
+  },
+  "polls": {
+    "back": "返回",
+    "eyebrow": "社区之选",
+    "title": "投票",
+    "subtitle": "由社区选出最强的项目。为你喜欢的项目投票——结果实时更新。",
+    "stats": {
+      "active": "进行中的投票",
+      "votes": "总票数"
+    },
+    "listHeading": "投票列表",
+    "empty": {
+      "title": "暂无投票",
+      "description": "管理员很快会发起项目投票"
+    },
+    "card": {
+      "kicker": "社区投票",
+      "ended": "已结束",
+      "live": "进行中",
+      "status": {
+        "closed": "投票已结束——最终结果",
+        "voted": "您的投票已记录，结果实时更新。",
+        "open": "请选择一个项目。您的投票保持匿名。"
+      },
+      "participants": "<b>{n}</b> {count, plural, other {人已投票}}",
+      "hint": {
+        "voted": "选择其他选项即可更改投票",
+        "closed": "投票已关闭",
+        "pick": "点击选择"
+      },
+      "startupFallback": "项目",
+      "winner": "获胜",
+      "leader": "领先",
+      "video": "视频",
+      "details": "详情"
+    }
+  },
+  "pricing": {
+    "title": "价格",
+    "subtitle": "选择套餐即可发布项目，随时可以更换。",
+    "intervalAria": "计费周期",
+    "yearlySaving": "按年付费<b>最多省 {percent}%</b>",
+    "empty": "暂无可用套餐",
+    "checkoutFailed": "无法发起支付",
+    "trust": {
+      "payVia": "{count, plural, =0 {银行卡支付} one {通过 {a} 支付} other {通过 {a} 或 {b} 支付}}",
+      "cardData": "我们绝不保存您的银行卡信息",
+      "noAutoTitle": "不自动续费",
+      "noAutoText": "一次性付费——到期后由您自己续订",
+      "ownTitle": "项目始终属于您",
+      "ownText": "套餐到期后，已发布的项目仍会继续展示"
+    },
+    "historyNote": "付款记录与当前订阅请见 <link>我的订阅</link>。"
+  },
+  "problemCreate": {
+    "title": "发布问题",
+    "subtitle": "详细描述问题——社区会给出解决方案",
+    "fileTooLarge": "文件最大 {max} MB",
+    "uploadFailed": "上传失败",
+    "published": "问题已发布！",
+    "invalidUrl": "请输入有效的网址",
+    "titleLabel": "标题",
+    "titlePlaceholder": "用几句话概括问题…",
+    "titleHint": "10–200 个字符",
+    "categoryLabel": "分类（选填）",
+    "descriptionLabel": "描述",
+    "descriptionPlaceholder": "详细描述问题。发生了什么？您期望怎样？已经尝试过什么？…",
+    "imagesLabel": "图片（最多 5 张）",
+    "uploadImage": "上传图片",
+    "imageUrlPlaceholder": "或粘贴链接",
+    "addImage": "添加图片",
+    "videosLabel": "视频（最多 3 个）",
+    "uploadVideo": "上传视频",
+    "videoUrlPlaceholder": "或 YouTube 链接",
+    "addVideo": "添加视频",
+    "notice": "<note>提示：</note>问题在提交后<hl>立即发布</hl>——社区可以马上提出解决方案。"
+  },
+  "problemDetail": {
+    "notFound": "未找到该问题",
+    "imageAlt": "问题配图",
+    "share": "分享",
+    "postedBy": "由 <author></author> 发布",
+    "analyzerNote": "分析员备注",
+    "proposeSolution": "提交解决方案",
+    "tabsAria": "评论或解决方案",
+    "tabComments": "评论",
+    "tabSolutions": "解决方案",
+    "writeComment": "写评论",
+    "signUpToComment": "<link>注册</link>后即可发表评论。",
+    "noComments": "暂无评论",
+    "noSolutions": "还没有解决方案——来做第一个吧！",
+    "presentation": "演示文稿",
+    "video": "视频",
+    "similar": "相似问题",
+    "comment": {
+      "added": "评论已发布",
+      "deleted": "评论已删除",
+      "delete": "删除评论",
+      "placeholder": "说说你的看法…",
+      "linkPlaceholder": "链接（选填）",
+      "linkInvalid": "该链接无效"
+    },
+    "solutionForm": {
+      "sent": "解决方案已提交！",
+      "fullNameLabel": "姓名",
+      "fullNamePlaceholder": "姓和名",
+      "attachLabel": "用您的项目作为解决方案 <muted>（选填）</muted>",
+      "attachAria": "关联项目",
+      "attachNone": "不关联",
+      "attachHintSelected": "您的项目本身就是答案——文字、演示与视频现在都是选填。",
+      "attachHint": "选择项目后，文字、演示与视频都变为选填。",
+      "contentLabel": "解决方案",
+      "contentLabelOptional": "解决方案说明（选填）",
+      "contentPlaceholder": "详细描述您的方案…（至少 20 个字符）",
+      "contentPlaceholderStartup": "可选：简要说明您的项目如何解决这个问题…",
+      "presentationLabel": "演示文稿链接",
+      "videoLabel": "视频链接",
+      "urlPlaceholderOptional": "https://…（选填）",
+      "urlInvalid": "链接无效",
+      "submit": "提交方案"
+    }
+  },
+  "problemLike": {
+    "label": "有用",
+    "markTitle": "标记为有用"
+  },
+  "problemsPage": {
+    "title": "问题",
+    "subtitle": "{count, plural, other {{n} 个问题 · 等待解决方案}}",
+    "add": "发布",
+    "searchPlaceholder": "搜索问题",
+    "listHeading": "问题列表",
+    "emptyTitle": "未找到问题",
+    "emptyDescription": "换个关键词试试"
+  },
+  "profile": {
+    "title": "个人主页",
+    "settings": "设置",
+    "emailVerified": "邮箱已验证",
+    "followers": "{count, plural, other {粉丝}}",
+    "following": "{count, plural, other {关注}}",
+    "viewPublic": "查看公开主页",
+    "setUsername": "设置用户名",
+    "details": {
+      "title": "资料",
+      "age": "年龄",
+      "region": "州／省",
+      "district": "区县",
+      "school": "学校",
+      "grade": "年级",
+      "gradeValue": "{grade} 年级",
+      "university": "大学",
+      "course": "学年",
+      "courseValue": "{course} 年级",
+      "email": "邮箱"
+    },
+    "saved": "已收藏项目 · {n}",
+    "problems": {
+      "title": "我的问题 · {n}",
+      "empty": "您还没有发布过问题",
+      "create": "发布问题"
+    },
+    "solutions": {
+      "title": "我的解决方案 · {n}",
+      "helpful": "{count, plural, other {{n} 人认为有用}}"
+    },
+    "actions": {
+      "billing": "我的订阅",
+      "introRequests": "对接请求",
+      "investor": "投资人工作台",
+      "settings": "设置",
+      "logout": "退出登录",
+      "deleteAccount": "注销账号",
+      "deleteNote": "30 天内重新登录即可完整恢复账号。"
+    },
+    "delete": {
+      "title": "注销账号",
+      "text": "您的账号将保留 30 天。若在此期间重新登录，即可恢复。",
+      "confirm": "注销",
+      "done": "您的账号已安排注销，30 天内可以恢复。"
+    }
+  },
+  "publicProfile": {
+    "back": "返回",
+    "notFoundTitle": "未找到该用户",
+    "notFoundText": "该用户名不存在，或账号未激活",
+    "edit": "编辑资料",
+    "message": "发消息",
+    "report": "举报用户",
+    "followsYou": "关注了你",
+    "memberSince": "{date} 加入",
+    "lastSeen": "最后活跃 {time}",
+    "online": "在线",
+    "followers": "{count, plural, other {粉丝}}",
+    "following": "{count, plural, other {关注}}",
+    "startups": "项目",
+    "noStartups": "暂无项目"
+  },
+  "rating": {
+    "value": "评分 {value} / {max}",
+    "valueVotes": "{count, plural, other {评分 {value} / {max} — {n} 人评价}}",
+    "scale": "评分 — 1 至 {max}",
+    "point": "{count, plural, other {# 分}}"
+  },
+  "readiness": {
+    "title": "项目成熟度",
+    "refresh": "刷新",
+    "refreshed": "分析已更新",
+    "aiReady": "AI 分析已就绪",
+    "scoreNote": "评分依据投资人最关注的 6 项标准。这是内部工作工具，不会公开展示。",
+    "matched": "{count, plural, other {您符合 <b>{n}</b> 位投资人的条件}}",
+    "matchedNote": "他们的身份保持匿名——若有人联系您，我们会通知您。",
+    "notInFeed": "您的项目未进入投资人的项目流",
+    "notInFeedHint": "在编辑页回答「您需要什么？」，项目就会加入投资人的项目流。",
+    "reply": "{count, plural, other {回复 {n} 条请求}}",
+    "market": "所属市场领域",
+    "demand": "该领域的需求分：{score}/100",
+    "checks": "检查项",
+    "aiTitle": "AI 分析",
+    "aiNote": "优势、不足与可执行建议。它不影响评分，评分是单独计算的。",
+    "strengths": "优势",
+    "weaknesses": "不足",
+    "opportunities": "机会",
+    "risks": "风险",
+    "recommendations": "建议",
+    "updating": "更新中…",
+    "rerun": "重新运行分析",
+    "preparing": "正在准备分析…",
+    "getAi": "获取 AI 分析",
+    "aiUnavailable": "AI 暂时不可用"
+  },
+  "regions": {
+    "andijan": "安集延州",
+    "bukhara": "布哈拉州",
+    "fergana": "费尔干纳州",
+    "jizzakh": "吉扎克州",
+    "namangan": "纳曼干州",
+    "navoi": "纳沃伊州",
+    "kashkadarya": "卡什卡达里亚州",
+    "karakalpakstan": "卡拉卡尔帕克斯坦",
+    "samarkand": "撒马尔罕州",
+    "syrdarya": "锡尔河州",
+    "surkhandarya": "苏尔汉河州",
+    "tashkentRegion": "塔什干州",
+    "tashkentCity": "塔什干市",
+    "khorezm": "花剌子模州"
+  },
+  "report": {
+    "title": "举报{target, select, startup {项目} message {消息} problem {问题} solution {解决方案} user {用户} other {内容}}",
+    "notice": "管理员会审核您的举报，请勿提交无依据的举报。",
+    "pickReason": "请选择举报理由",
+    "sent": "举报已提交",
+    "detailsLabel": "补充说明（选填）",
+    "detailsPlaceholder": "简要描述问题…",
+    "action": "举报",
+    "loginRequired": "登录后才能举报",
+    "reason": {
+      "spam": "垃圾信息或广告",
+      "inappropriate": "不当内容",
+      "harassment": "骚扰或欺凌",
+      "hate_speech": "仇恨言论",
+      "sexual_content": "色情内容",
+      "violence": "暴力内容",
+      "misinformation": "虚假信息",
+      "scam": "诈骗",
+      "copyright": "侵犯版权",
+      "duplicate": "重复内容",
+      "not_working": "已失效或无法使用",
+      "low_quality": "质量低或不相关",
+      "offensive": "冒犯性内容",
+      "other": "其他"
+    }
+  },
+  "reviews": {
+    "title": "评分与评价",
+    "votes": "{count, plural, other {{n} 人评价}}",
+    "summary": "以下是用户按 {max} 分制给该项目的评分。",
+    "noRatings": "还没有评分。来做第一个评分的人吧！",
+    "formula": "榜单排名采用加权（贝叶斯）算法，与 IMDb 相同。",
+    "updateTitle": "更新您的评价",
+    "rateTitle": "给这个项目评分",
+    "placeholder": "写下您的看法（选填）…",
+    "update": "更新",
+    "delete": "删除",
+    "deleted": "您的评价已删除",
+    "saved": "已保存",
+    "signIn": "<b>登录</b>后即可评分",
+    "empty": "暂无评价"
+  },
+  "search": {
+    "title": "搜索",
+    "placeholder": "搜索用户、项目或问题",
+    "quick": "快捷入口",
+    "empty": "没有结果",
+    "people": "用户",
+    "startups": "项目",
+    "problems": "问题"
+  },
+  "settings": {
+    "back": "个人主页",
+    "title": "设置",
+    "public": {
+      "title": "公开资料",
+      "view": "查看主页",
+      "cover": "封面图",
+      "avatar": "头像",
+      "username": "用户名",
+      "usernameHint": "5–32 个字符 · 以字母开头 · a-z、0-9、_",
+      "headline": "个人标签",
+      "headlinePlaceholder": "例如：全栈开发者 · 创始人",
+      "bio": "关于我",
+      "save": "保存公开资料",
+      "saved": "公开资料已更新",
+      "usernameInvalid": "用户名须为 5–32 个字符并以字母开头",
+      "usernameTaken": "该用户名已被占用"
+    },
+    "personal": {
+      "title": "个人信息",
+      "fullName": "姓名",
+      "age": "年龄（选填）",
+      "region": "州／省",
+      "regionNone": "未选择",
+      "district": "区县",
+      "school": "学校",
+      "grade": "年级",
+      "gradeOption": "{grade} 年级",
+      "university": "大学",
+      "course": "学年",
+      "courseOption": "{course} 年级",
+      "saved": "资料已更新"
+    },
+    "email": {
+      "title": "邮箱",
+      "verified": "已验证",
+      "readonly": "邮箱无法更改"
+    },
+    "password": {
+      "title": "修改密码",
+      "current": "当前密码",
+      "currentPlaceholder": "请输入当前密码",
+      "new": "新密码",
+      "newPlaceholder": "请输入新密码",
+      "confirm": "确认",
+      "confirmPlaceholder": "再次输入新密码",
+      "mismatch": "两次输入的密码不一致",
+      "invalid": "密码不符合要求",
+      "submit": "更新密码",
+      "changed": "密码已修改"
+    },
+    "devices": {
+      "title": "设备权限",
+      "state": {
+        "granted": "已允许",
+        "denied": "已阻止",
+        "prompt": "尚未请求",
+        "unsupported": "未知"
+      },
+      "camera": "摄像头",
+      "cameraDesc": "用于视频消息和拍照",
+      "microphone": "麦克风",
+      "microphoneDesc": "用于语音消息",
+      "microphoneOff": "暂未启用（已临时关闭）",
+      "request": "请求权限",
+      "cameraDenied": "未获得摄像头权限——可在浏览器地址栏的锁形图标中开启",
+      "microphoneDenied": "未获得麦克风权限——可在浏览器地址栏的锁形图标中开启",
+      "gallery": "相册",
+      "galleryDesc": "选择照片或视频时，设备会自行请求权限",
+      "auto": "自动",
+      "hint": "被阻止的权限可在浏览器地址栏的锁形图标中重新开启。"
+    }
+  },
+  "share": {
+    "title": "分享这个问题",
+    "linkLabel": "链接",
+    "copy": "复制",
+    "copied": "已复制",
+    "copyFailed": "复制链接失败",
+    "linkHint": "把链接发给任何人——注册后即可直接看到这个问题。",
+    "shareVia": "通过其他应用分享",
+    "sendToChat": "发送到聊天",
+    "searchPlaceholder": "搜索聊天…",
+    "sent": "已发送",
+    "sentToChat": "已发送到聊天",
+    "noChats": "未找到聊天",
+    "chatMessage": "问题：{title}\n{url}"
+  },
+  "social": {
+    "verified": "已认证账号",
+    "follow": "关注",
+    "following": "已关注",
+    "unfollow": "取消关注",
+    "followers": "粉丝",
+    "followingList": "关注",
+    "noFollowers": "还没有粉丝",
+    "noFollowing": "还没有关注任何人",
+    "founder": "创始人",
+    "founderHint": "创始人 — 已发布过项目的用户",
+    "votes": "{count, plural, other {{n} 票}}",
+    "vote": "投票",
+    "voted": "已投票",
+    "userFallback": "用户"
+  },
+  "solutionsPage": {
+    "title": "我的解决方案",
+    "subtitle": "{count, plural, other {您已提交 {n} 个解决方案——发布后即对所有人可见}}",
+    "helpfulCount": "{count, plural, other {{n} 人觉得有用}}",
+    "presentation": "演示文稿",
+    "video": "视频",
+    "guestTitle": "跟踪您的解决方案",
+    "guestDescription": "登录后可查看您提交过的解决方案",
+    "signIn": "登录",
+    "emptyTitle": "未找到解决方案",
+    "emptyDescription": "您还没有提交过解决方案"
+  },
+  "startupCard": {
+    "top": "TOP",
+    "ideaStage": "创意阶段"
+  },
+  "startupDetail": {
+    "notFound": "未找到该项目",
+    "backToList": "返回项目列表",
+    "views": "{count, plural, other {{n} 次浏览}}",
+    "linkCopied": "链接已复制",
+    "copied": "已复制",
+    "share": "分享",
+    "report": "举报",
+    "edit": "编辑",
+    "ideaStage": "该项目仍处于创意或开发阶段",
+    "about": "项目介绍",
+    "allLinks": "全部链接",
+    "related": "相似项目"
+  },
+  "startupForm": {
+    "errors": {
+      "yearMin": "{min} 年或之后",
+      "yearMax": "{max} 年或之前",
+      "invalidLinks": "其中一个链接似乎有误，请检查",
+      "tagTooLong": "标签最长 40 个字符",
+      "limitReached": "您已达到项目数量上限"
+    },
+    "toast": {
+      "updated": "项目已更新！",
+      "published": "项目已发布！"
+    },
+    "basic": {
+      "title": "基本信息",
+      "name": "项目名称",
+      "namePlaceholder": "例如 EcoDelivery",
+      "tagline": "一句话介绍（选填）",
+      "taglinePlaceholder": "你的项目是做什么的？——简短切题",
+      "description": "详细介绍（人们为什么要选择你的项目？）",
+      "descriptionPlaceholder": "多写一些：它解决什么问题、面向谁、有什么与众不同…",
+      "category": "分类（选填）"
+    },
+    "media": {
+      "title": "媒体",
+      "hint": "选填——填入链接后，标志与封面会自动获取",
+      "logo": "标志",
+      "cover": "封面图"
+    },
+    "video": {
+      "label": "封面视频",
+      "optional": "（选填）",
+      "coverTitle": "封面",
+      "remove": "移除视频",
+      "youtubeNote": "YouTube 视频会直接在站内显示，只有点击后才会播放。",
+      "fileNote": "视频会取代封面图，只有点击后才会播放。",
+      "modeUpload": "上传视频",
+      "modeLink": "YouTube 链接",
+      "pick": "选择视频——MP4 或 WebM，最大 50 MB",
+      "add": "添加",
+      "hint": "视频会取代封面——展示其首帧画面，只有点击后才会播放。",
+      "tooBig": "视频不得超过 50 MB",
+      "uploaded": "视频已上传",
+      "uploadFailed": "上传失败",
+      "invalidLink": "请输入 YouTube 链接或视频直链（.mp4/.webm）"
+    },
+    "links": {
+      "title": "链接",
+      "hint": "人们在哪里能找到你的项目？填一个就够了。",
+      "label": {
+        "website": "网站",
+        "ios": "App Store",
+        "android": "Google Play",
+        "telegram_bot": "Telegram",
+        "other": "其他链接"
+      },
+      "placeholder": {
+        "website": "mysite.uz",
+        "ios": "apps.apple.com/app/...",
+        "android": "play.google.com/store/apps/...",
+        "telegram_bot": "@mybot 或 t.me/mybot",
+        "other": "github.com/myproject"
+      },
+      "fetching": "正在从链接获取信息",
+      "invalid": "该链接似乎不正确——例如：mysite.uz",
+      "searching": "正在解析链接…",
+      "filled": "已从链接填入：{items} — 你可以随意修改。",
+      "field": {
+        "logo": "标志",
+        "cover": "封面",
+        "title": "名称",
+        "tagline": "一句话介绍",
+        "description": "详细介绍"
+      },
+      "listTwo": "{a} 和 {b}",
+      "listMany": "{head} 以及 {last}",
+      "idle": "填写需要的字段即可——标志、封面、名称与介绍会自动从链接获取。无需输入「https://」。"
+    },
+    "more": {
+      "title": "补充信息",
+      "subtitle": "地区、团队、标签——均为选填",
+      "region": "州／省",
+      "regionPlaceholder": "地区（选填）",
+      "district": "区县／城市",
+      "districtPlaceholder": "例如：奇兰扎尔",
+      "teamName": "团队名称",
+      "teamPlaceholder": "例如 EcoTeam",
+      "foundedYear": "成立年份",
+      "tags": "标签（最多 15 个）",
+      "tagPlaceholder": "例如：AI、SaaS、物流",
+      "addTag": "添加标签",
+      "removeTag": "移除标签「{tag}」"
+    },
+    "publishNote": "项目在提交后<b>立即上线</b>——无需等待审核，之后随时可以编辑。",
+    "publish": "发布",
+    "create": {
+      "title": "发布项目",
+      "subtitle": "只有名称和介绍是必填——其余可以稍后补充"
+    },
+    "edit": {
+      "eyebrow": "编辑",
+      "delete": "删除",
+      "deleteTitle": "删除项目",
+      "deleteConfirm": "<b>「{title}」</b>将被永久删除，且无法恢复。确定继续吗？",
+      "deleted": "项目已删除",
+      "noAccess": "您没有编辑该项目的权限",
+      "notFound": "未找到该项目"
+    }
+  },
+  "startupsPage": {
+    "title": "项目",
+    "subtitle": "社区打造的应用、网站与 Telegram 机器人——尽在一处",
+    "add": "发布",
+    "searchPlaceholder": "项目名称或简介",
+    "sortLabel": "排序",
+    "sort": {
+      "featured": "精选",
+      "top_rated": "评分最高",
+      "newest": "最新",
+      "popular": "最热门",
+      "alphabetical": "按字母"
+    },
+    "allPlatforms": "全部",
+    "total": "{count, plural, other {共 <b>{n}</b> 个项目}}",
+    "listHeading": "项目列表",
+    "empty": {
+      "title": "未找到项目",
+      "filtered": "试着调整筛选条件",
+      "none": "还没有发布任何项目"
+    }
+  },
+  "time": {
+    "justNow": "刚刚",
+    "ago": {
+      "minutes": "{count, plural, other {# 分钟前}}",
+      "hours": "{count, plural, other {# 小时前}}",
+      "days": "{count, plural, other {# 天前}}",
+      "months": "{count, plural, other {# 个月前}}",
+      "years": "{count, plural, other {# 年前}}"
+    },
+    "short": {
+      "now": "刚刚",
+      "minutes": "{count} 分",
+      "hours": "{count} 时",
+      "days": "{count} 天",
+      "months": "{count} 月",
+      "years": "{count} 年"
+    },
+    "today": "今天",
+    "yesterday": "昨天",
+    "month": "{month, select, 1 {1月} 2 {2月} 3 {3月} 4 {4月} 5 {5月} 6 {6月} 7 {7月} 8 {8月} 9 {9月} 10 {10月} 11 {11月} other {12月}}",
+    "monthOf": "{month, select, 1 {1月} 2 {2月} 3 {3月} 4 {4月} 5 {5月} 6 {6月} 7 {7月} 8 {8月} 9 {9月} 10 {10月} 11 {11月} other {12月}}",
+    "date": "{year}年{month}{day}日",
+    "dateNoYear": "{month}{day}日",
+    "monthYear": "{year}年{month}"
+  },
+  "ui": {
+    "password": {
+      "show": "显示密码",
+      "hide": "隐藏密码",
+      "ruleDone": "已满足：",
+      "ruleNeeded": "需满足：",
+      "rules": {
+        "len": "至少 8 个字符",
+        "upper": "大写字母",
+        "digit": "数字",
+        "special": "特殊符号"
+      }
+    },
+    "imageUpload": {
+      "error": "上传失败",
+      "previewAlt": "已上传的图片",
+      "remove": "移除图片",
+      "prompt": "选择图片，或拖拽到此处"
+    },
+    "pagination": {
+      "prev": "上一页",
+      "next": "下一页"
+    }
+  },
+  "validation": {
+    "required": "此项为必填",
+    "minChars": "{min, plural, other {至少 # 个字符}}",
+    "maxChars": "{max, plural, other {最多 # 个字符}}",
+    "email": "邮箱格式不正确",
+    "url": "请输入有效的链接",
+    "choose": "请选择一项",
+    "enter": "请填写此项",
+    "passwordRule": "需包含：{rule}",
+    "passwordsMismatch": "两次输入的密码不一致",
+    "number": "请输入数字"
+  },
+  "venture": {
+    "stage": {
+      "idea": "创意",
+      "prototyping": "原型",
+      "mvp": "MVP 已上线",
+      "early_revenue": "早期收入",
+      "growth": "稳定增长"
+    },
+    "stageHint": {
+      "idea": "尚未动工，只有计划",
+      "prototyping": "已有设计或原型",
+      "mvp": "已有首批用户",
+      "early_revenue": "开始有收入进账",
+      "growth": "用户与收入稳定"
+    },
+    "businessModel": {
+      "b2c": "直接面向消费者（B2C）",
+      "b2b": "面向企业（B2B）",
+      "b2b2c": "经企业触达消费者（B2B2C）",
+      "marketplace": "交易平台（双边）",
+      "subscription": "订阅制",
+      "ads": "广告",
+      "hardware": "硬件／设备",
+      "service": "服务",
+      "nonprofit": "非营利",
+      "other": "其他"
+    },
+    "need": {
+      "investment": "投资",
+      "grant": "补助金",
+      "mentor": "导师",
+      "team": "团队成员",
+      "customers": "首批客户",
+      "partner": "商业伙伴"
+    },
+    "needHint": {
+      "investment": "以股权换取资金",
+      "grant": "无需偿还的资金",
+      "mentor": "有经验的顾问",
+      "team": "开发、设计、市场",
+      "customers": "试点客户或测试场景",
+      "partner": "渠道商或合作方"
+    },
+    "offer": {
+      "investment": "投资",
+      "grant": "补助金",
+      "mentor": "导师辅导",
+      "team": "协助组建团队",
+      "customers": "客户／试点",
+      "partner": "合作"
+    },
+    "investorKind": {
+      "angel": "天使投资人",
+      "fund": "投资基金",
+      "accelerator": "加速器",
+      "grant": "资助机构",
+      "corporate": "企业投资方"
+    },
+    "investorKindHint": {
+      "angel": "我以个人身份投资",
+      "fund": "我们代表基金投资",
+      "accelerator": "我们提供项目营与辅导",
+      "grant": "我们提供无需偿还的资金",
+      "corporate": "我们在寻找解决方案或合作方"
+    },
+    "factor": {
+      "category": "行业",
+      "stage": "阶段",
+      "check": "投资额度",
+      "needs": "需求与供给",
+      "region": "地区",
+      "traction": "增长实绩",
+      "semantic": "语义匹配"
+    },
+    "detail": {
+      "exact": "完全匹配",
+      "partial": "部分匹配",
+      "open": "不限",
+      "none": "不匹配",
+      "unknown": "未评估"
+    },
+    "dimension": {
+      "clarity": "清晰度",
+      "market": "市场",
+      "product": "产品",
+      "traction": "实绩",
+      "team": "团队",
+      "ask": "需求明确度"
+    },
+    "dimensionHint": {
+      "clarity": "陌生人能否看懂这个项目在做什么",
+      "market": "面向谁、属于哪个行业、在哪里",
+      "product": "是否已经做出可见的东西",
+      "traction": "是否有数据作为佐证",
+      "team": "项目背后是谁",
+      "ask": "你需要什么是否表达清楚"
+    },
+    "grade": {
+      "strong": "可对接投资人",
+      "good": "状态良好",
+      "basic": "基础已具备",
+      "early": "早期阶段"
+    },
+    "score": {
+      "veryHigh": "非常匹配",
+      "high": "较为匹配",
+      "partial": "部分匹配",
+      "weak": "匹配度低"
+    },
+    "introStatus": {
+      "pending": "等待回复",
+      "accepted": "已接受",
+      "declined": "已拒绝",
+      "withdrawn": "已撤回"
+    }
+  }
+}

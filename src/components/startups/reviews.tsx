@@ -101,7 +101,7 @@ export function Reviews({ startup }: { startup: Startup }) {
             {t('votes', { count: startup.ratingCount, n: fmt(startup.ratingCount) })}
           </p>
         </div>
-        <div className="flex-1 border-l border-slate-100 pl-5 sm:pl-6">
+        <div className="flex-1 border-s border-slate-100 ps-5 sm:ps-6">
           <p className="text-subhead text-slate-600">
             {startup.ratingCount > 0 ? t('summary', { max: String(RATING_MAX) }) : t('noRatings')}
           </p>

@@ -38,7 +38,7 @@ export function PollsClient({ initialPolls }: { initialPolls: Poll[] | null }) {
       />
 
       {hasPolls && (
-        <div className="grid grid-cols-2 overflow-hidden rounded-ios-xl bg-white [&>*:nth-child(2)]:border-l [&>*]:border-slate-200">
+        <div className="grid grid-cols-2 overflow-hidden rounded-ios-xl bg-white [&>*:nth-child(2)]:border-s [&>*]:border-slate-200">
           <div className="px-5 py-4">
             <p className="text-title-2 font-semibold tabular-nums text-brand-900">{fmt(activeCount)}</p>
             <p className="text-footnote text-slate-500">{t('stats.active')}</p>

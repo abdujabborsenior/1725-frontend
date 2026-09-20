@@ -5,7 +5,7 @@ import { IconBase, type IconProps } from './base';
 
 export function ChevronLeft(props: IconProps) {
   return (
-    <IconBase nativeStroke={48} {...props}>
+    <IconBase nativeStroke={48} data-rtl-flip="" {...props}>
       <path d="M328 112 184 256l144 144" fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" />
     </IconBase>
   );

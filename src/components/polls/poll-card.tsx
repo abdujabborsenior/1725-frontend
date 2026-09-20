@@ -49,7 +49,7 @@ function VideoModal({ url, onClose }: { url: string; onClose: () => void }) {
         <button
           onClick={onClose}
           aria-label={tc('close')}
-          className="material-dark tappable absolute -top-12 right-0 grid h-9 w-9 place-items-center rounded-full text-white"
+          className="material-dark tappable absolute -top-12 end-0 grid h-9 w-9 place-items-center rounded-full text-white"
         >
           <X className="h-5 w-5" />
         </button>

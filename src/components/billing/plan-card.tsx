@@ -82,7 +82,7 @@ export function PlanCard({
       )}
     >
       {plan.isPopular && (
-        <span className="absolute -top-3 left-6 inline-flex items-center gap-1 rounded-full bg-accent-600 px-3 py-1 text-caption-1 font-semibold text-white">
+        <span className="absolute -top-3 start-6 inline-flex items-center gap-1 rounded-full bg-accent-600 px-3 py-1 text-caption-1 font-semibold text-white">
           <Sparkles className="h-3 w-3" />
           {t('popular')}
         </span>

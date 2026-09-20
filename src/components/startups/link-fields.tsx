@@ -139,7 +139,7 @@ export function LinkFields({
                 onBlur={() => onFieldBlur?.(type)}
                 placeholder={t(`links.placeholder.${type}`)}
                 className={cn(
-                  'min-w-0 flex-1 bg-transparent text-right text-body placeholder:text-slate-500 focus:outline-none',
+                  'min-w-0 flex-1 bg-transparent text-end text-body placeholder:text-slate-500 focus:outline-none',
                   isBad ? 'text-rose-600' : 'text-slate-600',
                 )}
               />

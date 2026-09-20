@@ -40,7 +40,8 @@ function Toggle({ on, onClick }: { on: boolean; onClick: () => void }) {
       <span
         className={cn(
           'h-5 w-5 rounded-full bg-white shadow transition-transform duration-200 ease-out',
-          on ? 'translate-x-5' : 'translate-x-0',
+          // RTL: yo'lak ko'zgulanadi — tugmacha ham teskari tomonga suriladi
+          on ? 'translate-x-5 rtl:-translate-x-5' : 'translate-x-0',
         )}
       />
     </button>

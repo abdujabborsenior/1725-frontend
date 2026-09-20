@@ -51,7 +51,7 @@ function LocaleOption({
         if (!selected) switchLocale(target, pathname);
       }}
       className={cn(
-        'flex w-full items-center gap-3 text-left outline-none focus-visible:bg-accent-50',
+        'flex w-full items-center gap-3 text-start outline-none focus-visible:bg-accent-50',
         // `.ios-list` qator ajratkichi ham `::before` — `hv-row` relsi bilan
         // to'qnashmasin: ro'yxat ko'rinishida faqat `ios-row` (o'z hover'i bor)
         compact ? 'ios-row' : 'hv-row px-3.5 py-2.5',
@@ -165,7 +165,7 @@ export function LanguageMenuButton({ className }: { className?: string }) {
           role="menu"
           aria-label={t('label')}
           onKeyDown={onMenuKeyDown}
-          className="material-menu absolute right-0 z-50 mt-2 w-[272px] origin-top-right animate-scale-in overflow-hidden rounded-ios-lg py-1.5 shadow-modal ring-1 ring-black/[0.06]"
+          className="material-menu absolute end-0 z-50 mt-2 w-[272px] origin-top-right rtl:origin-top-left animate-scale-in overflow-hidden rounded-ios-lg py-1.5 shadow-modal ring-1 ring-black/[0.06]"
         >
           {/* Uch tildagi sarlavha — qaysi tilni bilmasin, odam o'z so'zini topadi */}
           <p aria-hidden className="px-3.5 pb-1.5 pt-1 text-caption-1 font-medium text-slate-500">
@@ -225,7 +225,7 @@ export function FooterLanguages({ className }: { className?: string }) {
 
   return (
     <nav aria-label={t('label')} className={cn('flex flex-wrap items-center gap-x-1 gap-y-2', className)}>
-      <Language aria-hidden className="mr-1 h-[18px] w-[18px] text-white/70" />
+      <Language aria-hidden className="me-1 h-[18px] w-[18px] text-white/70" />
       {LOCALES.map((l, i) => {
         const selected = l === locale;
         return (

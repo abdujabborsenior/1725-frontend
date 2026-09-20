@@ -216,13 +216,13 @@ export function ProfileClient({ initialProfile }: { initialProfile: PublicProfil
 
             {/* Counts */}
             <div className="mt-4 flex flex-wrap items-center gap-x-6 gap-y-3">
-              <button onClick={() => setListMode('followers')} className="tappable group text-left">
+              <button onClick={() => setListMode('followers')} className="tappable group text-start">
                 <span className="text-title-3 font-semibold tabular-nums text-brand-900 transition-colors duration-200 group-hover:text-accent-700">{fmt(followers)}</span>
-                <span className="ml-1 text-subhead text-slate-500 transition-colors duration-200 group-hover:text-accent-700">{t('followers', { count: followers })}</span>
+                <span className="ms-1 text-subhead text-slate-500 transition-colors duration-200 group-hover:text-accent-700">{t('followers', { count: followers })}</span>
               </button>
-              <button onClick={() => setListMode('following')} className="tappable group text-left">
+              <button onClick={() => setListMode('following')} className="tappable group text-start">
                 <span className="text-title-3 font-semibold tabular-nums text-brand-900 transition-colors duration-200 group-hover:text-accent-700">{fmt(profile.followingCount)}</span>
-                <span className="ml-1 text-subhead text-slate-500 transition-colors duration-200 group-hover:text-accent-700">{t('following', { count: profile.followingCount })}</span>
+                <span className="ms-1 text-subhead text-slate-500 transition-colors duration-200 group-hover:text-accent-700">{t('following', { count: profile.followingCount })}</span>
               </button>
               {/* Asoschiga ovoz — toggle (o'z profilida faqat hisob) */}
               {profile.isFounder && (

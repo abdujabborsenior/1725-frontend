@@ -200,7 +200,7 @@ export function AdaptiveNav({
       ref={navRef}
       onPointerLeave={() => setHovered(null)}
       className={cn(
-        'relative ml-2 hidden min-w-0 flex-1 items-center gap-0.5 xl:flex',
+        'relative ms-2 hidden min-w-0 flex-1 items-center gap-0.5 xl:flex',
         className,
       )}
     >
@@ -244,7 +244,7 @@ export function AdaptiveNav({
           scroll olardi). `fixed` esa hujjat oqimidan butunlay chiqadi,
           o'lchamlari esa o'qilaveradi.
         */
-        className="pointer-events-none fixed left-[-9999px] top-0 flex select-none items-center gap-0.5"
+        className="pointer-events-none fixed start-[-9999px] top-0 flex select-none items-center gap-0.5"
         style={{ visibility: 'hidden' }}
       >
         {items.map((item) => (
@@ -317,7 +317,7 @@ function navItemClass(
     // `relative` — suzuvchi kapsula absolyut joylashgan, yorliq undan
     // YUQORIDA bo'yalishi kerak.
     'relative whitespace-nowrap rounded-full py-1.5 text-subhead transition-colors duration-200 ease-ios',
-    hasIcon ? 'flex items-center gap-1.5 pl-2 pr-2.5' : 'px-2.5',
+    hasIcon ? 'flex items-center gap-1.5 ps-2 pe-2.5' : 'px-2.5',
     // Faol band — brend tinti (kulrang emas). Fonni odatda suzuvchi kapsula
     // beradi; `ownBackground` faqat kapsula o'lchanmagunicha (SSR/birinchi
     // bo'yash) yoqiladi — shunda faol holat bir zum ham yo'qolmaydi.
@@ -463,7 +463,7 @@ function OverflowMenu({
         <div
           role="menu"
           aria-label={t('moreSections')}
-          className="material-menu absolute left-0 z-50 mt-2 min-w-[184px] origin-top-left animate-scale-in overflow-hidden rounded-ios-lg py-1 shadow-modal ring-1 ring-black/[0.06]"
+          className="material-menu absolute start-0 z-50 mt-2 min-w-[184px] origin-top-left rtl:origin-top-right animate-scale-in overflow-hidden rounded-ios-lg py-1 shadow-modal ring-1 ring-black/[0.06]"
         >
           {items.map((item) => {
             const active = isActive(pathname, item.href);

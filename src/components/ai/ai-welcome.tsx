@@ -52,7 +52,7 @@ export function AiWelcome({
                 onClick={() => onPick(example)}
                 style={{ '--d': `${0.24 + i * 0.06}s` } as CSSProperties}
                 className={cn(
-                  'yz-rise yz-card yz-card-tap group flex items-center gap-2.5 px-4 py-3 text-left',
+                  'yz-rise yz-card yz-card-tap group flex items-center gap-2.5 px-4 py-3 text-start',
                   // Mobilda faqat ikkitasi: qolgani composer ostiga tushib
                   // "yarim kesilgan" bo'lib ko'rinardi.
                   i > 1 && 'hidden sm:flex',

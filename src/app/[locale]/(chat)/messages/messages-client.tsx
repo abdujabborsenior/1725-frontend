@@ -50,7 +50,7 @@ export function MessagesClient() {
           {/* Ikonka matn OQIMIDA (flex emas): matn ikki qatorga o'ralganda
               flex uni markazdan uzib, "sinib qolgan qator" ko'rinishini berardi. */}
           <p className="mt-5 text-caption-1 leading-relaxed text-slate-500">
-            <Lock className="mr-1 inline h-3 w-3 align-[-1.5px] text-emerald-600" />
+            <Lock className="me-1 inline h-3 w-3 align-[-1.5px] text-emerald-600" />
             {t('privacy')}
           </p>
         </div>

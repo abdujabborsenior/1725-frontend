@@ -73,7 +73,7 @@ export function LikeButton({
         aria-label={label}
         title={label}
         className={cn(
-          'tappable relative z-10 -mr-1 inline-flex h-9 items-center gap-1.5 rounded-full px-2.5',
+          'tappable relative z-10 -me-1 inline-flex h-9 items-center gap-1.5 rounded-full px-2.5',
           'text-footnote font-medium tabular-nums transition-colors duration-150 ease-ios',
           liked
             ? 'bg-rose-50 text-rose-600 hover:bg-rose-100'

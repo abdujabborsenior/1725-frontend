@@ -98,7 +98,7 @@ export function BillingClient() {
               <p className="text-footnote text-slate-500">{t('current.label')}</p>
               <h2 className="mt-0.5 text-title-2 font-semibold text-brand-900">
                 {planText.name(sub.plan ?? { tier: sub.tier })}
-                <span className="ml-2 text-subhead font-normal text-slate-500">
+                <span className="ms-2 text-subhead font-normal text-slate-500">
                   {tb(`interval.${sub.interval}`)}
                 </span>
               </h2>
@@ -191,7 +191,7 @@ export function BillingClient() {
                       {formatDate(order.createdAt)} · {PROVIDER_META[order.provider]?.label ?? order.provider}
                     </span>
                   </span>
-                  <span className="shrink-0 text-right">
+                  <span className="shrink-0 text-end">
                     <span className="block text-body tabular-nums text-brand-900">
                       {formatSum(order.amount, locale)}
                     </span>

@@ -67,7 +67,7 @@ export function ClusterClient({
     <div className="mx-auto max-w-3xl space-y-6">
       <Link
         href="/market"
-        className="tappable -ml-1 flex items-center gap-0.5 text-body text-accent-700"
+        className="tappable -ms-1 flex items-center gap-0.5 text-body text-accent-700"
       >
         <ChevronLeft className="h-[19px] w-[19px]" strokeWidth={3} />
         {t('cluster.backToMap')}

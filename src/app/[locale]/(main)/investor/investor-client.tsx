@@ -202,7 +202,7 @@ function Row({ label, value }: { label: string; value: string }) {
   return (
     <div className="flex items-baseline justify-between gap-4">
       <dt className="shrink-0 text-slate-500">{label}</dt>
-      <dd className="text-right text-brand-900">{value}</dd>
+      <dd className="text-end text-brand-900">{value}</dd>
     </div>
   );
 }

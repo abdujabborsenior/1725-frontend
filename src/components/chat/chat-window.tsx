@@ -43,7 +43,7 @@ function HeaderIdentity({
   children: React.ReactNode;
 }) {
   const t = useTranslations('chat.window');
-  const cls = 'min-w-0 flex-1 rounded-lg px-1 py-0.5 text-left transition-colors hover:bg-slate-50';
+  const cls = 'min-w-0 flex-1 rounded-lg px-1 py-0.5 text-start transition-colors hover:bg-slate-50';
   if (isGroup) {
     return (
       <button onClick={onInfo} className={cn(cls, 'cursor-pointer')} aria-label={t('groupInfo')}>
@@ -364,7 +364,7 @@ export function ChatWindow({ conversationId }: { conversationId: string }) {
                 <>
                   <div className="fixed inset-0 z-40" onClick={() => setMenuOpen(false)} />
                   <div
-                    className="material-menu absolute right-0 top-11 z-50 w-60 max-w-[calc(100vw-1.5rem)] origin-top-right animate-scale-in overflow-hidden rounded-ios-lg p-1 shadow-modal ring-1 ring-black/[0.06]"
+                    className="material-menu absolute end-0 top-11 z-50 w-60 max-w-[calc(100vw-1.5rem)] origin-top-right rtl:origin-top-left animate-scale-in overflow-hidden rounded-ios-lg p-1 shadow-modal ring-1 ring-black/[0.06]"
                   >
                     <button onClick={() => { setInfoOpen(true); setMenuOpen(false); }} className="flex w-full items-center gap-3 rounded-[9px] px-3 py-2.5 text-body text-brand-900 hv-row">
                       <Info className="h-4 w-4 text-slate-400" /> {t('window.groupInfo')}
@@ -470,11 +470,11 @@ export function ChatWindow({ conversationId }: { conversationId: string }) {
           type="button"
           onClick={() => scrollToBottom(true)}
           aria-label={newCount ? t('window.jumpDownNew', { count: newCount }) : t('window.jumpDown')}
-          className="jump-btn material-thick tappable-scale absolute bottom-3 right-3 z-20 flex h-11 w-11 items-center justify-center rounded-full text-accent-700 shadow-card-hover ring-1 ring-black/[0.04]"
+          className="jump-btn material-thick tappable-scale absolute bottom-3 end-3 z-20 flex h-11 w-11 items-center justify-center rounded-full text-accent-700 shadow-card-hover ring-1 ring-black/[0.04]"
         >
           <ArrowDown className="h-[19px] w-[19px]" strokeWidth={2.5} />
           {newCount > 0 && (
-            <span className="absolute -top-1 -right-1 flex h-[18px] min-w-[18px] items-center justify-center rounded-full bg-accent-600 px-1 text-caption-2 font-semibold text-white">
+            <span className="absolute -top-1 -end-1 flex h-[18px] min-w-[18px] items-center justify-center rounded-full bg-accent-600 px-1 text-caption-2 font-semibold text-white">
               {newCount > 99 ? '99+' : newCount}
             </span>
           )}

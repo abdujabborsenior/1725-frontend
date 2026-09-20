@@ -89,6 +89,14 @@ const MONEY: Record<
     bn: 'bn UZS', mn: 'mln UZS', k: 'thousand UZS', one: 'UZS', decimal: '.', group: ',',
     from: (x) => `from ${x}`, upTo: (x) => `up to ${x}`, unset: 'Not specified',
   },
+  ar: {
+    bn: 'مليار سوم', mn: 'مليون سوم', k: 'ألف سوم', one: 'سوم', decimal: '.', group: ',',
+    from: (x) => `من ${x}`, upTo: (x) => `حتى ${x}`, unset: 'غير محدّد',
+  },
+  zh: {
+    bn: '十亿苏姆', mn: '百万苏姆', k: '千苏姆', one: '苏姆', decimal: '.', group: ',',
+    from: (x) => `${x} 起`, upTo: (x) => `最高 ${x}`, unset: '未填写',
+  },
 };
 
 /**

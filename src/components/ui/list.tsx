@@ -107,7 +107,7 @@ export function ListRow({
     </>
   );
 
-  const rowClass = cn('ios-row w-full text-left', disabled && 'opacity-40', className);
+  const rowClass = cn('ios-row w-full text-start', disabled && 'opacity-40', className);
 
   if (href && !disabled) {
     return (

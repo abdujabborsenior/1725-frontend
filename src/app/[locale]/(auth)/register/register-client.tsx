@@ -323,7 +323,7 @@ export function RegisterClient() {
                 <button
                   key={id}
                   onClick={() => setUserType(id)}
-                  className="w-full flex items-center gap-4 p-4 rounded-ios-lg bg-fill-tertiary transition-colors hover:bg-accent-50 text-left group"
+                  className="w-full flex items-center gap-4 p-4 rounded-ios-lg bg-fill-tertiary transition-colors hover:bg-accent-50 text-start group"
                 >
                   <span className="h-11 w-11 rounded-xl bg-brand-50 border border-brand-200 flex items-center justify-center flex-shrink-0 group-hover:bg-accent-100 group-hover:border-accent-300 transition-colors">
                     <Icon className="h-5 w-5 text-brand-900 group-hover:text-accent-700 transition-colors" />

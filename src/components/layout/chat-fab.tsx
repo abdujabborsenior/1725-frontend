@@ -46,12 +46,12 @@ export function ChatFab() {
       href="/messages"
       aria-label={unread > 0 ? t('messagesUnread', { count: unread }) : t('messages')}
       title={t('messages')}
-      className="group fixed bottom-8 right-8 z-40 hidden md:block motion-safe:animate-pop-in"
+      className="group fixed bottom-8 end-8 z-40 hidden md:block motion-safe:animate-pop-in"
     >
       <span className="relative flex h-14 w-14 items-center justify-center rounded-full bg-accent-600 text-white shadow-lift transition-[background-color,box-shadow,transform] duration-150 ease-ios group-hover:bg-accent-700 group-hover:shadow-glow-accent group-active:scale-95">
         <MessageCircleFill className="h-[26px] w-[26px]" />
         {unread > 0 && (
-          <span className="absolute -right-0.5 -top-0.5 flex h-[22px] min-w-[22px] items-center justify-center rounded-full bg-rose-500 px-1.5 text-caption-2 font-bold text-white ring-[3px] ring-surface-soft">
+          <span className="absolute -end-0.5 -top-0.5 flex h-[22px] min-w-[22px] items-center justify-center rounded-full bg-rose-500 px-1.5 text-caption-2 font-bold text-white ring-[3px] ring-surface-soft">
             {unread > 99 ? '99+' : unread}
           </span>
         )}

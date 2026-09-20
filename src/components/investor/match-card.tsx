@@ -142,7 +142,7 @@ export function MatchCard({ item }: { item: DealflowItem }) {
         type="button"
         onClick={() => setOpen((o) => !o)}
         aria-expanded={open}
-        className="hairline-t tappable flex w-full items-center justify-between px-4 py-2.5 text-left"
+        className="hairline-t tappable flex w-full items-center justify-between px-4 py-2.5 text-start"
       >
         <span className="text-footnote font-medium text-accent-700">
           {t('why')}

@@ -83,7 +83,7 @@ export function LanguageSuggest() {
       aria-live="polite"
       // Mobilda TEPADA (navbar ostida) — pastdagi kamera/mikrofon taklifi va
       // tab bar bilan ustma-ust tushmaydi; desktopda chap pastda (taklif o'ngda).
-      className="fixed inset-x-4 top-[calc(env(safe-area-inset-top)+3.75rem)] z-50 mx-auto flex max-w-md animate-slide-down items-center gap-3 rounded-ios-xl bg-white/[0.97] p-3 pl-4 shadow-modal ring-1 ring-black/[0.06] md:bottom-6 md:left-6 md:right-auto md:top-auto md:mx-0 md:animate-slide-up"
+      className="fixed inset-x-4 top-[calc(env(safe-area-inset-top)+3.75rem)] z-50 mx-auto flex max-w-md animate-slide-down items-center gap-3 rounded-ios-xl bg-white/[0.97] p-3 ps-4 shadow-modal ring-1 ring-black/[0.06] md:bottom-6 md:start-6 md:end-auto md:top-auto md:mx-0 md:animate-slide-up"
     >
       <Language aria-hidden className="h-[22px] w-[22px] shrink-0 text-accent-600" />
       <p className="min-w-0 flex-1 text-subhead font-medium text-brand-900">{meta.suggest.text}</p>

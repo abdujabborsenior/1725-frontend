@@ -199,7 +199,7 @@ export const Select = forwardRef<HTMLSelectElement, SelectProps>(
             className={cn(
               FIELD_SURFACE,
               FIELD_SIZE.md,
-              'cursor-pointer pr-10 text-left',
+              'cursor-pointer pe-10 text-start',
               'disabled:cursor-not-allowed disabled:opacity-40',
               error && 'border-rose-400',
               className,
@@ -212,7 +212,7 @@ export const Select = forwardRef<HTMLSelectElement, SelectProps>(
               ochuvchi maydonda emas). Ochilganda 180° buriladi. */}
           <span
             className={cn(
-              'pointer-events-none absolute right-3.5 top-1/2 flex -translate-y-1/2 items-center',
+              'pointer-events-none absolute end-3.5 top-1/2 flex -translate-y-1/2 items-center',
               'transition-transform duration-250 ease-ios motion-reduce:transition-none',
               FIELD_ICON,
               open && 'rotate-180',

@@ -11,7 +11,7 @@ import { CategoryLabelsProvider } from '@/lib/category-labels';
 import { fetchInitial } from '@/lib/server-api';
 import type { Category } from '@/types';
 import { API_URL } from '@/lib/constants';
-import { routing, type AppLocale } from '@/i18n/routing';
+import { dirOf, routing, type AppLocale } from '@/i18n/routing';
 import { LOCALE_META } from '@/i18n/locales';
 import { GLOBAL_CLIENT_NAMESPACES, pickMessages } from '@/i18n/scopes';
 import { SITE_URL, organizationJsonLd, websiteJsonLd } from '@/lib/seo';
@@ -19,7 +19,7 @@ import { SITE_URL, organizationJsonLd, websiteJsonLd } from '@/lib/seo';
 // API alohida origin (portda) — birinchi fetch'gacha ulanish tayyor tursin
 const API_ORIGIN = new URL(API_URL).origin;
 
-/** Uch til — build vaqtida statik (har til o'z HTML'i bilan, SSG/ISR saqlanadi). */
+/** Har til — build vaqtida statik (o'z HTML'i bilan, SSG/ISR saqlanadi). */
 export function generateStaticParams() {
   return routing.locales.map((locale) => ({ locale }));
 }
@@ -94,7 +94,9 @@ export default async function LocaleLayout({
   }
 
   return (
-    <html lang={locale} suppressHydrationWarning>
+    /* `dir` — SERVERDA, birinchi HTML bilan: klientda qo'yilsa arabcha sahifa
+       bir zum LTR bo'lib chizilib, keyin ko'zgulanardi (ko'rinadigan sakrash). */
+    <html lang={locale} dir={dirOf(locale)} suppressHydrationWarning>
       <head>
         {/* Inter — SELF-HOST: lotin subset globals.css ichida inline (base64),
             qolgan subset'lar (latin-ext/cyrillic) public/fonts'dan kerak bo'lganda.

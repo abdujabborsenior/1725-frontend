@@ -182,7 +182,7 @@ export function DiscoverClient({
                 {recent.map((r) => (
                   <span
                     key={r}
-                    className="inline-flex items-center gap-1 rounded-full bg-fill-tertiary py-1.5 pl-3.5 pr-2 text-subhead text-brand-900"
+                    className="inline-flex items-center gap-1 rounded-full bg-fill-tertiary py-1.5 ps-3.5 pe-2 text-subhead text-brand-900"
                   >
                     <button onClick={() => setQ(r)}>{r}</button>
                     <button

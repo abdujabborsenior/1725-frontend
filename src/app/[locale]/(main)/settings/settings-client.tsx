@@ -215,7 +215,7 @@ export function SettingsClient() {
     <div className="max-w-2xl mx-auto space-y-6">
       <button
         onClick={() => router.push('/profile')}
-        className="tappable -ml-1 -my-2 flex min-h-[38px] items-center gap-0.5 py-2 text-body text-accent-700"
+        className="tappable -ms-1 -my-2 flex min-h-[38px] items-center gap-0.5 py-2 text-body text-accent-700"
       >
         <ChevronLeft className="h-[19px] w-[19px]" strokeWidth={3} /> {t('back')}
       </button>

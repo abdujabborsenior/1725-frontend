@@ -36,7 +36,7 @@ export const SearchField = forwardRef<HTMLInputElement, SearchFieldProps>(
       <div className="relative flex min-w-0 flex-1 items-center">
         <Search
           className={cn(
-            'pointer-events-none absolute left-3.5 h-[18px] w-[18px]',
+            'pointer-events-none absolute start-3.5 h-[18px] w-[18px]',
             FIELD_ICON,
           )}
         />
@@ -48,7 +48,7 @@ export const SearchField = forwardRef<HTMLInputElement, SearchFieldProps>(
           className={cn(
             FIELD_SURFACE,
             FIELD_SIZE.md,
-            'pl-11 pr-11',
+            'ps-11 pe-11',
             '[&::-webkit-search-cancel-button]:appearance-none',
             className,
           )}
@@ -60,7 +60,7 @@ export const SearchField = forwardRef<HTMLInputElement, SearchFieldProps>(
             onClick={() => onValueChange('')}
             aria-label={t('clear')}
             className={cn(
-              'tappable absolute right-3 flex h-6 w-6 items-center justify-center rounded-full',
+              'tappable absolute end-3 flex h-6 w-6 items-center justify-center rounded-full',
               'text-slate-500 transition-colors duration-150 hover:text-accent-700',
             )}
           >

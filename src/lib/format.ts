@@ -10,9 +10,20 @@ import type { AppLocale } from '@/i18n/routing';
  * U+00A0 yoki U+202F) — hidratsiya matni farqlanib, raqam "sakraydi". Shuning
  * uchun ajratkich shu yerda qat'iy:
  *   uz, ru → 1 234 567 (bo'linmas bo'shliq U+00A0 — raqam qatorga bo'linmaydi)
- *   en     → 1,234,567
+ *   en, ar, zh → 1,234,567
+ *
+ * ⚠️ Arab tilida raqam G'ARB (ASCII) ko'rinishida, guruh ajratgichi vergul:
+ * arab-hind raqamlari (١٬٢٣٤) veb'da kam uchraydi va `tabular-nums` bilan
+ * qatorlanmaydi. Raqamning O'ZI RTL sahifada ham chapdan o'ngga o'qiladi —
+ * bu Unicode bidi algoritmi, alohida ish talab qilmaydi.
  */
-const GROUP: Record<AppLocale, string> = { uz: ' ', ru: ' ', en: ',' };
+const GROUP: Record<AppLocale, string> = {
+  uz: '\u00a0',
+  ru: '\u00a0',
+  en: ',',
+  ar: ',',
+  zh: ',',
+};
 
 export function formatNumber(value: number, locale: AppLocale): string {
   if (!Number.isFinite(value)) return '—';

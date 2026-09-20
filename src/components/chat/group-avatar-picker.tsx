@@ -76,7 +76,7 @@ export function GroupAvatarPicker({
             type="button"
             onClick={() => onChange(null)}
             aria-label={t('group.removePhoto')}
-            className="absolute -right-1 -top-1 flex h-6 w-6 items-center justify-center rounded-full border border-slate-200 bg-white text-slate-500 shadow-card transition-colors hover:text-rose-600"
+            className="absolute -end-1 -top-1 flex h-6 w-6 items-center justify-center rounded-full border border-slate-200 bg-white text-slate-500 shadow-card transition-colors hover:text-rose-600"
           >
             <X className="h-3.5 w-3.5" />
           </button>

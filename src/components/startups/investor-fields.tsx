@@ -154,7 +154,7 @@ function ChipToggle({
       onClick={onClick}
       aria-pressed={active}
       className={cn(
-        'tappable rounded-ios-md px-3.5 py-2.5 text-left transition-colors duration-150',
+        'tappable rounded-ios-md px-3.5 py-2.5 text-start transition-colors duration-150',
         active
           ? 'bg-accent-600 text-white'
           : 'bg-fill-tertiary text-brand-900 hover:bg-accent-50 hover:text-accent-700',
@@ -218,7 +218,7 @@ export function InvestorFields({
         type="button"
         onClick={() => setOpen((o) => !o)}
         aria-expanded={open}
-        className="ios-row w-full text-left"
+        className="ios-row w-full text-start"
       >
         <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-ios-sm bg-indigo-50">
           <Sparkles className="h-[18px] w-[18px] text-indigo-600" />

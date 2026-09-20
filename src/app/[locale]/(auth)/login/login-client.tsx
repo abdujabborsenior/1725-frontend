@@ -102,7 +102,7 @@ export function LoginClient() {
               <div className="flex justify-end">
                 <Link
                   href="/forgot-password"
-                  className="tappable -mr-1.5 inline-flex min-h-[32px] items-center rounded-full px-1.5 text-subhead font-medium text-accent-600 transition-colors hover:text-accent-700"
+                  className="tappable -me-1.5 inline-flex min-h-[32px] items-center rounded-full px-1.5 text-subhead font-medium text-accent-600 transition-colors hover:text-accent-700"
                 >
                   {t('login.forgot')}
                 </Link>

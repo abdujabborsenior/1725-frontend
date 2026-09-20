@@ -75,7 +75,7 @@ export function AuthHomeLink() {
   return (
     <Link
       href="/"
-      className="tappable -ml-2 inline-flex h-11 w-fit items-center gap-0.5 rounded-full pl-1.5 pr-3.5 text-body font-medium text-accent-600 transition-colors duration-150 ease-ios hover:bg-accent-50 hover:text-accent-700"
+      className="tappable -ms-2 inline-flex h-11 w-fit items-center gap-0.5 rounded-full ps-1.5 pe-3.5 text-body font-medium text-accent-600 transition-colors duration-150 ease-ios hover:bg-accent-50 hover:text-accent-700"
     >
       <ChevronLeft className="h-[22px] w-[22px]" strokeWidth={2.4} />
       {t('homeLink')}

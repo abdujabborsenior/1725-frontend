@@ -77,7 +77,7 @@ export function ReportDialog({ open, onClose, targetType, targetId }: ReportDial
               key={r}
               onClick={() => setReason(r)}
               className={cn(
-                'flex w-full items-center gap-3 rounded-ios-md border px-3.5 py-2.5 text-left text-subhead font-medium transition-all',
+                'flex w-full items-center gap-3 rounded-ios-md border px-3.5 py-2.5 text-start text-subhead font-medium transition-all',
                 reason === r
                   ? 'border-accent-500 bg-accent-50 text-accent-800'
                   : 'border-slate-200 text-slate-700 hover:border-accent-200 hover:bg-accent-50 hover:text-accent-700 active:bg-accent-100',
@@ -109,7 +109,7 @@ export function ReportDialog({ open, onClose, targetType, targetId }: ReportDial
             placeholder={t('detailsPlaceholder')}
             className={cn(FIELD_SURFACE, 'resize-none px-4 py-3')}
           />
-          <p className="mt-1 text-right text-caption-1 text-slate-500">{details.length}/300</p>
+          <p className="mt-1 text-end text-caption-1 text-slate-500">{details.length}/300</p>
         </div>
 
         <div className="flex justify-end gap-2.5 pt-1">
@@ -175,7 +175,7 @@ export function ReportButton({
         <button
           onClick={trigger}
           className={cn(
-            'flex w-full items-center gap-2.5 px-3 py-2 text-left text-subhead text-rose-600 hover:bg-rose-50',
+            'flex w-full items-center gap-2.5 px-3 py-2 text-start text-subhead text-rose-600 hover:bg-rose-50',
             className,
           )}
         >

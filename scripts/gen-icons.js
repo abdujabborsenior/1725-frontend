@@ -244,6 +244,36 @@ const CUSTOM = {
   Loader2: { stroke: 0, body: 'SPINNER' },
 };
 
+/**
+ * RTL'da KO'ZGULANADIGAN ikonkalar (`data-rtl-flip`).
+ *
+ * Arab tilida o'qish yo'nalishi o'ngdan chapga — "keyingi" strelkasi ham
+ * chapga qarashi kerak. Ko'zgulash HAR ishlatilgan joyda emas, AYNI SHU
+ * yerda belgilanadi: ikonka 25+ faylda uchraydi va bittasi unutilsa,
+ * arabcha sahifada strelka teskari tomonga ishora qilib turardi.
+ * CSS tomoni — `globals.css` dagi bitta qoida (`scale: -1 1`, `transform`
+ * bilan to'qnashmaydi: Tailwind'ning `rotate`/`translate` animatsiyalari
+ * o'z kuchida qoladi).
+ *
+ * ⚠️ Ro'yxatga KIRMAYDI: media boshqaruvlari (Play/Pause — butun dunyoda
+ * chapdan o'ngga), grafiklar (TrendingUp, StatsChart — ma'lumot yo'nalishi
+ * tildan qat'i nazar bir xil), vertikal va aylana ikonkalar.
+ */
+const MIRROR = new Set([
+  'ChevronLeft',
+  'ChevronRight',
+  'ArrowLeft',
+  'ArrowRight',
+  'ArrowUpRight',
+  'Send',
+  'SendOutline',
+  'PaperPlane',
+  'Reply',
+  'CornerDownLeft',
+  'ExternalLink',
+  'LogOut',
+]);
+
 /* ── Yordamchilar ─────────────────────────────────────────────────── */
 const toCamel = (s) => s.replace(/-([a-z])/g, (_, c) => c.toUpperCase());
 const KEEP_KEBAB = new Set(['data-name']);
@@ -376,7 +406,7 @@ for (const [name, file] of entries) {
 
 export function ${name}(props: IconProps) {
   return (
-    <IconBase nativeStroke={${nativeStroke}} {...props}>
+    <IconBase nativeStroke={${nativeStroke}}${MIRROR.has(name) ? ' data-rtl-flip=""' : ''} {...props}>
       ${body}
     </IconBase>
   );

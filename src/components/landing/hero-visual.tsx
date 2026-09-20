@@ -35,7 +35,7 @@ export function HeroVisual() {
   return (
     <div
       aria-hidden
-      className="relative mx-auto h-[404px] w-full max-w-[352px] text-left sm:h-[440px] sm:max-w-[444px]"
+      className="relative mx-auto h-[404px] w-full max-w-[352px] text-start sm:h-[440px] sm:max-w-[444px]"
     >
       {/* Yorug'lik manbai — sirtlar ostidagi tinch nur (dekor blob emas) */}
       <div
@@ -47,7 +47,7 @@ export function HeroVisual() {
 
       {/* ── Tayyor startap — kompozitsiyaning yakuni ─────────────────── */}
       <article
-        className="hero-enter-x absolute right-0 top-[92px] z-10 w-[60%] overflow-hidden rounded-ios-2xl bg-white shadow-modal ring-1 ring-black/[0.04] sm:top-12 sm:w-[296px]"
+        className="hero-enter-x absolute end-0 top-[92px] z-10 w-[60%] overflow-hidden rounded-ios-2xl bg-white shadow-modal ring-1 ring-black/[0.04] sm:top-12 sm:w-[296px]"
         style={{ '--enter-delay': '0.06s' } as CSSProperties}
       >
         <div className="relative h-24 bg-gradient-to-br from-iris-500 to-brand-900 sm:h-28">
@@ -59,7 +59,7 @@ export function HeroVisual() {
                 'radial-gradient(120% 100% at 10% 0%, rgba(255,255,255,0.24), transparent 58%)',
             }}
           />
-          <span className="material-dark absolute right-3 top-3 inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-caption-2 font-semibold text-white">
+          <span className="material-dark absolute end-3 top-3 inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-caption-2 font-semibold text-white">
             <StarFill className="h-2.5 w-2.5 text-amber-400" /> TOP
           </span>
           <span className="absolute inset-x-0 bottom-0 h-[3px] bg-iris-500" />
@@ -100,7 +100,7 @@ export function HeroVisual() {
 
       {/* ── Boshlanish: hamjamiyat yozgan muammo ─────────────────────── */}
       <div
-        className="hero-enter absolute left-0 top-0 z-20 w-[53%] rounded-ios-xl bg-white p-3.5 shadow-lift ring-1 ring-black/[0.04] sm:-left-5 sm:w-[232px]"
+        className="hero-enter absolute start-0 top-0 z-20 w-[53%] rounded-ios-xl bg-white p-3.5 shadow-lift ring-1 ring-black/[0.04] sm:-start-5 sm:w-[232px]"
         style={{ '--enter-delay': '0.2s' } as CSSProperties}
       >
         <span className="flex items-center gap-1.5 text-caption-1 font-medium text-amber-700">
@@ -125,7 +125,7 @@ export function HeroVisual() {
           torayganda uch qatlam ham birga torayadi. Logotip/sarlavha/reyting
           hech qachon berkilmaydi (desktopdagi qoida bilan bir xil). */}
       <div
-        className="hero-enter absolute bottom-0 left-0 z-20 w-[42%] rounded-ios-xl bg-white p-3 shadow-lift ring-1 ring-black/[0.04] sm:-left-5 sm:w-[240px] sm:p-3.5"
+        className="hero-enter absolute bottom-0 start-0 z-20 w-[42%] rounded-ios-xl bg-white p-3 shadow-lift ring-1 ring-black/[0.04] sm:-start-5 sm:w-[240px] sm:p-3.5"
         style={{ '--enter-delay': '0.32s' } as CSSProperties}
       >
         <span className="flex items-center gap-2">

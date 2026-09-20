@@ -145,7 +145,7 @@ export const PasswordField = forwardRef<HTMLInputElement, PasswordFieldProps>(
         <div className="relative">
           <Lock
             className={cn(
-              'pointer-events-none absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2',
+              'pointer-events-none absolute start-3.5 top-1/2 h-4 w-4 -translate-y-1/2',
               FIELD_ICON,
             )}
           />
@@ -171,7 +171,7 @@ export const PasswordField = forwardRef<HTMLInputElement, PasswordFieldProps>(
             className={cn(
               FIELD_SURFACE,
               FIELD_SIZE.md,
-              'pl-11 pr-12',
+              'ps-11 pe-12',
               // Yozayotganda maydon QIZARMAYDI — xato belgisi maydondan
               // chiqilgandan keyin (yoki forma yuborilganda) ko'rinadi.
               error && !focused && FIELD_INVALID,
@@ -184,7 +184,7 @@ export const PasswordField = forwardRef<HTMLInputElement, PasswordFieldProps>(
             tabIndex={-1}
             onClick={() => setShow((s) => !s)}
             aria-label={show ? t('hide') : t('show')}
-            className="tappable absolute right-2 top-1/2 flex h-9 w-9 -translate-y-1/2 items-center justify-center rounded-full text-slate-400 transition-colors duration-150 hover:text-slate-700"
+            className="tappable absolute end-2 top-1/2 flex h-9 w-9 -translate-y-1/2 items-center justify-center rounded-full text-slate-400 transition-colors duration-150 hover:text-slate-700"
           >
             {show ? <EyeOff className="h-[18px] w-[18px]" /> : <Eye className="h-[18px] w-[18px]" />}
           </button>

@@ -168,20 +168,20 @@ export function ConversationList({ activeId }: { activeId?: string }) {
       {/* Qidiruv — suhbat nomi, @username yoki oxirgi xabar matni bo'yicha */}
       <div className="px-3 pb-2">
         <div className="relative flex items-center">
-          <Search className={cn('pointer-events-none absolute left-3 h-4 w-4', FIELD_ICON)} />
+          <Search className={cn('pointer-events-none absolute start-3 h-4 w-4', FIELD_ICON)} />
           <input
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             placeholder={t('list.search')}
             aria-label={t('list.search')}
-            className={cn(FIELD_SURFACE, FIELD_SIZE.sm, 'pl-9 pr-9 text-subhead')}
+            className={cn(FIELD_SURFACE, FIELD_SIZE.sm, 'ps-9 pe-9 text-subhead')}
           />
           {query && (
             <button
               type="button"
               onClick={() => setQuery('')}
               aria-label={tc('clear')}
-              className="tappable absolute right-2.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-slate-400 text-white transition-colors hover:bg-accent-500"
+              className="tappable absolute end-2.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-slate-400 text-white transition-colors hover:bg-accent-500"
             >
               <X className="h-3 w-3" strokeWidth={3} />
             </button>
@@ -240,7 +240,7 @@ export function ConversationList({ activeId }: { activeId?: string }) {
             >
               {/* Telegram uslubidagi inset ajratkich — matn boshlanishiga tekislangan */}
               {i > 0 && (
-                <div aria-hidden className="ml-[70px] mr-3 h-px origin-top scale-y-50 bg-[rgba(60,60,67,0.29)]" />
+                <div aria-hidden className="ms-[70px] me-3 h-px origin-top scale-y-50 bg-[rgba(60,60,67,0.29)]" />
               )}
               <ConversationRow c={c} active={c.id === activeId} />
             </div>
@@ -303,7 +303,7 @@ function ConversationRow({ c, active }: { c: Conversation; active: boolean }) {
         </div>
         <div className="flex items-center justify-between gap-2">
           <p className="truncate text-subhead text-slate-500">
-            {c.type === 'group' && <Users className="mr-1 inline h-3 w-3" />}
+            {c.type === 'group' && <Users className="me-1 inline h-3 w-3" />}
             {c.lastMessagePreview != null ? preview(c.lastMessagePreview) : t('startChat')}
           </p>
           {c.unreadCount > 0 && (

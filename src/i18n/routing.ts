@@ -21,7 +21,7 @@ import { defineRouting } from 'next-intl/routing';
  * javob sarlavhasida takrorlanmaydi.
  */
 export const routing = defineRouting({
-  locales: ['uz', 'ru', 'en'],
+  locales: ['uz', 'ru', 'en', 'ar', 'zh'],
   defaultLocale: 'uz',
   localePrefix: 'as-needed',
   localeDetection: false,
@@ -30,3 +30,17 @@ export const routing = defineRouting({
 });
 
 export type AppLocale = (typeof routing.locales)[number];
+
+/**
+ * Yozuv yo'nalishi — YAGONA manba (`<html dir>`, RTL uslublari, ekran
+ * o'quvchilar). Arab tili o'ngdan chapga: maket KO'ZGULANADI, matn emas.
+ *
+ * ⚠️ Yo'nalish `LOCALE_META` ichida emas, shu yerda: uni ildiz layout
+ * (server) o'qiydi, `LOCALE_META` esa shior/taklif matnlarini ham olib
+ * yuradi — yo'nalish uchun butun jadvalni import qilish shart emas.
+ */
+export const RTL_LOCALES = new Set<string>(['ar']);
+
+export function dirOf(locale: string): 'ltr' | 'rtl' {
+  return RTL_LOCALES.has(locale) ? 'rtl' : 'ltr';
+}

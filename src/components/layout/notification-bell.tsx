@@ -81,14 +81,14 @@ export function NotificationBell() {
       >
         <Bell className="h-[22px] w-[22px]" />
         {count > 0 && (
-          <span className="absolute -right-1 -top-1 flex h-[18px] min-w-[18px] items-center justify-center rounded-full bg-rose-500 px-1 text-caption-2 font-semibold text-white ring-2 ring-white">
+          <span className="absolute -end-1 -top-1 flex h-[18px] min-w-[18px] items-center justify-center rounded-full bg-rose-500 px-1 text-caption-2 font-semibold text-white ring-2 ring-white">
             {count > 9 ? '9+' : count}
           </span>
         )}
       </button>
 
       {open && (
-        <div className="material-menu absolute right-0 z-50 mt-2 w-80 max-w-[calc(100vw-2rem)] origin-top-right animate-scale-in overflow-hidden rounded-ios-lg shadow-modal ring-1 ring-black/[0.06]">
+        <div className="material-menu absolute end-0 z-50 mt-2 w-80 max-w-[calc(100vw-2rem)] origin-top-right rtl:origin-top-left animate-scale-in overflow-hidden rounded-ios-lg shadow-modal ring-1 ring-black/[0.06]">
           <div className="hairline-b flex items-center justify-between gap-2 px-4 py-2.5">
             <span className="text-subhead font-semibold text-brand-900">{t('title')}</span>
             {count > 0 && (
@@ -123,7 +123,7 @@ export function NotificationBell() {
                     key={n.id}
                     onClick={() => openNotification(n)}
                     className={cn(
-                      'hairline-b flex w-full items-start gap-3 px-4 py-3 text-left hv-row',
+                      'hairline-b flex w-full items-start gap-3 px-4 py-3 text-start hv-row',
                       !n.isRead && 'bg-accent-50/50 hover:bg-accent-50',
                     )}
                   >

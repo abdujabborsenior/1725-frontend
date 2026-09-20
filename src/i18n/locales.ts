@@ -25,7 +25,7 @@ export interface LocaleMeta {
   short: string;
   /** Open Graph `og:locale` */
   og: string;
-  /** "Til" so'zi shu tilda — menyu sarlavhasi uch tilda: "Til · Язык · Language" */
+  /** "Til" so'zi shu tilda — menyu sarlavhasida hamma tilning so'zi turadi */
   word: string;
   /**
    * Mahsulot shiori shu tilda — almashtirgich menyusida har til yonida
@@ -79,12 +79,38 @@ export const LOCALE_META: Record<AppLocale, LocaleMeta> = {
       dismiss: 'Close',
     },
   },
+  ar: {
+    name: 'العربية',
+    short: 'AR',
+    og: 'ar_AR',
+    word: 'اللغة',
+    tagline: 'من الفكرة إلى مشروع تجاري',
+    suggest: {
+      text: 'هل تريد عرض هذه الصفحة بالعربية؟',
+      action: 'الانتقال إلى العربية',
+      dismiss: 'إغلاق',
+    },
+  },
+  zh: {
+    name: '简体中文',
+    short: 'ZH',
+    og: 'zh_CN',
+    word: '语言',
+    tagline: '从创意到商业项目',
+    suggest: {
+      text: '要用简体中文查看此页面吗？',
+      action: '切换为简体中文',
+      dismiss: '关闭',
+    },
+  },
 };
 
-/** Menyu sarlavhasi — "Til · Язык · Language": har kim o'z so'zini topadi. */
-export const LANGUAGE_WORDS = (['uz', 'ru', 'en'] as const)
-  .map((l) => LOCALE_META[l].word)
-  .join(' · ');
+/**
+ * Menyu sarlavhasi — "Til · Язык · Language · اللغة · 语言": qaysi tilni
+ * bilmasin, odam o'z so'zini topadi. Ro'yxat `LOCALES` dan quriladi —
+ * yangi til qo'shilganda sarlavha o'z-o'zidan yangilanadi.
+ */
+export const LANGUAGE_WORDS = LOCALES.map((l) => LOCALE_META[l].word).join(' · ');
 
 export function isAppLocale(value: unknown): value is AppLocale {
   return typeof value === 'string' && (LOCALES as readonly string[]).includes(value);

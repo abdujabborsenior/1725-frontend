@@ -290,7 +290,7 @@ export function AiWorkspace() {
         <Link
           href="/"
           aria-label={t('workspace.backHome')}
-          className="yz-btn flex h-10 items-center gap-1.5 rounded-full pl-1.5 pr-3 text-[color:var(--yz-ink-2)]"
+          className="yz-btn flex h-10 items-center gap-1.5 rounded-full ps-1.5 pe-3 text-[color:var(--yz-ink-2)]"
         >
           <ArrowLeft className="h-5 w-5" strokeWidth={2.5} />
           <LogoMark className="h-[22px] w-[22px]" />
@@ -308,7 +308,7 @@ export function AiWorkspace() {
           </h1>
         </div>
 
-        <div className="ml-auto flex items-center gap-1">
+        <div className="ms-auto flex items-center gap-1">
           {!guest && (
             <>
               <button
@@ -335,7 +335,7 @@ export function AiWorkspace() {
       <div className="flex min-h-0 flex-1">
         {/* ── Tarix (desktop) ───────────────────────────────────── */}
         {!guest && (
-          <aside className="hidden w-[272px] shrink-0 border-r border-white/[0.07] lg:block">
+          <aside className="hidden w-[272px] shrink-0 border-e border-white/[0.07] lg:block">
             {rail}
           </aside>
         )}
@@ -349,7 +349,7 @@ export function AiWorkspace() {
               onClick={() => setDrawer(false)}
               className="absolute inset-0 bg-black/60 animate-fade-in"
             />
-            <div className="yz-panel absolute inset-y-0 left-0 flex w-[86%] max-w-[320px] flex-col border-r border-white/10 shadow-modal yz-drawer">
+            <div className="yz-panel absolute inset-y-0 start-0 flex w-[86%] max-w-[320px] flex-col border-e border-white/10 shadow-modal yz-drawer">
               <div className="flex h-14 shrink-0 items-center justify-between px-3">
                 <p className="text-subhead font-semibold text-[color:var(--yz-ink)]">
                   {t('workspace.chats')}
