@@ -13,6 +13,7 @@ import { EmptyState, PageHeader } from '@/components/ui/page-header';
 import { ProblemCard, ProblemCardSkeleton } from '@/components/problems/problem-card';
 import { useDebounce } from '@/lib/use-debounce';
 import { useFormatNumber } from '@/lib/format';
+import { useSsrSeed } from '@/lib/ssr-seed';
 
 export function ProblemsClient({ initialList }: { initialList: PaginatedResponse<Problem> | null }) {
   const t = useTranslations('problemsPage');
@@ -23,6 +24,9 @@ export function ProblemsClient({ initialList }: { initialList: PaginatedResponse
 
   const isDefaultView = page === 1 && !debouncedSearch;
 
+  // Standart ko'rinish SSR'dan: mehmon API'ga so'rov yubormaydi (ssr-seed.ts)
+  const seed = useSsrSeed(isDefaultView ? initialList : undefined, { personal: true });
+
   const { data, isLoading } = useQuery({
     queryKey: ['problems', { page, search: debouncedSearch }],
     queryFn: () =>
@@ -31,9 +35,7 @@ export function ProblemsClient({ initialList }: { initialList: PaginatedResponse
         limit: 9,
         search: debouncedSearch || undefined,
       }),
-    // SSR ma'lumoti — darhol ko'rsatiladi; updatedAt=0 → stale → jimgina yangilanadi
-    initialData: isDefaultView ? (initialList ?? undefined) : undefined,
-    initialDataUpdatedAt: 0,
+    ...seed,
   });
 
   const items = data?.data ?? [];

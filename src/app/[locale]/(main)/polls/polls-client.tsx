@@ -9,18 +9,19 @@ import { useFormatNumber } from '@/lib/format';
 import { PollCard, PollCardSkeleton } from '@/components/polls/poll-card';
 import { BackButton } from '@/components/ui/back-button';
 import { EmptyState, PageHeader } from '@/components/ui/page-header';
+import { useSsrSeed } from '@/lib/ssr-seed';
 
 export function PollsClient({ initialPolls }: { initialPolls: Poll[] | null }) {
   const t = useTranslations('polls');
   const fmt = useFormatNumber();
+  // SSR ro'yxati — mehmon API'ga so'rov yubormaydi; kirgan foydalanuvchida
+  // shaxsiy maydon (myVotedOptionId) uchun jimgina bitta yangilash
+  const seed = useSsrSeed(initialPolls, { personal: true });
   const { data: polls, isLoading } = useQuery({
     queryKey: ['polls'],
     queryFn: () => pollsApi.list(),
     staleTime: 30_000,
-    // SSR ro'yxati darhol ko'rinadi; updatedAt=0 → shaxsiy maydonlar
-    // (myVotedOptionId) background refetch'da keladi
-    initialData: initialPolls ?? undefined,
-    initialDataUpdatedAt: 0,
+    ...seed,
   });
 
   const activeCount = polls?.filter((p) => !p.isClosed).length ?? 0;

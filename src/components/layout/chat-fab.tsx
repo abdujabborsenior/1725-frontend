@@ -5,6 +5,7 @@ import { useQuery } from '@tanstack/react-query';
 import { useTranslations } from 'next-intl';
 import { MessageCircleFill } from '@/components/icons';
 import { chatApi } from '@/lib/api';
+import { UNREAD_POLL_MS } from '@/lib/constants';
 import { useAuthStore } from '@/store/auth.store';
 
 /**
@@ -33,7 +34,8 @@ export function ChatFab() {
     queryKey: ['chat-unread'],
     queryFn: () => chatApi.unreadCount(),
     enabled: !!token,
-    refetchInterval: 20_000,
+    refetchInterval: UNREAD_POLL_MS,
+    refetchOnWindowFocus: true,
   });
 
   // Suhbatlar sahifasining o'zida ma'nosiz.

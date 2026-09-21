@@ -621,12 +621,13 @@
     "start": "Get started free",
     "welcome": "Welcome, {name}",
     "hero": {
-      "title": "From idea <br></br>to business",
+      "title": "From idea <br></br><hl>to business</hl>",
       "lead": "MYMarkaz is where students and creative young people come together. Describe a problem, build the solution with the community, find a team and turn your idea into a real product.",
       "showcase": "Explore the showcase",
       "messages": "Messages",
       "whatIs": "What is a startup?",
-      "building": "What the community is building here"
+      "building": "What the community is building here",
+      "proof": "<b>{n}</b> startups and ideas are already here"
     },
     "stats": {
       "startups": "Startups",

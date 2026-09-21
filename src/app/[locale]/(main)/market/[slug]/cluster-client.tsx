@@ -12,6 +12,7 @@ import { StartupCard } from '@/components/startups/startup-card';
 import { opportunityTone } from '@/components/market/cluster-card';
 import { cn } from '@/lib/utils';
 import type { MarketClusterDetail, Startup } from '@/types';
+import { useSsrSeed } from '@/lib/ssr-seed';
 
 /** Bitta bozor yo'nalishi: talab, qoplash va shu yerdagi loyihalar. */
 export function ClusterClient({
@@ -24,12 +25,13 @@ export function ClusterClient({
   const t = useTranslations('market');
   const tc = useTranslations('clusterCard');
   const fmt = useFormatNumber();
+  // Ommaviy ma'lumot (shaxsiy maydon yo'q) — SSR yetarli, qayta so'ralmaydi
+  const seed = useSsrSeed(initial, { personal: false });
   const { data, isLoading, error } = useQuery({
     queryKey: ['market-cluster', slug],
     queryFn: () => marketApi.cluster(slug),
-    initialData: initial ?? undefined,
-    initialDataUpdatedAt: 0,
     staleTime: 5 * 60_000,
+    ...seed,
   });
 
   if (isLoading && !data) {

@@ -60,6 +60,19 @@ const nextConfig = {
   async headers() {
     return [{ source: '/:path*', headers: securityHeaders }];
   },
+  /**
+   * Sitemap INDEKSI ommaviy `/sitemap.xml` manzilida, lekin fayl
+   * `app/sitemap-index.xml/route.ts` da. Sabab: `app/sitemap.ts`
+   * (`generateSitemaps`) Next 14 DEV rejimida `/sitemap.xml/[[...]]`
+   * marshrutini yaratadi va `app/sitemap.xml/route.ts` bilan to'qnashib
+   * `next dev` ni ishga tushirmay qo'yardi. `beforeFiles` — fayl
+   * marshrutlaridan OLDIN qo'llanadi, ya'ni dev va prod'da bir xil ishlaydi.
+   */
+  async rewrites() {
+    return {
+      beforeFiles: [{ source: '/sitemap.xml', destination: '/sitemap-index.xml' }],
+    };
+  },
   // iOS ikonka to'plami — barrel importni to'g'ridan-to'g'ri faylga aylantiradi
   // (`import { Bell } from '@/components/icons'` → `.../icons/bell`), shunda
   // bundle'ga faqat ishlatilgan ikonkalar tushadi.

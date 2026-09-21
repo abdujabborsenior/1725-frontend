@@ -10,6 +10,7 @@ import { EmptyState, PageHeader } from '@/components/ui/page-header';
 import { CardSkeleton } from '@/components/ui/skeleton';
 import { ClusterCard } from '@/components/market/cluster-card';
 import type { MarketCluster } from '@/types';
+import { useSsrSeed } from '@/lib/ssr-seed';
 
 /**
  * **Bozor xaritasi** — ommaviy sahifa (mehmonlar uchun ham ochiq).
@@ -24,12 +25,13 @@ export function MarketClient({
   initialClusters: MarketCluster[] | null;
 }) {
   const t = useTranslations('market');
+  // Ommaviy ma'lumot (shaxsiy maydon yo'q) — SSR yetarli, qayta so'ralmaydi
+  const seed = useSsrSeed(initialClusters, { personal: false });
   const { data, isLoading } = useQuery({
     queryKey: ['market-clusters'],
     queryFn: () => marketApi.clusters(24),
-    initialData: initialClusters ?? undefined,
-    initialDataUpdatedAt: 0,
     staleTime: 5 * 60_000,
+    ...seed,
   });
 
   const clusters = data ?? [];

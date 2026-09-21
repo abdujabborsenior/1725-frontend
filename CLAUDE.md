@@ -127,16 +127,36 @@ Barchasi blur+saturate. Faqat chrome/overlay uchun — kontent kartasiga emas.
   `.cta-arrow` (hover'da 3px o'ngga). Hover qoidasi: har doim
   `@media (hover: hover)` ichida — sensorli ekranda holat "yopishib" qolmaydi.
 - **Tab bar** (mobil): faol band TO'LDIRILGAN (`*Fill`) ikonka + tint.
-- **Hero vizuali** (`landing/hero-visual.tsx`) — home hero'ning o'ng ustuni:
-  stock rasm emas, MAHSULOTNING o'zi. Uch sirt (muammo chipi → Yechim AI chipi
-  → startap kartasi) turli balandlikda qalashadi; chiplar kartaning faqat
-  BURCHAGINI qoplaydi (logotip/sarlavha/reyting hech qachon berkilmaydi).
-  Rasm fayli yo'q — DOM + tokenlar (retina'da aniq, tarmoq so'rovi 0, LCP
-  h1 matnida qoladi). **Mobilda ham uchala qatlam ko'rinadi** (2026-08-28):
-  kengliklar FOIZDA (karta 60% · muammo 53% · AI chipi 42% — yig'indisi
-  100% dan kam, ya'ni chip o'ng qirrasi kartaning 16px chekinishidan chapda
-  qoladi), matn qisqargan variant bilan. Qat'iy px kengliklar 360px'da
-  reyting qatorini qoplab qo'yardi. Kanvas balandligi o'zgarmadi.
+- **Hero — "Markaz orbitasi"** (`landing/hero-visual.tsx`, 2026-09-21) — home
+  hero'ning o'ng ustuni: stock rasm emas, MAHSULOTNING o'zi harakatda. Markazda
+  MYMarkaz belgisi (oq "linza" + aylanuvchi skaner yoyi + signal to'lqinlari),
+  atrofida ikki orbita (soha ilova-ikonkalari va hamjamiyat a'zolari, belgilar
+  teskari aylanib doim TIK turadi), fonda logotipning 8 yo'nalishi nozik nur
+  bo'lib tarqaladi; MUAMMO kartasidan markazga, markazdan Yechim AI va STARTAP
+  kartasiga yorug'lik nurlari oqadi (sarlavhaning bayoni). Seksiya foni —
+  statik `.hero-aurora` (rang faqat vizual atrofida, matn ustuni oq), h1 dagi
+  manzil iborasi `<hl>` → `.hero-hl` (brend gradienti; `dekorativ gradient
+  taqiqi`dan ONGLI istisno — faqat shu bir ibora). Ostida jonli ijtimoiy
+  isbot (`HeroProof`: haqiqiy avatarlar + loyiha/g'oya soni; ma'lumot kelguncha
+  joy band, xato bo'lsa yashirin — yolg'on "0+" yo'q).
+  **Geometriya qoidalari** (o'lchab tasdiqlangan, 360…1440 + RTL):
+  · markaz nuqtasi `--hub-x/--hub-y` (globals.css; sm+ 58%/35%, mobil 60%/34%) —
+    logotip hech qaysi karta bilan KESISHMAYDI (o'lchov 0);
+  · nurlar 480×470 koordinatada, boshi/oxiri ATAYLAB karta/markaz ostida —
+    5 tildagi matn uzunligi o'zgarsa ham nur "havoda" uzilmaydi. Markaz yoki
+    karta o'lchami o'zgarsa `BEAMS` va `--hub-*` BIRGA yangilanadi;
+  · kartalar mobilda FOIZDA (46% / 58% / 40%), kanvas balandligi qat'iy.
+  **Motion — §7.8 dan ONGLI istisno (foydalanuvchi direktivasi):** doimiy harakat
+  faqat transform/opacity (kompozitor), kirishdan KEYIN boshlanadi
+  (`--hub-delay`), hero ekrandan chiqsa `[data-paused]` bilan TO'XTAYDI (IO,
+  React render'siz), `prefers-reduced-motion` da 0 ta animatsiya (nurlar chizilgan
+  holatda). Yagona paint animatsiyasi — nurlardagi qisqa impuls. Rang emas
+  POZITSIYA o'zgargani uchun Speed Index gistogrammasi deyarli qimirlamaydi
+  (2026-07-07 dagi SI muammosi hero FONINING rang animatsiyasidan edi — fon
+  shuning uchun statik). Bu naqsh boshqa bloklarga TARQATILMAYDI.
+- **Marquee** (`landing/marquee.tsx`) — oq kapsula + hairline, har soha o'z
+  system rangidagi DOIRA belgida (kulrang plomba + kulrang ikonka "o'chiq"
+  ko'rinardi).
 - **AI kirish nuqtasi** (`ai/ai-launcher.tsx`) — home'dagi Yechim AI moduli:
   chapda NIMA ekani (marka + sarlavha + bir jumla), o'ngda NIMA QILISH kerakligi
   (maydon + tez savollar). Ikki ustun faqat `lg`dan (768px'da sarlavha ustuni
@@ -467,12 +487,37 @@ overflow tekshiruvi. Har katta o'zgarishdan keyin build + lint + vizual.
 2. **LCP**: sahifa root'iga fade YO'Q; LCP element opacity-0 dan boshlanmaydi
    (`.hero-enter-x` faqat transform).
 3. **Reveal**: `landing/reveal.tsx` (CSS+IO). framer faqat chatda.
-4. **SSR initial data**: public sahifalar `fetchInitial` → `initialData`
-   (+`initialDataUpdatedAt: 0`); LCP rasmga `preload(fetchPriority: high)`.
+4. **SSR initial data**: public sahifalar `fetchInitial` → **`useSsrSeed()`**
+   (`lib/ssr-seed.ts`, 2026-09-21) — `initialData` ni qo'lda yozmang.
+   `personal: true` (javobda `likedByMe`/`votedOptionId`/`isFollowedByMe`...) —
+   mehmonda qayta so'rov YO'Q, kirgan foydalanuvchida bitta yangilash;
+   `personal: false` — hech kimda qayta so'ralmaydi. ⚠️ Eski
+   `initialDataUpdatedAt: 0` naqshi HAR mehmon ko'rishini API so'roviga
+   aylantirardi (1M = 1M keraksiz chaqiruv). ⚠️ Detal sahifalarida
+   ishlatilmaydi — klient GET ko'rishlar sonini hisoblaydi. LCP rasmga
+   `preload(fetchPriority: high)`.
 5. **Rasmlar**: list'da birinchi 1–2 karta `priority`, qolgani lazy.
 6. **Kontrast AA**: §2.1 qiymatlari; `opacity-*` bilan matn xiralashtirish taqiq.
 7. **Home**: below-fold `LazySection` + `next/dynamic` + `cv-auto`.
-8. Above-fold'da cheksiz animatsiya taqiq.
+8. Above-fold'da cheksiz animatsiya taqiq. **Yagona istisno — home hero "Markaz
+   orbitasi"** (§2.5): kompozitor-only, kechiktirilgan start, off-screen pauza,
+   reduced-motion'da statik.
+9. **Sitemap indeksi** `app/sitemap-index.xml/route.ts` da, ommaviy `/sitemap.xml`
+   ga `next.config.mjs` dagi `beforeFiles` rewrite bilan ulanadi. ⚠️
+   `app/sitemap.xml/route.ts` ni QAYTA yaratmang: `app/sitemap.ts`
+   (`generateSitemaps`) Next 14 dev'da `/sitemap.xml/[[...]]` yasaydi va
+   to'qnashuv `next dev` ni umuman ishga tushirmay qo'yardi (2026-09-19..21).
+10. **Prefetch — faqat NIYAT bo'yicha** (`i18n/intent-link.tsx`, 2026-09-21).
+    Ilovadagi yagona `Link` (`@/i18n/navigation`) ko'rinishdagi havolani
+    oldindan YUKLAMAYDI; hover/fokus/teginishda bitta sahifa, `kind: AUTO`.
+    Sabab (prod'da o'lchandi): viewport-prefetch har ko'rishni serverga 10–18
+    qo'shimcha RSC so'roviga aylantirardi. `next/link` ni to'g'ridan import
+    QILMANG; `router.prefetch()` ni `kind` siz chaqirmang (standarti FULL —
+    dinamik sahifani to'liq render qiladi). ⚠️ Viewport-prefetch faqat PROD
+    build'da ishlaydi — `next dev` da tekshirib bo'lmaydi.
+11. **Davriy so'rovlar** — `UNREAD_POLL_MS` (`lib/constants.ts`, 60 s) +
+    `refetchOnWindowFocus: true`. Yangi polling qo'shishdan oldin hisoblang:
+    1M kirgan foydalanuvchi ÷ oraliq = sekundiga so'rov (20 s → 50 000/s).
 
 ## 8. Sana/vaqt (i18n — MAJBURIY)
 `date-fns` TO'G'RIDAN chaqirilmaydi (locale'siz "1 day ago" kabi inglizcha matn

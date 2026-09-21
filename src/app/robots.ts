@@ -1,5 +1,6 @@
 import type { MetadataRoute } from 'next';
 
+import { routing } from '@/i18n/routing';
 import { SITE_URL } from '@/lib/seo';
 
 /**
@@ -28,7 +29,10 @@ const PRIVATE = [
 ];
 
 export default function robots(): MetadataRoute.Robots {
-  const disallow = PRIVATE.flatMap((p) => [p, `/ru${p}`, `/en${p}`]);
+  // Barcha prefiksli tillar (ru/en/ar/zh) — `routing.locales` dan: til
+  // qo'shilganda ro'yxat o'zi kengayadi (ilgari ar/zh unutilib qolgan edi)
+  const prefixes = routing.locales.filter((l) => l !== routing.defaultLocale);
+  const disallow = PRIVATE.flatMap((p) => [p, ...prefixes.map((l) => `/${l}${p}`)]);
   return {
     rules: [
       {

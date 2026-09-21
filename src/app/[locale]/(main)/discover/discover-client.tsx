@@ -13,6 +13,7 @@ import { CardSkeleton, UserRowSkeleton } from '@/components/ui/skeleton';
 import { SearchField } from '@/components/ui/search-field';
 import { Segmented } from '@/components/ui/segmented';
 import { EmptyState, PageHeader } from '@/components/ui/page-header';
+import { useSsrSeed } from '@/lib/ssr-seed';
 
 const RECENT_KEY = 'sh_recent_searches';
 const MAX_RECENT = 8;
@@ -83,20 +84,23 @@ export function DiscoverClient({
     () => chatApi.groupSearch(debounced),
     searching && (tab === 'all' || tab === 'groups'),
   );
+  // SSR boshlang'ich ro'yxatlar — mehmon API'ga so'rov yubormaydi; kirgan
+  // foydalanuvchida follow/a'zolik holati uchun jimgina bitta yangilash
+  const suggestionsSeed = useSsrSeed(initialSuggestions, { personal: true });
+  const groupsSeed = useSsrSeed(initialGroups, { personal: true });
   const { data: suggestions } = useQuery({
     queryKey: ['discover-suggestions'],
     queryFn: () => usersApi.suggestions(12),
-    enabled: !searching,
-    // SSR boshlang'ich ro'yxat — CLS yo'q; follow holati background'da aniqlanadi
-    initialData: initialSuggestions ?? undefined,
-    initialDataUpdatedAt: 0,
+    initialData: suggestionsSeed.initialData,
+    initialDataUpdatedAt: suggestionsSeed.initialDataUpdatedAt,
+    enabled: !searching && (suggestionsSeed.enabled ?? true),
   });
   const { data: groups } = useQuery({
     queryKey: ['discover-groups'],
     queryFn: () => chatApi.publicGroups(20),
-    enabled: !searching,
-    initialData: initialGroups ?? undefined,
-    initialDataUpdatedAt: 0,
+    initialData: groupsSeed.initialData,
+    initialDataUpdatedAt: groupsSeed.initialDataUpdatedAt,
+    enabled: !searching && (groupsSeed.enabled ?? true),
   });
 
   const isFetching = peopleLoading || groupsLoading;

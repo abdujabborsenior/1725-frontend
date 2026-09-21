@@ -17,6 +17,19 @@ import {
 } from '@/components/icons';
 import { problemsApi, startupsApi, chatApi, usersApi, pollsApi } from '@/lib/api';
 import { useAuthStore } from '@/store/auth.store';
+import { useFormatNumber } from '@/lib/format';
+import { cn } from '@/lib/utils';
+import type {
+  LeaderboardResponse,
+  PaginatedResponse,
+  Poll,
+  Problem,
+  PublicGroup,
+  PublicUserCard,
+  Startup,
+} from '@/types';
+import { useSsrSeed } from '@/lib/ssr-seed';
+import { Avatar } from '@/components/ui/avatar';
 import dynamic from 'next/dynamic';
 import { Reveal, RevealGroup, RevealItem } from '@/components/landing/reveal';
 import { AiLauncher } from '@/components/ai/ai-launcher';
@@ -125,41 +138,73 @@ function SectionHeader({
   );
 }
 
-export function HomeClient() {
+/** Bosh sahifaning SSR (ISR) ma'lumoti — `page.tsx` serverda oladi. */
+export interface HomeInitial {
+  startups: PaginatedResponse<Startup> | null;
+  leaderboard: LeaderboardResponse | null;
+  problems: PaginatedResponse<Problem> | null;
+  groups: PublicGroup[] | null;
+  suggestions: PublicUserCard[] | null;
+  polls: Poll[] | null;
+}
+
+export function HomeClient({ initial }: { initial: HomeInitial }) {
   const t = useTranslations('home');
   const { token, user } = useAuthStore();
+
+  /* Barcha bo'limlar SSR'dan: mehmon API'ga so'rov yubormaydi, kirgan
+     foydalanuvchida esa shaxsiy belgilar (yoqtirgan, a'zo, ovoz bergan)
+     uchun jimgina bitta yangilash (`useSsrSeed`). SSR xato bergan bo'lsa —
+     odatdagi client fetch (fail-open). */
+  const startupsSeed = useSsrSeed(initial.startups, { personal: true });
+  const leaderboardSeed = useSsrSeed(initial.leaderboard, { personal: true });
+  const problemsSeed = useSsrSeed(initial.problems, { personal: true });
+  const groupsSeed = useSsrSeed(initial.groups, { personal: true });
+  const suggestionsSeed = useSsrSeed(initial.suggestions, { personal: true });
+  const pollsSeed = useSsrSeed(initial.polls, { personal: true });
 
   const { data: featuredStartups, isLoading: startupsLoading } = useQuery({
     queryKey: ['startups-landing'],
     queryFn: () => startupsApi.list({ limit: 6, sort: 'featured' }),
     staleTime: 60_000,
+    ...startupsSeed,
   });
   const { data: topRated } = useQuery({
     queryKey: ['startups-leaderboard-home'],
     queryFn: () => startupsApi.leaderboard({ limit: 6, period: 'all' }),
     staleTime: 60_000,
+    ...leaderboardSeed,
   });
   const { data: recentProblems } = useQuery({
     queryKey: ['problems-landing'],
     queryFn: () => problemsApi.list({ limit: 6, status: 'open' }),
     staleTime: 60_000,
+    ...problemsSeed,
   });
   const { data: groups } = useQuery({
     queryKey: ['home-groups'],
     queryFn: () => chatApi.publicGroups(5),
     staleTime: 60_000,
+    ...groupsSeed,
   });
   const { data: suggestions } = useQuery({
     queryKey: ['home-suggestions'],
     queryFn: () => usersApi.suggestions(5),
     staleTime: 60_000,
+    ...suggestionsSeed,
   });
   const { data: polls } = useQuery({
     queryKey: ['home-polls'],
     queryFn: () => pollsApi.list(),
     staleTime: 60_000,
+    ...pollsSeed,
   });
   const activePoll = polls?.find((p) => !p.isClosed) ?? polls?.[0];
+  // Hero'dagi ijtimoiy isbot: platformadagi startaplar + ochiq muammolar (g'oyalar)
+  const communityTotal =
+    featuredStartups && recentProblems
+      ? featuredStartups.meta.total + recentProblems.meta.total
+      : undefined;
 
   const stats = [
     { icon: Rocket, key: 'startups', value: featuredStartups?.meta.total },
@@ -171,14 +216,22 @@ export function HomeClient() {
   return (
     <div className="space-y-16 md:space-y-24">
       {/* ── Hero ─────────────────────────────────────────────────────────
-          Apple mahsulot sahifasi ritmi: tinch oq sirt, yirik va zich
-          sarlavha, bitta asosiy amal + bitta oddiy havola. Dekor yo'q. */}
-      <section className="-mx-4 bg-white px-4 pb-14 pt-12 text-center md:mx-0 md:rounded-ios-3xl md:px-6 md:pb-20 md:pt-16 lg:text-start">
-        <div className="mx-auto grid max-w-5xl items-center gap-12 lg:grid-cols-[minmax(0,1fr)_minmax(0,444px)] lg:gap-10">
+          Chapda — NIMA (sarlavha, bitta asosiy amal, jonli ijtimoiy isbot),
+          o'ngda — QANDAY: "Markaz orbitasi" sahnasi (muammo → platforma →
+          startap). Rang faqat vizual atrofidagi yorug'likda; matn ustuni
+          tinch oq qoladi. `overflow-hidden` — orbita chetlari sirt bilan
+          kesiladi, sahifa hech qachon gorizontal toshmaydi. */}
+      <section className="relative isolate -mx-4 overflow-hidden bg-white px-4 pb-14 pt-12 text-center md:mx-0 md:rounded-ios-3xl md:px-6 md:pb-20 md:pt-16 lg:text-start">
+        <div aria-hidden className="hero-aurora pointer-events-none absolute inset-0 -z-10" />
+        <div className="mx-auto grid max-w-5xl items-center gap-10 lg:grid-cols-[minmax(0,1fr)_minmax(0,480px)] lg:gap-8">
           <div>
             <h1 className="text-[2.5rem] font-semibold leading-[1.05] tracking-[-0.03em] text-brand-900 md:text-[4.5rem] lg:text-[3.25rem] xl:text-[3.75rem]">
-              {/* Ikki ustunli maketda sarlavha o'zi tabiiy o'raladi */}
-              {t.rich('hero.title', { br: () => <br className="lg:hidden" /> })}
+              {/* Ikki ustunli maketda sarlavha o'zi tabiiy o'raladi.
+                  `hl` — manzil iborasi (brend tinti gradienti). */}
+              {t.rich('hero.title', {
+                br: () => <br className="lg:hidden" />,
+                hl: (chunks) => <span className="hero-hl">{chunks}</span>,
+              })}
             </h1>
 
             <p className="mx-auto mt-5 max-w-xl text-title-3 font-normal leading-snug text-slate-500 md:mt-6 lg:mx-0">
@@ -222,10 +275,12 @@ export function HomeClient() {
                 </>
               )}
             </div>
+
+            <HeroProof total={communityTotal} people={suggestions} />
           </div>
 
-          {/* Vizual — stock rasm emas, mahsulotning o'zi (DOM, rasm fayli yo'q) */}
-          <div className="mt-2 lg:mt-0">
+          {/* Vizual — stock rasm emas, mahsulotning o'zi (DOM + SVG, rasm fayli yo'q) */}
+          <div className="lg:-me-2">
             <HeroVisual />
           </div>
         </div>
@@ -235,7 +290,7 @@ export function HomeClient() {
           className="hero-enter mx-auto mt-14 max-w-5xl"
           style={{ '--enter-delay': '0.34s' } as CSSProperties}
         >
-          <p className="mb-3 text-footnote text-slate-500">{t('hero.building')}</p>
+          <p className="mb-3 text-footnote font-medium text-slate-500">{t('hero.building')}</p>
           <Marquee />
         </div>
       </section>
@@ -539,6 +594,53 @@ export function HomeClient() {
         </p>
       )}
 
+    </div>
+  );
+}
+
+/**
+ * Hero ostidagi jonli ijtimoiy isbot: haqiqiy hamjamiyat a'zolari (avatarlar)
+ * va platformadagi loyiha/g'oyalar soni. Ma'lumot kelguncha joy BAND turadi
+ * (min-h) va faqat shaffoflik almashadi — maket sakramaydi (CLS 0). Server
+ * javob bermasa qator ko'rinmay qoladi (yolg'on "0+" ko'rsatilmaydi).
+ */
+function HeroProof({ total, people }: { total?: number; people?: PublicUserCard[] }) {
+  const t = useTranslations('home');
+  const fmt = useFormatNumber();
+  const ready = total !== undefined && total > 0;
+  const faces = people?.slice(0, 4) ?? [];
+  return (
+    <div
+      aria-hidden={!ready}
+      className={cn(
+        // Mobilda ustma-ust (matn bir qatorda qoladi), kengroq ekranda yonma-yon
+        'mt-7 flex min-h-[64px] flex-col items-center justify-center gap-2.5 transition-opacity duration-500 ease-ios sm:min-h-[34px] sm:flex-row sm:gap-3 lg:justify-start',
+        ready ? 'opacity-100' : 'opacity-0',
+      )}
+    >
+      {faces.length > 0 && (
+        <span className="flex shrink-0">
+          {faces.map((u, i) => (
+            <Avatar
+              key={u.id}
+              src={u.avatarUrl}
+              name={u.fullName}
+              size={30}
+              className={cn('ring-2 ring-white', i > 0 && '-ms-1')}
+            />
+          ))}
+        </span>
+      )}
+      <p className="text-subhead text-slate-500">
+        {t.rich('hero.proof', {
+          n: `${fmt(total ?? 0)}+`,
+          b: (chunks) => (
+            <span translate="no" className="font-semibold tabular-nums text-brand-900">
+              {chunks}
+            </span>
+          ),
+        })}
+      </p>
     </div>
   );
 }

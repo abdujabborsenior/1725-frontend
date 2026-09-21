@@ -621,12 +621,13 @@
     "start": "Bepul boshlash",
     "welcome": "Xush kelibsiz, {name}",
     "hero": {
-      "title": "G‘oyadan <br></br>biznes loyihagacha",
+      "title": "G‘oyadan <br></br><hl>biznes loyihagacha</hl>",
       "lead": "MYMarkaz — o‘quvchilar, talabalar va kreativ yoshlar yig‘iladigan maydon. Muammoni yozing, yechimini hamjamiyat bilan quring, jamoa toping va g‘oyangizni real mahsulotga aylantiring.",
       "showcase": "Vitrinani ko‘rish",
       "messages": "Suhbatlar",
       "whatIs": "Startap nima?",
-      "building": "Hamjamiyat shu yerda nimalar quryapti"
+      "building": "Hamjamiyat shu yerda nimalar quryapti",
+      "proof": "<b>{n}</b> startap va g‘oya allaqachon shu yerda"
     },
     "stats": {
       "startups": "Startaplar",

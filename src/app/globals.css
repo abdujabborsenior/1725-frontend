@@ -1828,6 +1828,273 @@ select:-webkit-autofill {
   }
 }
 
+/* ═══ HERO — "MARKAZ ORBITASI" (2026-09-21) ════════════════════════════
+   Bosh sahifa hero'sining jonli sahnasi (`landing/hero-visual.tsx`).
+   Charter §7.8 ("above-fold'da cheksiz animatsiya yo'q") dan ONGLI istisno —
+   foydalanuvchi direktivasi bilan, lekin qat'iy shartlar ostida:
+    1. doimiy harakat FAQAT transform/opacity (kompozitor, main thread bo'sh);
+       yagona paint animatsiyasi — nurdagi qisqa yorug'lik impulsi;
+    2. hammasi kirish sahnasidan KEYIN boshlanadi (`--hub-delay`) — LCP va
+       Speed Index kadrlari tinch qoladi (rang emas, POZITSIYA o'zgaradi —
+       speedline gistogrammasi deyarli qimirlamaydi);
+    3. hero ekrandan chiqsa to'xtaydi (`[data-paused]`);
+    4. `prefers-reduced-motion` — to'liq statik (pastdagi blokda). */
+.hub {
+  /* Markaz nuqtasi kartalar orasidagi bo'sh joyda: muammo kartasining
+     o'ng qirrasi va startap kartasining yuqori qirrasi bilan kesishmaydi
+     (o'lchandi). Nurlar ham shu nuqtaga qaratilgan — birga o'zgartiriladi. */
+  --hub-x: 60%;
+  --hub-y: 34%;
+  --hub-delay: 1.1s;
+}
+@media (min-width: 640px) {
+  .hub {
+    --hub-x: 58%;
+    --hub-y: 35%;
+  }
+}
+.hub[data-paused] *,
+.hub[data-paused] *::before,
+.hub[data-paused] *::after {
+  animation-play-state: paused !important;
+}
+/* Markaz nuqtasi — RTL'da ko'zgulanadi (kompozitsiya tomonlari almashadi) */
+:where(.hub-center) {
+  left: var(--hub-x);
+  top: var(--hub-y);
+  transform: translate(-50%, -50%);
+}
+[dir='rtl'] :where(.hub-center) {
+  left: calc(100% - var(--hub-x));
+}
+[dir='rtl'] .hub-beams {
+  transform: scaleX(-1);
+}
+
+@keyframes hubSpin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+/* Orbita aylanishi; belgilar ichida TESKARI yo'nalish bilan tik turadi.
+   `--dur` orbitada beriladi va ichki belgiga meros o'tadi — sinxron. */
+.hub-spin,
+.hub-spin-rev {
+  animation: hubSpin var(--dur, 60s) linear infinite;
+  animation-delay: var(--hub-delay);
+}
+.hub-spin-rev {
+  animation-direction: reverse;
+}
+
+/* Kirish: orbitalar "ochiladi", markaz prujina bilan chiqadi */
+.hub-bloom {
+  animation: hubBloom 1.05s var(--ease-ios) both;
+  animation-delay: 0.05s;
+}
+@keyframes hubBloom {
+  from {
+    opacity: 0;
+    transform: scale(0.9) rotate(-10deg);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+.hub-pop {
+  animation: hubPop 0.8s var(--ease-ios-spring) both;
+  animation-delay: 0.12s;
+}
+@keyframes hubPop {
+  from {
+    opacity: 0;
+    transform: scale(0.6);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* Markaz nuri (statik) */
+.hub-halo {
+  background: radial-gradient(
+    closest-side,
+    rgba(0, 122, 255, 0.2),
+    rgba(88, 86, 214, 0.09) 55%,
+    rgba(88, 86, 214, 0) 100%
+  );
+}
+/* Signal to'lqinlari — markazdan tarqaladi */
+.hub-ripple {
+  border: 1.5px solid rgba(0, 122, 255, 0.3);
+  opacity: 0;
+  animation: hubRipple 5.2s cubic-bezier(0.2, 0.6, 0.3, 1) infinite;
+  animation-delay: calc(var(--hub-delay) + var(--i, 0s));
+}
+@keyframes hubRipple {
+  0% {
+    opacity: 0.7;
+    transform: scale(1);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(2.35);
+  }
+}
+/* Markaz atrofidagi "skaner" yoyi (konus gradient → yupqa halqa) */
+.hub-scan {
+  background: conic-gradient(
+    from 0deg,
+    rgba(0, 122, 255, 0) 0deg 190deg,
+    rgba(0, 122, 255, 0.55) 292deg,
+    #5856d6 352deg,
+    rgba(88, 86, 214, 0) 360deg
+  );
+  -webkit-mask: radial-gradient(farthest-side, transparent calc(100% - 2.5px), #000 calc(100% - 2px));
+  mask: radial-gradient(farthest-side, transparent calc(100% - 2.5px), #000 calc(100% - 2px));
+  animation: hubSpin 5.5s linear infinite;
+  animation-delay: var(--hub-delay);
+}
+/* Kometa: orbita chizig'i ustidagi yorug'lik izi + yorqin bosh */
+.hub-comet {
+  background: conic-gradient(
+    from 0deg,
+    rgba(0, 122, 255, 0) 0deg 262deg,
+    rgba(0, 122, 255, 0.5) 345deg,
+    rgba(0, 122, 255, 0.95) 360deg
+  );
+  -webkit-mask: radial-gradient(farthest-side, transparent calc(100% - 2px), #000 calc(100% - 1.5px));
+  mask: radial-gradient(farthest-side, transparent calc(100% - 2px), #000 calc(100% - 1.5px));
+}
+.hub-comet-head {
+  background: #fff;
+  box-shadow:
+    0 0 0 2px rgba(0, 122, 255, 0.9),
+    0 0 12px 3px rgba(0, 122, 255, 0.5);
+}
+
+/* Kartalar tinch "suzadi" (har biri o'z fazasida) */
+.hub-float {
+  animation: hubFloat var(--float-dur, 8s) ease-in-out infinite;
+  animation-delay: var(--float-delay, var(--hub-delay));
+}
+@keyframes hubFloat {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0);
+  }
+  50% {
+    transform: translate3d(0, var(--float-y, -6px), 0);
+  }
+}
+/* "Muammo" yorlig'idagi jonli nuqta */
+.hub-live {
+  opacity: 0;
+  animation: hubLive 2.4s ease-out infinite;
+  animation-delay: var(--hub-delay);
+}
+@keyframes hubLive {
+  0% {
+    opacity: 0.75;
+    transform: scale(1);
+  }
+  80%,
+  100% {
+    opacity: 0;
+    transform: scale(2.6);
+  }
+}
+
+/* Nurlar: kirishda chiziladi, keyin bo'ylab yorug'lik impulsi yuguradi.
+   `pathLength="100"` — nur uzunligidan qat'i nazar foizda hisoblanadi. */
+.hub-beam {
+  stroke-dasharray: 100 100;
+  stroke-dashoffset: 100;
+  animation: hubDraw 1.1s var(--ease-ios) forwards;
+  animation-delay: var(--draw-delay, 0.4s);
+}
+@keyframes hubDraw {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+.hub-pulse {
+  stroke-dasharray: 10 150;
+  stroke-dashoffset: 10;
+  opacity: 0;
+  animation: hubPulse 3.4s cubic-bezier(0.45, 0.05, 0.3, 1) infinite;
+  animation-delay: calc(var(--hub-delay) + var(--pulse-delay, 0s));
+}
+@keyframes hubPulse {
+  0% {
+    stroke-dashoffset: 10;
+    opacity: 0;
+  }
+  12%,
+  85% {
+    opacity: 1;
+  }
+  100% {
+    stroke-dashoffset: -100;
+    opacity: 0;
+  }
+}
+
+/* Yechim AI chipi — AI spektridagi ingichka hoshiya (oq sirt saqlanadi) */
+.hub-ai-chip {
+  border: 1px solid transparent;
+  background:
+    linear-gradient(#fff, #fff) padding-box,
+    linear-gradient(135deg, rgba(10, 132, 255, 0.55), rgba(139, 123, 243, 0.55)) border-box;
+  box-shadow: 0 16px 38px -16px rgba(60, 50, 160, 0.35);
+}
+/* Namuna startap muqovasi — yorug', rangli (to'q slab EMAS) */
+.hub-cover {
+  background:
+    radial-gradient(120% 140% at 0% 0%, rgba(255, 255, 255, 0.3), transparent 55%),
+    linear-gradient(125deg, #5856d6 0%, #3e7bfa 55%, #32ade6 100%);
+}
+
+/* Hero sirtining yorug'ligi — vizual orqasidagi rangli "aurora" (statik).
+   Rang faqat vizual atrofida; matn ustuni tinch oq qoladi (o'qilish). */
+.hero-aurora {
+  background:
+    radial-gradient(38% 50% at 76% 42%, rgba(0, 122, 255, 0.14), transparent 70%),
+    radial-gradient(34% 44% at 95% 80%, rgba(88, 86, 214, 0.13), transparent 72%),
+    radial-gradient(30% 38% at 60% 94%, rgba(50, 173, 230, 0.11), transparent 70%),
+    radial-gradient(26% 30% at 3% 0%, rgba(255, 149, 0, 0.07), transparent 72%);
+}
+@media (max-width: 1023.98px) {
+  /* Tor ekranda vizual matn OSTIDA — yorug'lik ham pastga ko'chadi */
+  .hero-aurora {
+    background:
+      radial-gradient(75% 30% at 62% 70%, rgba(0, 122, 255, 0.13), transparent 72%),
+      radial-gradient(60% 24% at 92% 86%, rgba(88, 86, 214, 0.12), transparent 72%),
+      radial-gradient(55% 22% at 20% 92%, rgba(50, 173, 230, 0.1), transparent 72%),
+      radial-gradient(50% 18% at 6% 0%, rgba(255, 149, 0, 0.06), transparent 72%);
+  }
+}
+[dir='rtl'] .hero-aurora {
+  transform: scaleX(-1);
+}
+
+/* Sarlavhadagi manzil ("biznes loyihagacha") — brend tinti gradienti.
+   Faqat shu bir ibora; LCP bloki (h1) statik qoladi. */
+.hero-hl {
+  background-image: linear-gradient(100deg, #0071e3 0%, #2f6bf0 40%, #5856d6 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  -webkit-text-fill-color: transparent;
+  -webkit-box-decoration-break: clone;
+  box-decoration-break: clone;
+}
+[dir='rtl'] .hero-hl {
+  background-image: linear-gradient(-100deg, #0071e3 0%, #2f6bf0 40%, #5856d6 100%);
+}
+
 .cv-auto {
   content-visibility: auto;
   contain-intrinsic-size: auto 560px;
@@ -2681,6 +2948,24 @@ select:-webkit-autofill {
   .hero-enter-x {
     animation: none !important;
     opacity: 1;
+  }
+  /* Markaz orbitasi — to'liq statik: orbitalar, kartalar va nurlar joyida,
+     faqat "yuguruvchi" qatlamlar (impuls, to'lqin, kometa) yashiriladi. */
+  .hub *,
+  .hub *::before,
+  .hub *::after {
+    animation: none !important;
+  }
+  .hub-beam {
+    stroke-dashoffset: 0;
+  }
+  .hub-pulse,
+  .hub-ripple,
+  .hub-live,
+  .hub-comet,
+  .hub-comet-head,
+  .hub-scan {
+    display: none;
   }
   html {
     scroll-behavior: auto;

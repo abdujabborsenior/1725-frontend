@@ -621,12 +621,13 @@
     "start": "免费开始",
     "welcome": "欢迎，{name}",
     "hero": {
-      "title": "从创意<br></br>到商业项目",
+      "title": "从创意<br></br><hl>到商业项目</hl>",
       "lead": "MYMarkaz 是学生与有创造力的年轻人相聚的地方。描述一个问题，和社区一起打造解决方案，组建团队，把创意变成真正的产品。",
       "showcase": "浏览展示区",
       "messages": "消息",
       "whatIs": "什么是创业项目？",
-      "building": "社区正在这里打造什么"
+      "building": "社区正在这里打造什么",
+      "proof": "这里已有 <b>{n}</b> 个创业项目和创意"
     },
     "stats": {
       "startups": "项目",

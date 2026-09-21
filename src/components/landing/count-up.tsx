@@ -21,7 +21,13 @@ export function CountUp({
 }) {
   const fmt = useFormatNumber();
   const { ref, inView } = useInViewOnce<HTMLSpanElement>('-40px');
-  const [display, setDisplay] = useState(0);
+  // Serverda (va JS'siz) YAKUNIY son chiziladi — HTML/qidiruv tizimi to'g'ri
+  // raqamni oladi. Mount'da 0 ga tushiriladi (blok `Reveal` ichida hali
+  // shaffof — sakrash ko'rinmaydi) va ko'ringanda 0 dan sanaladi.
+  const [display, setDisplay] = useState(value ?? 0);
+  useEffect(() => {
+    setDisplay(0);
+  }, []);
 
   useEffect(() => {
     if (!inView || value === undefined) return;

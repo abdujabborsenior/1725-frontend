@@ -18,6 +18,7 @@ import { SearchField } from '@/components/ui/search-field';
 import { EmptyState, FilterChip, PageHeader } from '@/components/ui/page-header';
 import { StartupCard, StartupCardSkeleton } from '@/components/startups/startup-card';
 import { PlatformIcon } from '@/components/startups/platform';
+import { useSsrSeed } from '@/lib/ssr-seed';
 
 /**
  * initialList — server component (page.tsx) SSR'da keltirgan 1-sahifa:
@@ -54,6 +55,9 @@ export function StartupsClient({
   const isDefaultView =
     page === 1 && !debouncedSearch && !category && !platform && sort === 'featured';
 
+  // Standart ko'rinish SSR'dan: mehmon API'ga so'rov yubormaydi (ssr-seed.ts)
+  const seed = useSsrSeed(isDefaultView ? initialList : undefined, { personal: true });
+
   const { data, isLoading } = useQuery({
     queryKey: ['startups', { page, search: debouncedSearch, category, platform, sort }],
     queryFn: () =>
@@ -66,9 +70,7 @@ export function StartupsClient({
         sort,
       }),
     placeholderData: keepPreviousData,
-    // SSR ma'lumoti — darhol ko'rsatiladi; updatedAt=0 → stale → jimgina yangilanadi
-    initialData: isDefaultView ? (initialList ?? undefined) : undefined,
-    initialDataUpdatedAt: 0,
+    ...seed,
   });
 
   const items = data?.data ?? [];

@@ -20,6 +20,7 @@ import { FormulaExplainer } from '@/components/startups/leaderboard-formula';
 import { FoundersBoard } from '@/components/social/founders-board';
 import { Segmented } from '@/components/ui/segmented';
 import { EmptyState, FilterChip, PageHeader } from '@/components/ui/page-header';
+import { useSsrSeed } from '@/lib/ssr-seed';
 
 const LIMIT = 20;
 
@@ -47,6 +48,12 @@ export function LeaderboardClient({
     initialData: initialCategories ?? undefined,
   });
 
+  // SSR standart ko'rinish (period=all, 1-sahifa) — mehmon API'ga so'rov yubormaydi
+  const seed = useSsrSeed(
+    period === 'all' && !category && page === 1 ? initialBoard : undefined,
+    { personal: true },
+  );
+
   const { data, isLoading, isFetching } = useQuery({
     queryKey: ['leaderboard', { period, category, page }],
     queryFn: () =>
@@ -57,11 +64,9 @@ export function LeaderboardClient({
         limit: LIMIT,
       }),
     placeholderData: keepPreviousData,
-    enabled: tab === 'startups',
-    // SSR standart ko'rinish (period=all, 1-sahifa) — CLS/LCP uchun
-    initialData:
-      period === 'all' && !category && page === 1 ? (initialBoard ?? undefined) : undefined,
-    initialDataUpdatedAt: 0,
+    initialData: seed.initialData,
+    initialDataUpdatedAt: seed.initialDataUpdatedAt,
+    enabled: tab === 'startups' && (seed.enabled ?? true),
   });
 
   const entries = data?.data ?? [];

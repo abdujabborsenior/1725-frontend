@@ -3,6 +3,10 @@ import { SITE_URL } from '@/lib/seo';
 /**
  * Sitemap INDEKSI (`/sitemap.xml`).
  *
+ * ⚠️ Fayl `sitemap-index.xml/` da — `/sitemap.xml` ga `next.config.mjs`
+ * dagi `beforeFiles` rewrite bilan ulanadi (dev rejimdagi marshrut
+ * to'qnashuvi sababi o'sha yerda yozilgan).
+ *
  * `sitemap.ts` dagi `generateSitemaps` bo'limlarni `/sitemap/<id>.xml` qilib
  * beradi, lekin Next 14 ularning INDEKSINI yasamaydi — `robots.txt` esa
  * `/sitemap.xml` ni ko'rsatadi. Busiz Search Console "sitemap topilmadi"

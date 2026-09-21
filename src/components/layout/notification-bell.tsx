@@ -11,6 +11,7 @@ import { cn } from '@/lib/utils';
 import { notificationMeta, notificationTarget } from '@/lib/notification-meta';
 import type { AppNotification } from '@/types';
 import { useDateFormat } from '@/lib/date';
+import { UNREAD_POLL_MS } from '@/lib/constants';
 
 export function NotificationBell() {
   const t = useTranslations('notifications');
@@ -25,7 +26,7 @@ export function NotificationBell() {
     queryKey: ['notifications-unread'],
     queryFn: () => notificationsApi.unreadCount(),
     enabled: !!token,
-    refetchInterval: 30_000,
+    refetchInterval: UNREAD_POLL_MS,
     refetchOnWindowFocus: true,
   });
 

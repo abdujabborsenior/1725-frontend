@@ -22,6 +22,17 @@ export const STORAGE = {
 } as const;
 
 /*
+ * O'qilmagan hisoblagichlar (suhbat / bildirishnoma) davriy so'rovi.
+ * Har KIRGAN foydalanuvchining ochiq (ko'rinib turgan) oynasi shu oraliqda
+ * so'raydi: 1M bir vaqtdagi foydalanuvchida 20–30 s = sekundiga ~83 000
+ * so'rov faqat badge'lar uchun edi, 60 s da ~33 000. Yangiligi baribir
+ * saqlanadi: oynaga qaytilganda darhol yangilanadi (`refetchOnWindowFocus`),
+ * yashirin oynada umuman so'ralmaydi (React Query standarti), suhbat
+ * sahifasining o'zida esa socket jonli yangilaydi.
+ */
+export const UNREAD_POLL_MS = 60_000;
+
+/*
  * ⚠️ Yorliq MATNLARI bu faylda YO'Q — ular lug'atda (`messages/*.json`,
  * asosan `labels.*`), chunki har tilda boshqacha. Bu yerda faqat
  * tilga bog'liq bo'lmagan narsalar: qiymatlar, tartib, rang klasslari.

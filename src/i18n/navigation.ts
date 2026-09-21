@@ -1,6 +1,3 @@
-import { createNavigation } from 'next-intl/navigation';
-import { routing } from './routing';
-
 /**
  * Tilni biladigan navigatsiya — `next/link` va `next/navigation` O'RNIGA
  * ilova bo'ylab FAQAT shular ishlatiladi:
@@ -9,8 +6,11 @@ import { routing } from './routing';
  *  · `usePathname()` — prefikssiz yo'l qaytaradi (`/startups`), shuning uchun
  *    faol menyu bandi va marshrut tekshiruvlari har tilda bir xil ishlaydi.
  *
+ * `Link` — NIYAT bo'yicha prefetch qiluvchi o'ram (`intent-link.tsx`):
+ * ko'rinishdagi hamma havolani oldindan yuklamaydi (server yuki, 1M miqyos).
+ *
  * `useSearchParams`, `useParams`, `notFound` — `next/navigation` dan (tilga
  * bog'liq emas).
  */
-export const { Link, redirect, usePathname, useRouter, getPathname } =
-  createNavigation(routing);
+export { redirect, usePathname, useRouter, getPathname } from './navigation-core';
+export { Link } from './intent-link';

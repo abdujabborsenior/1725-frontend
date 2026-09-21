@@ -17,6 +17,7 @@ import { useQuery } from '@tanstack/react-query';
 import { useTranslations } from 'next-intl';
 import { useAuthStore } from '@/store/auth.store';
 import { chatApi } from '@/lib/api';
+import { UNREAD_POLL_MS } from '@/lib/constants';
 import { cn } from '@/lib/utils';
 import type { LucideIcon } from '@/components/icons';
 
@@ -70,7 +71,8 @@ export function BottomNav() {
     queryKey: ['chat-unread'],
     queryFn: () => chatApi.unreadCount(),
     enabled: !!token,
-    refetchInterval: 20_000,
+    refetchInterval: UNREAD_POLL_MS,
+    refetchOnWindowFocus: true,
   });
   const unread = data?.count ?? 0;
 

@@ -32,7 +32,7 @@ export function StartupCard({
   const t = useTranslations('startupCard');
   const catLabel = useCategoryLabel();
   const fmt = useFormatNumber();
-  const platformTypes = Array.from(new Set(startup.platforms.map((p) => p.type))).sort(
+  const platformTypes = Array.from(new Set((startup.platforms ?? []).map((p) => p.type))).sort(
     (a, b) => PLATFORM_ORDER.indexOf(a) - PLATFORM_ORDER.indexOf(b),
   );
   const tint = categoryTint(startup.category);

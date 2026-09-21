@@ -18,6 +18,7 @@ import { SearchPalette, openSearchPalette } from '@/components/layout/search-pal
 import { AdaptiveNav, type NavItem } from '@/components/layout/adaptive-nav';
 import toast from 'react-hot-toast';
 import { BILLING_ENABLED } from '@/lib/billing';
+import { UNREAD_POLL_MS } from '@/lib/constants';
 import { LanguageList, LanguageMenuButton } from '@/components/i18n/language-switcher';
 
 // Asosiy navigatsiya. "Ovoz berish" ATAYLAB bu yerda emas — ikkilamchi
@@ -62,7 +63,7 @@ function ChatLink({ mobile }: { mobile?: boolean }) {
     queryKey: ['chat-unread'],
     queryFn: () => chatApi.unreadCount(),
     enabled: !!token,
-    refetchInterval: 20_000,
+    refetchInterval: UNREAD_POLL_MS,
     refetchOnWindowFocus: true,
   });
   const count = data?.count ?? 0;
